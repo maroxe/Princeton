@@ -1,0 +1,96 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+% custom commands
+\newcommand{\Q}[1]{\subsubsection*{Question #1}}
+
+% parameters
+\geometry{hmargin=1cm,vmargin=1cm}
+\title{ORF526 - Problem Set 1}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+
+\maketitle
+
+\Q{1} 
+Let $X$ and $Y$ be the result of two independant coin tosses, and let
+\begin{align*}
+  A_1 = \{X = H\} \\
+  A_2 = \{Y = H\} \\
+  A_3 = \{X = Y\} 
+\end{align*}
+  
+
+\Q{2}
+\begin{align*}
+  \mathbb{E}[X]
+  & := \sum_{n=1}^{N} X(\omega_n) p_n \\
+  & = \sum_{n=1}^{N} \left[ \text{Re}(X)(\omega_n) + i \text{Im}(X)(\omega_n) \right] p_n \\
+  & = \sum_{n=1}^{N} \text{Re}(X)(\omega_n) p_n
+    + i \, \sum_{n=1}^{N}  \text{Im}(X)(\omega_n)  p_n \\
+  & = \mathbb{E}[\text{Re}(X)] + i \, \mathbb{E}[\text{Im}(X)]
+\end{align*}
+
+\Q{3}
+
+$$(i) \Rightarrow (ii)$$
+\begin{align*}
+  \mathbb{E}[f_1(X_1) ... f_M(X_M)]
+  &= \sum_{x_1, ..., x_M} f_1(x_1) ... f_M(x_M) \mathbb{P}(X_1 = x_1, ..., X_M = x_m)\\
+  &= \sum_{x_1, ..., x_M} f_1(x_1) ... f_M(x_M) \mathbb{P}(X_1 = x_1) ... \mathbb{P}(X_M = x_M) & (\text{because of} \, (i)) \\
+  &= \sum_{x_1} f_1(x_1) \mathbb{P}(X_1=x_1) ... \sum_{x_M}  f_M(x_M) \mathbb{P}(X_M = x_M) \\
+  &= \mathbb{E}[f_1(X_1)] ... \mathbb{E}[f_M(X_M)]
+\end{align*}
+
+
+$$(ii) \Rightarrow (iii)$$
+Take $f_i(x) = e^{i u_i x}$
+
+$$(iii) \Rightarrow (i)$$
+Density of $e^{iu}$
+
+\Q{4} Immediate using definition $(ii)$
+\Q{5}
+\begin{itemize}
+\item [a)] if $X$ and $Y$ are independant, then $cov(X, Y) = \mathbb{E}\left[(X - \mathbb{E}[X]) (Y - \mathbb{E}[Y]) \right] = \mathbb{E}[X - \mathbb{E}[X]] \mathbb{E}[Y - \mathbb{E}[Y]] = 0$
+\item [b)] Let $X$ and $\epsilon$ be two independant uniform variables on $\{-1, 1\}$, then $cov(X, \epsilon X) = \mathbb{E}[\epsilon X^2]  = \mathbb{E}[\epsilon] \mathbb{E}[X^2] = 0$, but $\mathbb{P}(X = 1, \epsilon X = 1) = 0 \neq \mathbb{P}(X = 1) \mathbb{P}(\epsilon X = 1) = \frac{1}{4}$
+\end{itemize}
+
+\Q{6}
+A vector space $(V,+,.,{\mathbb K})$ over a field $\mathbb K$ verifies
+
+For all $u,v,w\in V$ and $\lambda, \mu \in \mathbb K$, then $u+v\in V$, $\lambda u\in V$ and
+
+\begin{itemize}
+\item $(V,+)$ is an Abelian group
+\item $\lambda(\mu u)=(\lambda\mu)u$.
+\item $(\lambda+\mu)u=\lambda u+\mu u$.
+\item  $\lambda(u+v)=\lambda u+\lambda v$.
+\item $1u=u$.
+\end{itemize}
+
+\Q{7}
+\begin{itemize}
+\item [a)] By using symetry, bilinearity and then symetry
+\item [b)] When $y = 0$ it is trivial. When $y \neq 0$ and $\lambda = \frac{<x,y>}{||y||^2}$, $0 \leq <x - \lambda y, x - \lambda y> = \frac{||x||^2 ||y||^2 - <x, y>^2}{||y||^2} $
+
+\item [c)]
+  \begin{itemize}
+  \item Positive homogeneity is a result of Bilinearity.
+  \item Triangle inequality can be obtained by squaring both sides of the inequality and applying Cauchy-Shwartz.
+  \item Positive definiteness of the norm is a direct consquence of the Positive definiteness of the scalar product.
+  \end{itemize}
+  
+  \item [d)] Cauchy-Shwartz
+  \end{itemize}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
