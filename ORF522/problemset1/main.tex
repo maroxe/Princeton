@@ -68,6 +68,10 @@ Conversely, if is not $| \emptyset$, let $d$ be an element of the intersection, 
 if in the sum $\sum_{v \in V} x_{u,v}  = 1$, more than one element is positive, replacing all of them with 0 except the element with the smallest weight (give it a value of 1) can only better the solution.
 
 \Q{5}
+Let $x_{i, j}$ be the number of cars we move from city $i$ to $j$, $w_{i,j}$ the cost of moving a car from $i$ to $j$, $p_i$ the number of cars currently present in city $i$, and $n_j$ the number of cars needed.
+
+We want to minimize $\sum x_{i,j} w_{i,j} = w^T x$ under the constraints
+$ \sum_j x_{i,j} = n_i - p_i \, \forall i$
 
 \end{document}
 
