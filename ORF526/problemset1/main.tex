@@ -18,13 +18,12 @@
 \maketitle
 
 \Q{1} 
-Let $X$ and $Y$ be the result of two independant coin tosses, and let
+Let $X$ and $Y$ be the result of two independent coin tosses, and let
 \begin{align*}
   A_1 = \{X = H\} \\
   A_2 = \{Y = H\} \\
   A_3 = \{X = Y\} 
 \end{align*}
-  
 
 \Q{2}
 \begin{align*}
@@ -47,18 +46,32 @@ $$(i) \Rightarrow (ii)$$
   &= \mathbb{E}[f_1(X_1)] ... \mathbb{E}[f_M(X_M)]
 \end{align*}
 
-
 $$(ii) \Rightarrow (iii)$$
 Take $f_i(x) = e^{i u_i x}$
 
 $$(iii) \Rightarrow (i)$$
-Density of $e^{iu}$
+By linearity we prove that the equality holds for polynomials of complex exponentials of the random variables too.
 
-\Q{4} Immediate using definition $(ii)$
+Let $\{x_1, ..., x_n\}$ be the elements of $\Omega$, and
+
+\begin{align*}
+f \, : \, &\mathbb{C}^{n-1}[X] \longrightarrow \mathbb{C}^n \\
+& P \longrightarrow (P(e^{i \frac{x_i}{n}}))_i
+\end{align*}
+
+where $n$ is large enough so that $e^{i \frac{x_i}{n}}$ are all different.
+
+$f$ is linear and injective (two polynomials of degree $< n$ who agree on $n$ points are equal), it is then a bijection (because $dim(\mathbb{C}^{n-1}[X]) = dim( \mathbb{C}^n )$)
+As a consequence, for each indicator function of the form $1_{x_i}$ there exists a polynomial $P_i(e^{i \frac{u}{n}}) = 1_{u = x_i}$, ie $(i)$ is verified.
+
+\Q{4} 
+Immediate using definition $(ii)$
+
 \Q{5}
 \begin{itemize}
-\item [a)] if $X$ and $Y$ are independant, then $cov(X, Y) = \mathbb{E}\left[(X - \mathbb{E}[X]) (Y - \mathbb{E}[Y]) \right] = \mathbb{E}[X - \mathbb{E}[X]] \mathbb{E}[Y - \mathbb{E}[Y]] = 0$
-\item [b)] Let $X$ and $\epsilon$ be two independant uniform variables on $\{-1, 1\}$, then $cov(X, \epsilon X) = \mathbb{E}[\epsilon X^2]  = \mathbb{E}[\epsilon] \mathbb{E}[X^2] = 0$, but $\mathbb{P}(X = 1, \epsilon X = 1) = 0 \neq \mathbb{P}(X = 1) \mathbb{P}(\epsilon X = 1) = \frac{1}{4}$
+\item [a)] if $X$ and $Y$ are independent, then
+  $$cov(X, Y) = \mathbb{E}\left[(X - \mathbb{E}[X]) (Y - \mathbb{E}[Y]) \right] = \mathbb{E}\left[f(X)g(Y) \right] = \mathbb{E}\left[f(X) \right]\mathbb{E}\left(Y) \right] = \mathbb{E}[X - \mathbb{E}[X]] \mathbb{E}[Y - \mathbb{E}[Y]] = 0$$
+\item [b)] Let $X$ and $\epsilon$ be two independent uniform variables on $\{-1, 0, 1\}$ and $\{-1, 1\}$ respectively, then $cov(X, \epsilon X) = \mathbb{E}[\epsilon X^2]  = \mathbb{E}[\epsilon] \mathbb{E}[X^2] = 0$, but $\mathbb{P}(X = 1, \epsilon X = 0) = 0 \neq \mathbb{P}(X = 1) \mathbb{P}(\epsilon X = 1) = \frac{1}{9}$
 \end{itemize}
 
 \Q{6}
@@ -74,6 +87,7 @@ For all $u,v,w\in V$ and $\lambda, \mu \in \mathbb K$, then $u+v\in V$, $\lambda
 \item $1u=u$.
 \end{itemize}
 
+examples: $R^n$, space of continuous functions from $R$ to $R$, space of square matrices of dimension $n$ ...
 \Q{7}
 \begin{itemize}
 \item [a)] By using symetry, bilinearity and then symetry
@@ -83,10 +97,10 @@ For all $u,v,w\in V$ and $\lambda, \mu \in \mathbb K$, then $u+v\in V$, $\lambda
   \begin{itemize}
   \item Positive homogeneity is a result of Bilinearity.
   \item Triangle inequality can be obtained by squaring both sides of the inequality and applying Cauchy-Shwartz.
-  \item Positive definiteness of the norm is a direct consquence of the Positive definiteness of the scalar product.
+  \item Positive definiteness of the norm is a direct consequence of the Positive definiteness of the scalar product.
   \end{itemize}
   
-  \item [d)] Cauchy-Shwartz
+  \item [d)] We can assume that $X$ and $Y$ are centred (adding a constant doesn't change the cov or var). Since the mapping $(X, Y) \longrightarrow cov(X, Y)$ is scalar product in the space of centered random variables on the finite probability space $\Omega$, we then apply Cauchy-Shwarz.
   \end{itemize}
 \end{document}
 
@@ -94,3 +108,6 @@ For all $u,v,w\in V$ and $\lambda, \mu \in \mathbb K$, then $u+v\in V$, $\lambda
 %%% mode: latex
 %%% TeX-master: t
 %%% End:
+
+
+
