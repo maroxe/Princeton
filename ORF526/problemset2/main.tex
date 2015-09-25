@@ -1,0 +1,59 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+% custom commands
+\newcommand{\Q}[1]{\subsubsection*{Question #1}}
+\newcommand{\Exp}[1]{\mathbb{E}[#1]}
+\newcommand{\Var}[1]{Var[#1]}
+\newcommand{\Pb}[1]{\mathbb{P}(#1)}
+
+% parameters
+\geometry{hmargin=1cm,vmargin=1cm}
+\title{ORF526 - Problem Set 2}
+
+\author{Bachir EL KHADIR }
+
+\begin{document}
+
+\maketitle
+
+\Q{1}
+\begin{itemize}
+\item
+  $$\Exp{X} = \Exp{\sum \epsilon_i} = \sum \Exp{\epsilon_i} = n
+  \Exp{\epsilon} = np$$
+  $$\Var{X} = \Var{\sum \epsilon_i} = \sum \Var{\epsilon_i} = n \Var{\epsilon} = n  \Exp{(X-p)^2} = n [ p(1-p)^2 + (1-p)p^2 ] = np(1-p)$$
+\item
+  $$\Exp{X} = \sum_{n \geq 1} n e^{-\lambda} \frac{\lambda^n}{n!} = e^{-\lambda} \sum_{n \geq 0}  \frac{\lambda^{n+1}}{n!} = \lambda$$
+  $$\Var{X} = \Exp{X^2} -\lambda^2 = \sum_{n \geq 1} n^2 e^{-\lambda} \frac{\lambda^n}{n!} - \lambda^2= e^{-\lambda} \lambda \sum_{n \geq 1} (n+1)  \frac{\lambda^n}{n!} - \lambda^2  = \lambda ( 1 + \lambda) - \lambda^2  = \lambda$$
+
+  $$\sum_n (n+1) \frac{x^n}{n!} = \left(\frac{d}{dx} x \sum_n  \frac{x^n}{n!}\right)_{|x=\lambda} = \left(\frac{d}{dx} x e^x \right)_{|x=\lambda} = e^{\lambda}(1+\lambda)$$
+\end{itemize}
+\Q{2}
+\begin{itemize}
+\item 0
+\item $\Pb{X = k} = (1-p)^{k-1} p$ geometric
+\item $\Exp{X} = \sum_{k \geq 1} k (1-p)^{k-1} p = p  \sum_{k \geq 0} (k+1) (1-p)^k = p \left( \frac{d}{dx} \sum_k x^{k+1} \right)_{|x = 1-p} = p\left( \frac{d}{dx} (\frac{1}{1-x} - 1)  \right)_{|x = 1-p} = p \left(\frac{1}{1 - (1-p)}\right)^2 = \frac{1}{p}$
+  $$\Var{X} = \frac{1-p}{p^2}$$
+\item $$\Exp{2^X} = \sum 2^n p (1-p)^{n-1} = \frac{p}{1-p} \sum_n (2(1-p))^n =\left\{
+    \begin{array}{ll}
+      \infty & \text{if} \, p \leq \frac{1}{2} \\
+      \frac{p}{(1-p)(2p-1)} & \text{else}
+    \end{array}
+  \right.
+  $$
+\end{itemize}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+
+
