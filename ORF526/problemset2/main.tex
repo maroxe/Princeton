@@ -10,6 +10,10 @@
 \newcommand{\Exp}[1]{\mathbb{E}[#1]}
 \newcommand{\Var}[1]{Var[#1]}
 \newcommand{\Pb}[1]{\mathbb{P}(#1)}
+\newcommand{\Fil}{\mathcal{F}}
+\newcommand{\FExp}[1]{\mathbb{E}[#1 | \Fil]}
+\newcommand{\Gil}{\mathcal{G}}
+\newcommand{\GExp}[1]{\mathbb{E}[#1 | \Gil]}
 
 % parameters
 \geometry{hmargin=1cm,vmargin=1cm}
@@ -48,12 +52,99 @@
   $$
 \end{itemize}
 
+\Q{3}
+\begin{itemize}
+Let's note $Y = \Exp{X | \Fil}$
+
+\item [(i)]
+\begin{itemize}
+\item $Y$ takes finite number of values $I := Y(\Omega) = \{x_1, ..., x_r\}$
+\item $Y$ is constant on the $A_i$
+\item As a consequence, either all element of $A_j$ are equal to $x_i$, or no one is. ie $A_j \cap Y^-1(x_i) = \emptyset$ or $A_j \subset Y^{-1}(x_i)$
+\item Since $\Omega = \cap_j A_j$, $Y^{-1}(x_i) = \cap A_j \cup Y^{-1}(x_i) = \cap_{Y(A_j) = \{x_i\}}  A_j$ is measurable
+\end{itemize}
+\item [(ii)] if $\Fil = \{\emptyset, \Omega\}$, $\Exp{X | \Fil} = \frac{\sum_{\omega_n \in \Omega} X(\omega_n) p_n}{P(\Omega} = \Exp{X}$
+\item [(iii)] if $X$ if $\Fil$-measurable, $X$ is constant on the $A_i$, otherwise there exist two elements $w_n, w_m$ such that $X(w_n) \neq X(w_m)$, but then $X^-1( X(w_n) ) \cap A_i$ is an element if $\Fil$ and a strict subset of $A_i$ whose measure is not 0.
+for $\omega \in A_m$: $$\Exp{X|\Fil}(\omega) = X(\omega ) \frac{\sum_{\omega_n \in A_m}  p_n}{P(A_m)} = X(\omega)$$
+\item [(iv)] This is true because $Y$ is a positive linear combination of the $X(\omega_n) \geq 0$
+\item [(v)] 
+$$\FExp{X Y + Z} = \FExp{X Y} + \FExp{Z}  \text{ by linearity of } \Exp{}$$
+Let $\omega \in A_m$, $X$ is constant on $A_m$, so
+$$\FExp{X}(\omega) = X(\omega ) \frac{\sum_{\omega_n \in A_m} Y(w_n) p_n}{P(A_m)} = X(\omega) \FExp{Y}(\omega)$$
+\item [(vi)]
+$\FExp{X}$ is $\Gil$-measurable (by (i)), we conclude by $(iii)$.
+\item [(vii)] Independance of $\Fil$
+\item [(viii)] $Y \Fil-$measurable is equivalent to $Y$ being constant on each $A_i$: Let's note $Y(A_i)$ this value. Choosing $Y$ is equivalent to choosing the vector $(Y(A_1), ..., Y(A_M)) \in \mathbb{R}^M$
+
+Minimizating this quantity
+$$\Exp{(X-Y)^2} = \sum_{A_i} \sum_{\omega_n \in A_i} (X(\omega_n) - Y(A_i))^2 p_n$$
+is therefore equivalent to solving the following minimization program:
+\begin{align*}
+\text{min}_{a_1, ... a_M \in \mathbb{R}^M }  \sum_{A_i} \sum_{\omega_n \in A_i} (X(\omega_n) - a_i)^2 p_n 
+&=  \sum_{A_i} \text{min}_{a_i \in \mathbb{R}} \sum_{\omega_n \in A_i} (X(\omega_n) - a_i)^2 p_n
+\\ &= \sum_{A_i} \text{min}_{a_i \in \mathbb{R}} \sum_{\omega_n \in A_i} (X(\omega_n) - a_i)^2 p_n
+\\ &= \sum_{A_i} \text{min}_{a_i \in \mathbb{R}} f_i(a_i)
+\end{align*}
+
+$f : a_i \mapsto \sum_{\omega_n \in A_i} (X(\omega_n) - a_i)^2 p_n$ is a strictly convex function (as positive sun of convex functions), it has an unique absolute minimum $a_i$ that verifies $f'(a_i) = 2 \sum_{\omega_n \in A_i} (a_i - X(\omega_n))p_n = 0$, ie $a_i = \FExp X (A_i)$
+\end{itemize}
+
+\Q{4}
+It is clear that $(\Omega, \hat \Fil, \hat \mu)$ is a measure space.\\
+Let $D \in \hat \Fil$, and Let $A, B, C \subset \Omega$ such that $A \subset B \in \Fil$ and $C \in \Fil$ such that $D = A \cup C$ and $\mu(B) = 0$. \\
+Let's also suppose that $\hat \mu (D) = \mu(C) = 0$.\\
+Let $E \subset D$, and let's show that $E \in \hat F$. We can write $E = (E \cap A) \cup (E \cap C) \subset B \cup C = (B\cup C) \cup \emptyset$.
+
+\Q{5}
+$$1) \Rightarrow 2)$$
+$(E_i)_i$ sequence of increasing sets, as a convention $E_{-1} = \emptyset$
+
+$$\mu ( \cup E_i ) = \mu ( \cup (E_i \setminus  E_{i-1}) ) = \sum_i \mu(E_i \setminus E_{i-1}) = \sum_i \mu(E_i) - \mu(E_{i-1})$$
+
+$$\mu(E_j) = \sum_{ i \leq j} \mu(E_i) - \mu(E_{i-1})$$
+so $$\mu ( \cup E_i ) - \mu(E_j) = \sum_i \mu(E_i \setminus E_{i-1}) = \sum_{i > j} \mu(E_i) - \mu(E_{i-1}) \rightarrow 0$$ (as the rest of a convergent series)
+
+$$ 2) \Rightarrow 3)$$
+Let $(E_i)_i$ be a sequence of decreasing sets, as a convention, $E_{-1} = \Omega$
+\begin{align*}
+\mu( \cap E_j ) &= \mu( \Omega \setminus \cup E_j^c) \\
+&= \mu(\Omega) - \mu(\cup E_j^c) & \text{by $\sigma$-linearity} \\
+&= \mu(\Omega) - \lim \mu(E_j^c) & \text{by coninuity from above} \\
+&= \lim \mu(\Omega) -  \mu(E_j^c)  \\
+&= \lim \mu(\Omega \setminus E_j^c) & \text{by $\sigma$-linearity} \\
+&= \lim \mu(E_j) \\
+\end{align*}
+
+$$ 3) \Rightarrow 4)$$
+
+\Q{6}
+
+Let's suppose $1)-3)$
+\begin{itemize}
+
+\item $1')$ is trivially verified
+\item For $2')$, we have $B \setminus A = B \cap A^c = (B^c \cap A)^c \in \mathcal{D}$ (because $A \subset B \Rightarrow A \cap B^c = \emptyset$)
+\item For $3')$, $\cup A_n = \cup A_n \setminus A_{n-1} = \cup (A_n \cap A_{n-1}^c) \in \mathcal{D}$
+\end{itemize}
+
+Let's suppose $1')-3')$
+\begin{itemize}
+\item $1)$ is trivially verified
+\item For $3)$, $A^c = \Omega \setminus A \in \mathcal{D}$
+\item For $2)$, Let's first show that it is true for a finite number of sets.\\
+For two disjoint sets $A_1 \cup A_2 = (A_2^c \setminus A_1)^c \in \mathcal{D} $ by $2')$\\
+For $n > 2$ sets $A_1, ... A_n$ pairwise disjoint, we write $\cup  A_i = A_1 \cup \cup_{i>1} A_i$. Since $A_1$ and $\cup_{i>1} A_i$ are disjoint, we can apply the same proof as in the case $n=2$.\\
+General case:
+$\cup A_n = \cup (\cup_{i \leq n} A_n) \in \mathcal{D}$ by $3')$
+\end{itemize}
+
 \end{document}
 
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: t
 %%% End:
+
 
 
 
