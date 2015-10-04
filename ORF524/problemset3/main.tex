@@ -1,0 +1,114 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+
+\geometry{hmargin=1cm,vmargin=1cm}
+
+
+% custom commands
+\newcommand{\Q}[1]{\subsubsection*{Question #1}}
+\newcommand{\salgebra}{$\sigma$-algebra }
+
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+
+% parameters
+\title{ORF526 - Problem Set 3}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+
+\maketitle
+bls
+\Q{1}
+
+\begin{itemize}
+\item [a)] $\cap_{n \in \mathbb{N}} A_n^c$
+\item [b)] $\cap_{m \in \mathbb{N}} \cup_{m \leq n} A_n$
+\item [c)] $\left(\cap_{m \in \mathbb{N}} \cup_{m \leq n} A_n \right)^c = ..$
+\item [d)] $\cap_{ i,j \in \mathbb{N}, i \neq j} \left(A_i \cap A_j \cap (\cup_{n \neq i, n \neq j} A_j^c) \right)$
+\item [e)] This event can be expressed as "$\Phi$ nevr occurs at even times", ie $\cap_{n \in \mathbb{N}} A_{2 n}^c$
+\end{itemize}
+
+\Q{2}
+\begin{itemize}
+\item $\varepsilon \subseteq \sigma(\varepsilon)$, so $\{ f^{-1}(A) : A \in \varepsilon \} \subseteq \{ f^{-1}(A) : A \in \sigma(\varepsilon) \}$. since the RHS is already a $\sigma$-algebra (showed in class), $\sigma \{ f^{-1}(A) : A \in \varepsilon \} \subseteq \{ f^{-1}(A) : A \in \sigma(\varepsilon) \}$
+\item Let's note $B := \sigma \{ f^{-1}(A) : A \in \varepsilon \}$, and $C := \{ A: f^{-1}(A) \in B \}$.
+\begin{itemize}
+\item $C$ is a \salgebra containing $\varepsilon$, so $\sigma(\varepsilon) \subseteq C$
+\item As a consequence, for every $A \in \sigma(\varepsilon)$, $A \in C$, ie $f^{-1}(A) \in B$.
+\end{itemize}
+We have just proved that $\{ f^{-1}(A) : A \in \sigma(\varepsilon) \}  \subseteq B$
+\end{itemize}
+
+
+\Q{3} 
+\begin{itemize}
+\item $X = \lim_n X_n = \lim_n \text{sup}_{k \geq n} X_k$
+\item $X \leq x$ eq $\exists n \, \forall k \, \geq n X_k \leq x$
+\item $\{X \leq x\} = \cup_{n \in \mathbb{N}} \cap_{k \geq n} \{X_k \leq x \}$
+\end{itemize}
+
+\Q{4}
+
+\begin{itemize}
+
+\item
+Let's call $Q = P(\{1,..,n\})$. For $i = 1 .. n$:
+$$A_i = \bigunion{I \subseteq Q, i \in I} (\inter{k \in I} A_k) \inter{} (\inter{k \in I^c} A_k^c) $$
+Note that this a union of disjoint sets.
+
+
+Let's call $I_i := \{ I \in Q: \sum_{i \in I} a_i = x_i\}$, ie the different possible combinations for the $A_i$ where $\omega \in \Omega$ can be so that its image by $f$ equals $x_i$. 
+
+
+Written differently, $\{ f = x_i \} = \bigunion{I \in I_i} \inter{k \in I_i} A_k \inter{} \inter{k \in I_i^c} A_k^c$. And as result of the sets being disjoint: 
+$$ \mu(f = x_i) = \sum_{I \in I_i} \mu(\inter{k \in I_i} A_k \inter{} \inter{k \in I_i^c} A_k^c)$$
+
+
+Note that any sum index by some $I \in Q$ in finite because $|I| \leq n$, and this we can rearrange the sums in any order.
+
+\begin{align*}
+\sum_{i=1}^m x_i \mu(f = x_i) 
+&= \sum_{i=1}^m x_i \sum_{I \in I_i} \mu(\inter{k \in I} A_k \inter{} \inter{k \in I^c} A_k^c) \\
+&= \sum_{i=1}^m  \left(\sum_{I \in I_i} (\sum_{k \in I} a_k) \mu(\inter{k \in I} A_k \inter{} \inter{k \in I^c} A_k^c)\right) \\
+&= \sum_{I \in Q} (\sum_{k \in I} a_k) \mu(\inter{k \in I} A_k \inter{} \inter{k \in I^c} A_k^c) 
+& \text{because $Q = \union{k=1..m} I_i$} \\
+&= \sum_{i=1..n} \sum_{I \in Q, i \in I} a_i \mu(\inter{k \in I} A_k \inter{} \inter{k \in I^c} A_k^c) 
+& \text{By rearranging the sum}\\
+&= \sum_{i=1..n} a_i \sum_{I \in Q, i \in I}  \mu(\inter{k \in I} A_k \inter{} \inter{k \in I^c} A_k^c) \\
+&= \sum_{i=1..n} a_i \mu(A_i)
+\end{align*}
+
+\item
+Let's first prove that if a set $A$ has measure 1, for all measurable sets $B$, $\mu(A \inter{} B) = \mu(B)$. This holds because 
+
+$$\mu(B) \geq \mu(A \inter{} B) = 1 - \mu(A^c \union{} B^c) \geq 1 - \mu(B^c) = \mu(B)$$
+
+
+Let's now prove that $f(\omega) = g(\omega)$.
+Let $x$ in the set on the left
+
+$\mu(\{g = x\}) \geq \mu(\{g = x\} \inter{} \{f=x\}) = \mu(\{f = x\} \inter{} \{f=g\}) = \mu(\{f = x\})$ 
+Symmetrically, we prove that $\mu(\{f = x\}) \geq \mu(\{g = x\})$, and thus this two quantities are equal.
+
+This proves that in the sum $\sum_{x \in f(\Omega)} x \mu(f = x)$ there is a term that is non zero, $\mu(\{f = x\}) = \mu(\{g=x\}) \neq 0$, and $x \in g(\Omega)$. Since all quantities are positive, this means, $\sum_{x \in f(\Omega)} x \mu(f = x) \leq \sum_{x \in g(\Omega)} x \mu(g = x)$, and by symmetry: $\sum_{x \in f(\Omega)} x \mu(f = x) = \sum_{x \in g(\Omega)} x \mu(g = x)$
+
+
+\end{itemize}
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
