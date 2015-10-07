@@ -1,0 +1,52 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+% custom commands
+\newcommand{\Q}[1]{\subsubsection*{Problem #1}}
+\newcommand{\optimize}[4]{\begin{equation*}
+\begin{aligned}
+& \underset{#1}{\text{#4}}
+& & #2 \\
+& \text{subject to}
+& & #3
+\end{aligned}
+\end{equation*}
+}
+
+\newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+\newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+
+
+% parameters
+\geometry{hmargin=1cm,vmargin=1cm}
+\title{ORF524 - Problem Set 1}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+
+\maketitle
+
+\Q{1}
+
+Let's consider the following optimization problem
+\minimize{x}{0}{Ax \leq b}
+and its dual
+\maximize{y \geq 0}{-y^T b}{y^TA = b}
+By the duality theorem, both problems have the same optimal solution.
+
+If $1.$ is feasible, then $0$ is its optimal solution. If $2.$ is feasible, then the optimal value is negative. We conclude that the two systems cannot be feasible at the same time.
+
+\Q{2}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
