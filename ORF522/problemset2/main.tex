@@ -7,18 +7,50 @@
 
 % custom commands
 \newcommand{\Q}[1]{\subsubsection*{Problem #1}}
-\newcommand{\optimize}[4]{\begin{equation*}
+\newcommand{\optimize}[4]{\begin{equation}
 \begin{aligned}
 & \underset{#1}{\text{#4}}
 & & #2 \\
 & \text{subject to}
 & & #3
 \end{aligned}
-\end{equation*}
+\end{equation}
 }
+
+
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
 
 \newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
 \newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+
+\newcommand{\Ab}[9]{
+\left(
+\begin{array}{ccc}
+#1&#2&#3 \\
+#4&#5&#6 \\
+#7&#8&#9 \\
+\end{array} 
+\right)
+}
+\newcommand{\Dir}[5]{
+\left(
+\begin{array}{c}
+#1\\#2\\#3\\#4\\#5
+\end{array} 
+\right)
+}
+
+
+\newcommand{\BDir}[8]{
+\left(
+\begin{array}{c}
+#1\\#2\\#3\\#4\\#5\\#6\\#7\\#8
+\end{array} 
+\right)
+}
 
 
 % parameters
@@ -32,16 +64,175 @@
 
 \Q{1}
 
-Let's consider the following optimization problem
-\minimize{x}{0}{Ax \leq b}
-and its dual
-\maximize{y \geq 0}{-y^T b}{y^TA = b}
+Let's consider the following optimization problem $P$:
+\maximize{x}{0}{Ax \leq b}
+and its dual $D$:
+\minimize{y \geq 0}{y^T b}{y^TA = 0}
 By the duality theorem, both problems have the same optimal solution.
 
-If $1.$ is feasible, then $0$ is its optimal solution. If $2.$ is feasible, then the optimal value is negative. We conclude that the two systems cannot be feasible at the same time.
+If $1.$ is feasible, then $0$ is the optimal solution. If $2.$ is feasible, then the optimal value is negative. We conclude that the two systems cannot be feasible at the same time.
+
+If $2.$ is infeasable, if and only if $N(A^T) \inter{} \{y \geq 0\} \inter{} \{b^Ty < 0 \} = \emptyset$, and using Problem $3$ of the first assignement, this means that the dual $D$ (and consequently the primal $P$) has an optimal solution, and $1$ is then feasible.
 
 \Q{2}
+\begin{itemize}
 
+\item
+\maximize{f_{u,v} \geq 0}{ \sum_{v: (s,v) \in E} f_{s,v}}
+{  \forall (u,v) \in E \, f_{u,v} \leq w(u, v) \\ &&& \forall v \in V \setminus \{s,t\} \sum_{u: (u,v) \in E} f_{u,v} = \sum_{u: (v, u) \in E} f_{v,u}}
+
+If we set $w_{u,v}$ to 0 when $(u,v) \not \in E$, we can rewrite the problem as:
+\maximize{f_{u,v} }{ \sum_{v: (s,v) \in E} f_{s,v}}
+{  \forall u,v \in V \, 0 \leq f_{u,v} \leq w(u, v) \\ &&& \forall v \in V \setminus \{s,t\} \sum_{u \in V} f_{u,v} = \sum_{u \in E} f_{v,u}}
+
+
+Or in vectorial form:
+
+\maximize{f \in R^{|V|^2}, f \geq 0 }{ c^T f}
+{  0 \leq f \leq w \\ &&& Af = 0}
+
+\item Let's call $g, u$ the dual variables (for the first and second constraint resp.)
+
+The dual can be written as
+$$\text{max}_{f \geq 0 } \, { \text{min}_{g \geq 0, u} \, c^T f + g^T(w-f) + u^TAf}$$
+e.g.
+$$\text{max}_{f \geq 0 } \, { \text{min}_{g \geq 0, u} \, (c-g+u^TA)^T f + g^Tw }$$
+e.g.
+\minimize{g \geq 0, u}{g^Tw }{u^TA - g \geq c}
+
+\end{itemize}
+
+
+\Q{3}
+$$c = (2, 1, 3, 1, -3)$$
+\[ A = \left(
+\begin{array}{r|r|r|r|r}
+x_1&x_2&x_3&x_4&x_5\\
+\hline
+1&2&0&4&-3 \\
+1&1&0&-3&4 \\
+-1&-3&3&0&0 \\
+\end{array} 
+\right) \]
+
+
+The first problem
+$\hat A := (A, I_3)$
+
+\minimize{x, y \geq 0}{e^Ty}{Ax + y = b}
+$z = (x = 0, y = b)$ is a BFS
+\[\left| 
+\begin{array}{c|c|c|c|c|c|c|c|c}
+  z & B & A_B & A_B^{-1} & e^Tx & \bar e & j & d & \theta\\
+  \hline
+   \BDir 0 0 0 0 0 2 2 1 & 6,7,8 & I_3 &
+   I_3 &
+   5 & \bar e_1 = -1 & 1 & \BDir 1 0 0 0 0 {-1} {-1} 1  & 2 \\
+   \hline
+   \BDir 2 0 0 0 0 0 0 3 & 1,2,8 & \Ab 1 2 0 1 1 0 {-1} {-3} 1 &
+   \Ab {-1}  2 0  1 {-1} 0 2 {-1} 1 &
+   3 & \bar e_3 = -3 & 3 & \BDir 0 0 1 0 0 0 0  {-3}  & 1 \\
+   \hline
+   \BDir 2 0 1 0 0 0 0 0 & 1,2,3 & - &- &
+   0 \text{(optimal)} &  - & - & - & - \\
+   \hline
+\end{array} 
+\right| \]
+
+We found a BFS $x = (2, 0, 1, 0, 0)$ to our problem
+
+\[\left| 
+\begin{array}{c|c|c|c|c|c|c|c|c}
+  x & B & A_B & A_B^{-1} & c^Tx & \bar c & j & d & \theta\\
+  \hline
+   \Dir 2 0 1 0 0 & 1, 3, 5 & \Ab 1 0 {-3} 1 0 4 {-1} 3 0 &
+   \frac{1}{21} \Ab {12} 9 0 4 3 7 {-3} 3 0 &
+   7 & \bar c_2 =  -\frac{8}{7}, \bar c_4 = -5 & 4 & \Dir {-1} 0 {-\frac{1}{3}} 1 1  & 2 \\
+   \hline
+   \Dir 0 0 {\frac{1}{3}} 2 2
+   & 3,4,5 & \Ab 2 0 {-3} 1 0 4 {-3} 3 0  &
+   \frac{1}{33} \Ab {12} 9 0 4 3 7 {-3} 3 0 &
+   -3 & \hat c_1 = 5, \hat c_2 = \frac{47}{3} & - & - & -\\
+   \hline
+\end{array} 
+\right| \]
+
+The optimal value is then -3.
+
+
+\newpage
+
+
+\Q{4}
+
+\begin{itemize}
+\item 
+
+  Let $x_i$ be the number of times that the manager uses the process $i$, $p_i$ the the benefit from selling the ouput of that process, and $c_i$ the cost.
+    \maximize{x \geq 0}{ \sum_i x_i (p_i - c_i) = x^T(p-c)}
+    {2x_1 + 2x_2 + 4x_3 \leq 8M \\ &&& 4x_1 + 2x_2 + 2x_3 \leq 5M}
+which can be put to standard form:
+    \maximize{x \geq 0}{ \sum_i x_i (p_i - c_i) = x^T(p-c)}
+    {2x_1 + 2x_2 + 4x_3 + x_4 = 8 \\ &&& 4x_1 + 2x_2 + 2x_3 +x_5 = 5}
+    
+    $$c = (111, 11, 100), p = (4, 1, 3)  38 + (3, 1, 4)  33 = (251,  71, 246)$$
+\[A = \left(
+\begin{array}{r|r|r|r|r}
+x_1&x_2&x_3&x_4&x_5\\
+\hline
+2&2&4&1&0\\
+4&2&2&0&1
+\end{array} 
+\right) \]
+
+$$b = (5, 8)^T$$
+$$ w = p - c$$
+
+
+We rewrite the program:
+
+    \maximize{x \geq 0}{  x^Tw}{Ax = b}
+
+
+Simplex
+We start with a $B = (1, 3)$ as a basis.
+we calculate 
+\[ x_B = A_B^{-1} b = \frac{1}{6} 
+\left(\begin{array}{cc}-1 & 2 \\ 2 & -1\end{array}\right)
+(5, 8)^T = (\frac{1}{3}, \frac{11}{6})^T \geq 0
+\]
+
+The reduced cost for 2, 4, 5:
+$\bar c_2 = -106/3, \bar c_4 = -76/3, c_5 = -77/3 \leq 0$
+
+We have found the optimum for $x^* = (\frac{1}{3}, 0, \frac{11}{6}, 0, 0)^T$.
+
+\item
+The increase in price (that we call $\Delta$) can change the optimal solution if one of the new reduced costs becomes positive.
+
+The only parameter that changes is $w$, it becomes $w' := w + \Delta (4, 1, 3, 0, 0)$
+It is easy to see that $\bar w_4'$ and $\bar w_5'$  will not be affeced.
+
+Let's call $\bar w'$ the reduced cost after the price increase.
+$\bar w_2' := \hat w_2' - w_B'^T A_B^{-1} A_2 =  \bar w_2 + \Delta (1 - (4, 3) A_B^{-1} A_2) = \bar w_2 + (1 - \frac{7}{3}) \Delta = -106/3 - 4/3 \Delta$
+$\bar w_2 '$ becomes positive when $\Delta < -\frac{3}{4}w_2$
+
+
+\item
+The new constraints are:
+
+$$4x_1 + 3x_2 + 5x_3 \leq 14$$
+The optimal solution $x^*$ verifies this constraint
+$4 * 1/3 + 3*0 + 5*11/6 = 63/6 \sim 10.5 < 14$
+
+So the optimal solution doesn't change
+
+\item Maximizing $U(r)$ is the same as maximizing $U(r)^2 = 2$ when $U$ is positive
+
+\end{itemize}
+
+
+\Q{5}
 
 \end{document}
 
