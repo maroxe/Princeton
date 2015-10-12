@@ -1,0 +1,153 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+
+\geometry{hmargin=1cm,vmargin=1cm}
+
+
+% custom commands
+\newcommand{\Q}[1]{\subsubsection*{Question #1}}
+\newcommand{\salgebra}{$\sigma$-algebra }
+
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+
+\newcommand{\norm}[1]{||{#1}|| }
+\newcommand{\abs}[1]{|{#1}| }
+
+
+
+% parameters
+\title{ORF526 - Problem Set 4}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+
+\maketitle
+
+\Q{1}
+\begin{enumerate}
+
+\item
+Let $\mathbb{F}$ be a field which is either $\mathbb{R}$ or $\mathbb{C}$.  A normed vector space over $\mathbb{F}$ is a pair $(V,\norm{\cdot})$ where $V$ is a vector space over $\mathbb{F}$ and $\norm{\cdot}\colon V\to\mathbb{R}$ is a function such that
+\begin{enumerate}
+\item $\norm{v}\geq 0$ for all $v\in V$ and $\norm{v}=0$ if and only if $v=0$ in $V$ (\emph{positive definiteness})
+\item $\norm{\lambda v} = \abs{\lambda} \norm{v}$ 
+
+for all $v\in V$ and all $\lambda\in\mathbb{F}$
+\item $\norm{v+w}\leq\norm{v}+\norm{w}$ for all $v,w\in V$ (the \emph{triangle inequality})
+\end{enumerate}
+
+
+\item Inner product space
+
+\item A metric space $M$ is called complete if every Cauchy sequence of points in $M$ has a limit that is also in $M$ or, alternatively, if every Cauchy sequence in $M$ converges in $M$.
+
+\item A Banach space is a vector space X over the field R of real numbers, or over the field C of complex numbers, which is equipped with a norm and which is complete with respect to that norm.
+
+\item A Hilbert space is a vector space $H$ with an inner product $<f,g>$ such that the norm defined by
+ $\norm{f}=\sqrt{<f,f>}$
+turns $H$ into a complete metric space. If the metric defined by the norm is not complete, then $H$ is instead known as an inner product space.
+\end{enumerate}
+
+\Q{2}
+\begin{itemize}
+
+\item
+$$(a_1, b_1] \times (a_2, b_2] = (-\infty, b_1] \times (-\infty, b_2]
+ \setminus 
+\left( (-\infty, b_1] \times (-\infty, a_2] 
+ \union{} (-\infty, a_1] \times (-\infty, b_2] \right)$$ 
+
+
+\begin{align*}
+\mu (a_1, b_1] \times (a_2, b_2] 
+&= \mu (-\infty, b_1] \times (-\infty, b_2]
+ -
+\mu \left( (-\infty, b_1] \times (-\infty, a_2] 
+ \union{} (-\infty, a_1] \times (-\infty, b_2] \right)\\
+&= \mu (-\infty, b_1] \times (-\infty, b_2] 
+-\mu  (-\infty, b_1] \times (-\infty, a_2] 
+- \mu ((-\infty, a_1] \times (-\infty, b_2]) \\
+&+ \mu \left( (-\infty, b_1] \times (-\infty, a_2] 
+ \inter{} (-\infty, a_1] \times (-\infty, b_2] \right) \\
+&= F(b_1, b_2) - F(b_1, a_2) - F(b_2, a_1) + F(a_1, a_2)
+\end{align*}
+
+
+\item
+The following intersection is decreasing:
+$$(-\infty, x_1] \times (-\infty, x_2] = \biginter{k \in \mathbb{N}} (-\infty, x^k_1] \times (-\infty, x^k_1]$$
+By continuity from above $F(x_k) \rightarrow F(x)$
+
+
+\item
+
+$$\mathbb{R} = \union{k \in \mathbb{N}} (-\infty, x_1^k] \times (-\infty, x_2^k]$$
+
+The union is increasing, by continuity from below we have the equality.
+
+
+\item $(-\infty, x_1] \times (-\infty, x_2] \subseteq (-\infty, y_1] \times (-\infty, x_2] $ so $F(x_1, x_2) \leq F(y_1, x_2)$
+
+
+
+\item 
+\end{itemize}
+
+\Q{3}
+Let's write $f$ and $g$ as:
+$f = \sum_i a_i 1_{A_i}$, $g = \sum_k b_k 1_{B_k}$
+$$\int (f+g) = \sum_i a_i \mu(A_i) + \sum_k \mu(B_k) = \int f + \int g$$
+
+\Q{4}
+\begin{itemize}
+\item
+If $f = \sum a_i 1_{A_i}$ a simple function, then $cf = \sum (c a_i) 1_{A_I}$, $\int c f = \sum c a_i \mu(A_i) = c \sum a_i \mu(A_i) = c \int f$.
+
+
+If $f_n$ a sequence of increasing simple function converging to $f$, then $(c f_n)$ is an monotonous sequence converging to $c f$, and therefore by monotnous convergence, $\int c f = \lim \int c f_n = c \lim \int f_n = c \int f$.
+
+\item
+
+\item
+
+
+\end{itemize}
+
+\Q{5}
+
+\begin{itemize}
+\item
+\begin{itemize}
+\item $\mu_f(\emptyset) = \mu f^{-1}(\emptyset) = \mu \emptyset = 0$
+\item $\mu_f(B^c) = \mu f^{-1}(B^c) = \mu (f^{-1}B)^c = 1 - \mu(f^{-1}B) = 1 - \mu_f(B)$
+\item if $\{B_k | k \in \mathbb{N}\}$ a set of pairwise disjoint sets, so is$\{ f^{-1} B_k | k \in \mathbb{N}\}$ and therefore $$\mu_f(\union{k} B_k) = ...$$
+\end{itemize}
+
+\item
+If $g$ is simple, eg $g = \sum a_i 1_{A_i}$: $gof = \sum a_i 1_{f^{-1}(A_i)}$
+
+$\int_{\Omega} g o f \rm{d}\mu = \sum_i a_i \mu(f^{-1}A_i) = \sum_i a_i \mu_f(A_i) = \int_E g  \rm{d}\mu_f$
+
+If $g_n \rightarrow g$, $g_nof \rightarrow gof$ so:
+$$\int gof = \lim\int g_nof  = \lim \int g_n \rm{d}\mu_f = \int g \rm{d}\mu_f$$
+\end{itemize}
+
+
+\Q{6}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
