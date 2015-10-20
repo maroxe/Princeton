@@ -45,20 +45,29 @@ for all $v\in V$ and all $\lambda\in\mathbb{F}$
 \end{enumerate}
 
 
-\item Inner product space
+\item Inner product space is a vector space with an inner product
 
-\item A metric space $M$ is called complete if every Cauchy sequence of points in $M$ has a limit that is also in $M$ or, alternatively, if every Cauchy sequence in $M$ converges in $M$.
+\item A metric space $M$ is a set with a distance.
+It is called complete if every Cauchy sequence of points in $M$ has a limit that is also in $M$.
 
-\item A Banach space is a vector space X over the field R of real numbers, or over the field C of complex numbers, which is equipped with a norm and which is complete with respect to that norm.
+\item A Banach space is a vector space X over the field $R$ of real numbers, or over the field $C$ of complex numbers, which is equipped with a norm and which is complete with respect to that norm.
 
 \item A Hilbert space is a vector space $H$ with an inner product $<f,g>$ such that the norm defined by
  $\norm{f}=\sqrt{<f,f>}$
-turns $H$ into a complete metric space. If the metric defined by the norm is not complete, then $H$ is instead known as an inner product space.
+turns $H$ into a complete metric space. 
 \end{enumerate}
 
 \Q{2}
-\begin{itemize}
 
+In the following we use these properties: For $A, B$ two measurable sets:
+
+\begin{enumerate}
+\item if $A \subseteq B$, $\mu(B \setminus A) = \mu(B) - \mu(A)$
+\item $\mu(A \union{} B) = \mu(A \union{} (B \setminus A \inter{}B)) = \mu(A) + \mu(B) - \mu(A \inter{} B)$
+\end{enumerate}
+
+
+\begin{itemize}
 \item
 $$(a_1, b_1] \times (a_2, b_2] = (-\infty, b_1] \times (-\infty, b_2]
  \setminus 
@@ -80,31 +89,62 @@ $$(a_1, b_1] \times (a_2, b_2] = (-\infty, b_1] \times (-\infty, b_2]
 &= F(b_1, b_2) - F(b_1, a_2) - F(b_2, a_1) + F(a_1, a_2)
 \end{align*}
 
-
 \item
-The following intersection is decreasing:
+The sequence $x_k$ is decreasing so the following intersection is decreasing:
 $$(-\infty, x_1] \times (-\infty, x_2] = \biginter{k \in \mathbb{N}} (-\infty, x^k_1] \times (-\infty, x^k_1]$$
 By continuity from above $F(x_k) \rightarrow F(x)$
-
 
 \item
 
 $$\mathbb{R} = \union{k \in \mathbb{N}} (-\infty, x_1^k] \times (-\infty, x_2^k]$$
 
-The union is increasing, by continuity from below we have the equality.
+The union is increasing because $x_{k}$ is increasing, by continuity from below we have the equality.
 
 
-\item $(-\infty, x_1] \times (-\infty, x_2] \subseteq (-\infty, y_1] \times (-\infty, x_2] $ so $F(x_1, x_2) \leq F(y_1, x_2)$
+\item If any of the $x_i^k$ go to $-\infty$, we have the following decreasing intersection:
+$$\emptyset = \inter{k} (-\infty, x^k_1) \times (-\infty, x^k_2) $$
+We conclude by continuety at 0.
 
 
+\item By monotonicity of the measure $(-\infty, x_1] \times (-\infty, x_2] \subseteq (-\infty, y_1] \times (-\infty, x_2] $ so $F(x_1, x_2) \leq F(y_1, x_2)$
+By symetry of $(x_1, y_1)$ and $(x_2, y_2)$, we prove the other inequality.
 
-\item 
+\item Let G be function definied on $R^2$ such that 
+
+\[ 
+G(x,y) = \left\{
+\begin{array}{cc}
+    1 & \text{when $x, y \geq 0$ and $(x, y) \neq (0,0)$} \\
+      0 & \text{otherwise}
+  \end{array}
+  \right.
+\]
+$G(x,y)$ is non decreasing in $x$ and $y$, but
+$$G(1, 1) - G(1, 0) - G(0, 1) + G(0, 0) = 1 - 1 - 1 + 0 = -1$$
+
 \end{itemize}
 
 \Q{3}
 Let's write $f$ and $g$ as:
-$f = \sum_i a_i 1_{A_i}$, $g = \sum_k b_k 1_{B_k}$
-$$\int (f+g) = \sum_i a_i \mu(A_i) + \sum_k \mu(B_k) = \int f + \int g$$
+$f = \sum_i a_i 1_{A_i}$, $g = \sum_k b_k 1_{B_k}$,
+$f+g = \sum_i a_i 1_{A_i} + \sum_k b_k 1_{B_k}$
+
+
+$$\int (f+g) = \sum_i a_i \mu(A_i) + \sum_k b_k \mu(B_k) = \int f + \int g$$, 
+
+General case:
+If $f, g \geq 0$
+Let $(f_n)_n$ and$ (g_n)_n$ two sequences of simple functions 
+
+$0 \leq f_n \uparrow f$, 
+
+$0 \leq g_n \uparrow g$
+
+Then $0 \leq f_n + g_n \uparrow f+g$
+By monotone convergence theorem:
+$$\int f+g = \lim_n \int  f_n + g_n = \lim_n \int f_n + \lim_n \int g_n = \int f + \int g$$
+
+If $f$ and $g$ measurable, we write $f = f^+ - f^-$ and $g = g^+ - g^-$ and we apply the precedent result.
 
 \Q{4}
 \begin{itemize}
@@ -112,38 +152,192 @@ $$\int (f+g) = \sum_i a_i \mu(A_i) + \sum_k \mu(B_k) = \int f + \int g$$
 If $f = \sum a_i 1_{A_i}$ a simple function, then $cf = \sum (c a_i) 1_{A_I}$, $\int c f = \sum c a_i \mu(A_i) = c \sum a_i \mu(A_i) = c \int f$.
 
 
-If $f_n$ a sequence of increasing simple function converging to $f$, then $(c f_n)$ is an monotonous sequence converging to $c f$, and therefore by monotnous convergence, $\int c f = \lim \int c f_n = c \lim \int f_n = c \int f$.
 
-\item
+If $f \geq 0$
+If $f_n$ a sequence of non negative increasing simple function converging to $f$, then $(c f_n)$ is an monotonous sequence converging to $c f$, and therefore by monotnous convergence, $\int c f = \lim \int c f_n = c \lim \int f_n = c \int f$.
 
-\item
+General case $f = f^+ - f^-$, so by linearity $$\int cf = \int c f^+ + \int (-c) f^- = c(\int f^+ - \int  f^-) = c \int f$$
 
+\item $h := g-f$, $\mu{h < 0} = 0$
+
+\begin{align*}
+\int g - \int f  &= \int (g-f)  \\
+&= \int h \\
+&= \int_{\{h \geq 0\}} h + \int_{\{h < 0\}} h \\
+&= \int_{\{h \geq 0\}} h^+ + \int_{\{h < 0\}} h
+\end{align*}
+
+It is easy to see that the integral of constant functions on a set of measure $0$ is $0$ , by linearity it extends to simple functions, and it holds for measurable positive functions because of the definition of the integral as the sup of a set that contains only $0$ and for measurable function by linearity. Therefore $\int_{\{h < 0\}} h = 0$
+
+
+Moreover, the integral of positive functions is definied as the sup of the integral of positive simple functions, and that integral is positive as the sum of positive terms. So $\int_{\{h \geq 0\}} h^+ \geq 0$
+
+We conclude that $\int g - \int f \geq 0$.
+
+
+\item 
+$$\int |f| = \int_{f = 0} |f| + \int_{f \neq 0} |f| = \int_{f \neq 0} |f| = 0$$
+
+$$\{f \neq 0\} = \union{n \geq 1} \{ |f| \geq \frac1 n\}$$
+
+Let's call $A_n := \{ |f| \geq \frac1 n\}$ for $n \geq 1$, so that $A_n$ is increasing. By using the last question:
+$$ 0 \geq \int_{f \neq 0} |f| \geq  \int_{\{f \neq 0\} \inter{} A_n} |f| + \int_{A_n} |f| \geq  \int_{A_n} |f| \geq \frac{\mu A_n}{n} \geq 0$$
+
+so $\mu A_n = 0$. and subsequently by continuty from below $$\mu \{f \neq 0\} = 0$$
 
 \end{itemize}
 
-\Q{5}
 
-\begin{itemize}
-\item
+\Q{5}
+$\mu$ is a measure because:
 \begin{itemize}
 \item $\mu_f(\emptyset) = \mu f^{-1}(\emptyset) = \mu \emptyset = 0$
 \item $\mu_f(B^c) = \mu f^{-1}(B^c) = \mu (f^{-1}B)^c = 1 - \mu(f^{-1}B) = 1 - \mu_f(B)$
-\item if $\{B_k | k \in \mathbb{N}\}$ a set of pairwise disjoint sets, so is$\{ f^{-1} B_k | k \in \mathbb{N}\}$ and therefore $$\mu_f(\union{k} B_k) = ...$$
+\item if $\{B_k | k \in \mathbb{N}\}$ a set of pairwise disjoint sets, so is$\{ f^{-1} B_k | k \in \mathbb{N}\}$ and therefore $$\mu_f(\union{k} B_k) = \mu(f^{-1}\union{k}B_k) = \mu(\union{k}f^{-1}B_k) = \sum_k \mu_f(B_k)$$
 \end{itemize}
 
-\item
+
 If $g$ is simple, eg $g = \sum a_i 1_{A_i}$: $gof = \sum a_i 1_{f^{-1}(A_i)}$
 
-$\int_{\Omega} g o f \rm{d}\mu = \sum_i a_i \mu(f^{-1}A_i) = \sum_i a_i \mu_f(A_i) = \int_E g  \rm{d}\mu_f$
+$$\int_{\Omega} g o f \rm{d}\mu = \sum_i a_i \mu(f^{-1}A_i) = \sum_i a_i \mu_f(A_i) = \int_E g  \rm{d}\mu_f$$
 
-If $g_n \rightarrow g$, $g_nof \rightarrow gof$ so:
-$$\int gof = \lim\int g_nof  = \lim \int g_n \rm{d}\mu_f = \int g \rm{d}\mu_f$$
-\end{itemize}
-
+If $g \geq 0$, and $0 \leq g_n \uparrow g$, $g_nof \uparrow gof$  by monotone convergence:
+$$\int gof \rm d \mu= \lim\int g_nof  = \lim \int g_n \rm{d}\mu_f = \int g \rm{d}\mu_f$$
+If $g$ is measurable such that the integral exist, we write $g = g^+ - g^-$,$gof = g^+of - g^-of$, one of the integrals of $g^+, g^-$ is finite, and we have the result by linearity of the integral. 
 
 \Q{6}
 
+\begin{enumerate}
+\item Let $(x_k)_k$ be a sequence s.t. $x_k \downarrow x$, then by continuety from above of the probability measure:
 
+$F(X \leq x) = P( \inter{k}\{X \leq x_k\} ) = \lim_k P( \{X \leq x_k\} ) = \lim_K F(x_k)$ and therefore $F$ is right continuous.
+
+First we notice that by definition of $q$ and $F$, for every $u$ and $\epsilon > 0$:
+
+$$F(q(u)+\epsilon) > u \geq F(q(u) - \epsilon)$$
+
+$q$ is non-decreasing, so the right limit exists at every point u. Let's note it $q(u^+)$. 
+Let's suppose $q(u^+) > q(u)$ and note $\alpha = q(u^+) - q(u)$.
+Let $(u_n)$ a decreasing sequence s.t $u_n \downarrow u$ so that $q(u_n) \downarrow q(u)$
+For every $\epsilon > 0$ we have:$u_n \geq F(q(u_n) - \epsilon) $
+
+
+For $\epsilon  = \frac{\alpha}2$, we have
+$$u_n \geq F(q(u_n) - \epsilon) \geq F(q(u^+) - \epsilon) \geq F(q(u) + \epsilon) > u$$
+and by going to the limit:
+$$u \geq F(q(u)+\epsilon) > u$$
+Contradiction. $q$ is right continous.
+
+
+\item 
+
+Let $g_n(x) = x$, by question $5$:
+\begin{align*}
+\mathbb{E}[X] &= \int_{\Omega} goX(\omega) \rm{d}P \\
+&= \int_{\mathbb{R}} g \, \rm d \mu_{X}
+\end{align*}
+
+
+Let's consider the application from the Borel to $\mathbb{R}^+$: $\alpha: A \rightarrow \int_\mathbb{R} 1_A \rm dF_X$.
+
+Since $F_X$ is right continous, we can prove that $\alpha$ is a measure that agrees with $\mu_X$ on every interval (so they agree on a semi-ring that generates the Borel $\sigma$-algebra), so by  unicity garanteed by Carathéodory extension theorem for $\sigma$-finite measures , $\mu_x = \alpha$. so that
+
+$$E[X] = \int_R g \rm d \mu_X = \int_R g \rm d F_X$$
+
+
+
+\item
+Let's first prove the statement of bounded functions. Let $X$ be integrable such that $|X| < a$
+
+\begin{align*}
+\int_{-\infty}^0 (P[X > x] - 1) \rm dx 
+&= -  \int_{-a}^0 F(x) \rm dx \\
+&=  \int_{-a}^0 x \rm d F(x) - F(0)*0 - F(-a)a\\
+&= \int_{-a}^0 x \rm d F(x) 
+&= \int_{-\infty}^0 x \rm d F(x) 
+\end{align*}
+
+
+\begin{align*}
+\int^{\infty}_0 P[X > x] \rm dx 
+&= \int_0^a 1 - F(x) \rm dx \\
+&= -\int_0^a x \rm d(1- F) (x) + a(1-F(a)) \\
+&= \int_0^a x \rm d F(x) \\
+&= \int_0^{\infty} x \rm d F(x) \\
+\end{align*}
+$F$ being constant for $x > a$ and $x < -a$, the Stieltjes sum and there for the $\int$ is 0 on those interval.
+
+
+
+By summing both:
+
+$$\int_{-\infty}^0 (P[X > x] - 1) \rm dx + \int^{\infty}_0 P[X > x]  \rm dx = \int_{-\infty}^{\infty} x \rm d F(x) = E[X]$$
+
+Let $X$ be just integrable now, $X = X^+ - X^-$, and $X^+$, $X^-$ are both integrable.
+If we prove the statement for non negative functions, then we can conclude by linearity because
+$E[X] = E[X^+] - E[X^-]$ and when the integrals exist we have:
+\begin{align*}
+\int_{-\infty}^0 (P[X > x] - 1) \rm dx + \int^{\infty}_0 P[X > x]  \rm dx &= \int_{-\infty}^0 (P[-X^- > x] - 1) \rm dx + \int^{\infty}_0 P[X^+ > x]  \rm dx 
+\\&=
+-\int_0^{\infty} P[X^- \geq x]  \rm dx + \int^{\infty}_0 P[X^+ > x]  \rm dx 
+\\&=-\int_0^{\infty} P[X^- > x]  \rm dx  - \int_0^{\infty} P[X^- = x]  \rm dx + \int^{\infty}_0 P[X^+ > x]  \rm dx
+\\&=
+-\int_0^{\infty} P[X^- \geq x]  \rm dx + \int^{\infty}_0 P[X^+ > x]  \rm dx 
+\\&=-\int_0^{\infty} P[X^- > x]  \rm dx + \int^{\infty}_0 P[X^+ > x]  \rm dx \\&\text{because $P[X^- = x]$ is non zero on at most a countable set}
+\end{align*}
+
+
+Let's now suppose $X \geq 0$
+Let $X_n := X1_{|X|<n}$, so $X_n \uparrow X$ which is integrable.
+\begin{align*}
+E[X] &= \lim_n E[|X|1_{|X|<n}] &\text{by monotone convergence}\\
+&=\int^{\infty}_0 P[X_n > x]  \rm dx \\
+&= \int^{\infty}_0 P[X_n > x]1_{x \geq 0}  \rm dx \\
+&= \lim_n \int_{\mathbb{R}} P[X_n > x]
+\end{align*}
+
+
+\begin{align*}\phi_n &:= P[X_n > x] \\
+&\leq P[X > x] &\text{because $X_n$ is increasing}\\
+&\leq (1 - F(X \leq x))\\
+\end{align*}
+
+and we have by right continuety of $F$ and the fact that $X_n \uparrow X$ that:
+$\phi_n \uparrow P[X > x]$
+By monotne convergence we can swap limit and integral, and we have the equality.
+
+$E[X] = \lim_n \int_{\mathbb{R}} P[X_n > x] = \lim_n \int \phi_n = \int P[X > x]$
+
+\item
+Let's show that 
+
+$$\{ u \in (0, 1): u < F(x) \} \subseteq\{ u \in (0, 1): q(u) \leq x \} \subseteq \{ u \in (0, 1): u \leq F(x) \} $$
+Let's note that sets $A, B, C$ (it's clear that they are all measurable sets)
+
+Let's prove $A \subset B$.
+Let $u \in A$, then $u < F(x)$. Let $y \in \mathbb{R}$ s.t $F(y) \leq u$, then $F(y) < F(x)$, then $y < x$ because $F$ is non-decreasing. By taking the $\sup$, $q(u) \leq x$.
+
+
+Let's first prove that $F(q(u)) \geq u$. 
+Let $\epsilon > 0$ we know that $F(q(u)+\epsilon) \geq u$,  because otherwise $q(u) + \epsilon \in \{x | F(x) \leq u\}$ and $q(u) + \epsilon $ is greater than the sup of this set.
+We now take the limit since $F$ is right continous, and we have $F(q(u)) \geq u$. 
+
+
+Let's now prove that $B \subseteq C$ 
+Let $u \in C$, ie $F(x) \geq u$, so $q(F(x)) \leq q(u)$ so $x \leq q(u)$.
+
+We conclude by noting that $\mu(C) = \mu(A)$ because $\mu(C \setminus A) = \mu(\{F(x)\}) = 0$.
+And therefore $\mu(A) = \mu(B) = \mu(C)$
+
+But $\mu(C) = \mu((0, F(x)]) = F(x)$
+
+
+\item 
+The distribution of $X$ and $q$ are the same, so the distribution of  $F(X)$ and $F(q)$ are the same.
+
+In the case where $F$ is increasing, $F$ is a bijection and $F(q)$ is the identity of $(0, 1)$, so $F(q) \sim \mathcal{U}\text{nif}(0, 1)$
+
+\end{enumerate}
 \end{document}
 
 %%% Local Variables:

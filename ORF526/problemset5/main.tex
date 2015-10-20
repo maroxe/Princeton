@@ -1,0 +1,139 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+% custom commands
+\newcommand{\Q}[1]{\subsubsection*{Question #1}}
+\newcommand{\salgebra}{$\sigma$-algebra }
+
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+
+\newcommand{\norm}[1]{||{#1}|| }
+\newcommand{\abs}[1]{|{#1}| }
+
+% parameters
+\geometry{hmargin=1cm,vmargin=1cm}
+\title{ORF526 - Problem Set 1}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+
+\maketitle
+
+
+
+$\Omega = [0, 1]$, $\mathcal F = \mathcal B([0, 1])$, $\mathbb{P}$ is the restriction of the lebesgue measure on $\Omega$. This is a probability space.
+
+
+Let's consider the sequence:
+
+$$X_k = k 1_{\{0 < x < \frac 1 k\}}$$
+
+
+\begin{itemize}
+\item $\mathbb{E}[X_k] = 1$
+\item $X_k \rightarrow_{k \infty} 0$ a.s., because for all $x \in (0,1)$, $X_k(x) = 0$ for all $k > \frac{1}{x}$
+\end{itemize}
+
+\Q{1} 
+
+\begin{itemize}
+\item $\sup_k ||X_k||_1 = 1 < \infty$
+\item For any $C > 0$, for any $k > C$, $\mathbb{E}[|X_k| 1_{\{X_k > C\}}] = \mathbb{E}[X_k] = 1$. Which means the sequence is not uniformly integrable.
+\end{itemize}
+
+\Q{2}
+the $(X_k)$ satisfy the conditions
+
+\Q{3}
+$\mathbb{E}(\lim \inf X_k) = \mathbb{E}(\lim X_k) = \mathbb{E}(0) = 0 < 1 = \lim_k \mathbb{E}(X_k) = \lim \inf \mathbb{E}(X_k)$
+
+
+\Q{4}
+
+Let's define 
+
+$\mu_1(A_1, ..., A_m) = \prod_i \mathbb{P}(X_i \in A_i)$
+
+$\mu_2(A_1, ..., A_m) = \mathbb{P}(X_1 \in A_1,...,X_m \in A_m)$
+
+$\mu_1$ is a measure (as the product measure of $\mathbb{P}oX^{-1}$)
+
+$\mu_2$ agrees with $\mu_1$ on sets of the form $(-\infty, x_1] \times ... \times (-\infty, x_m]$
+
+
+Since $\mu_1$ is $\sigma$-finite (it's a probability measure), by Cathedory extension theorem, $\mu_1 = \mu_2$ on ...
+
+
+\Q{5}
+\begin{enumerate}
+\item $i \Rightarrow iii$
+
+
+Let $\epsilon > 0$,$A_n = \union{m \geq n} \{ \omega , |X_n(\omega) - X(\omega)| > \epsilon\}$
+and $A_{\infty} = \inter{n} A_n$
+$A_n$ is a decreasing sequence.
+
+If $\omega \in A_\infty$, 
+for infinitely many $m \in \mathbb{N}$, 
+$|X_n(\omega) - X(\omega)| > \epsilon$. 
+Which means that $\omega \in N$. Therefore $\mathbb{P}(A_\infty) \leq \mathbb{P}(N) = 0$
+
+
+By continuty from above:
+$$\mathbb{P}(|X_n - X| > \epsilon) \leq \mathbb{P}(A_n) \rightarrow \mathbb{P}(A_\infty) = 0$$
+
+
+\item $ii \Rightarrow iii$
+By Markov inequality
+$\mathbb{P}(|X_n - X| > \epsilon) \leq \frac{E{|X_n - X|}}{\epsilon} \rightarrow 0$
+
+
+\item $iii \Rightarrow iv$ 
+
+\item blabla
+\end{enumerate}
+
+
+\Q{6}
+\begin{enumerate}
+
+\item
+Every cdf is right continous and admits$F$ a left limit everywhere. (Let's call it $F(x-)$)
+
+A point of discontinuty if where $F(x-) \neq F(x)$.
+
+
+Let $A$ be the set of discontinuties of $F$.
+\[
+f: \left\{ 
+\begin{array}{cc}
+      A \rightarrow &\mathbb{Q}\\
+      x \rightarrow &\text{some arbitrary } r \in (F(x^-), F(x))\\
+\end{array}
+\right.
+\]
+
+
+This application is an injection. So $A$ is countable.
+
+\item
+\end{enumerate}
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+
+

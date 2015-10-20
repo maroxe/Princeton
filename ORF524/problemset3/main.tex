@@ -1,0 +1,200 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+% custom commands
+\newcommand{\Q}[1]{\subsubsection*{Question #1}}
+
+\newcommand{\Es}[1]{\mathbb{E}(#1)}
+\newcommand{\deriv}[2]{\frac{\partial #1}{\partial \theta_{#2}}}
+
+
+
+
+
+% parameters
+\geometry{hmargin=1cm,vmargin=1cm}
+\title{ORF524 - Problem Set 3}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+
+\maketitle
+
+\Q{1}
+\begin{enumerate}
+
+\item
+for $p > 0$, let's denote $f_p: x \rightarrow x^p$ for $x > 0$.
+$f_p$ is convexe because $f_p''(x) = p(1-p)x^{p-2}$.
+
+$\mathcal L a = \sum_i (a_i - \theta_i)^p = \sum_i f_p(a_i) $
+
+
+\item $\mathcal L a = f_q(f_p(a))$ is convexe as the composition of two convexe functions.
+\end{enumerate}
+
+
+\Q{2}
+\begin{enumerate}
+\item
+The $X_i$ have the same distribution and play symetric roles, so:
+$$\tilde p = E [\hat p | T(X)] = E[ X_1 | \sum_i X_i] = \frac1 n E[\sum X_i | \sum_i X_i] = \frac {T(X)} n$$
+
+\item ...
+\end{enumerate}
+
+
+\Q{3}
+$$Var(E[X|Y]) = E[ (E[X|Y] - E[ E[X|Y]])^2] = E[ (E[X|Y] - E[X])^2]$$
+
+\begin{align*}
+E[ Var(X|Y) ] &= E[ E[(X - E[X|Y])^2 |Y]] 
+\\&= E[ E[(X - E[X] + E[X] - E[X|Y])^2 ] 
+\\&= E[ E[(X - E[X])^2] ] - E[(E[X] - E[X|Y])^2 ] &\text{By Pythagor, because $E[X] - E[X|Y] \perp X - E[X]$}
+\end{align*}
+
+By summing:
+$$E[ Var(X|Y) ] + Var(E[X|Y]) = E[ E[(X - E[X])^2] ] = Var(X)$$
+
+
+\Q{4}
+
+
+Let's prove that $\phi(\{c_j\}^l$ is non-increasing.
+
+
+$$\phi(\{c_j\}^l = \sum_j \sum_{x_i \in C_j^l} ||x_i - c_j^l||^2 \leq \sum_{x_i \in C_j^l} ||x_i - c_j^{l+1}||^2$$
+
+
+
+For every $j = 1..K$, $\sum_{x_i \in C_j^l} ||x_i - c_j^l||^2 \leq \sum_{x_i \in C_j^l} ||x_i - c_j^{l+1}||^2$
+because the mean of the point $x_i \in C_j^l$, minimizes the quantity $\mu \rightarrow \sum_{x_i \in C_j^l} ||x_i - \mu||^2$.
+
+So: $\phi(\{c_j\}^l = \sum_j \sum_{x_i \in C_j^l} ||x_i - c_j^l||^2 \leq\sum_i \sum_{x_i \in C_j^l} ||x_i - c_j^{l+1}||^2$
+
+By assigning each $x_i$ to the nearest $c_j^{l+1}$, each quantity $||x_i - c_j^l||^2$ in the sum above is replaced by a smaller (or equal) quantity $||x_i - c_j^{l+1}||^2$
+
+
+Therefore $\phi(\{c_j\}^l$ is non-increasing, and the limit exsits.
+
+
+
+\Q{5}
+
+\begin{enumerate}
+\item 
+
+\begin{align*}
+Cov( (T, a)^T ) &= \mathbb{E} (T, a) (T, a)^T -  (\mathbb{E} (T, a))(\mathbb{E} (T, a))^T\\
+\\ &= \mathbb{E} 
+\begin{bmatrix}TT^T & T^T a \\ aT^T & aa^T \\\end{bmatrix} 
+- \begin{bmatrix}\Es T \Es T^T & \Es T^T \Es a \\ \Es a \Es T^T & \Es a \Es a^T \\\end{bmatrix} 
+\\ &= 
+\begin{bmatrix}Cov(T) & Cov(T,a) \\ Cov(a,T) & Cov(a) \\\end{bmatrix} 
+\\ &= 
+\begin{bmatrix}Cov(T) & \nabla_\theta g(\theta) \\ \nabla_\theta g(\theta)^T & I(\theta) \\\end{bmatrix} 
+\end{align*}
+
+Because:
+\begin{itemize}
+\item $\Es{a} = \int \nabla_\theta \log f_\theta(x) f_\theta(x) \rm{d}x 
+= \int \frac{\nabla_\theta f_\theta(x)}{f_\theta(x)}f_\theta(x) \rm{d}x = \nabla_\theta 1 = 0$
+\item $Cov(a) = \Es{aa^T} = I(\theta)$
+
+\item
+\begin{align*}
+Cov(T, a) &= \Es{T^T a} \\
+&= \int T(x) \nabla_\theta \log f_{\theta}(x)  f_{\theta}(x)\rm{d}x \\
+&= \int T(x) \frac{\nabla_\theta f_{\theta}(x)}{ f_{\theta}(x)} f_{\theta}(x)\rm{d}x \\
+&= \nabla_\theta \int T(x) f_{\theta}(x)\rm{d}x & \text{(By regularity condition)} \\
+&= \nabla_\theta g(\theta)
+\end{align*}
+\end{itemize}
+
+\item
+\[ B = \left(\begin{array}{cc}-I_p&,\nabla_\theta g(\theta) I(\theta)^{-1}\end{array}\right)^T \]
+
+$B^T Cov(T, a)^T B = ...$
+
+
+\item $Cov(T) - \nabla_\theta g(\theta)I(\theta) \nabla_\theta g(\theta)  = B^T Cov(T, a)^T B = Cov( B(T, a)^T ) \geq 0$
+\end{enumerate}
+
+\Q{6}
+
+In the following we write $f$ instead of $f_\theta(x)$ or $f_\theta(X)$.
+
+
+$$\nabla_\theta^2 \log f = \nabla_\theta (\frac{\nabla_\theta f}{f}) = \frac{\nabla_\theta^2 f}{f} - \frac{\nabla_\theta f \nabla_\theta f^T}{f^2} = \frac{\nabla_\theta^2 f}{f} - \nabla_\theta \log f \nabla_\theta \log f^T$$
+
+
+But $\Es {\frac{\nabla_\theta^2 f}{f}} = \int \frac{\nabla_\theta^2 f}{f} f \rm d x 
+= \nabla_\theta ^2 \int f \rm d x = 0$, so
+$$
+I(\theta) = \Es{\nabla_\theta f_{\theta}(x) \nabla_\theta f_{\theta}(x)^T}  = - \Es{ \nabla_{\theta}^2 f}
+$$
+
+\Q{7}
+\begin{enumerate}
+
+\item
+By the series expansion of exponential:
+$$|\frac{e^{az} - 1}{z}| = |\sum_{k=1}^{\infty} \frac{a^kz^{k-1}}{k!}|
+\leq \sum_{k=1}^{\infty} \frac{|a|^k|z|^{k-1}}{k!}
+\leq \sum_{k=1}^{\infty} \frac{1}{\delta} \frac{|a|^k|\delta|^{k}}{k!}
+\frac{e^{a\delta}}{\delta} 
+$$
+\item
+Let $\alpha_n \Rightarrow \alpha_n$
+$$\frac{g(x)f_{\alpha_n}(x) - g(x) f_\alpha(x)}{\alpha_n - \alpha} 
+= g(x)h(x)
+ $$ 
+
+\end{enumerate}
+
+\Q{8}
+\begin{enumerate}
+
+
+\item 
+
+$$\hat \beta = (X^TX)^{-1} X^T y  = (X^TX)^{-1} X^T X \beta + (X^TX)^{-1} X^T \eta = \beta + (X^TX)^{-1} X^T \eta$$
+
+$\Es {\hat \beta} = \beta + (X^TX)^{-1} X^T \Es{\eta} = \beta$. So $\hat \beta$ is unbiased.
+
+best var
+\item $R_2(\hat \beta) = Var(\hat \beta) = Var((X^TX)^{-1} X^T \eta) = (X^TX)^{-1} X^T Var(\eta) ((X^TX)^{-1} X^T)^T = \sigma^2 (X^TX)^{-1} X^T X (X^TX)^{-1} = \sigma^2 (X^TX)^{-1}$
+
+If $X^TX = I_p$, $R_2(\hat \beta) = \sigma^2 I_p$
+\end{enumerate}
+
+
+
+\Q{9}
+\begin{enumerate}
+\item 
+
+\begin{align*}
+\frac{\rm d}{\rm d c} \Es {|X-c|} &= \frac{\rm d}{\rm d c} \int^c (c-x)f(x) \rm{dx} + \int_c (x-c)f(x) \rm{dx} 
+\\&= \frac{\rm d}{\rm d c} c (F(c) - (1-F(c)) + \int^c -xf(x) \rm{dx} + \int_c x f(x) \rm{dx}
+\\&= \frac{\rm d}{\rm d c} c (2F(c) - 1) - 2 \int^c xf(x) \rm{dx} + \int_{\mathbb{R}} x f(x) \rm{dx}
+\\&= 2F(c)-1 + 2cf(c) - 2 cf(c) 
+\\&= 2F(c)-1
+\end{align*}
+
+The derivative is increasing so the function is strictly convexe, and therefore it attains its minimum when the derivative is 0, or $F(c) = \frac12$, or $c = \text{median}(P_X)$ 
+\end{enumerate}
+
+\end{document}
+
+
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
