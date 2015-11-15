@@ -1,0 +1,175 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+
+\newcommand{\Q}[1]{\subsubsection*{Problem #1}}
+\newcommand{\optimize}[4]
+{
+\begin{align*}
+& \underset{#1}{\text{#4}}
+& & #2 \\
+& \text{subject to}
+& & #3
+\end{align*}
+}
+
+
+
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+
+\newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+\newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+
+
+
+% parameters
+\geometry{hmargin=1cm,vmargin=1cm}
+\title{ORF524 - Problem Set 2}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+
+\maketitle
+
+\Q{1}
+\begin{itemize}
+\item 
+$$\hat \beta = (X^TX)^{-1}X^T(X\beta + \eta) = \beta + (X^TX)^{-1}X^T\eta$$
+
+$$ (X^TX)(\hat \beta - \beta) = X^T \eta$$
+
+$$ $$
+
+
+$$\hat \beta - \beta \sim \mathcal N(0, (X^TX)^{-1}X^T ((X^TX)^{-1}X^T)^T) \sim \mathcal N(0, (X^TX)^{-1})$$
+
+
+$$(X^TX)^{-1} = LL^T$$
+$$\hat \beta - \beta \sim L \mathcal  N(0, I)$$
+
+$$P(||L^{-1}(\hat \beta - \beta)||^2 \leq z ) = P(\chi_n \leq z ) = \Phi(z)$$ 
+
+$$S(\hat \beta) = \{ \hat \beta + u : ||L^{-1}u|| \leq z \}$$
+$$ z = \Phi^{-1}(1 - \alpha)$$
+\item $$C  = $$
+\end{itemize}
+
+\Q{2}
+$$\hat \beta = \beta + \frac{\eta}n$$
+The procedure choose the estimator of $S := \operatorname{supp}(\beta)$, order the component of $\hat \beta$ in descending order $\hat \beta_{j_1} \le ... \le \hat \beta_{j_n}$, and choose the set of $k$ indices $\hat S = \{j_1, ... j_k\}$.
+
+The probability of success is
+
+\begin{align*}
+P(\hat S = S) &= P(\forall \, i \not \in S, j \in S \, \hat \beta_i \le \hat \beta_j) 
+\\&\ge P(\forall \, i \not \in S, j \in S \, \eta_i \le \eta_j + n \beta_j)
+\\&\ge P(\forall \, i \not \in S, j \in S \, \eta_i \le \eta_j + n \kappa)
+\\&\ge P(\mathcal N(0, 1) - \mathcal N(0, 1) \leq n \kappa)
+\\&\ge \Phi(\frac{n \kappa}{\sqrt 2})
+\end{align*}
+
+For this quantity to be bigger than $1 - \alpha$, $n$ must be bigger than $\frac{\sqrt 2 \Phi^{-1}(1 - \alpha)}{\kappa}$.
+
+\Q{3}
+
+\begin{itemize}
+\item
+
+(NB: $\mathbb R$ is a ($1-\alpha$)-confidence set for $\theta$.)
+
+
+We look for an confidence set of the form 
+$\hat S_{\lambda} = [\lambda \max x_i, \infty)$
+
+
+$P(\theta \in \hat S_{\lambda}) = P(\max x_i \le \frac{\theta}{\lambda}) = (\frac 1 {\theta} \frac{\theta}{\lambda})^n = \lambda^{-n}$
+
+For $\hat S_{\lambda}$ to be  a ($1-\alpha$)-confidence set for $\theta$, $\lambda = (1-\alpha)^{-\frac1 n}$.
+
+
+\item $P(m \in [x_{(1), \infty})) = P(x_{(1)} \leq F^{-1}(\frac 1 2)) = 1 - P(\forall \, i x_i > F^{-1}(\frac 1 2)) = 1 - (1 - F(F^{-1}(\frac 1 2)))^n = 1 - \frac 1 2^n$
+
+
+$P(m \in (- \infty, x_{(n)}]) = 1 - P(\forall i \, x_i \leq m) = 1 - \frac 1 2^n$
+
+$A := [x_{(1)}, \infty)$, $B := (- \infty, x_{(n)}]$, $A \setminus B = (x_{(n)}, \infty)$, $B \setminus A = (- \infty, x_{(1)}) $
+
+
+$P(m \in [x_{(1)}, x_{(n)}]) = P(m \in A \inter{} B) = 1 - P(m \in A^c \union{} B^c) = 1 - P(m \in A \setminus B) - P(m \in B \setminus A) = 1 - \frac 1 2^{n-1}$
+
+
+\Q{4}
+
+\begin{align}
+\beta_T(\mu) &= E^{\mu}[T(x)] = P^{\mu}(|\mathcal N(\frac{\sqrt n(\mu - \mu_0)}{\sigma}, 1)| > z_{\frac{\alpha}2})
+\\&= 1 - P(-\frac{\sqrt n}{\sigma}(\mu-\mu_0) - z_{\frac{\alpha}2} < N(0, 1) < -\frac{\sqrt n}{\sigma}(\mu-\mu_0) + z_{\frac{\alpha}2}))
+\\&=  1 + \phi( - \frac{\sqrt n}{\sigma}(\mu-\mu_0) - z_{\frac{\alpha}2}) - \phi( - \frac{\sqrt n}{\sigma}(\mu-\mu_0) + z_{\frac{\alpha}2})
+\end{align}
+
+$$\beta_T(\mu) \rightarrow_n 1$$
+
+
+\Q{5}
+
+\begin{itemize}
+\item For $p < p_0$, $P_p(T(x) = 1) \geq P_{p_0}(T(x) = 1) = P( \mathcal B(n, p_0) \le n c_{\alpha}) = F(n c_{\alpha})$
+
+$ F(n c_{\alpha}) = 1 - \alpha \iff c_{\alpha} = \frac{F^{-1}(1 - \alpha)}{n} $
+
+\item 
+
+\end{itemize}
+
+
+\Q{6}
+\begin{itemize}
+\item $$P^{\theta}(\theta \in S(x)) = P^{\theta}(T_{\theta}(x) = 0) = 1 - \alpha$$
+
+\item 
+
+$H_0: (\mu, \sigma) = (\mu_0, \sigma_0)$,
+$H_1: (\mu, \sigma) \ne (\mu_0, \sigma_0)$
+
+$T_{\mu_0, \sigma_0}(x) = 1_{\{\sqrt n |\bar x - \mu_0| / \sigma_0 > f(\alpha) \} }$
+
+$$S(x) = \{ \theta |\, \sqrt n |\bar x - \mu_0| / \sigma_0 < f(\alpha) \}
+$$ is a ($1-\alpha$)-confidence set
+
+\end{itemize}
+
+
+\Q{7}
+\Q{9}
+
+\begin{itemize}
+\item $E[g(X)] = \int g(x) \frac 1 {\sigma} f(\frac{x - \mu}{\sigma}) dx = \int g(\sigma(u+\mu))  f(u) du = E[g(\sigma(Y + \mu)]$
+
+For $g = \operatorname{id}, (\operatorname{id} - E[X] )^2$, 
+
+$$E[X] = E[\sigma(Y + \mu)] = \sigma(\mu + \mu_Y)$$
+$$Var(X) = Var(\sigma(Y + \mu)) = \sigma^2 \sigma_Y^2$$
+
+\item
+
+$Z = \frac{\bar x - \mu}{\sigma} $
+\end{itemize}
+
+
+\end{itemize}
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+

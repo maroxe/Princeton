@@ -353,13 +353,14 @@ $$\nabla V = (c^T A_B^{-1})(A_B^{-1} b)^T$$
 If the change in $a_{i,j}$ is for a number in a non-basic column, say $A_N$ , then the original optimal solution is still feasible, the only change is to the reduced cost of $N-$th variable. 
 Recompute $\bar c_N = c_N - c_B^T(A_B^{-1})^TA_N = f(a_{i,j})$, the solution doesn't change as long as  $f(a_{ij}) >= 0$, we can solve this linear inequality to get the range.
 
-\item If the change is for a number in a basic column, the solution doesn't change iff $A_B^{-1}b$ remains positive and all the reduced costs remain positive. eg one has to solve the following inequalities for $a_{ij}$ ($N$ is the set of columns not in $B$):
+\item If the change is for a number in a basic column, the solution doesn't change iff $A_B^{-1}$ remains invertible, $A_B^{-1}b$ remains positive and all the reduced costs remain positive. eg one has to solve the following inequalities for $a_{ij}$ ($N$ is the set of columns not in $B$):
 
 $$ A_B^{-1} b \geq 0$$
 $$ \bar c = c_N - c_B^T(A_B^{-1})^TA_N \geq 0$$
 
-
 \end{itemize}
+
+
 \end{itemize}
 \Q{6}
 
