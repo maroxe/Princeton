@@ -31,7 +31,7 @@
 
 % parameters
 \geometry{hmargin=1cm,vmargin=1cm}
-\title{ORF524 - Problem Set 2}
+\title{ORF524 - Problem Set 4}
 \author{Bachir EL KHADIR }
 
 \begin{document}
@@ -39,37 +39,55 @@
 \maketitle
 
 \Q{1}
-\begin{itemize}
+\begin{enumerate}
 \item 
 $$\hat \beta = (X^TX)^{-1}X^T(X\beta + \eta) = \beta + (X^TX)^{-1}X^T\eta$$
 
 $$ (X^TX)(\hat \beta - \beta) = X^T \eta$$
-
-$$ $$
+So
 
 
 $$\hat \beta - \beta \sim \mathcal N(0, (X^TX)^{-1}X^T ((X^TX)^{-1}X^T)^T) \sim \mathcal N(0, (X^TX)^{-1})$$
 
 
-$$(X^TX)^{-1} = LL^T$$
+$X^TX > 0$ so is $(X^TX)^{-1}$. There exist an orthogonal matrix $U$, and $D = diag(\lambda_1,...,\lambda_n) > 0$ such that $(X^TX)^{-1} = UDU^T = (U \sqrt D U^T)^2$, where $\sqrt D = diag(\sqrt \lambda_1, ... \sqrt \lambda_n)$. Let $L := U \sqrt D U^T = L^T$.
+
+
 $$\hat \beta - \beta \sim L \mathcal  N(0, I)$$
 
-$$P(||L^{-1}(\hat \beta - \beta)||^2 \leq z ) = P(\chi_n \leq z ) = \Phi(z)$$ 
+$$L^{-1}(\hat \beta - \beta) \sim \mathcal  N(0, I)$$
+
+$$P(||L^{-1}(\hat \beta - \beta)||^2 \leq z ) = P(\chi_n^2 \leq z ) = \Phi(z)$$ 
 
 $$S(\hat \beta) = \{ \hat \beta + u : ||L^{-1}u|| \leq z \}$$
 $$ z = \Phi^{-1}(1 - \alpha)$$
-\item $$C  = $$
-\end{itemize}
+
+\item $||Ax||_2 \le ||A||_2 ||x||_2 \le n ||A||_2 ||x||_{\infty}$
+$$\{\beta: ||A(\beta - \hat \beta)||_2 < r \}  \subseteq
+\{\beta: ||\beta - \hat \beta||_{\infty} 
+< \frac r {n||A||_2} \}$$
+So $$P(\{\beta: ||\beta - \hat \beta||_{\infty} 
+< \frac r {n||A||_2} \}) \ge 1 - \alpha$$
+
+\item 
+
+\item 
+By taking the conditional probability in $X$ and then summing over all possible values of $X$, we prove that the confidence sets still of level $1 - \alpha$.
+$$P^{H_0}(T(x) = 0) = E^{H_0}_X[P^{H_0}(T(x) = 0|X)] \ge 1 - \alpha$$
+
+
+\end{enumerate}
 
 \Q{2}
 $$\hat \beta = \beta + \frac{\eta}n$$
-The procedure choose the estimator of $S := \operatorname{supp}(\beta)$, order the component of $\hat \beta$ in descending order $\hat \beta_{j_1} \le ... \le \hat \beta_{j_n}$, and choose the set of $k$ indices $\hat S = \{j_1, ... j_k\}$.
+The procedure chooses the estimator of $S := \operatorname{supp}(\beta)$, order the component of $|\hat \beta|$ in descending order $|\hat \beta_{j_1}| \ge ... \ge |\hat \beta_{j_n}|$, and choose the set of $k$ indices $\hat S = \{j_1, ... j_k\}$.
 
 The probability of success is
 
 \begin{align*}
-P(\hat S = S) &= P(\forall \, i \not \in S, j \in S \, \hat \beta_i \le \hat \beta_j) 
-\\&\ge P(\forall \, i \not \in S, j \in S \, \eta_i \le \eta_j + n \beta_j)
+P(\hat S = S) &= P(\forall \, i \not \in S, j \in S \, |\hat \beta_i| \le |\hat \beta_j|) 
+\\&\ge P(\forall \, i \not \in S, j \in S \, |\eta_i| \le |\eta_j + n \beta_j|)
+\\&\ge P(\forall \, i \not \in S, j \in S \, |\eta_i| \le |\eta_j| - n \kappa)
 \\&\ge P(\forall \, i \not \in S, j \in S \, \eta_i \le \eta_j + n \kappa)
 \\&\ge P(\mathcal N(0, 1) - \mathcal N(0, 1) \leq n \kappa)
 \\&\ge \Phi(\frac{n \kappa}{\sqrt 2})
@@ -94,7 +112,7 @@ $P(\theta \in \hat S_{\lambda}) = P(\max x_i \le \frac{\theta}{\lambda}) = (\fra
 For $\hat S_{\lambda}$ to be  a ($1-\alpha$)-confidence set for $\theta$, $\lambda = (1-\alpha)^{-\frac1 n}$.
 
 
-\item $P(m \in [x_{(1), \infty})) = P(x_{(1)} \leq F^{-1}(\frac 1 2)) = 1 - P(\forall \, i x_i > F^{-1}(\frac 1 2)) = 1 - (1 - F(F^{-1}(\frac 1 2)))^n = 1 - \frac 1 2^n$
+\item $P(m \in [x_{(1), \infty})) = P(x_{(1)} \leq F^{-1}(\frac 1 2)) = 1 - P(\forall \, i \, x_i > F^{-1}(\frac 1 2)) = 1 - (1 - F(F^{-1}(\frac 1 2)))^n = 1 - \frac 1 2^n$
 
 
 $P(m \in (- \infty, x_{(n)}]) = 1 - P(\forall i \, x_i \leq m) = 1 - \frac 1 2^n$
@@ -119,9 +137,9 @@ $$\beta_T(\mu) \rightarrow_n 1$$
 \Q{5}
 
 \begin{itemize}
-\item For $p < p_0$, $P_p(T(x) = 1) \geq P_{p_0}(T(x) = 1) = P( \mathcal B(n, p_0) \le n c_{\alpha}) = F(n c_{\alpha})$
+\item For $p < p_0$, $P_p(T(x) = 0) \geq P_{p_0}(T(x) = 0) = P( \mathcal B(n, p_0) \ge n c_{\alpha}) = 1 - F(n c_{\alpha})$
 
-$ F(n c_{\alpha}) = 1 - \alpha \iff c_{\alpha} = \frac{F^{-1}(1 - \alpha)}{n} $
+$ 1 - F(n c_{\alpha}) = 1 - \alpha \iff c_{\alpha} = \frac{F^{-1}(\alpha)}{n} $
 
 \item 
 
@@ -146,6 +164,33 @@ $$ is a ($1-\alpha$)-confidence set
 
 
 \Q{7}
+\begin{enumerate}
+\item If $T(x)$ a test of 
+
+
+\end{enumerate}
+
+
+\Q{8}
+\begin{itemize}
+\item Let's consider the test $$T(x) = 1_{\{\sqrt n|\bar x - \bar y| > t\} }$$
+
+Under $H_0$, $P(T(x) = 1) = P(|\mathcal N(0, 1)| > t) = 1 - (\Phi(t) - \Phi(-t)) = 1 - 2(\Phi(t) - \Phi(0)) = 2(1 - \Phi(t))$.
+
+In order for the test to be of size $1-\alpha$, $t = \Phi^{-1}(1 - \frac{1-\alpha}2) = \Phi^{-1}(\frac{1+\alpha}2)$
+
+
+\item 
+\[
+\begin{array}{c|c|c|c}
+& T_< & T & T_> \\
+\hline
+t+\mu_0 & -\sqrt n \Phi^{-1}(1 + \alpha) & \sqrt n\Phi^{-1}(\frac{1+\alpha}2) & \sqrt n\Phi^{-1}(1 + \alpha) \\
+\beta &  &  &  \\
+\end{array}
+\]
+\end{itemize}
+
 \Q{9}
 
 \begin{itemize}
@@ -160,6 +205,24 @@ $$Var(X) = Var(\sigma(Y + \mu)) = \sigma^2 \sigma_Y^2$$
 
 $Z = \frac{\bar x - \mu}{\sigma} $
 \end{itemize}
+
+
+\Q{10}
+\begin{align}
+P^{H_0}(T(x) = 1) &= E_l[P(X > \theta_0 + z_{\alpha} \sigma_l) | l] & X \sim \mathcal N_l(\theta_0, \sigma_l^2)\\
+&= E_l[P(\theta_0 + \sigma_l N > \theta_0 + z_{\alpha} \sigma_l) | l] & N \sim \mathcal N_l(0, 1)\\
+&= 1 - \Phi(z_{\alpha}) = \alpha
+\end{align}
+
+
+\begin{align}
+P^{H_0}(T'(x) = 1) &= P(l = 1) + P(l = 2)P(x > \theta_0  + z_{\frac{\alpha-p}{1-p}}\sigma_2 | l=2) \\
+&= p + (1-p) P(\theta_0 + \sigma_2 N > \theta_0  + z_{\frac{\alpha-p}{1-p}}\sigma_2) \\
+&= p + (1-p) \Phi(z_{\frac{\alpha-p}{1-p}})\\
+&= p + (1-p)(1 - \frac{\alpha-p}{1-p})\\
+&= 1 - (\alpha-p) \ge 1 - \alpha
+\end{align}
+
 
 
 \end{itemize}
