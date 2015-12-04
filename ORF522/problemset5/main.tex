@@ -1,0 +1,348 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+
+
+\newcommand{\Q}[1]{\subsubsection*{Problem #1}}
+\newcommand{\optimize}[4]
+{
+\begin{align*}
+& \underset{#1}{\text{#4}}
+& & #2 \\
+& \text{subject to}
+& & #3
+\end{align*}
+}
+
+
+
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+
+\newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+\newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+
+
+
+% parameters
+\geometry{hmargin=1cm,vmargin=1cm}
+\title{ORF524 - Problem Set 4}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+
+\maketitle
+
+\Q{1}
+\begin{enumerate}
+\item 
+$$\hat \beta = (X^TX)^{-1}X^T(X\beta + \eta) = \beta + (X^TX)^{-1}X^T\eta$$
+
+$$ (X^TX)(\hat \beta - \beta) = X^T \eta$$
+So
+
+$$\hat \beta - \beta \sim \mathcal N(0, (X^TX)^{-1}X^T ((X^TX)^{-1}X^T)^T) \sim \mathcal N(0, (X^TX)^{-1})$$
+
+
+$X^TX > 0$ so is $(X^TX)^{-1}$. There exist an orthogonal matrix $U$, and $D = diag(\lambda_1,...,\lambda_n) > 0$ such that $(X^TX)^{-1} = UDU^T = (U \sqrt D U^T)^2$, where $\sqrt D = diag(\sqrt \lambda_1, ... \sqrt \lambda_n)$. Let $L := U \sqrt D U^T = L^T$.
+
+
+$$\hat \beta - \beta \sim L \mathcal  N(0, I)$$
+
+$$L^{-1}(\hat \beta - \beta) \sim \mathcal  N(0, I)$$
+
+$$P(||L^{-1}(\hat \beta - \beta)||^2 \leq z ) = P(\chi_n^2 \leq z ) := \Phi(z)$$ 
+
+
+The following ellipsoid is an $1-\alpha$-confidence set
+$$S(\hat \beta) = \{ \hat \beta + u : ||L^{-1}u|| \leq z \}$$
+
+where:$ z = \Phi^{-1}(1 - \alpha)$
+
+\item 
+Let $A = L^{-1}$.
+
+
+$||Ax||_2 \le ||A||_2 ||x||_2 \le n ||A||_2 ||x||_{\infty}$
+$$\{\beta: ||A(\beta - \hat \beta)||_2 < z \}  \subseteq
+\{\beta: ||\beta - \hat \beta||_{\infty} 
+< \frac z {n||A||_2} \}$$
+So $$P(\{\beta: ||\beta - \hat \beta||_{\infty} 
+< \frac r {n||A||_2} \}) \ge 1 - \alpha$$
+
+\item 
+
+$$\hat S(\lambda) := \{ \beta: \beta_i \in [-\lambda |\hat \beta_i| , \lambda |\hat \beta_i|] \}$$
+
+
+\begin{align}
+P(\beta \not \in\hat S(\lambda)) &=
+P( \exists i\, |\beta_i| > \lambda |\hat \beta_i|)
+\\&\le \sum_i P(|\beta_i| > \lambda |\hat \beta_i|)
+\end{align}
+
+We know that $\hat \beta_i$ is a normal variable centered around $\beta_i$.
+
+\begin{align*}
+P(|\beta_i| > \lambda |\hat \beta_i|) &= \Phi(\frac{|\beta_i|}{\lambda}) - \Phi(-\frac{|\beta_i|}{\lambda}) & \text{where $\Phi$ the cdf of $\hat \beta_i$}
+\\ &= 2\frac{|\beta_i|}{\lambda} \Phi'(c) &\text{Where $|c| \in \frac{|\beta_i|}{\lambda}$ exists by the mean value theorem}
+\\ &\le 2\frac{|\beta_i|}{\lambda} \frac{\Phi(\beta_i) - \Phi(\frac{\beta_i}{\lambda})}{\beta_i(1-\frac1 {\lambda}) } &\text{because $\Phi'(x)$ is bigger when x is closed to the mean $\beta_i$}
+\\ &\le 2\frac{|\beta_i|}{\lambda} \frac{|\Phi(\beta_i) - \Phi(\frac{\beta_i}{\lambda})|}{|\beta_i|(1-\frac1 {\lambda}) }
+\\ &\le 2 \frac{|\Phi(\beta_i) - \Phi(\frac{\beta_i}{\lambda})|}{\lambda - 1}
+\\ &\le  \frac4{\lambda - 1} &\text{because $|\Phi| \le 1$}
+\end{align*}
+
+So that:
+
+$$P(\beta \in \hat S(\lambda) \ge 1 - \sum_i \frac4 {\lambda - 1} \ge 1 - \frac{4n}{\lambda-1}$$ 
+By taking $\lambda > \frac{4n} {\alpha} + 1$, we have that $1 - \frac{4n}{\lambda-1} \ge 1 - \alpha$, so that $\hat S(\lambda)$ is an $1-\alpha$-confidence interval.
+
+\item 
+By taking the conditional probability in $X$ and then summing over all possible values of $X$, we prove that the confidence sets still of level $1 - \alpha$.
+$$P^{H_0}(T(x) = 0) = E^{H_0}_X[P^{H_0}(T(x) = 0|X)] \ge 1 - \alpha$$
+
+
+\end{enumerate}
+
+\Q{2}
+$$\hat \beta = \beta + \frac{\eta}n$$
+The procedure chooses the estimator of $S := \operatorname{supp}(\beta)$, order the component of $|\hat \beta|$ in descending order $|\hat \beta_{j_1}| \ge ... \ge |\hat \beta_{j_n}|$, and choose the set of $k$ indices $\hat S = \{j_1, ... j_k\}$.
+
+
+If $|\hat \beta - \beta|_{\infty} < \frac{\kappa}2$, then the procedure succeds, and since $\beta - \hat \beta \sim \mathcal N(0, \frac1{n} I)$, we have 
+
+
+$P(|\hat \beta - \beta|_{\infty} < \frac{\kappa}2) =  P(\forall i \, |\hat \beta_i - \beta_i|< \frac{\kappa}2)  = P(|\mathcal N(0,1)|< n\frac{\kappa}2)^n = \Phi(\frac{\kappa}2)^n$
+
+
+($\Phi$ is the cdf of an $\mathcal N(0,1)$)
+
+For this quantity to be bigger than $1 - \alpha$, $n$ must verify  $ \Phi(n\frac{\kappa}2)^n > 1 - \alpha$, which is true whenever $n \ge \frac{\log(1-\alpha)}{\log \Phi(\frac{\kappa} 2)}$
+
+
+
+\Q{3}
+
+\begin{itemize}
+\item
+
+(NB: $\mathbb R$ is a ($1-\alpha$)-confidence set for $\theta$.)
+
+
+We look for an confidence set of the form 
+$\hat S_{\lambda} = [\lambda \max x_i, \infty)$
+
+
+$P(\theta \in \hat S_{\lambda}) = P(\max x_i \le \frac{\theta}{\lambda}) = (\frac 1 {\theta} \frac{\theta}{\lambda})^n = \lambda^{-n}$
+
+For $\hat S_{\lambda}$ to be  a ($1-\alpha$)-confidence set for $\theta$, $\lambda = (1-\alpha)^{-\frac1 n}$.
+
+
+\item $P(m \in [x_{(1), \infty})) = P(x_{(1)} \leq F^{-1}(\frac 1 2)) = 1 - P(\forall \, i \, x_i > F^{-1}(\frac 1 2)) = 1 - (1 - F(F^{-1}(\frac 1 2)))^n = 1 - \frac 1 2^n$
+
+
+$P(m \in (- \infty, x_{(n)}]) = 1 - P(\forall i \, x_i \leq m) = 1 - \frac 1 2^n$
+
+$A := [x_{(1)}, \infty)$, $B := (- \infty, x_{(n)}]$, $A \cup B = R$, $A \setminus B = (x_{(n)}, \infty)$, $B \setminus A = (- \infty, x_{(1)}) $
+
+
+$P(m \in [x_{(1)}, x_{(n)}]) = P(m \in A \inter{} B) = 1 - P(m \in A^c \union{} B^c) = 1 - P(m \in A \setminus B) - P(m \in B \setminus A) = 1 - \frac 1 2^{n-1}$
+
+\end{itemize}
+
+
+\Q{4}
+
+\begin{align}
+\beta_T(\mu) &= E^{\mu}[T(x)] = P^{\mu}(|\mathcal N(\frac{\sqrt n(\mu - \mu_0)}{\sigma}, 1)| > z_{\frac{\alpha}2})
+\\&= 1 - P(\frac{\sqrt n}{\sigma}(\mu-\mu_0) - z_{\frac{\alpha}2} < N(0, 1) < \frac{\sqrt n}{\sigma}(\mu-\mu_0) + z_{\frac{\alpha}2}))
+\\&=  1 + \phi(  \frac{\sqrt n}{\sigma}(\mu-\mu_0) - z_{\frac{\alpha}2}) - \phi( \frac{\sqrt n}{\sigma}(\mu-\mu_0) + z_{\frac{\alpha}2})
+\end{align}
+
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.5]{plot.png}
+    \caption{When $\mu_0 = 1$ for example, here is a plot of $\beta_T(\mu)$}
+    \label{fig:awesome_image}
+\end{figure}
+
+$\beta_T(\mu) \rightarrow_n 1$, because $\phi(x) \rightarrow_{x \rightarrow -\infty} 0$
+
+\Q{5}
+
+\begin{itemize}
+\item For $p > p_0$, $P_p(T(x) = 0) \geq P( \mathcal B(n, p_0) \ge n c_{\alpha}) \ge P( \mathcal B(n, p_0) \ge n c_{\alpha}) = 1 - F(n c_{\alpha})$
+$F$ being the cdf of $\mathcal B(n, p_0)$.
+
+
+$ 1 - F(n c_{\alpha}) = 1 - \alpha \iff c_{\alpha} = \frac{F^{-1}(\alpha)}{n} $
+
+\item If $p(x)$ the p-value for the test, then $$p(x) = \inf \{ \alpha, T_\alpha(x) = 1 \} = \inf  \{ \alpha, \bar x > c_{\alpha} \} = \inf  \{ \alpha, F(n \bar x) > \alpha \} = F(n \bar x)$$. 
+
+An equivalent test to $T_{\alpha}$ would be $\{p(x) \le F(nc_{\alpha})\} = \{\bar x \le c_{\alpha}\}$
+
+\end{itemize}
+
+
+\Q{6}
+\begin{itemize}
+\item $$P^{\theta}(\theta \in S(x)) = P^{\theta}(T_{\theta}(x) = 0) = 1 - \alpha$$
+
+\item 
+
+$H_0: \mu = \mu_0$,
+$H_1: \mu \ne \mu_0$
+
+We know that $\frac{\bar x - \mu_0}{s / \sqrt n}$, where $s = \sqrt {\frac1 {n-1} \sum (x_i - \bar x)^2}$, follows a t-student distribution under $H_0$, and the test
+$T_{\mu_0}(x) = 1_{\{ \sqrt n |\bar x - \mu_0| / s > z_{\alpha/2} \} }$ is of level $1 - \alpha$, where $z_{y}$ the inverse image of $y$ by the t-student cdf.
+
+$$S(x) = \{ \mu |\, \sqrt n |\bar x - \mu| / s < z_{\alpha /2} \} = \{ \mu |\,  -\frac{s z_{\alpha /2}}{\sqrt n} + \bar x < \mu < \frac{s z_{\alpha /2}}{\sqrt n} + \bar x  \} $$ 
+
+is a ($1-\alpha$)-confidence set
+
+\end{itemize}
+
+
+\Q{7}
+\begin{enumerate}
+\item We know that $T$ is UMP among the tests that depend only on the value of $\tau$.
+
+We also know that for all $c$, $T'(x) = 1_{\frac{f^{\theta_0}_X(x)}{f^{\theta}_X(x)} < c}$ is UMP among all tests of the same level. But this test depend only on $\tau$ by the factorisation theorem, therefore, $T$ is UMP. 
+
+
+\item if $\frac{f^{\theta_0}_{\tau}}{f^{\theta_1}_{\tau}}$ is increasing on the common support of the two distribution for all $\theta_1 < \theta_0$, then $T_0$, then $\forall \theta_1 < \theta_0$ we have that:
+
+$$P^{\theta_1}(T_0(x) = 1) = P^{\theta_1}( \tau(x) \le \tau_0) = P^{\theta_1}( \frac{f^{\theta_0}_{\tau}}{f^{\theta_1}_{\tau}}(\tau(x)) \le \frac{f^{\theta_0}_{\tau}}{f^{\theta_1}_{\tau}}(\tau_0) := c) = P^{\theta_1}(T(x) = 1)$$
+Which is the biggest quantity among all tests of the same level, and therefore $T_0$ is UMP.
+
+
+\item Example: the exponential distribution $\mathcal E(\lambda)$, where $\theta = -\lambda$, because we have that $\tau(x) = x$ is sufficient, and 
+$\frac{f^{\theta_0}_{\tau}}{f^{\theta}_{\tau}}(x) = 1_{x \ge 0} \frac{\theta_0}{\theta_1} e^{(\theta_0 - \theta_1)x}$ is increasing on $R^+$ when $\theta_0 > \theta_1$.
+
+\end{enumerate}
+
+
+\Q{8}
+\begin{itemize}
+\item Let's consider the test $$T(x) = 1_{\{\sqrt n|\bar x - \bar y| > t\} }$$
+
+Under $H_0$, since $\bar x - \bar y \sim \mathcal N(0, 2)$, $P(T(x) = 1) = P(|\mathcal N(0, 1)| > \frac t {\sqrt 2}) = 2( 1 - \Phi(\frac t {\sqrt 2}))$
+
+In order for the test to be of size $1-\alpha$, $t = \sqrt 2 \Phi^{-1}(1 - \frac{\alpha}2)$
+
+
+\item 
+\[
+\begin{array}{c|c|c|c}
+& T_< & T & T_> \\
+\hline
+t &   \mu_0 + \frac 1 {\sqrt n} \Phi^{-1}(\alpha) &  \frac 1 {\sqrt n} \Phi^{-1}( 1-\frac{\alpha}2) & \mu_0 + \frac 1 {\sqrt n} \Phi^{-1}(1-\alpha) \\
+\text{power} 
+& \Phi( \Phi^{-1}(\alpha) + \sqrt n (\mu_0 - \mu)) 
+& 1 + \Phi(-\Phi^{-1}(1-\frac{\alpha}2) + \sqrt n (\mu - \mu_0)) 
+& 1 - \Phi( \Phi^{-1}(1 - \alpha) + \sqrt n (\mu_0 - \mu)) \\
+&
+& - \Phi(\Phi^{-1}(1-\frac{\alpha}2) + \sqrt n (\mu - \mu_0)) \\
+\hline
+\text{power} 
+& \Phi( -z_{\alpha} + \Delta \mu) 
+& 1 + \Phi(-z_{\frac{\alpha}2} + \Delta \mu) 
+& 1 - \Phi( z_{\alpha} + \Delta \mu) \\
+&
+& - \Phi(z_{\frac{\alpha}2} + \Delta \mu) 
+\end{array}
+\]
+\end{itemize}
+With $\Delta \mu = \sqrt n (\mu_0 - \mu)$
+
+
+When $\Delta > 0$, $T_<$ is the most powerful followed by $T$. 
+Indeed:
+
+\begin{align}
+E[T_<] - E[T] &= (\Phi(-z_{\alpha} + \Delta \mu) - \Phi(-z_{\frac{\alpha}2} + \Delta \mu)) - \Phi(-z_{\frac{\alpha}2} - \Delta \mu) & \text{because $1 - \Phi(x) = \Phi(-x)$}
+\\&\ge (\Phi(-z_{\alpha}) - \Phi(-z_{\frac{\alpha}2})) - \Phi(-z_{\frac{\alpha}2}) & \text{mean value theorem}
+\\&\ge \frac \alpha 2 - \frac{\alpha} 2 = 0
+\end{align}
+
+
+\begin{align*}
+E[T] &= \Phi(-z_{\frac{\alpha}2} + \Delta \mu)  + \Phi(-z_{\frac{\alpha}2} - \Delta \mu) 
+\\&= (\Phi(-z_{\frac{\alpha}2} + \Delta \mu) - \Phi(-z_{\frac{\alpha}2})) - (\Phi(-z_{\frac{\alpha}2}) - \Phi(-z_{\frac{\alpha}2}-  \Delta \mu)) + \alpha  
+\\&\ge \alpha &\text{Mean Value theorem}
+\end{align*}
+
+and $E[T_>] = \Phi(-\Delta \mu - z_{\alpha}) < \Phi( z_{\alpha}) \le \alpha \le E[T]$.
+
+
+
+By symmetry of the normal distribution, when $\Delta \mu < 0$, $T_>$ is the most powerful, followed by $T$.
+
+
+\Q{9}
+
+\begin{itemize}
+\item $E[g(X)] = \int g(x) \frac 1 {\sigma} f(\frac{x - \mu}{\sigma}) dx = \int g(\sigma u + \mu))  f(u) du = E[g(\sigma Y + \mu)]$
+
+For $g = \operatorname{id}, (\operatorname{id} - E[X] )^2$, 
+
+$$E[X] = E[\sigma Y + \mu] = \sigma \mu_Y + \mu$$
+$$Var(X) = Var(\sigma Y + \mu) = \sigma^2 \sigma_Y^2$$
+
+\item
+
+$Z = \frac{\bar x - \mu}{\sigma} $ is a sum of iid variables with density $f$, so its distribution is independent of $\mu$ and $\sigma$.
+
+
+\item 
+Let $X \sim P_{0, 1}$, and let $\Phi_X$ be its caracetristic function.
+
+The caracteristic function of $Z$ is
+
+$\Phi(t) = E[e^{i t Z}] = E[e^{iXt}]^2 = \Phi_X(t)^2$ by independence of $x_1$ and $x_2$.
+
+Using the inverse fourier transform, the density $f_Z = f_X * f_X$, where $*$ denotes the convolution product.
+
+
+\item $1 - \alpha = P(\frac{\bar x - \mu}{\sigma} < z_{\alpha}) = P(\mu \ge -\sigma z_{\alpha} + \bar x)$
+
+
+
+$ [-\sigma z_{\alpha} + \bar x, \infty)$ is a $1-\alpha$ confidence set.
+
+
+\end{itemize}
+
+
+\Q{10}
+\begin{align}
+P^{H_0}(T(x) = 1) &= E_l[P(X > \theta_0 + z_{\alpha} \sigma_l) | l] & X \sim \mathcal N_l(\theta_0, \sigma_l^2)\\
+&= E_l[P(\theta_0 + \sigma_l N > \theta_0 + z_{\alpha} \sigma_l) | l] & N \sim \mathcal N_l(0, 1)\\
+&= 1 - \Phi(z_{\alpha}) = \alpha
+\end{align}
+
+
+\begin{align}
+P^{H_0}(T'(x) = 1) &= P(l = 1) + P(l = 2)P(x > \theta_0  + z_{\frac{\alpha-p}{1-p}}\sigma_2 | l=2) \\
+&= p + (1-p) P(\theta_0 + \sigma_2 N > \theta_0  + z_{\frac{\alpha-p}{1-p}}\sigma_2) \\
+&= p + (1-p) (1-\Phi(z_{\frac{\alpha-p}{1-p}}))\\
+&= p + (1-p)\frac{\alpha-p}{1-p}\\
+&= \alpha
+\end{align}
+
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+

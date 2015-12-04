@@ -1,0 +1,149 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{amsthm}
+
+
+
+
+
+% custom commands
+\newcommand{\Q}[1]{\subsubsection*{Question #1}}
+\newcommand{\OB}[1]{\overbrace{#1}^{\in F_n}}
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}[thm]{Lemma}
+
+% parameters
+\geometry{hmargin=1cm,vmargin=1cm}
+\title{ORF526 - Problem Set 8}
+\author{Bachir EL KHADIR }
+
+
+\begin{document}
+
+\maketitle
+
+\Q{1}
+$X_n$ is a martingale because
+\begin{itemize}
+\item It is adapted to $\mathcal F_n$, and $L_1$ by definition of conditional expectation.
+\item $E[X_{n+1}|\mathcal F_n] = E[ E[X | \mathcal F_{n+1}] | \mathcal F_n] = E[X|F_n] = X_n$ because $F_n \subseteq F_{n+1}$
+\end{itemize}
+
+$X_n$ are ui because:
+\begin{itemize}
+\item
+  By Jensen inequality: $E[|X_n|] = E[|E[X|\mathcal F_n]|] \le E[E[|X| |\mathcal F_n]] \le
+  E[|X|] < \infty$
+
+\item
+  For $\epsilon > 0$,
+  Since $X \in L_1$, there exist $\delta > 0$ st $\forall A \in \mathcal F, P(A) < \delta \Rightarrow E[|X|1_A] < \epsilon$.
+  
+  Let $c$ be large enough so that $\frac{E[|X|]}{c} \le \delta$.
+  \begin{align*}
+    E[|X_n| 1_{|X_n| > c]}] &\le E[ E[|X| | F_n] 1_{|X_n| > c]}]
+    \\& \le E[E[ E[|X|  1_{|X_n| > c]} | F_n]] &\text{because $1_{|X_n| > c]}$ is $F_n$ measurable}
+    \\& \le E[|X|1_{|X_n| > c]}]
+    \\& \le \epsilon &\text{because $P(|X_n| > c) \le \frac{E[|X_n|]}{c} \le \frac{E[|X|]}{c} \le \delta$}
+  \end{align*}
+\end{itemize}
+
+\Q{2}
+$F_{\tau}$ is a $\sigma$-algebra because:
+($n$ denotes a natural number)
+\begin{itemize}
+\item $\{\tau = n\} \cap \emptyset = \emptyset \in F_n$ so $\emptyset \in F_{\tau}$, and $F_{\tau} \ne \emptyset$
+\item Let $(A_i)_{i \in \mathbb{N}} \in F_{\tau}^{\mathbb{N}}$,
+  $(\cup_{i \in \mathbb{N}} A_i) \cap \{ \tau = n \} = \cup_{i \in \mathbb{N}} (\OB{A_i \cap \{ \tau = n \}}) \in F_n$, so $\cup_{i \in \mathbb{N}} A_i \in F_{\tau}$
+\item Let $A \in F_{\tau}$, then $(A^c \cap \{\tau = n\})^c = A \cup \{\tau \ne n\} = (\OB{A \cap \{\tau = n\}}) \cup \OB{\{\tau \ne n\}} \in \mathcal F_n$, so $A^c \cap \{\tau = n\} \in F_n$ so $A^c \in F_{\tau}$
+
+\end{itemize}
+
+\Q{3}
+\begin{lem}
+  if $\tau$ a stopping time adapted to $(F_n)$, then for $k \le n$, $\{ \tau = k \} \in F_n$ and $\{ \tau \le n \} \in F_n$.
+\end{lem}
+proof: $F_n$ is increasing and $\{ \tau \le n \} =  \cup_{k = 0..n} \OB{\{ \tau = k \}} \in F_n$
+\begin{lem}
+  if $A \cap \{\tau \le n\} \in F_n \forall n$ then $A \in F_{\tau}$
+\end{lem}
+proof: $A \cap \{\tau = n\} = A \cap \{\tau \le n\} \cap \{\tau \le n-1\}^c \in F_n$ for all $n$, so $A \in F_{\tau}$
+
+$n$ is an arbitrary natural number:
+\begin{enumerate}[label=\alph*)] 
+\item $\{ \tau + \sigma = n \} = \cup_{k=0..n} (\OB{\{ \tau = k \}} \cap \OB{\{ \sigma = n-k \}}) \in F_n$, so $\tau + \sigma$ is a stopping time.
+  \item
+  $\{ \tau \vee \sigma \le n\} =
+\{ \tau \le n\} \cup \{ \sigma \le n\} \in F_n$,
+by lemma 2 $\tau \vee \sigma$ is a stopping time.
+\item
+  $\{ \tau > k \} \in F_k$ because $\{ \tau > k \} = \{ \tau \le k \}^c \in F_k$. Same for $\{ \sigma > k \}$
+  
+  $\{ \tau \wedge \sigma > k \} = \{ \tau > k \} \cap \{ \sigma > k \} \in F_k$
+  
+  But $\{ \tau \wedge \sigma \le n \} =  \{ \tau \wedge \sigma > n  \}^c \in F_n$, 
+  so by lemma 2 $\tau \wedge \sigma$ is a stopping time.
+
+\item 
+  \begin{itemize}
+  \item[$\Rightarrow$]Let $A \in F_{\tau} \cap F_{\sigma}$, then
+    $A \cap \{ \tau \le n \}$ and $A \cap \{ \sigma \le n \}$ are in $F_n$,
+    so is their intersection $A \cap \{ \tau \wedge \sigma \le n\}$.
+    c/c: $F_{\tau} \cap F_{\sigma} \subset F_{\tau \wedge \sigma}$
+    \item[$\Leftarrow$] Let $A \in F_{\tau \wedge \sigma}$,
+  then $A \cap \{ \tau \wedge \sigma = n \} \in F_n$
+
+  \begin{align*}
+    A \cap \{ \tau = n \}
+    &= \left(\cup_{k \le n} A \cap \{ \tau = n, \sigma = k \}\right)
+      \bigcup \left(\cup_{k > n} A \cap \{ \tau = n, \sigma = k \} \right)
+    \\&= \left(\cup_{k \le n} A \cap \{ \tau = n, \tau \wedge \sigma = k \} \right)
+        \bigcup \left(\cup_{k > n} A \cap \{ \sigma = k, \tau \wedge \sigma = n \} \right)
+    \\&= \left( \OB{A \cap \{ \tau = n \}} \cap \OB{\{\tau \wedge \sigma \le n \}} \right)
+        \bigcup \left(\OB{A  \cap \{ \tau \wedge \sigma = n \}} \cap \OB{\{ \sigma \le n \}^c} \right)
+    \\& \in F_n
+  \end{align*}
+  c/c: $ F_{\tau \wedge \sigma} \subset F_{\tau} \cap F_{\sigma}$
+  \end{itemize}
+As a conclusion $F_{\tau \wedge \sigma} = F_{\tau} \cap F_{\sigma}$
+\end{enumerate}
+
+\Q{4} Let $M_n$ be such a martingale, then
+\begin{itemize}
+  \item $\forall n, \,  M_n \in L_1$ and is $G_n$ adapated trivially.
+\item 
+Since $E[ M_{n+1} | F_n] = M_n$, we have that $E[E[ M_{n+1} | F_n]|G_n] = E[M_n|G_n] = M_n$, so that
+$E[ M_{n+1} | G_n] = M_n$ because $G_n \subset F_n$.
+\end{itemize}
+\Q{5}
+\begin{enumerate}[label=\alph*)]
+\item
+  Let $N \in mathbb{N}^*$, we have that
+  $$ \cup_{n=1..N} \{ Y_{(A+B)n + k} = 1, k=1..(A+B) \} \subset \{ \tau <  \infty \}$$
+\begin{align*}
+  P(\tau < \infty) &\ge P(\cup_{n=1..N} \{ Y_{(A+B)n + k} = 1, k=1..(A+B) \})
+  \\&= 1 - P(\cap_n \{ Y_{(A+B)n + k} = 1, k=1..(A+B) \})^c)
+  \\&= 1 - \prod_{n=1..N} P(\{ Y_{(A+B)n + k} = 1, k=1..(A+B) \})^c) &\text{independence}
+  \\&= 1 - \prod_{n=1..N} (1-P(\{ Y_{(A+B)n + k} = 1, k=1..(A+B) \}))&\text{independence}
+  \\&= 1 - \prod_{n=1..N} (1-p^{A+B})
+  \\&= 1 - (1-p^{A+B})^N \rightarrow 0 &\text{because $0 < p < 1$}
+\end{align*}
+so $\tau < \infty$ a.s.
+\item
+  $$E[X_N | G_{N-1}] - X_{N-1} = X_N - X_{N-1} = Y_N \ne 0$$
+  So $(X_n)$ is not martingale with respect to $(G_n)$.
+\end{enumerate}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+
+
