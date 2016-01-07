@@ -2,10 +2,10 @@ import numpy as np
 import itertools
 
 up, down = 0.9, 1.1
-p = 0.2
+p = 0.5
 S0 = 100.
 K = 100.
-T = 100
+T = 10
 
 
 def generate_slates(n):
@@ -23,7 +23,7 @@ def price(T):
     J = np.zeros(T+1) 
     for i, slate in generate_slates(T):
         St = map(lambda k: pow(up,k)*pow(down,i-k), slate)
-        St = np.array(list(St))
+        St = np.array(list(St))*S0
         J, control = backward_induction(St, J)
         yield np.array([i*np.ones_like(St), St, J, control])
 
@@ -43,7 +43,7 @@ for points in price(T):
                    ys, zs, s=50, 
                    c=c[u], marker=m[u],
                    depthshade=True)
-
+print(points[2])
 ax.set_xlabel('t')
 ax.set_ylabel('St')
 ax.set_zlabel('J(t, St)')
@@ -55,4 +55,6 @@ labels = [
 plt.legend(handles=labels)
 
 plt.show()
+
+
 

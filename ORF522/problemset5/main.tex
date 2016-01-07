@@ -37,6 +37,9 @@
 \newcommand{\irow}[1]{% inline row vector
   \begin{smallmatrix}(#1)\end{smallmatrix}%
 }
+\newcommand\undermat[2]{% http://tex.stackexchange.com/a/102468/5764
+  \makebox[0pt][l]{$\smash{\underbrace{\phantom{%
+    \begin{matrix}#2\end{matrix}}}_{\text{$#1$}}}$}#2}
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
@@ -124,8 +127,37 @@
   Which proves that $f$ convexe.
 \end{itemize}
 
-\Q{3}
 
+\Q{3}
+\begin{enumerate}
+\item
+  $D$ being definite positive, It can be written as a diagonal matrix in an orthonormal basis.
+  Since  rotations are isometries, witout loss of generality we can assume that $D = \operatorname{diag}(d_1, ... d_n) $ is diagonal in the canonical basis.
+
+
+  let's define the norm $||u||_D^2 := u^T D^{-1} u = ||\sqrt{D^{-1}}u||_2^2$.
+  We assume that the projection $[.]^+$ is done with
+  respect to the norm $||\, ||_D$ rather than the euclidian norm.
+  Let $y_{k+1} := x_k - \alpha D \nabla f(x_k)$ such that $x_k = [y_k]^+$
+
+  \begin{align*}
+    f(x_k) - f(x^*) & \le \nabla f(x_k) (x_k - x^*) \\
+                    &= \frac1 \alpha (D^{-1}(x_k - y_{k+1}))^T (x_k - x^*) \\
+                    &= \frac1 {2\alpha} ( ||x_k - y_{k+1}||_D^2 + ||x_k - x^*||_D^2 - ||y_{k+1} - x^*||_D^2 ) \\
+  \end{align*}
+  But by taylor inequality:
+  $||y_{k+1} - x_k||_D^2 = \alpha^2 ||D \nabla f (x_k)||_D^2 = \alpha^2 \nabla f(x_k)^T D \nabla f(x_k) \le \alpha^2 L$
+  And By non expansiveness of the projection $[.]^+$:  $||y_{k+1} - x^*||_D \ge ||x_{k+1} - x^*||$
+  So:
+  $$f(x_k) - f(x^*) \le \frac 1{2\alpha} (\alpha^2 L + ||x_k - x^*||_D^2 - ||x_{k+1} - x^*||_D^2)$$
+  By summing over $k$:
+  $$\sum_{i \le k} (f(x_i) - f(x^*)) \le \frac{k}2 \alpha L + \frac{1}{2\alpha} ||x_0 - x^*||_D^2$$
+
+
+  $$\min_{i \le k} f(x_i) - f(x^*) \le \frac1k \sum_{i \le k} (f(x_i) - f(x^*)) \le \frac{\alpha L} {2}  + \frac{||x_0 - x^*||_D^2}{2\alpha k}$$
+ \end{enumerate}
+
+ 
 \Q{4}
 \begin{enumerate}
 \item
@@ -156,23 +188,17 @@
   
 \end{enumerate}
 
-\Q{4}
-\begin{enumerate}
-\item By taylor equality, there exist $y \in X$ such that:
-  $$f(x^k) - f(x^*) = \nabla f(x^*) (x^k - x^*) + \nabla^2 f(x^*)$$
-\end{enumerate}
-
 \Q{5}
 \begin{enumerate}
-\item Let's call $S_t$ the price of the stock at time t, and $C_t(S_t)$ the
+\item Let's call $S_t$ the price of the stock at time t, and $V_t(S_t)$ the
   price of the corresponding american action (with strike $K$)
   \begin{itemize}
   \item State $x_t = S_t$, $t = 1..T$
   \item Action:
     \[
       u_t = \left\{ \begin{array}{cc}
-                      1 & \text{meaning we exercise the option}\\
-                      0 & \text{meaning we don't}
+                      \text{EXEC} & \text{meaning we exercise the option}\\
+                      \text{HOLD} & \text{meaning we don't}
                     \end{array}
                   \right.
                 \]
@@ -180,20 +206,19 @@
                 $w_t = \frac{S_{t+1}}{S_t}$ s.t $x_{t+1} = w_t x_t$, $P(w_t = u) = 1 - P(w_t = d) = p$
               \item Transitional cost:
   
-                $g(x_k, u_k=0, w_t) = 0$
-                $g(x_k, u_k=1, w_t) = (x_t-K)^+ - C_{t+1}(x_t + w_t)$
+                $g(x_k, u_k=\text{HOLD}, w_t) = 0$
+                $g(x_k, u_k=\text{EXEC}, w_t) = x_t-K$
                 Explication: If we exercise the option, we gain
-                $(x_t-K)^+$ but we lose the right to the option
-                ($-C_{t+1}$).  $g(x_T) = (x_T - K)^+$: We are forced
-                to exericse the option at time $T$
+                $x_t-K$ but we lose the right to the option
+                ($-V_{t+1}$).
+                $g(x_T) = (x_T - K)^+$: We exericse the option at time $T$ only if $x_T > K$
               \end{itemize}
               The price problem:
-  $$C_k(x) = \max_{\mu} E[g(x_T) + \sum_{t=k}^{T-1} g(x_k, \mu_k(x_k), w_t) | x_k = x]$$
+  $$V_k(x) = \max_{\mu} E[g(x_T) + \sum_{t=k}^{T-1} g(x_k, \mu_k(x_k), w_t) | x_k = x]$$
 
 \item Bellman equation:
-  $$C_k(x) = \max_{\mu_k} E[ g_k(x, \mu_k(x) , w_k) + C_{k+1}(w_kx_{k+1}) | x_k = x ]
-  = \max \left\{ (x-K)^+ , p C_{k+1}(u x) + (1-p) C_{k+1}(d x) \right\}$$
-  $$C_T(x) = (x-K)^+$$
+  $$V_k(x) = \max \left\{ x-K , p V_{k+1}(u x) + (1-p) V_{k+1}(d x) \right\}$$
+  $$V_T(x) = (x-K)^+$$
 
 \item
   
@@ -202,7 +227,8 @@
   and we decide to adopt the strategy 
 
   $J$ verifies: $J(t, S) = \max \{ E[J(t+1, S_{t+1}) | S_t = S], S - K \} = [\max_{\mu} (P_{\mu}J + g_\mu) ](t,S) $
-  where $\mu(t, S) \in \{ \text{HOLD}, \text{EXEC} \}$,
+  where:
+  $$\mu(t, S) \in \{ \text{HOLD}, \text{EXEC} \}$$
   \[ (P_\mu J)(t, S) = \left\{
       \begin{array}{cc}
         p J(t+1, uS) + (1-p)J(t+1, dS) & \text{ if $\mu(t, S) = $ HOLD } \\
@@ -216,19 +242,109 @@
         0 & \text{ if $\mu(t, S) = $ HOLD } \\
         S - K & \text{otherwise}
       \end{array}
-    \right\}
+    \right.
   \]
-                                                
+
+  The LP problem is:
+  $$\min e^T J \text{ s.t } \forall \mu \, J \ge P_\mu J + g_\mu$$
+  At time $t$, $S$ can take the following values $\{ u^k d^{t-k} S_0,\, k \le t\}$. Let's denote by $\tilde J(t, k) := J(t, u^k d^{t-k} S_0)$ when $k \le t$ and $L$ otherewise where $L >> S_0$ is a very big constant.
+  The problem can be written as:
+  \begin{align*}
+    \min &\sum_{t, k} \tilde J(t, k) \\
+         &\text{ s.t } \forall t, k \in \{1...T-1\}\\
+         & \tilde J(t, k) \ge p \tilde J(t+1, k) + (1-p) \tilde J(t+1, k+1) \\
+         & \tilde J(t, k) \ge u^k d^{t-k} S_0 - K\\
+         & \tilde J(T, k) = u^k d^{t-k} S_0 - K \\
+         & \tilde J(t, k) = L \text{ when } k > t\\
+  \end{align*}
+
+  Let $x_{t*T + k} = \tilde J(t, k)$, and define $A \in \mathcal M_{T, T}$,
+  $B \in \mathcal M_{\frac{T(T-1)}{2}, T^2}$ $U \in \mathbb R^{T^2}$ such that:
+
+  \[
+    A := 
+    \begin{array}{r@{}}
+      \text{T(T-1)}~\left\{\begin{array}{@{}c@{}}\null\\\null\\\null\end{array}\right.\\
+      \text{T}~\left\{\begin{array}{@{}c@{}}\null\\\null\end{array}\right.\\
+    \end{array}
+  \left [
+    \begin{array}{ccccc}
+      0               & p                     & (1-p)  & 0     & \cdots \\
+      \vdots          &                       & \ddots & \ddots& \cdots \\
+      0               &                       & \cdots & p     & (1-p)  \\
+      0               & 0                     & 0      & 0     & 0      \\
+                      & \cdots                & \cdots &       & 
+    \end{array}
+  \right ]
+\]
+
+
+  \[
+    B := 
+    \begin{array}{r@{}}
+      \text{T-1}~\left\{\begin{array}{@{}c@{}}\null\\\null\\\null\end{array}\right.\\
+      \text{T-2}~\left\{\begin{array}{@{}c@{}}\null\\\null\\\null\\\null\end{array}\right.\\
+      \text{\vdots}~\left\{\begin{array}{@{}c@{}}\null\end{array}\right.\\
+      \text{T - (T-1)}~\left\{\begin{array}{@{}c@{}}\null\end{array}\right.\\
+    \end{array}
+  \left [
+    \begin{array}{cccc|ccccc|c|ccc}
+      0 & 1      &        &\cdots &&& &&& &&& \\
+        &        & \ddots &       &&& &&& &&& \\
+        &        &        & 1     &&& &&& &&& \\
+      \hline
+        &        &        &       & 0 & 0 & 1 & \cdots &   &&&&\\
+        &        &        &       &   &   &   & \ddots &   &&&& \\
+        &        &        &       &   &   &   &        & 1 &&&&\\
+      \hline
+        &        &        &       &   &   &   &        & & \ddots \\
+      \hline
+        &        &        &       &   &   &   &        & &        & 0 & \cdots & 1 \\
+    \end{array}
+  \right ]
+\]
+ $U \in R^{T^2}$ such that : $U_{tT + k} := u^kd^{t-k}S_0 - K$
+
+ The LP problem is equivalent to:
+ \begin{align*}
+    \min & e^T x \\
+         &\text{ s.t } \\
+         & x \ge Ax \\
+         & x \ge U\\
+         & Bx = L 1_{\frac{T(T-1)}2}
+  \end{align*}
+ 
+
 \end{enumerate}
 
 \Q{6}
 
+\begin{itemize}
+\item
+  We choose a discrete random walk model for generating $S_t$:
+  $S_t = Y + \sum_{i \le t} X_i$ where
+  the $X_i$ are iid $P(X_i = 1) = 1 - P(X_i = -1) = p$
+  and $Y$ uniform on $\{-10, ..., 10\}$ and independent from the $X_i$
+
+  Sample trajectories:
+  <Image>
+\item 
+  By generating the paths $(S_t^{(i)})_i$,
+  we simulate the transitions $(t, S_t) \rightarrow (t+1, S_{t+1})$
+
+    We adopt the same notation as in lecture 23 slide 36.
+    At step $i \in \{0, ..., M-1\}$:
+    $$Q_{i+1}((t, S_t)) =  (1-\gamma)Q_i((t, S_t)) + \gamma \max( S_{t+1} - K, Q_i((t+1, S_{t+1}))$$
+    
+    $$J((t, S_t)) = \max \{ S_t - K, Q_M((t, S_t)) \}$$
+\end{itemize}
 \end{document}
 
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: t
 %%% End:
+
 
 
 
