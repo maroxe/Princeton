@@ -133,9 +133,11 @@
 \item
   $D$ being definite positive, It can be written as a diagonal matrix in an orthonormal basis.
   Since  rotations are isometries, witout loss of generality we can assume that $D = \operatorname{diag}(d_1, ... d_n) $ is diagonal in the canonical basis.
+  Let's call $\lambda$ the biggest of the eigen values of $D$, and $\beta$ the smallest.
 
-
-  let's define the norm $||u||_D^2 := u^T D^{-1} u = ||\sqrt{D^{-1}}u||_2^2$.
+  let's define the norm $||u||_D^2 := u^T D^{-1} u = ||\sqrt{D^{-1}}u||_2^2$ and the associated scalar product $<.,.>_D$
+  We have that: $ \frac{||u||_2^2}{\lambda} \le ||u||_D^2 \le \frac{||u||_2^2}{\beta}$
+  
   We assume that the projection $[.]^+$ is done with
   respect to the norm $||\, ||_D$ rather than the euclidian norm.
   Let $y_{k+1} := x_k - \alpha D \nabla f(x_k)$ such that $x_k = [y_k]^+$
@@ -145,17 +147,81 @@
                     &= \frac1 \alpha (D^{-1}(x_k - y_{k+1}))^T (x_k - x^*) \\
                     &= \frac1 {2\alpha} ( ||x_k - y_{k+1}||_D^2 + ||x_k - x^*||_D^2 - ||y_{k+1} - x^*||_D^2 ) \\
   \end{align*}
-  But by taylor inequality:
-  $||y_{k+1} - x_k||_D^2 = \alpha^2 ||D \nabla f (x_k)||_D^2 = \alpha^2 \nabla f(x_k)^T D \nabla f(x_k) \le \alpha^2 L$
+  Since $\nabla^2f$ is uniformly bounded by $||H||$, we have that $\nabla f$ is $L$-Lipschiz.
+  We assume that $$\nabla f$$ is uniformly bounded by a constant $L$.
+
   And By non expansiveness of the projection $[.]^+$:  $||y_{k+1} - x^*||_D \ge ||x_{k+1} - x^*||$
   So:
   $$f(x_k) - f(x^*) \le \frac 1{2\alpha} (\alpha^2 L + ||x_k - x^*||_D^2 - ||x_{k+1} - x^*||_D^2)$$
   By summing over $k$:
   $$\sum_{i \le k} (f(x_i) - f(x^*)) \le \frac{k}2 \alpha L + \frac{1}{2\alpha} ||x_0 - x^*||_D^2$$
 
+  Let's show that $f(x_i)$ is non-increasing. Indeed, We have that
+  \begin{itemize}
+  \item
+    By non expansiveness of the projection:
+    $$\nabla f(x_k) (x_{k+1} - x_k) = -\frac 1{\alpha}
+    (y_{k+1}-x_k)'D^{-1}(x_{k+1} - x_k) =-\frac1 {\alpha}
+    <y_{k+1}-x_k, x_{k+1} - x_k>_D \le -\frac1{\alpha}
+    ||x_{k+1}-x_k||_D^2$$
+  \item
+    By Cauchy Schwartz and the non expansiveness of the projection:
+    \begin{align*}
+      ||x_{k+1}-x_k||_2^2 &\le \lambda ||x_{k+1}-x_k||_D^2 \\
+                          &\le \lambda ||y_{k+1}-x_k||_D^2 \\
+                          &\le \alpha^2 \lambda  \nabla f(x_k)'D \nabla f(x_k) \\
+                          &\le \alpha^2 \lambda^2 ||\nabla f(x_k)||_2^2 = \alpha^2 \lambda^2 L^2
+    \end{align*}
+  \item
+    Taylor approximation:
+    \begin{align*}
+    f(x_{k+1}) - f(x_k) &\le \nabla f(x_k) (x_{k+1} - x_k) + \frac12 ||H||^2 ||x_{k+1} - x_k||_2^2 \\
+                        &\le -\frac1 {\alpha}   ||x_{k+1} - x_k||_D^2 + \alpha^2 \frac{\lambda^2 L^2 ||H||^2}2 
+    \end{align*}
+    Which is smaller than $0$ when $\alpha$ is small enough.
+    Therefore:
+    $f(x_k) - f(x^*) \le \frac1k \sum_{i \le k} (f(x_i) - f(x^*)) \le \frac{\alpha L}{2} + \frac{1}{2\alpha k} ||x_0 - x^*||_D^2$
 
-  $$\min_{i \le k} f(x_i) - f(x^*) \le \frac1k \sum_{i \le k} (f(x_i) - f(x^*)) \le \frac{\alpha L} {2}  + \frac{||x_0 - x^*||_D^2}{2\alpha k}$$
- \end{enumerate}
+  \end{itemize}
+  
+  
+As a result:
+$$f(x_k) - f(x^*) = \min_{i \le k} f(x_i) - f(x^*) \le \frac1k \sum_{i \le k} (f(x_i) - f(x^*)) \le \frac{\alpha L} {2}  + \frac{||x_0 - x^*||_D^2}{2\alpha k}$$
+
+\item
+
+  Let $g: \alpha \rightarrow \frac{\alpha L} {2}  + \frac{||x_0 - x^*||_D^2}{2\alpha k} := a \alpha + \frac{b}{\alpha}$ so that
+  $g'(\alpha) = a - \frac{b}{\alpha^2}$, $g''(\alpha) = \frac{2b}{\alpha^3} > 0$
+
+  $g$ is convexe, so it is minimal when $g'(\alpha) = 0$, ie
+  
+  $\alpha = \sqrt{\frac b a} = \sqrt{\frac{||x_0-x^*||_D^2}{Lk}}$,
+  $\min g = g(\alpha) = 2 \sqrt{\frac{b}{a}} = 2\sqrt{\frac{||x_0-x^*||_D^2}{Lk}}$
+
+  Therefore the optimal bound is:
+  $$f(x_k) - f(x^*) \le \sqrt{\frac{||x_0-x^*||_D^2}{Lk}} = O(k^{-\frac12})$$
+
+\item 
+  Since $\nabla f$ is Lipshiz:  $||\nabla f(x_k) - \nabla f(x^*)||_2 \le ||H|| ||x_k - x^*||_2^2$
+  We will also need the inequality: $||Du||_D \le \frac{||Du||_2}{\beta} \le \frac{\lambda}{\beta} ||u||_2$
+  And the fact that $x^* = [x^* - \alpha D \nabla f(x^*)]^+$
+  
+  \begin{align*}
+    ||x^{k+1} - x^*||_D^2 & \le || [x_k - \alpha D \nabla f(x_k)]^+ - [x^* - \alpha D \nabla f(x^*)]^+||_D^2 \\
+                          & \le || x_k - x^* - \alpha D(\nabla f(x_k) - \nabla f(x^*))||_D^2 \\
+                          & \le ||x_k - x^*||_D^2 - 2 \alpha <D(\nabla f(x_k) - \nabla f(x^*)), (x_k - x^*)>_D + \alpha^2 ||D (\nabla f(x_k) - \nabla f(x^*))||_D^2 \\
+                          & \le ||x_k - x^*||_D^2 - 2 \alpha (\nabla f(x_k) - \nabla f(x^*))' (x_k - x^*) + \alpha^2 \lambda^2 ||\nabla f(x_k) - \nabla f(x^*)||_2^2 \\
+                          & \le ||x_k - x^*||_D^2 - 2 \alpha \sigma ||x_k - x^*||_2^2+ \alpha^2 \frac{\lambda^2}{\beta^2} ||H|| ||x_k - x^*||_2^2 & \text{By strong convexity}
+    \\                    & \le ||x_k - x^*||_D^2 - 2 \alpha \frac{\sigma}{\beta^2} ||x_k - x^*||_D^2+ \alpha^2 \frac{\lambda^2}{\beta^4} ||H|| ||x_k - x^*||_D^2 & \text{By strong convexity}
+    \\                    & \le (1 - 2\frac{\sigma}{\beta^2} \alpha + \frac{||H|| \lambda^2}{\beta^4} \alpha^2)||x_k - x^*||_D^2
+    \\ & \le \rho ||x_k - x^*||_D^2 \\& (\rho = 1 - 2\frac{\sigma}{\beta^2} \alpha + \frac{||H|| \lambda^2}{\beta^4} \alpha^2)
+    \\ & \le \rho^{k+1} ||x_0 - x^*||_D^2 \\&\text{By reccurence}
+  \end{align*}
+
+\item
+  $\rho$ is quadratic in $\alpha$, so it is minimal when $\frac{\partial \rho}{\partial \alpha} = 0 $, ie $\alpha = \frac{\beta^2\sigma}{||H|| \lambda^2}$,
+  $\min \rho = 1 - \frac{\sigma^2}{||H|| \lambda^2}$
+\end{enumerate}
 
  
 \Q{4}
@@ -208,9 +274,6 @@
   
                 $g(x_k, u_k=\text{HOLD}, w_t) = 0$
                 $g(x_k, u_k=\text{EXEC}, w_t) = x_t-K$
-                Explication: If we exercise the option, we gain
-                $x_t-K$ but we lose the right to the option
-                ($-V_{t+1}$).
                 $g(x_T) = (x_T - K)^+$: We exericse the option at time $T$ only if $x_T > K$
               \end{itemize}
               The price problem:
@@ -219,6 +282,9 @@
 \item Bellman equation:
   $$V_k(x) = \max \left\{ x-K , p V_{k+1}(u x) + (1-p) V_{k+1}(d x) \right\}$$
   $$V_T(x) = (x-K)^+$$
+  Result for $K = S_0 = 1., P(w_t = \text{down}) = 0.45, \text{up} = 1.1, \text{down} = 0.9, T = 100 \text{ days}, \text{time step} = 10$:
+ 
+  \includegraphics[scale=1.]{qtree.png}
 
 \item
   
@@ -258,7 +324,7 @@
          & \tilde J(t, k) = L \text{ when } k > t\\
   \end{align*}
 
-  Let $x_{t*T + k} = \tilde J(t, k)$, and define $A \in \mathcal M_{T, T}$,
+  Let $x_{t*T + k} = \tilde J(t, k)$, and define $A \in \mathcal M_{T^2, T^2}$,
   $B \in \mathcal M_{\frac{T(T-1)}{2}, T^2}$ $U \in \mathbb R^{T^2}$ such that:
 
   \[
@@ -314,7 +380,9 @@
          & Bx = L 1_{\frac{T(T-1)}2}
   \end{align*}
  
-
+  Result for the same parameters as before:
+  
+  \includegraphics[scale=1.]{qlp.png}  
 \end{enumerate}
 
 \Q{6}
@@ -323,11 +391,12 @@
 \item
   We choose a discrete random walk model for generating $S_t$:
   $S_t = Y + \sum_{i \le t} X_i$ where
-  the $X_i$ are iid $P(X_i = 1) = 1 - P(X_i = -1) = p$
+  the $X_i$ are iid $\mathcal{N}(\mu, sigma)$
   and $Y$ uniform on $\{-10, ..., 10\}$ and independent from the $X_i$
 
   Sample trajectories:
-  <Image>
+  \includegraphics[scale=1.]{traj.png}
+  
 \item 
   By generating the paths $(S_t^{(i)})_i$,
   we simulate the transitions $(t, S_t) \rightarrow (t+1, S_{t+1})$
@@ -337,6 +406,11 @@
     $$Q_{i+1}((t, S_t)) =  (1-\gamma)Q_i((t, S_t)) + \gamma \max( S_{t+1} - K, Q_i((t+1, S_{t+1}))$$
     
     $$J((t, S_t)) = \max \{ S_t - K, Q_M((t, S_t)) \}$$
+
+    
+    \includegraphics[scale=1.]{option.png}
+    
+    \includegraphics[scale=1.]{control.png}
 \end{itemize}
 \end{document}
 
