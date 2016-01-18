@@ -1,0 +1,23 @@
+*.log
+*.aux
+*#
+*~
+*.thm
+*.gz
+*.zip
+*.prv/
+*auto
+.DS_STORE
+*.pyc
+/ORF522/matlab license.lic
+*_region_.tex
+*_flymake.py
+prv_*
+
+*bbl
+*blg
+*pyg
+
+
+
+

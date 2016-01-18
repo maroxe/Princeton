@@ -125,7 +125,7 @@ def plot(pricing_method, name, img):
     plt.legend(handles=labels)
     plt.savefig('q%s.png' % img)
     plt.show()
-bla
+
 plot(price_tree, 'Backward Induction', 'tree')
 plot(price_lp, 'LP programming', 'lp')
 

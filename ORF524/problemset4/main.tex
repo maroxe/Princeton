@@ -86,9 +86,10 @@ doesn't converge to 0.
   \item[($L_p$)] By the triangular inequality: $||X_n + Y_n - (X + Y)||_p \le ||X_n - X||_p + ||Y_n - Y||_p \rightarrow_n 0$
   \end{itemize}
 
-  \item
+  \item 
     \begin{itemize}
-    \item
+    \item[(a.s.)] For $\omega \in \Omega_x \cap \Omega_y$, $X_n(\omega) \rightarrow X(\omega)$ and $Y_n(\omega) \rightarrow Y(\omega)$ so $X_nY_n(\omega) \rightarrow XY(\omega)$
+    \item[(p)]
     \begin{align*}|X_n^TY_n - X^TY| &\le |X_n^TY_n - X_n^TY + X_n^TY -
       X^TY| \\&\le |X_n^T(Y_n - Y)| + |(X_n-X)^TY| \\&\le
       |(X_n-X)^T(Y_n - Y)| + |X^T(Y_n-Y)| + |(X_n-X)^TY| \\&\le
@@ -107,7 +108,7 @@ doesn't converge to 0.
       $P(|X_n-X| |Y_n - Y| > \epsilon)\le P(|X_n - X| >
       \sqrt{\epsilon}) + P(|Y_n - Y| > \sqrt{\epsilon}) \rightarrow 0$
     \item For $A > 0$,
-      $|X| \le A \wedge |Y_n-Y| \le \frac{\epsilon}{A} \Rightarrow |X|
+      $(|X| \le A \text{ and } |Y_n-Y| \le \frac{\epsilon}{A}) \Rightarrow |X|
       |Y_n - Y| < \epsilon$,
       so
       $\{|X| |Y_n - Y| > \epsilon \} \subset \{|X|>A\} \cup \{|Y_n-Y|
@@ -118,8 +119,8 @@ doesn't converge to 0.
   
 \item
   \begin{itemize}
-  \item If $Y_n \rightarrow Y$ on $\Omega_y$ of size one, then for
-    $w \in \Omega_y \cap {Y \ne 0}$ (which is also of size 1) we have
+  \item[(a.s)] If $Y_n \rightarrow Y$ on $\Omega_y$ of size one, then for
+    $w \in \Omega_y \cap \{Y \ne 0\}$ (which is also of size 1) we have
     that for $n$ large enough $|Y_n - Y|(\omega) < \frac{Y(\omega)}2$,
     and therefore $Y_n(\omega) \ne 0$ and
     $\frac1{Y_n}(\omega) \rightarrow \frac1 Y(\omega)$. eg
@@ -127,7 +128,7 @@ doesn't converge to 0.
     question to prove that
   $$\frac{X_n}{Y_n} \rightarrow \frac{X}{Y} \text{ a.s.} $$
 
-\item
+\item[(p)]
   We suppose $Y_n$ is bounded from below in probability (this is a necessary condition since: $\frac1 {Y_n} \text{converges} \Rightarrow \frac 1 {Y_n} \text{is bounded in probability} \Rightarrow Y_n \text{ bounded from below in probability}$
 
   Let $\alpha > 0$, $\epsilon > 0$, and $n$ large enough so that $ P(|Y - Y_n| > \epsilon) < \alpha$.
@@ -144,7 +145,7 @@ doesn't converge to 0.
   \end{align*}
   And therefore we have convergence in probability.
 \end{itemize}
-
+\end{itemize}
 \item Take $\forall n X_n = Y_n = X = -Y \sim \mathcal N(0,1)$, then:
   \begin{itemize}
   \item For $a)$, $V(X_n+Y_n) = 2$, but $Var(X+Y) = 0$.
@@ -152,10 +153,10 @@ doesn't converge to 0.
     $E[XY] = -1$
   \item For $c)$, $E[\frac{X_n}{Y_n}] = 1, E[\frac{X}{Y}] = -1$
   \end{itemize}
-\end{itemize}
+
 \end{enumerate}
 \Q{3}
-\begin{itemize}
+\begin{enumerate}
 \item $\forall \epsilon > 0 \, P(|X_n - X| > \epsilon) =  P(|X_n - X|^p > \epsilon^p)\le \frac{E[ |X_n - X|^p]}{\epsilon^p} \rightarrow 0$
 \item
   \begin{itemize}
@@ -170,7 +171,9 @@ doesn't converge to 0.
     \item in probability:
       $\epsilon > 0$, and $\delta > 0$. There exist $N \in \mathbb{N}$  such that for all $n > N$, $P(|X_n - X| > \epsilon) < \delta$, in particular when $k > N$, $P(|X_{n_k} - X| > \epsilon) < \delta$, and thus $\forall \epsilon P(|X_{n_k} - X| > \epsilon) \rightarrow 0$
     \item In distribution:
-      
+      for $\epsilon > 0 \exists N > 0 \forall n > N ||X_n - X||_{L_p} < \epsilon$
+
+      Since $n_k > k$, if $k < N$ then $||X_{n_k} - X||_{L_p} < \epsilon$
     \end{itemize}
 
     
@@ -179,7 +182,7 @@ doesn't converge to 0.
   if $x \ne c$, \[ F_n(x) \rightarrow_n \left\{ \begin{array}{cc}1&\text{if $x > c$}\\0&\text{if $x < c$}\end{array} \right.\]
   
   $\forall \epsilon > 0 \, P(|X_n - c| > \epsilon) = E[1_{|X_n - c| > \epsilon}] = E[1_{X_n - c > \epsilon} + 1_{X_n - c < -\epsilon}] \le (1-F_n(\epsilon+c)) + F_n(c - \epsilon) \rightarrow 0$
-\end{itemize}
+\end{enumerate}
 
 \Q{4}
 \begin{itemize}
@@ -244,25 +247,33 @@ And thus the induction proof is complete.
   $P(|X| > a)  \rightarrow_a 1$, Let
   Let $\epsilon > 0$ and $a$ large enough so that $P(|X| > a) < \epsilon$.
   
-  $X_n \overset{D}{\rightarrow} X$,
+  $X_n \overset{D}{\rightarrow} X$, so by the continuous mapping theorem $||X_n|| \overset{D}{\rightarrow} ||X||$.
+
   Let $N \in N$, st for
-  $n > N$,
-  $|E[1_{|X_n| > a}]  - E[1_{|X| > a}]| < \epsilon$.
+  $n > N$, and $a > 0$ such that $a$ and $-a$ are continuous point of $F$, (such points are dense in $R$),
+  $|F_n(a) - F(a)| < \epsilon$ and $|F_n(-a) - F(-a)| < \epsilon$
   
-  Then $|E[1_{|X_n| > a}]| \le \epsilon + |E[1_{|X| > a}]| \le 2\epsilon$.
+  Therefore $|E[1_{|X_n| > a}] - E[1_{|X| > a}]|
+  \le |F_n(a) - F(a)| + |F_n(-a) - F(-a)| \le 2 \epsilon$.
+  
+  $|E[1_{|X_n| > a}]| \le \epsilon + |E[1_{|X_n| > a}] - E[1_{|X| > a}]|
+   \le 3\epsilon$.
   
   As a result $X_n = O_p(1)$
 
 \item 
-  $||Y_n^TX_n|| \le ||Y_n|| ||X_n|| = o_p(1)$ because $||Y_n|| = o_p(1)$ and $||X_n|| = O_p(1)$ and are 1-dimensional.
-
+  $||Y_n^TX_n|| \le ||Y_n|| ||X_n||$, without loss of generality we assume that $X_n$ and $Y_n$ are 1-dimensional.
+  Like in question 2:
+  $P(|X_nY_n| > \epsilon) \le P(|X_n| > A) + P(|Y_n - Y| > \frac{epsilon}{A})$
+  Let $A$ be large enough so that $\forall n \, P(|X_n| > A) < \delta$, and let $n$ be large enough so that $P(|Y_n - Y| > \frac{epsilon}{A}) < \delta$.
+  c/c: $P(|X_nY_n| > \epsilon) \le 2 \delta$ and $X_nY_n = o_p(1)$
 
 \end{itemize}
 \Q{7}
 Since convergence a.s and in probability imply convergence in distribution, we only need to show that:
 $$X_n \overset{D}{\rightarrow} X \Rightarrow E[g(X_n)] \rightarrow E[g(X)]$$
 
-By **** representation theorem, there exist $Y_n \overset{D}{\sim} X_n$, $Y \overset{D}{\sim} X$ such that $Y_n \rightarrow Y$ a.s.
+By Skorokhod representation theorem, there exist $Y_n \overset{D}{\sim} X_n$, $Y \overset{D}{\sim} X$ such that $Y_n \rightarrow Y$ a.s.
 Let $\Omega$ be the set where $g$ is continuous, we know that $P_Y(\Omega) = P_X(\Omega) = 1$. 
 Let $\omega \in \Omega$, $t_o = Y(\omega)$ and $\epsilon > 0$.
 \begin{itemize}
@@ -304,7 +315,8 @@ Since $g$ is bounded, by dominated convergence theorem we have that: $E[g(Y_n)] 
 
   $ \sqrt n (S_{n-1}^2 - \sigma^2) = \sqrt n (S_{n-1}^2 - \frac
   n{n-1}\sigma^2) + \sqrt n (\sigma - \frac n{n-1}\sigma ) \rightarrow
-  \mathcal N (0, \nabla g_{E[y]}^T Cov(Y) \nabla g_{E[y]})$
+  \mathcal N (0, \nabla g_{E[y]}^T Cov(Y) \nabla g_{E[y]}) = \mathcal N
+  (0, E[(X_1 - EX_1)^4] - \sigma^4)$
 \end{itemize}
 
 \item
@@ -313,7 +325,7 @@ Since $g$ is bounded, by dominated convergence theorem we have that: $E[g(Y_n)] 
   $\hat C_n = f(\bar z)$ where $f(u, v, t) = t - uv$ is differentiable and:
   $\nabla f = \icol{ -v\\ -u \\1 }$ is continuous
 
-  $\sqrt{n}(\hat C_n - Cov(x_1,y_1)) \rightarrow \mathcal N(0, \nabla f^T cov(Z) \nabla f)$
+  $\sqrt{n}(\hat C_n - Cov(x_1,y_1)) \rightarrow \mathcal N(0, \nabla f^T cov(Z) \nabla f) $
 
   \[ cov(Z) = \left(
       \begin{array}{ccc}
@@ -324,7 +336,7 @@ Since $g$ is bounded, by dominated convergence theorem we have that: $E[g(Y_n)] 
   \]
 \end{itemize}
 
-
+$$\nabla f = \icol{ -EY\\ -EX \\1 }$$
 \end{document}
 
 %%% Local Variables:

@@ -8,6 +8,17 @@
 % custom commands
 \newcommand{\Q}[1]{\subsubsection*{Problem #1}}
 
+\newcommand{\D}[2]{
+\frac{\partial #1}{\partial #2}
+}
+
+\newcommand{\opL}{\mathcal{L}}
+
+\newcommand{\dD}[2]{
+\frac{\partial^2 #1}{\partial {#2}^2}
+}
+
+
 % parameters
 \geometry{hmargin=1cm,vmargin=1cm}
 \title{ORF538 - Problem Set 1}
@@ -18,6 +29,61 @@
 \maketitle
 
 \Q{1}
+
+\begin{itemize}
+
+\item
+Let $v(t, x) = e^{-t}u(t, x)$, so that 
+\begin{align}
+\D v t &= e^{-t}(\D u t + u) \\
+&= -e^{-t}(\frac12 \dD u x + \D u x) \\
+&= -\frac12 \dD v x - \D v x \\
+&= -\opL v
+\end{align}
+
+and the boundary condition $v(T, x) = e^{-T} u(T, x)= e^{-T - |x|}$
+
+This is a Backward Kolmogorov Equation. The probabilstic representation is thus:
+
+$$v(t, x) = \mathbb{E}_{t,x}\{ e^{-T - |X_T|}\}$$
+with $X_t$ a stochastic process of which $\opL$ is the generator. If $(W_s)_s$ a standard brownian motion, we can take $\rm{d} X_s =  \rm{d}s + \rm{d}W_s$, or $X_s = X_t + (t-s) + (W_t - W_s) = x + t-s + (W_t - W_s) \sim \mathcal{N}(x+t-s, (t-s))$
+
+
+\begin{align*}
+u(t, x) &= e^T v(t, x) \\
+&= e^T \mathbb{E}_{t,x}\{ e^{-T - |X_T|}\} \\
+&= \mathbb{E}_{t,x}\{ e^{-|X_T|}\} \\
+&= \mathbb{E}_{t,x}\{ e^{-|X_T|}\} \\
+\end{align*}
+
+\item
+
+If $N \sim \mathcal(0, 1)$
+
+
+\begin{align*}
+u(t, x) &= \mathbb{E}_{t,x}\{ e^{-|X_T|}\} \\
+&= \mathbb{E}\{ e^{-|x + T - t + \sqrt{T-t} N |}\} \\
+&= \mathbb{E}\{ e^{-(a + b N)} 1_{N \geq \frac{-a} b} \} + \mathbb{E}\{ e^{a + b N} 1_{N \leq \frac{-a}b} \} \\
+&= e^{-a}\mathbb{E}\{ e^{- b N} 1_{N \geq \frac{-a}b}\} +
+e^{a} \mathbb{E}\{ e^{b N} 1_{N \leq \frac{-a}b} \} \\
+&= \frac{e^{-a}}{\sqrt{2\pi}} \int_{\frac{-a}b}  e^{-b x-\frac12 x^2} \rm{d}x +
+\frac{e^a}{\sqrt{2\pi}} \int^{\frac{-a}b}  e^{b x-\frac12 x^2} \rm{d}x \\
+&= \frac{e^{-a+\frac{b^2} 2}}{\sqrt{2\pi}} \int_{\frac{-a}b}  e^{-\frac12 (x+b)^2} 
++ \frac{e^{a+\frac{b^2} 2}}{\sqrt{2\pi}} \int^{\frac{-a}b}  e^{-\frac12 (x-b)^2} \\
+&= \frac{e^{-a+\frac{b^2} 2}}{\sqrt{2\pi}} (1-\Phi(\frac{-a}{b}-b))
++ \frac{e^{a+\frac{b^2} 2}}{\sqrt{2\pi}} \Phi(\frac{-a}{b}+b)\\
+&= \frac{e^{\frac{b^2} 2}}{\sqrt{2\pi}}
+\end{align*}
+
+\end{itemize}
+
+
+\Q{2}
+
+
+
+
 
 \end{document}
 
