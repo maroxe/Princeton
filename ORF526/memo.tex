@@ -1,0 +1,223 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage[a4paper, total={8in, 11in}]{geometry}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+\linespread{0.2}
+
+\begin{document}
+\section{measure theory}
+  
+\begin{definition}[Sigma Algebra]
+  $\mathcal F$ $\sigma$-algebra:
+  \begin{itemize}
+  \item $\Omega \in \mathcal F$
+  \item $A \in \mathcal F \Rightarrow A^c \in \mathcal F$
+  \item $\cup_n A_n \in \mathcal F$
+  \end{itemize}
+\end{definition}
+\begin{definition}[Probability measure]
+  Probability measure
+  \begin{itemize}
+  \item $\mathbb P(A) \in [0, 1]$
+  \item $\mathbb P(\Omega) = 1$
+  \item $A \cap B = \emptyset \rightarrow \mathbb P(A \cup B) = \mathbb P(A) + \mathbb P(B)$
+  \end{itemize}
+\end{definition}
+\begin{theorem}[Equivalence additive measure]
+  The following are equivalent fo $\mu$ finitely additive measure:
+  \begin{itemize}
+  \item $\mu \sigma-$ additive
+  \item $\mu$ continuous from below / above/ at 0.
+  \end{itemize}
+\end{theorem}
+\begin{definition}[Monotone class theorem]
+  Monotne class $\mathcal M \subset \mathcal P(\Omega)$,  and is closed under countable monotone unions and intersections.
+\end{definition}
+\begin{theorem}[Monote class theorem]
+  $G$ an algebra, $\sigma(G) = M(G)$
+\end{theorem}
+\begin{theorem}[Sigma in out]
+  $$\sigma(f^{-1}(A): A \in \epsilon) = \{ f^{-1}(A): A \in \sigma(\epsilon) \}$$
+\end{theorem}
+\begin{definition}[Semi-ring]
+  \begin{itemize}
+  \item $\emptyset \in S$
+  \item $A \cap B \in S \forall A, B \in S$
+  \item For al $A, B \in S$ there exist pairwise disjoint subset $C_1, ..., C_n \in S$ such that $A \setminus B = \cup_{i \le n} C_i$
+  \end{itemize}
+\end{definition}
+\begin{theorem}[Caratheodory's Extension Theorem]
+  \begin{itemize}
+  \item A measure $\mu$ on a semi-ring $S$ can be extendted to a
+    measure on $\sigma(S)$.
+  \item If $\mu$ is $\sigma$-finite, the extension is unique.
+  \end{itemize}
+\end{theorem}
+\begin{definition}[Consistence]
+  \begin{itemize}
+  \item $\mathbb P^{i_1, ..., i_n}[A_1 \times ... \times A_n] = \mathbb P^{\pi(i_1), ... , \pi(i_n)}[A_{\pi(1)} \times ... \times A_{\pi(n)}]$
+  \item $\mathbb P^{i_1, ..., i_{n-1}}[A_1 \times ... \times A_{n-1}] = \mathbb P^{i_1, ..., i_n}[A_1 \times ... \times A_{n-1} \times \mathbb R] $
+  \end{itemize}
+\end{definition}
+\begin{theorem}[Kolmogorov's Extension Theorem]
+  $I$ non empty.
+  $(\mathbb P^{i_1, ..., i_n})_{i_1, ..., i_n \in I}$ consistent family. There exists a unique probability measure on $\mathbb P$ on $(\mathbb R^I, \mathbb B(\mathbb R)^{\times I})$ such that
+  $$\mathbb P[\{ \omega \in R^I: (\omega_{i_1}, ..., \omega_{i_n}) \in B] = \mathbb P^{i_1, ..., i_n}[B]$$
+\end{theorem}
+
+\section{Integrals}
+\begin{theorem}[Monotone Convergencen]
+  $f_1, \ldots$  be a pointwise non-decreasing sequence of non-negative valued measurable functions, set $\sup f_n = f$. Then $f$ is measurable and
+$\lim_{k\to\infty} \int f_k \, \mathrm{d}\mu = \int f \, \mathrm{d}\mu$.
+\end{theorem}
+\begin{theorem}[Fatou]
+  Let $f1, f2, f3, \ldots$ be a sequence of non-negative measurable functions.  Define $f = \liminf_{n\to\infty} f_n$.
+Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
+
+\end{theorem}
+\begin{theorem}[Dominated Convergence]
+  $g, f_1, f_2, \ldots$ measurable functions suchat $\int |g| < \infty$, $|f_n| \le g \forall n$ a.s., $f_n \overset{\text{a.s.}}\rightarrow f$, then
+  $\int |f| \le \int |g| < \infty$ and $\lim |f_n - f| \rightarrow 0$, $\lim \int f_n \rightarrow \int f$
+\end{theorem}
+\begin{theorem}[Funbini]
+  $\mu_1, \mu_2$ are $\sigma$-finite.
+  \begin{itemize}
+  \item $\int_{\Omega_1 \times \Omega_2} |f| d(\mu_1 \times \mu_2) < \infty \Rightarrow
+    \int_{\Omega_1 \times \Omega_2} f d(\mu_1 \times \mu_2)
+    = \int_{\Omega_1}\int{\Omega_2} f$
+  \item $f \ge 0 \, \text{a.s}\; \Rightarrow
+    \int_{\Omega_1 \times \Omega_2} f d(\mu_1 \times \mu_2)
+    = \int_{\Omega_1}\int{\Omega_2} f$
+  \end{itemize}
+\end{theorem}
+\begin{theorem}[Inequalities]
+  \begin{itemize}
+  \item Holder: $ \frac1p + \frac1q = 1 \Rightarrow \int |fg| \le (\int |f|^p)^{\frac 1p}(\int |g|^q)^{\frac 1q}$
+  \item Minkowsky: $\forall p \le 0 \; ||f + g||_p \le ||f||_p + ||g||_p$
+  \end{itemize}
+\end{theorem}
+\begin{theorem}[Borel Cantelli]
+  \begin{itemize}
+  \item $\sum \mathbb P(A_n) < \infty \Rightarrow \mathbb P[\cap_m \cup_{n \ge m} A_n] = 0$
+  \item $(A_n) ,\text{indepedent}, \; \sum \mathbb P(A_n) = \infty \Rightarrow \mathbb P[\cap_m \cup_{n \ge m} A_n] = 1$
+  \end{itemize}
+\end{theorem}
+
+\section{Random Variables}
+\begin{definition}[Uniform integrability]
+  $(X_i)$ u.i iff $\lim_n \sup_i \int_{|X_i| > c} |X_i|d\mathbb P = 0$
+  iff $\lim_n \sup_i \mathbb E[1_{|X_i| > c}|X_i|]  = 0$
+\end{definition}
+\begin{theorem}[Caracterisation]
+  \begin{itemize}
+  \item $\forall i |X_i| \le X \in L_1 \Rightarrow (X_i)$ uc
+  \item uc iff:
+    \begin{itemize}
+    \item $\sup E[|X_i|] < \infty$
+    \item $\forall \epsilon > 0, \exists \delta > 0 \forall A \mathbb P(A) < \delta \Rightarrow  \forall i \int_A |X_i| < \epsilon$
+    \end{itemize}
+  \end{itemize}
+\end{theorem}
+\begin{theorem}[$L_1$ Convergencen]
+  $X_i \overset{\mathbb P}{\rightarrow} X$, $X_i$ uc. Then $X \in L_1$, $X_i \overset{L_1}{\rightarrow} X$
+  
+\end{theorem}
+\begin{theorem}[De la Valle-Pousson]
+  $X_i$ uc $\iff$ $\exists \Phi: \mathbb R^+ \rightarrow \mathbb R^+,\frac{\Phi(x)}{x}\rightarrow \infty \text{st} \sup \Phi |X_i| < \infty$.
+  $\Phi$ can be assumed convex and non-decreasing.
+\end{theorem}
+
+\begin{theorem}[Week Law of large numbers]
+  $X_i \in L_2$ uncorrelated, $E[X_i] = m, \sup E[X_i^2] < \infty$, then $\frac{\sum_i X_i}{n} \rightarrow m$ in $L_2$.
+\end{theorem}
+
+\begin{theorem}[Caracteristic Function]
+  \begin{itemize}
+  \item $|\Phi_X(u)| < \Phi_X(0) = 1$
+  \item $\Phi_X(-u) = \bar {\Phi_X(y)}$
+  \item $\Phi_X \in \mathbb R \iff X \overset{\mathbb D}{=} -X$
+  \item $\Phi_x$ is unifromly continuous.
+  \item $E[|X|^n] < \infty \Rightarrow \exists \Phi^{k}_X \forall k \le n$, and $\Phi_X^k(u) = E[(iX)^ke^{iuX}]$, and $\Phi_X(u) = \sum_k^n \frac{(iu)^k}{k!}E[X^k] + \frac{(iu)^n}{n!}\mathcal E_n(u)$, with $\mathcal E_n \rightarrow_0 0$
+  \item $\exists \Phi^{2k}_X(0) \Rightarrow E[X^{2k}] < \infty$
+  \item Inversion Formula: $\frac{F_X(b) + F_X(b^-)}{2}- \frac{F_X(a) + F_X(a^-)}{2} = \lim \frac{}{2\pi} \int_{-c}^{c} \frac{e^{-iua} - e^{-iub}}{iu}\Phi_X(u) du$
+  \item $\int_R |\Phi_X| < \infty \Rightarrow f_X(x) = \frac{1}{2\pi} \int_{-\infty}^{\infty} e^{iux} \Phi_X(u) du$
+  \item $X = (X_1, \ldots X_n)$ indepdendent $\iff \Phi_X = \prod \Phi_{X_i}$
+  \end{itemize}
+\end{theorem}
+\begin{theorem}[Continuity Theorem]
+  \begin{itemize}
+  \item $X_n \overset{D}{\rightarrow} X \iff \Phi_{X_n} \rightarrow \Phi_X$
+  \item $\Phi_{X_n} \rightarrow \Phi$ and $\Phi$ continuous at $0$ then $\exists X \; X_n \overset{D}{\rightarrow} X$
+  \item $X_n \overset{D}{\rightarrow} X \iff F_n \overset{\text{in} \; C(F_X)}\rightarrow F_X$
+  \end{itemize}
+\end{theorem}
+\begin{theorem}[LLN]
+  $X_i$ iid in $L_1$, $\frac{\sum X_i}{n} \rightarrow E[X]$ as and in $L_1$
+\end{theorem}
+\begin{theorem}[CLT]
+  $X_n$ iid $Var(X) = \sigma^2 < \infty$ then $\frac{1}{\sqrt n}\sum \frac{X_i - E[X]}{\sigma} \rightarrow \mathcal N(0, 1)$
+\end{theorem}
+
+\section{Martingales}
+\begin{theorem}[Radon-Nikodym]
+  $\mu_2 << \mu_1 \Rightarrow \exists f \text{unique $\mu_1$-a.s} \; f = \frac{d\mu_2}{d\mu_1}$
+\end{theorem}
+\begin{theorem}[Stopping times]
+  \begin{itemize}
+  \item $X_n^{\tau} = X_0 + (V.X)_n$ is martingale because $V$ is
+    predictable.
+  \item If $\tau$ bounded $E[X_0] = E[X_{\tau}]$
+  \item $M \ge \tau \ge \sigma$ stopping times, then $E[X_{\tau} | F_{\sigma}] = X_{\sigma}$
+  \end{itemize}
+  
+\end{theorem}
+\begin{theorem}[Upcrossing inequality]
+  $X_n$ submartingale. $E[B_n(a, b)] \le \frac{E[(X_n - a)^+]}{b - a}$
+\end{theorem}
+\begin{theorem}[Convergence]
+  \begin{itemize}
+  \item $X_n$ submartingale, $L_1$ bounded, then there exists  $X_{\infty}$ such that  $X_n \overset{a.s}{\rightarrow} X_{\infty}$, and  $E[|X_\infty|] < \sup E[|X_n|]$
+  \item a submartingale that is bounded above converges a.s.
+  \item $X_n$ ui submartingale, then there exists $X_{\infty} \in L_1$ such that $X_n \rightarrow X_{\infty}$ in $L_1$. Moreover $E[X_{\infty} | F_n] \ge X_n$.
+  \item $(F_n)$ filtration, $E[X | F_n] \rightarrow E[X | \cup F_n]$ a.s and $L_1$ (because u.i.)
+  \item $X_i$ iid, $\mathcal G = \cup \sigma(X_n, \ldots)$, then $\forall A \in \mathcal G \; P(A) \in \{0, 1\}$ (because $1_A = E[1_A]$)
+  \item $(G_i)$ dec-filtration, $E[X | G_n ] \rightarrow E[X | \cap G_n]$ as and in $L_1$.
+  \end{itemize}
+\end{theorem}
+\begin{theorem}[Doob Maximal inequality]
+  $X_n$ non-negative submartingale.
+  \begin{itemize}
+  \item $\forall \lambda > 0$, then $\lambda^p \mathbb P[\max{k \le n} X_k \ge \lambda] \le E[X_n^p]$
+  \item $|\max_{k \le n} X_k|_p \le \frac{p}{p-1} |X_n|_p$
+  \item $|\max_{k \le n} X_k|_1 \le \frac{e}{e-1} (1 + |X_n\log(X_n)|_1)$
+  \end{itemize}
+\end{theorem}
+
+\section{Markov}
+\begin{theorem}[Markov property]
+  $(X_n)$ markov $(\lambda, P)$. Conditional on $X_m = i$, $X_{n+m}$ is markov $(\delta_i, P)$ independent of $X_0, ..., X_m$.
+  $(X_n)$ markov $(\lambda, P)$. Conditional on $X_T = i$, $X_{n+T}$ is markov $(\delta_i, P)$ independent of $X_0, ..., X_T$.
+\end{theorem}
+\begin{definition}[Some defs]
+  \begin{itemize}
+  \item $C$ Closed $\iff i \in C, i \rightarrow j \Rightarrow j \in C$
+  \item $C$ irreducible $\iff \forall i, j \in C, i \rightarrow j$
+  \item $H_i = \inf\{ n \ge 0; X_n = i\}, T_i = \inf\{n \ge 1; X_n = i \}, V_i := \sum_n 1_{\{X_n = i\}}, f_i = P_i(T_i < \infty), m_i = [T_i]$
+  \item 
+    $i$ is reccurent if $P_i(\sum_n 1_{\{X_n = i\}} = \infty) = 1 \iff f_i = 1 \iff \sum p_{ii}^{(n)} = \infty$, otherwise transient.
+  \item $P_i(V_i \ge k + 1) = f_i^k$
+  \item 
+  \end{itemize}
+\end{definition}
+\end{document}
+
+
+
+
+
