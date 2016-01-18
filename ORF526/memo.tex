@@ -201,27 +201,37 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
 
 \section{Markov}
 \begin{theorem}[Markov property]
-  $(X_n)$ markov $(\lambda, P)$. Conditional on $X_m = i$, $X_{n+m}$ is markov $(\delta_i, P)$ independent of $X_0, ..., X_m$.
-  $(X_n)$ markov $(\lambda, P)$. Conditional on $X_T = i$, $X_{n+T}$ is markov $(\delta_i, P)$ independent of $X_0, ..., X_T$.
+  \begin{itemize}
+  \item $(X_n)$ markov $(\lambda, P)$. Conditional on $X_m = i$,
+    $X_{n+m}$ is markov $(\delta_i, P)$ independent of
+    $X_0, ..., X_m$.
+  \item $(X_n)$ markov $(\lambda, P)$. Conditional on
+    $X_T = i$, $X_{n+T}$ is markov $(\delta_i, P)$ independent of
+    $X_0, ..., X_T$.
+  \end{itemize}
+
 \end{theorem}
 \begin{definition}[Some defs]
   \begin{itemize}
+  \item Communicating classes: $I / \sim$ where $i \sim j \iff i \leftrightarrow j$
   \item $C$ Closed $\iff i \in C, i \rightarrow j \Rightarrow j \in C$
-  \item $C$ irreducible $\iff \forall i, j \in C, i \rightarrow j$
-  \item $H_i = \inf\{ n \ge 0; X_n = i\}, T_i = \inf\{n \ge 1; X_n = i \}, V_i := \sum_n 1_{\{X_n = i\}}, f_i = P_i(T_i < \infty), m_i = [T_i]$
-  \item 
-    $i$ is reccurent if $P_i(\sum_n 1_{\{X_n = i\}} = \infty) = 1 \iff f_i = 1 \iff \sum p_{ii}^{(n)} = \infty$, otherwise transient.
+  \item $P$ irreducible $\iff \forall i, j, i \rightarrow j \iff $  there is only one communicating class.
+  \item $H_i = \inf\{ n \ge 0; X_n = i\}, T_i = \inf\{n \ge 1; X_n = i \}, V_i := \sum_n 1_{\{X_n = i\}}, f_i = P_i(T_i < \infty), m_i = E[T_i]$
+  \item $i$ is reccurent if $P_i(V_i = \infty) = 1 \iff f_i = 1 \iff \sum p_{ii}^{(n)} = \infty$, otherwise transient.
   \item $P_i(V_i \ge k + 1) = f_i^k$
-  \item 
+  \item In a communcating class all cstates are transient or all are reccurrent.
+  \item recurrence $\Rightarrow$ closed
+  \item finite  + closed $\Rightarrow$ recurrent.
+  \item $P$ irreducible + recurrent $\Rightarrow P(T_j < \infty)$
   \end{itemize}
 \end{definition}
+\begin{theorem}[Invariant Distribution]
+  \begin{itemize}
+  \item $I$ finite, if for some $i \in I$ $p_{ij}^{(n)} \rightarrow \pi_j \forall j \in I$ then $\pi$ is an invariant distribution.
+  \end{itemize}
+\end{theorem}
+
 \end{document}
-
-
-
-
-
-
 
 
 
