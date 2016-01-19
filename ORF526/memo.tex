@@ -1,10 +1,10 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
-
+\usepackage{graphicx}
 \usepackage{amsfonts}
 \usepackage{amsmath}
-\usepackage[a4paper, total={8in, 11in}]{geometry}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
 
@@ -41,6 +41,24 @@
 \end{definition}
 \begin{theorem}[Monote class theorem]
   $G$ an algebra, $\sigma(G) = M(G)$
+\end{theorem}
+\begin{theorem}[$\lambda-\pi$]
+  $D$ is a Dynkin system if:
+  \begin{itemize}
+  \item $\Omega \in D$
+  \item $A \in D \Rightarrow A^c \in D$ 
+  \item $A_1, \ldots \in D$ pariwise disjoint, $\cup A_i \in D$
+  \end{itemize}
+  Equivalently
+  \begin{itemize}
+  \item $\Omega \in D$
+  \item $A,B \in D ; A \subset B \Rightarrow B \setminus A \in D$ 
+  \item $A_1, \ldots \in D$ increasing, $\cup A_i \in D$
+  \end{itemize}
+
+  $P \pi$-system: closed under finite interesection.
+
+  $P \subset D \Rightarrow \sigma(P) \subset P$
 \end{theorem}
 \begin{theorem}[Sigma in out]
   $$\sigma(f^{-1}(A): A \in \epsilon) = \{ f^{-1}(A): A \in \sigma(\epsilon) \}$$
@@ -163,6 +181,11 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
 \begin{theorem}[CLT]
   $X_n$ iid $Var(X) = \sigma^2 < \infty$ then $\frac{1}{\sqrt n}\sum \frac{X_i - E[X]}{\sigma} \rightarrow \mathcal N(0, 1)$
 \end{theorem}
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.75]{distributions.png}
+  \caption{Distributions}
+\end{figure}
 
 \section{Martingales}
 \begin{theorem}[Radon-Nikodym]
@@ -218,19 +241,42 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
   \item $P$ irreducible $\iff \forall i, j, i \rightarrow j \iff $  there is only one communicating class.
   \item $H_i = \inf\{ n \ge 0; X_n = i\}, T_i = \inf\{n \ge 1; X_n = i \}, V_i := \sum_n 1_{\{X_n = i\}}, f_i = P_i(T_i < \infty), m_i = E[T_i]$
   \item $i$ is reccurent if $P_i(V_i = \infty) = 1 \iff f_i = 1 \iff \sum p_{ii}^{(n)} = \infty$, otherwise transient.
+  \item $i$ is positibe recurrent $\iff m_i < \infty$ 
   \item $P_i(V_i \ge k + 1) = f_i^k$
   \item In a communcating class all cstates are transient or all are reccurrent.
   \item recurrence $\Rightarrow$ closed
   \item finite  + closed $\Rightarrow$ recurrent.
   \item $P$ irreducible + recurrent $\Rightarrow P(T_j < \infty)$
+  \item $i$ aperiodic $\iff p_{ii}^{n} > 0$ for large $n$
   \end{itemize}
 \end{definition}
 \begin{theorem}[Invariant Distribution]
   \begin{itemize}
   \item $I$ finite, if for some $i \in I$ $p_{ij}^{(n)} \rightarrow \pi_j \forall j \in I$ then $\pi$ is an invariant distribution.
+  \item if $P$ irreducible and $\lambda \ge 0$ invariant, then $\lambda \in \{0, \infty, \mathbb R^n\}$
+  \item $\gamma_i^k = E_k [\sum^{T_k-1}_{n = 0} 1_{X_n = i}]$.
+    If $P$ irreducible and recurrent, then
+    \begin{itemize}
+    \item $\gamma_k^k = 1$
+    \item $\gamma^k$ is invariant
+    \item $0 < \gamma^k < \infty$
+    \end{itemize}
+  \item If $P$ irreducible and $\lambda$ invariant with $\lambda_k = 1$ then $\lambda \ge \gamma^k$. If $P$ is reccurent, $\lambda = \gamma^k$.
+  \item If $P$ irreducible, every state is positive recurrent $\iff$ state $i$ is pos rec $\iff$ P has invariant distribution $\pi$. Moreover $\pi_i = 1/m_i$
   \end{itemize}
 \end{theorem}
+\begin{theorem}[Convergences]
+  $P$ transition matrix of an ergodic Markov chain (irreducible, aperiodic and positive recurrent), with invariant measure $\pi$, then for any initial distribution, $P(X_n = j) \rightarrow \pi_j$
+\end{theorem}
 
+\begin{theorem}[Ergodic theorem]
+  \begin{itemize}
+  \item $P$ irreducible, then $\frac{V_n(n)}{n} \rightarrow \frac{1}{m_i}$ as.
+    If $P$ is irreducible and positive recurrent, for every bounded function:
+    $\frac{1}{n} \sum^{n-1} f(X_k) \rightarrow \sum_i \pi_i f(i)$ a.s 
+  \end{itemize}
+
+\end{theorem}
 \end{document}
 
 
