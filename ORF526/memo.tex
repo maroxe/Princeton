@@ -101,7 +101,7 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
 \end{theorem}
 \begin{theorem}[Dominated Convergence]
   $g, f_1, f_2, \ldots$ measurable functions suchat $\int |g| < \infty$, $|f_n| \le g \forall n$ a.s., $f_n \overset{\text{a.s.}}\rightarrow f$, then
-  $\int |f| \le \int |g| < \infty$ and $\lim |f_n - f| \rightarrow 0$, $\lim \int f_n \rightarrow \int f$
+  $\int |f| \le \int |g| < \infty$ and $\lim \int |f_n - f| \rightarrow 0$, $\lim \int f_n \rightarrow \int f$
 \end{theorem}
 \begin{theorem}[Funbini]
   $\mu_1, \mu_2$ are $\sigma$-finite.
@@ -129,7 +129,7 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
 
 \section{Random Variables}
 \begin{definition}[Uniform integrability]
-  $(X_i)$ u.i iff $\lim_n \sup_i \int_{|X_i| > c} |X_i|d\mathbb P = 0$
+  $(X_i)$ u.i iff $\lim_c \sup_i \int_{|X_i| > c} |X_i|d\mathbb P = 0$
   iff $\lim_n \sup_i \mathbb E[1_{|X_i| > c}|X_i|]  = 0$
 \end{definition}
 \begin{theorem}[Caracterisation]
@@ -147,7 +147,7 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
   
 \end{theorem}
 \begin{theorem}[De la Valle-Pousson]
-  $X_i$ uc $\iff$ $\exists \Phi: \mathbb R^+ \rightarrow \mathbb R^+,\frac{\Phi(x)}{x}\rightarrow \infty \text{st} \sup \Phi |X_i| < \infty$.
+  $X_i$ uc $\iff$ $\exists \Phi: \mathbb R^+ \rightarrow \mathbb R^+,\frac{\Phi(x)}{x}\rightarrow \infty \text{st} \sup E[\Phi |X_i|] < \infty$.
   $\Phi$ can be assumed convex and non-decreasing.
 \end{theorem}
 
@@ -183,7 +183,7 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
 \end{theorem}
 \begin{figure}
   \centering
-  \includegraphics[scale=0.75]{distributions.png}
+  \includegraphics[scale=0.65]{distributions.png}
   \caption{Distributions}
 \end{figure}
 
@@ -216,7 +216,7 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
 \begin{theorem}[Doob Maximal inequality]
   $X_n$ non-negative submartingale.
   \begin{itemize}
-  \item $\forall \lambda > 0$, then $\lambda^p \mathbb P[\max{k \le n} X_k \ge \lambda] \le E[X_n^p]$
+  \item $\forall \lambda > 0$, then $\lambda^p \mathbb P[\max_{k \le n} X_k \ge \lambda] \le E[X_n^p]$
   \item $|\max_{k \le n} X_k|_p \le \frac{p}{p-1} |X_n|_p$
   \item $|\max_{k \le n} X_k|_1 \le \frac{e}{e-1} (1 + |X_n\log(X_n)|_1)$
   \end{itemize}
@@ -268,7 +268,6 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
 \begin{theorem}[Convergences]
   $P$ transition matrix of an ergodic Markov chain (irreducible, aperiodic and positive recurrent), with invariant measure $\pi$, then for any initial distribution, $P(X_n = j) \rightarrow \pi_j$
 \end{theorem}
-
 \begin{theorem}[Ergodic theorem]
   \begin{itemize}
   \item $P$ irreducible, then $\frac{V_n(n)}{n} \rightarrow \frac{1}{m_i}$ as.
@@ -277,7 +276,31 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
   \end{itemize}
 
 \end{theorem}
+
+\section{Complex Analysis}
+
+\begin{theorem}[Cauchy]
+  Suppose $U$ is an open subset of the complex plane $\mathbb C$,
+  $f : U \rightarrow \mathbb C$ is a holomorphic function and the
+  closed disk $D = \{ z: |z-z_0| \le r\}$ is completely contained
+  in $U$. Let $\gamma$ be the circle forming the boundary of $D$. Then
+  for every a in the interior of $D$:
+$$f(a) = \frac{1}{2\pi i} \oint_\gamma \frac{f(z)}{z-a}\, dz $$
+where the contour integral is taken counter-clockwise.
+\end{theorem}
+
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
 
 
 
