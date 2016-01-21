@@ -150,11 +150,9 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
   $X_i$ uc $\iff$ $\exists \Phi: \mathbb R^+ \rightarrow \mathbb R^+,\frac{\Phi(x)}{x}\rightarrow \infty \text{st} \sup E[\Phi |X_i|] < \infty$.
   $\Phi$ can be assumed convex and non-decreasing.
 \end{theorem}
-
 \begin{theorem}[Week Law of large numbers]
   $X_i \in L_2$ uncorrelated, $E[X_i] = m, \sup E[X_i^2] < \infty$, then $\frac{\sum_i X_i}{n} \rightarrow m$ in $L_2$.
 \end{theorem}
-
 \begin{theorem}[Caracteristic Function]
   \begin{itemize}
   \item $|\Phi_X(u)| < \Phi_X(0) = 1$
@@ -181,11 +179,6 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
 \begin{theorem}[CLT]
   $X_n$ iid $Var(X) = \sigma^2 < \infty$ then $\frac{1}{\sqrt n}\sum \frac{X_i - E[X]}{\sigma} \rightarrow \mathcal N(0, 1)$
 \end{theorem}
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.65]{distributions.png}
-  \caption{Distributions}
-\end{figure}
 
 \section{Martingales}
 \begin{theorem}[Radon-Nikodym]
@@ -221,6 +214,24 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
   \item $|\max_{k \le n} X_k|_1 \le \frac{e}{e-1} (1 + |X_n\log(X_n)|_1)$
   \end{itemize}
 \end{theorem}
+\begin{theorem}[Random Walk]
+  \begin{itemize}
+  \item Fair random walk, $S_0 = 0, \tau = \inf\{n: S_n\in \{A, -B\} \}$:
+    $$P(X_\tau = A) = \frac{B}{A+B}$$
+    $$E[\tau] = AB$$
+    $$P(\tau < \infty) \ge P(\tau_A < \tau_{-B}) \rightarrow 1$$
+
+  \item $p \ne \frac12$, $P(X_{\tau} = A) = \frac{(\frac{1-p}p)^B - 1}{(\frac{1-p}p)^{A+B} - 1}$,
+    \[
+      P(\tau_A < \infty) = \lim_B P(\tau_A < \tau_{-B}) =
+      \left\{\begin{array}{cc}1&\text{if } p > \frac12\\(\frac{p}{1-p})^A&\text{else}\end{array}\right.
+    \]
+    \[
+      E[\tau_A] = \lim E[\tau_A \wedge \tau_{-B}] =
+      \left\{\begin{array}{cc}\frac{A}{2p-1}&\text{if } p > \frac12\\\infty&\text{else}\end{array}\right.
+    \]
+  \end{itemize}
+\end{theorem}
 
 \section{Markov}
 \begin{theorem}[Markov property]
@@ -248,6 +259,7 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
   \item finite  + closed $\Rightarrow$ recurrent.
   \item $P$ irreducible + recurrent $\Rightarrow P(T_j < \infty)$
   \item $i$ aperiodic $\iff p_{ii}^{n} > 0$ for large $n$
+  \item $\lambda_i p_{ij} = \lambda_j p_{ji} \Rightarrow \lambda$ is invariant.
   \end{itemize}
 \end{definition}
 \begin{theorem}[Invariant Distribution]
@@ -276,8 +288,17 @@ Then $f$ is measurable and $\int_S f\,d\mu \le \liminf_n \int_S f_n\,d\mu$.
   \end{itemize}
 
 \end{theorem}
+\begin{theorem}[Time reversal]
+  $P$ irreducible and have an invariant distribution $\pi$.
+  if $X_i \sim Markov(\pi, (P_{ij}))$ then $X_{N-i} \sim Markov(\pi, (P_{ji}))$
+\end{theorem}
+\begin{theorem}[Coupling theorem]
+  $X, Y \sim Markov(\lambda / \pi, P)$ indenpendent, $W_n = (X_n, Y_n) \sim Markov(\lambda \otimes \pi, P \otimes P)$
+\end{theorem}
+
 
 \section{Complex Analysis}
+
 
 \begin{theorem}[Cauchy]
   Suppose $U$ is an open subset of the complex plane $\mathbb C$,
@@ -289,7 +310,56 @@ $$f(a) = \frac{1}{2\pi i} \oint_\gamma \frac{f(z)}{z-a}\, dz $$
 where the contour integral is taken counter-clockwise.
 \end{theorem}
 
+\section{Annexe}
+\begin{theorem}[Tower]
+\begin{align*}
+  E[1_{Y \in B} F(y)] &= \int 1_{y \in B} F(y) f(y) dy\\
+                      &= \int 1_{y \in B} (\int 1_{x \le y} f(x)dx) f(y) dy\\
+                      &= \int 1_{y \in B}  1_{x \le y} f(x) f(y) dx dy & \text{Tonnelli, positive}\\
+                      &= \int 1_{y \in B}  1_{x \le y} dP_{X,Y}\\
+                      &= E[1_{Y \in B} 1_{X \le Y}]
+\end{align*}
+$F(Y)$ is $\sigma(Y)$-measurable.  So
+$P(X \le Y | Y ) = E[1_{X \le Y} | Y] = F(Y)$
+\end{theorem}
+
+\section{Common distribution}
+
+\[
+\begin{array}{l|l|l}
+\text{Order}&\text{Non-central moment}&	\text{Central moment}\\
+1    &\mu	&0\\
+2    &\mu^2  + \sigma^2 &\sigma^  2\\
+3    &\mu^3  + 3\mu \sigma^  2&0\\
+4    &\mu^4  + 6\mu^2 \sigma^2  + 3\sigma^4 &3\sigma^  4\\
+5    &\mu^5  + 10\mu^3 \sigma^2  + 15\mu \sigma^  4&0\\
+6    &\mu^6  + 15\mu^4 \sigma^2  + 45\mu^2 \sigma^4  + 15\sigma^6 &15\sigma^  6\\
+7    &\mu^7  + 21\mu^5 \sigma^2  + 105\mu^3 \sigma^4  + 105\mu \sigma^  6&0\\
+8    &\mu^8  + 28\mu^6 \sigma^2  + 210\mu^4 \sigma^4  + 420\mu^2 \sigma^6  + 105\sigma^8 &105\sigma^  8\\
+\end{array}
+\]
+\begin{figure}
+  \centering
+  \includegraphics[scale=0.65]{distributions.png}
+  \includegraphics[scale=0.8]{gamma.png}
+  \caption{Distributions(gamma mean var)}
+\end{figure}
+
+
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
