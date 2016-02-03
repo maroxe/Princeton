@@ -1,8 +1,3 @@
-%%% Local Variables:
-%%% mode: latex
-%%% TeX-master: "chapter1.tex"
-%%% End:
-
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
@@ -14,9 +9,8 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
 
-
 \begin{document}
-\section{measure theory}
+\section{Measure theory}
   
 \begin{definition}[(Continuous) Semimartingale]
   $X_t, t \ge 0$ is a stochastic process with continuous paths which admits the decomposition
@@ -28,7 +22,7 @@
 \end{definition}
 \begin{definition}[Process of bounded variation(BV)]
   $A_t$ has BV if it is a difference of two non-decreasing prices.
-  $A_t = A_t^{up} - A_t^{down}$ Where $A_t^{up/down}$ are non-decreasing.
+  $A_t = A_t^{\uparrow} - A_t^{\downarrow}$ Where $A_t^{\uparrow/\downarrow}$ are non-decreasing.
   Alternatively
   $$A(\omega) = \int_0^t \mu(ds, w) = \mu([0, t], \omega)$$
   where $\mu$ is a random signed non-atomic measure on $R$.
@@ -42,7 +36,6 @@
   is still a semi martingale?
 \item What can we say about the maximum of two semi martingalse.
 \end{itemize}
-
 \begin{theorem}[Ito formula for semi martingals]
   If $X$ is a semimartingale and and $f \in C^2$, then $f(X_t)$ is a semimartingale and
   $$f(X_t) = f(X_0) + \int_0^t f'(X_s) dM_s + \int_0^t f'(X_s)dA_s + \int_0^t \frac{f''(X_s)}2 d<M>_s$$
@@ -58,7 +51,6 @@ Example: $X_t$ brownian motion.
 \item $$X_t^2 = X_0^2 + \int_0^t 2X_s dX_s + \int_0^t 1 d<X>_s$$
 \item $$d<X>_s = ds$$
 \end{itemize}
-
 \begin{proof}
   $ $\newline
 \begin{itemize}
@@ -71,7 +63,6 @@ Example: $X_t$ brownian motion.
 \item Induction over $m$, $X_t^m = X_t X_t^{m-1} \overset{\text{Ito applied to product}}{=} ..$
 \end{itemize}
 \end{proof}
-
 \begin{theorem}[Ito applied to product]
   if $X$ and $Y$ are continuous semi martingales, then $XY$ is also a consitnuous semi-martingale and we have the decomposition:
   $$X_t Y_t = X_0 Y_0 + \int_0^t X_s dY_s + \int_0^t Y_s dX_sds + <X, Y>_t$$ where:
@@ -79,8 +70,6 @@ Example: $X_t$ brownian motion.
   \item $<X, Y>_t = \lim \sum \Delta X_k \Delta Y_k$, is the BV part of $X_t Y_t$, 
   \end{itemize}
 \end{theorem}
-
-
 \begin{itemize}
 \item Polarization $$X_tY_t = \frac{(X_t + Y_t)^2 - (X_t - Y_t)^2}4$$
   So it is enough to show that the square of semi-martingale is also a
@@ -104,3 +93,20 @@ Note: $\max, \min$ are not $C^2$ but at least convex.
 \end{document}
 
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
