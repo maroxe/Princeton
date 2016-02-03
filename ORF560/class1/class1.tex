@@ -1,0 +1,106 @@
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "chapter1.tex"
+%%% End:
+
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+
+\begin{document}
+\section{measure theory}
+  
+\begin{definition}[(Continuous) Semimartingale]
+  $X_t, t \ge 0$ is a stochastic process with continuous paths which admits the decomposition
+  $$X_t = M_t + A_t$$
+  \begin{itemize}
+  \item $M_t$ is a local martingale
+  \item $A_t$ is a processof bounded variation.
+  \end{itemize}
+\end{definition}
+\begin{definition}[Process of bounded variation(BV)]
+  $A_t$ has BV if it is a difference of two non-decreasing prices.
+  $A_t = A_t^{up} - A_t^{down}$ Where $A_t^{up/down}$ are non-decreasing.
+  Alternatively
+  $$A(\omega) = \int_0^t \mu(ds, w) = \mu([0, t], \omega)$$
+  where $\mu$ is a random signed non-atomic measure on $R$.
+\end{definition}
+\begin{definition}[Local Martingale]
+  $M_t$ is local martingale iff there exists a sequence $\tau_n \rightarrow \infty$ of stopping times s.t $M_{t \wedge \tau_n}$ is a martingale for every $n$.
+\end{definition}
+\subsection{Question}
+\begin{itemize}
+\item What happens if we take $f \in C^2(R)$. Is it true that $f(X_t)$
+  is still a semi martingale?
+\item What can we say about the maximum of two semi martingalse.
+\end{itemize}
+
+\begin{theorem}[Ito formula for semi martingals]
+  If $X$ is a semimartingale and and $f \in C^2$, then $f(X_t)$ is a semimartingale and
+  $$f(X_t) = f(X_0) + \int_0^t f'(X_s) dM_s + \int_0^t f'(X_s)dA_s + \int_0^t \frac{f''(X_s)}2 d<M>_s$$
+  Where
+  \begin{itemize}
+  \item $X_t = M_t + A_t$
+  \item $<M>_t$ is the quandratic variation of $M$. It is the only BV process s.t $M_t^2 - <M>_t$ is a local martingale.
+  \item Existence: $<M>_t = \lim^{\mathbb{P}}_{\text{mesh} \rightarrow 0} \sum_{i=1..k+1} (M_{t_i} - M_{t_{i-1}})^2$
+  \end{itemize}
+\end{theorem}
+Example: $X_t$ brownian motion.
+\begin{itemize}
+\item $$X_t^2 = X_0^2 + \int_0^t 2X_s dX_s + \int_0^t 1 d<X>_s$$
+\item $$d<X>_s = ds$$
+\end{itemize}
+
+\begin{proof}
+  $ $\newline
+\begin{itemize}
+\item Localization:
+  Introduce the stopping times $\tau_n = \inf \{ t: |X_t| \ge n\}$. Note that $\tau_n$ is non-decreasing $\rightarrow \infty$.
+  Suffice th show that $f(X_{t \wedge \tau_n}) = f(X_0) + \int_0^{t \wedge \tau_n} f'(X_s)ds + \int_0^{t \wedge \tau_n} f'(X_s)dA_s + \int_0^{t \wedge \tau_n} \frac{f''(X_s)}2 d<M>_s$ (Because it converge in probability to the original formula)
+\item On $[-n, n]$, we can approximate $f$ by polynomials uniformly ($p_k^{(j} \rightarrow f^{(j)}, j = 0, 1, 2$). (Stones-Weierestrass theorem applied to $f''$). 
+\item It is enough to show Ito's formula for polynomials. By linearity it is enough to show it for $f(x) = x^m$
+  $$X_{t \wedge \tau_k} = X_0^m + \int_0^{t \wedge \tau_n} mX_s^{m-1} dM_s + \int_0^{t \wedge \tau_n} m X_s^{m-1} dA_s + \int_0^{t \wedge \tau_n} \frac{m(m-1)}2 X_s^{m-2} d<M>_s$$
+\item Induction over $m$, $X_t^m = X_t X_t^{m-1} \overset{\text{Ito applied to product}}{=} ..$
+\end{itemize}
+\end{proof}
+
+\begin{theorem}[Ito applied to product]
+  if $X$ and $Y$ are continuous semi martingales, then $XY$ is also a consitnuous semi-martingale and we have the decomposition:
+  $$X_t Y_t = X_0 Y_0 + \int_0^t X_s dY_s + \int_0^t Y_s dX_sds + <X, Y>_t$$ where:
+  \begin{itemize}
+  \item $<X, Y>_t = \lim \sum \Delta X_k \Delta Y_k$, is the BV part of $X_t Y_t$, 
+  \end{itemize}
+\end{theorem}
+
+
+\begin{itemize}
+\item Polarization $$X_tY_t = \frac{(X_t + Y_t)^2 - (X_t - Y_t)^2}4$$
+  So it is enough to show that the square of semi-martingale is also a
+  semi martingale.
+\item If $Z_t$ a semi martingale, let's show that $$Z_t^2 = Z_0^2 + \int_0^t2Z_s dM_s^Z + \int_0^t 2 Z_s dA_s^Z + \int_0^t 1 d<M^Z>_s$$:
+  \begin{align*}
+    <M^Z>_t &= \lim \sum (M^Z_{t_i} - M^Z_{t_{i-1}})^2
+    \\&= \lim \sum (Z_{t_i} - Z_{t_{i-1}})^2 & \text{(Because $A^Z$ has BV)}
+    \\&= \lim Z_t^2 - Z_0^2 -2 \sum Z_{t_{i-1}}(Z_{t_i} - Z_{t_{i-1}})
+    \\&= Z_t^2 - Z_0^2 -2 \int Z_s dZ_s
+  \end{align*}
+\end{itemize}
+
+
+\subsection{Next question}
+What if $f$ is not $C^2$?
+Motivation: if you have a market with two companies where log stocj prices are modelled by the semimartingales X and Y we will be interested ni
+$\max(X_t, Y_t)$ and $\min(X_t, Y_t)$
+Note: $\max, \min$ are not $C^2$ but at least convex.
+
+\end{document}
+
+  
