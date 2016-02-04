@@ -1,0 +1,88 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+\begin{document}
+Main motivation:
+$max(X_t, Y_t)$. We want to know if it is semimartingale.
+
+Claim:
+This Q is related to the following Q:
+Take a brownian motion $B$. We know that $\int_0^t 1_{B(s) = 0}ds = 0$ for all $t$ with probability 1.
+What is the right way of measuring the time spent at 0 by a BM.
+
+Relation between the two questions:
+Suppose $B_1, B_2$ are independent standard BMs and we want to stdy $max(B_1, B_2)$
+
+
+Note: $max(x, y) = \frac{x+y + |x-y|}{2}$, so we only need to analyse $|B_1 - B_2|$. $f(x) = |x|$, $f''(x) = 2\delta_0(x)$
+Try to apply Ito: $|B(t)| = \int_0^t sgn(B_s) dB_s + \int_0^t \delta_0(B_s) ds$
+
+
+Three natural ways of measuring time spent at 0 by BM:
+\begin{itemize}
+\item Take $\varepsilon > 0$, consider $\int_0^t 1_{|B_s| < \varepsilon} ds$, take the limit $\varepsilon \downarrow 0$ in some way.
+\item Define time spent at 0 as: $2(|B(t)| - \int_0^t sign(B_s) dB_s)$
+\item Recall that a BM is a limit of random walks, $B(t) = \lim_{\text{distribution}} \frac{S_{\lfloor Kt \rfloor}}{\sqrt K}$
+  Take $\lim_K \frac1{\sqrt K}\# \{ i, S_i = 0, i \le \lfloor Kt \rfloor \}$
+\end{itemize}
+
+Luckily $1 \iff 2 \iff 3$
+
+\begin{definition}[Local time]
+  For a BM $B$ and a point $a \in R$, call the almost sure limit $\lim_{\epsilon 0} \frac{1}{2\epsilon} \int_0^t 1_{|B_s - a| < \epsilon}ds$ the local time of $B$ at $a$ and write $L_t^a$.
+  With probability 1 $(a, t) \rightarrow L_t^a$ is continuous.(Trotter '57)
+\end{definition}
+
+Remarks:
+\begin{enumerate}
+\item Need to justify the a.s limit and continuity.
+\item $t \rightarrow L_t^a$ is non decreasing wp 1.
+\item $B(R) \ni A \rightarrow \int_0^t 1_{B_s \in A}ds$  has $a \rightarrow L_t^a$ as its density.
+\end{enumerate}
+
+\begin{definition}[Local Time]
+  Define the local time $L_t^a$ by $|B_t-a| - \int_0^t sgn(B_s-a)ds =: \frac12 L_t^a$
+\end{definition}
+Proof:
+
+Bump function $\rho(x) = c e^{\frac1{x^2-1}}1_{|x| < 1}$, $\int \rho = 1$, $\rho_n(x) = n\rho(nx)$
+$h_n(x) = \int_{-\infty}^x \rho_n(y - a)dy, h_n(x) = \int_{-\infty}^x \rho_n(y)dy$
+Easy to check: $h_n(x) \rightarrow sgn(x-a), H_n(x) \rightarrow |x - a|$
+Clear: $\rho_n \in C^{\infty}$
+$\Rightarrow$ Ito:  $H_n(B_t) = H_n(B_0) + \int_0^t h_n(B_s)dB_s + \int_0^t \frac12 \rho_n(B_s)ds$
+
+$n \rightarrow \infty$:
+\begin{itemize}
+\item $H_n(B_t) \rightarrow |B_t - a|$, as
+\item 
+\end{itemize}
+
+\end{document}
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
