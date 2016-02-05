@@ -1,0 +1,74 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+
+\newcommand{\Q}[1]{\subsubsection*{Q.#1}}
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+
+\newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+\newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\var}{var}
+
+
+% parameters
+\geometry{hmargin=1cm,vmargin=1cm}
+\title{ORF523 - Problem Set 1}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+\maketitle
+\Q{1}
+\begin{enumerate}
+\item Let $\lambda$ be an eigen value of $A^TA$ corresponding to an eigen vector $u \ne 0$, then $0 \le ||Au||^2 = u^TA^TAu = \lambda ||u||^2$, therefore $\lambda > 0$.
+\item Let $\lambda$ be an eigen value of $A$ corresponding to an eigen vector $u$, the $A^TAu = A(Au) = \lambda^2 u$, so $\lambda^2$ is an eigen value of $A^TA$. Since $A$ has $n$ eigen values (accounting for multplicity), the eigen values of $A^TA$ are exactly the squares of the eigen values of $A$, and therefore the singular values of $A$ are the absolute values of the eigen values of $A$.
+
+\item
+  $$u_i^Tu_j = u_i^T\frac{A^TAu_j}{\lambda_j} = \frac{u_i^TA^TA}{\lambda_j}u_j$$
+  Since $\lambda_i \ne \lambda_j$, $u_i^Tu_j = 0$
+
+\end{enumerate}
+\Q{2}
+\begin{itemize}
+\item The $L_2$ norm for vectors is unitarly invariant:
+  Let $O$ unitary matrix and $X$ a vector, then $||OX||^2  = X^TO^TOX = X^TX = ||X||^2$.
+\item Since $O$ is invertible, the application $S \rightarrow S, X \rightarrow OX$, where $S$ is the $L_2$ sphere, is a bijection. So   $\{ x, ||x||_2 = 1\} = \{ Ox, ||x||_2 = 1\}$
+\item The $L_2$ norm for matrices is unitarly invariant.
+  If $A$ a matrix, then $||AO|| = \max_{||x||_2 = 1} ||AOx|| = \max_{||Ox||_2 = 1} ||AOx|| = \max_{||y||_2 = 1} ||Ay|| = ||A||$ and
+  $||OA|| = \max_{||x||_2 = 1} ||OAx|| = \max_{||x||_2 = 1} ||Ax|| = ||A||$.
+\item
+  Let $B$ be a matrix of rank at most $k$.
+  $||A - B|| = ||U(\Sigma - U^TBV)V^T|| = ||\Sigma - U^TBV||$
+  Let $U'\Sigma'V'$ be the SVD of $B$, by a similar argument: $||A - B|| = ||\Sigma - \Sigma'||$.
+  
+  $rank(B) = rank(\Sigma') \le k$, so $\Sigma'$ can be written as $\Sigma'^{(k)} = diag(\sigma_1', \ldots, \sigma'_k, \0 ldots )$.
+  $||A - B|| = \sqrt{\sum_{i = 1 ... k} (\sigma_i - \sigma'_i)^2 + \sum_{i = k+1 \ldots n} \sigma_i^2}
+  = \sqrt{\sum_{i = 1 ... k} (\sigma_i - \sigma'_i)^2 + ||A - A^{(k)}||^2} \ge ||A - A^{(k)}||$,
+  Since $rank(A^{(k)}) = k$ we have proved the result.
+\end{itemize}
+
+\Q{3}
+\begin{enumerate}
+\item
+\item To store $A^{(k)}$ we need only to store $\Sigma^{(k)}$ ($k$ parameters), $U^{(k)}, V^{(k)}$ (each of them has only at most $k$ column not set to zero, so they take $nk + mk$), while $A$ takes $nm$ numbers to store.
+  In conclusion, we save ($nm - k(n+m+1)$).
+\item 
+\end{enumerate}
+\end{document}
+
+
+
+
+
+
+
+
+

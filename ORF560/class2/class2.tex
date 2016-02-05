@@ -36,7 +36,7 @@ Three natural ways of measuring time spent at 0 by BM:
 
 Luckily $1 \iff 2 \iff 3$
 
-\begin{definition}[Local time]
+\begin{definition}[Local time, def1]
   For a BM $B$ and a point $a \in R$, call the almost sure limit $\lim_{\epsilon 0} \frac{1}{2\epsilon} \int_0^t 1_{|B_s - a| < \epsilon}ds$ the local time of $B$ at $a$ and write $L_t^a$.
   With probability 1 $(a, t) \rightarrow L_t^a$ is continuous.(Trotter '57)
 \end{definition}
@@ -48,22 +48,56 @@ Remarks:
 \item $B(R) \ni A \rightarrow \int_0^t 1_{B_s \in A}ds$  has $a \rightarrow L_t^a$ as its density.
 \end{enumerate}
 
-\begin{definition}[Local Time]
+\begin{definition}[Local Time, def2]
   Define the local time $L_t^a$ by $|B_t-a| - \int_0^t sgn(B_s-a)ds =: \frac12 L_t^a$
 \end{definition}
-Proof:
+\begin{proof}
+  Bump function $\rho(x) = c e^{\frac1{x^2-1}}1_{|x| < 1}$,
+  $\int \rho = 1$, $\rho_n(x) = n\rho(n(x-a))$
+  $h_n(x) = \int_{-\infty}^x \rho_n(y)dy, h_n(x) = \int_{-\infty}^x
+  \rho_n(y)dy$ Easy to check:
+  $h_n(x) \rightarrow sgn(x-a), H_n(x) \rightarrow |x - a|$ Clear:
+  $\rho_n \in C^{\infty}$ $\Rightarrow$ Ito:
+  $H_n(B_t) = H_n(B_0) + \int_0^t h_n(B_s)dB_s + \int_0^t \frac12
+  \rho_n(B_s)ds$
 
-Bump function $\rho(x) = c e^{\frac1{x^2-1}}1_{|x| < 1}$, $\int \rho = 1$, $\rho_n(x) = n\rho(nx)$
-$h_n(x) = \int_{-\infty}^x \rho_n(y - a)dy, h_n(x) = \int_{-\infty}^x \rho_n(y)dy$
-Easy to check: $h_n(x) \rightarrow sgn(x-a), H_n(x) \rightarrow |x - a|$
-Clear: $\rho_n \in C^{\infty}$
-$\Rightarrow$ Ito:  $H_n(B_t) = H_n(B_0) + \int_0^t h_n(B_s)dB_s + \int_0^t \frac12 \rho_n(B_s)ds$
+  $n \rightarrow \infty$:
+  \begin{itemize}
+  \item $H_n(B_t) \rightarrow |B_t - a|$, as
+  \item $\int h_n(B_s)dB_s \rightarrow \int_0^t sgn(B_s - a)dB_s$, in
+    $L_2$?
+    \begin{align*}
+      E[\left(\int (h_n(B_s) - sgn(B_s - a))dB_s\right)^2]
+      &= E[ \int_0^t (h_n(B_s) - sgn(B_s-a))^2 ds ]
+      \\&\le E[ \int_0^t 1_{|B_s-a| < \frac1n}  ds ] = \int_0^t \mathbb P(|B_s - a| \frac 1n) ds
+      \\ &\underbrace{\rightarrow}_{DCT} 0
+    \end{align*}
+  \item
+    $\frac12 \int_0^t \frac12 \rho_n(B_s) = \int_{-\infty}^{\infty}
+    \frac12 \rho_n(y)L_t^ydy$ (because $L_t^a$ is a density)
+    $\rightarrow L_t^a$ as
+  
+  \end{itemize}
 
-$n \rightarrow \infty$:
-\begin{itemize}
-\item $H_n(B_t) \rightarrow |B_t - a|$, as
-\item 
-\end{itemize}
+  $H_n(B_t) = H_n(B_0) + \int_0^t h_n(B_s)dB_s + \int_0^t \frac12
+  \rho_n(B_s)ds$ Taking the limit in probability:
+  $|B(t)-a| = |B(0) - a| + \int_0^t sgn(B_s-a)dB_s + L_t^a$ (Ito-Tanaka Formula)
+\end{proof}
+\begin{theorem}[Def2 imply Def1]
+  If we define $L_t^a$ through Tanak's formula, it will be the density of the occupation time measure and joint continuity in $(a, t)$
+\end{theorem}
+\begin{proof}
+  $H'(X) = \int_{-\infty}^{\infty}h(x) 1_{y \le x}dy$
+  $H(X) = \int_{-\infty}^{\infty}h(u)(x-u)^+ dy$
+  Note $f^+ = \frac{f+ |f|}2$
+  $(B_t - a)^+ = \frac12 (B_t - a)^+ + \frac12 |B_t - a|$
+
+  Ito:
+  \begin{align*}
+    \frac12 \int_0^t h(B_s)d_s &= H(B_t) - H(B_0) - \int_0^t H'(B_s)dB_s
+    \\&= 
+  \end{align*}
+\end{proof}
 
 \end{document}
 
