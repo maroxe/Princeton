@@ -1,3 +1,4 @@
+
 \documentclass[12pt]{article}
 
 % packages
@@ -83,16 +84,20 @@ For a random variable $X$, let's call $\Phi_X$ its caracteristic function.
 
 \Q{3}
 \begin{enumerate}[label=(\alph*)]
-\item Since $\forall n > 0, \Delta_n(1) = 0$, $B_1 = \sum_{n=0}^{\infty} \lambda_n Z_n \Delta_n(1) = \lambda_0 Z_0 \Delta_0(1)$.
+\item Since $\forall n > 0, \Delta_n(1) = 0$, $B_1 = \sum_{n=0}^{\infty} \lambda_n Z_n \Delta_n(1) = \lambda_0 Z_0 \Delta_0(1) = \lambda_0Z_0$.
+  But $B_t - U_t = \lambda_0 Z_0 \Delta_0(t) = t\lambda_0 Z_0 = t B_t$, which proves the result.
 \item
   If $s < t$, then $cov(B_s, B_t) = \cov(B_s - B_t, B_s) + \var(B_s) = s$.
   
-  $\cov(U_s, U_t) = \cov(B_s - sB_1, B_t -tB_1) = \cov(B_s, B_t) + ts \cov(B_1, B_1) - t \cov(B_s, B_1) - s\cob(B_1, B_t) = s + ts - ts - ts = s - ts = s(1- t)$.
+  $\cov(U_s, U_t) = \cov(B_s - sB_1, B_t -tB_1) = \cov(B_s, B_t) + ts \cov(B_1, B_1) - t \cov(B_s, B_1) - s\cov(B_1, B_t) = s + ts - ts - ts = s - ts = s(1- t)$.
 
 \item
-  For $s < t$, $cov(X_t, X_s) = g(t)g(s) h(s)$ should be equale to $s(1-t)$.
-  We can take $g: t \rightarrow 1 - t$, $h: t \rightarrow \frac s{1 - s}$ defined on $[0, 1)$
+  For $s < t$, $cov(X_t, X_s) = g(t)g(s) (h(s) \wedge h(t))$, should be equal to $s(1-t)$.
+  We can take $g: t \rightarrow 1 - t$, $h: s \rightarrow \frac s{1 - s}$ defined on $[0, 1)$
 
+\item
+  Since the two guaissian processes $U_t$ and $X_t$ have the same mean (0) and covariance matrix, they have the same distribution. Therefore, $Y_t$ has the same distribution as $(1+t)X_{\frac{t}{1+t}} = (1+t)g(1+t)B_{h(\frac{t}{1+t})} = B_t$. In addition, $U_t$ is continuous as a composition of two continuous functions, it is a brownian motion.
+  
 \end{enumerate}
 \end{document}
 
