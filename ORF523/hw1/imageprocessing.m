@@ -22,9 +22,9 @@ title('original')
 for i = 1:length(k_range)
     k = k_range(i);
     Uk = U; Sk = S; Vk = V;
-    Sk(k:end, k:end) = 0;
-    Uk(:, k:end) = 0;
-    Vk(:, k:end) = 0;
+    Sk(k+1:end, k+1:end) = 0;
+    Uk(:, k+1:end) = 0;
+    Vk(:, k+1:end) = 0;
     Ak = Uk * Sk * Vk';
     diff_norm(i) = norm(A - Ak,'fro');
     total_savings(i) = prod(size(A)) ... % size of A

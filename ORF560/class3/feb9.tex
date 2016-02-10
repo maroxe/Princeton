@@ -1,0 +1,109 @@
+\documentclass{article} \usepackage[utf8]{inputenc}
+\usepackage[english]{babel} \usepackage{graphicx}
+\usepackage{amsfonts} \usepackage{amsmath} \usepackage{amsthm}
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+
+\begin{document}
+$X = \underbrace{M}_{\text{local martingale}} + \underbrace{A}_{\text{bounded variation process}}$
+
+Ito: $f \in \mathcal C^2, df(X_t) = f'(X_s)dX_s + \frac12 f''(X_s)d<M>_s$
+\section{Basic concepts of SPT}
+Starting point: semimartingale market models, ie:
+
+\begin{equation}
+  dB(t) = r(t) B(t) dt
+\end{equation}
+
+\begin{equation}
+dX_i(t) = X_i(t) \left(b_i(t)dt + \sum_{\nu} \sigma_{i,\nu} dW_{\mu}(t)\right)
+\end{equation}
+
+
+
+Here:
+\begin{itemize}
+\item $B(t)$ is the value of the bank accound if we start from 1 dollar today.
+\item $X_i(t)$ stands for the price of one share of stock of company $i$.
+\item $r(t)$ is the short rate.
+\item $b_i(t)$ rate of return of stock $i$.
+\item $\sigma_{i, \nu}(t)$ volatility of stock $i$ with respect to $W_{\nu}$.
+
+\end{itemize}
+
+\begin{theorem}[Solutions]
+  (1) and (2) admist solutions (as long as we know the ?)
+  $B(t) = e^{\int_0^t r_s ds}$
+  $X_i(t) = X_i(0) e^{\int_0^t \gamma_i(s) ds + \int \Sigma_{\nu=1}^d \sigma_{i,\nu}(s) dW_{\nu}(s)}$
+  where $\gamma_i(t) = b_i(t) - \frac12 a_{ii}(t) = b_i(t) - \frac12 \sum_{\mu=1}^d \sigma_{i\mu}(t)$
+\end{theorem}
+\begin{proof}
+  \begin{itemize}
+  \item $e^{\int_0^t r(s) ds}$ is a process of bounded variations.
+    $( \int_0^t r(s)ds = \int_0^t r(s)^+ds - r(s)^-ds )$ By Ito's
+    formula for the semi martingale $\int_0^t r(s)ds$ and $f = \exp$
+    $\rm de^{\int_0^t r(s)\rm ds} = e^{\int_0^t r(s)\rm ds} \rm
+    d(\int_0^t r(s) \rm ds) = e^{\int_0^t r(s)\rm ds} r(t) dt$.
+  \item 
+    $$X_i(t) = X_i(0) e^{\int_0^t \gamma_i(s) ds + \int \Sigma_{\nu=1}^d \sigma_{i,\nu}(s) dW_{\nu}(s)}$$
+    $$d \, log(X_i(t)) = d(\int_0^t \gamma_i(s) ds + \int \Sigma_{\nu=1}^d \sigma_{i,\nu}(s) dW_{\nu}(s)) = \gamma_i(t) dt + \Sigma_{\nu=1}^d \sigma_{i,\nu}(t) dW_{\nu}(t)$$
+    \begin{align*}
+      d \, log(X_i(t)) &= \frac{dX_i(t)}{X_i(t)} - \frac12 \frac1{X_i(t)^2} \underbrace{X_i(t)^2 \sum \sigma_{i\mu}^2(t) dt}_{d<X_i>(t)}\\
+                       &= \frac{dX_i(t)}{X_i(t)} - \frac12 \sum \sigma_{i\mu}^2(t) dt
+    \end{align*}
+
+  \end{itemize}
+
+\end{proof}
+
+\begin{definition}[Portfolios]
+  Fix a filtration $(\mathcal F_t)_{t \ge 0}$ such that $B, X_i, r, b, \sigma$ are adapated to it.
+  A portfolio $\Pi(t) = (\Pi_1(t), \ldots, \Pi_n(t))$is a bounded progressively measurable process with respect to $(\mathcal F_t)_t$ such that:
+  $$\sum_i \Pi_i(t) = 1 \; \forall t$$
+  We $\Pi$ call long-only portfolio if $\pi_i(t) \ge 0 \forall i$ 
+\end{definition}
+\begin{definition}[Progessively measurable]
+  $\Pi(t)$ measurable with respect to $\cup_{s < t} \mathcal F_s$
+\end{definition}
+\begin{example}
+  \begin{itemize}
+  \item Equal weigted portfolio: $\Pi_1(t) = \ldots = \Pi_n(t) = \frac1n$.
+  \item Market portfolio: Suppose company $i$ has $N_i(t)$ shares at time $t$
+    $\Pi_i(t) = \frac{X_i(t)V_i(t)}{\sum X_j(t)V_j(t)}$
+  \end{itemize}
+\end{example}
+
+\textbf{Assumption:} All portfolios $\Pi$ are self financing( $\iff$ we immediately re investing all gain from traind).
+Mathematically, the portfolio value $V^{(\pi)}(t) = \sum \Pi_i(t) X_i(t)$ satisfies the equation $\frac{dV^{\pi}(t)}{V_i^{pi}(t)} = \sum_{i} \pi_i(t) \frac{dX_i(t)}{X_i(t)}$.
+
+\begin{theorem}
+  Has an explicit solution
+  $$V^{(\pi)}(t) = V^{(\pi)}(0) \exp( \int_0^t \gamma_{\pi}(u)du + \int_0^t \sum_{\nu} \sigma_{\pi\nu}(u)dW_{\nu}(u))$$
+  $\gamma_\pi(t) = \sum_i \pi_i(t) \gamma_i(t) + \gamma_{\pi}^*(t)$
+  $\gamma_{\pi}^*(t) = \frac12 (\sum \pi_i(t) a_{ii}(t) - \sum_{i, j} \pi_i(t)\pi_j(t)a_{i,j}(t))$
+  $$\sigma_{\pi\nu}(t) = \sum_i \pi_i(t)\sigma_{i\mu}(t)$$
+\end{theorem}
+\end{document}
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,73 @@
+
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+%\usepackage[a4paper, total={7in, 10in}]{geometry}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\begin{document}
+\begin{itemize}
+\item $X_0 = 0$
+\item $X_t - X_s \sim \mathcal N(0, t-s)$
+  \begin{proof}
+    fix $t_n \rightarrow t, s_n \rightarrow s$, $t_n, s_n$ are dyadic.
+    By construction: $X_{t_n} - X_{x_n} \sim \mathcal N(0, t_n - s_n)$
+    $X_{t_n} - X_{x_n} \overset{as}{\rightarrow} X_t - X_s$
+    $\mathcal N(0, t_n - s_n) \rightarrow \mathcal N(0, t - s)$
+  \end{proof}
+\item $X_t - X_s \perp \{ X_r : r \le s \} \forall t \ge s$
+  \begin{proof}
+    $s = k'2^{-n}, t = k2^{-n}$
+    Then $X_t - X_s \perp \sigma \underbrace{\{ X_r, r \le s, r = k2^{-n}\}}_{\mathcal F_n}$
+    
+    Let $Z \text{ bdd } \sigma\{X_r, r \le s\}$-meas, 
+    $Y \text{ bdd } \sigma\{X_t - X_s\}$-meas.
+
+    Let's show $E[YZ] = E[Y]E[Z]$.
+
+    Let $Z^{(n)} \rightarrow Z, Y^{(n)} \rightarrow Y$.
+    
+    We know that $E[Y^{(n)}Z^{(n)}] = E[Y^{(n)}]E[Z^{(n)}]$
+    We conclude by DCT.
+
+    Example of such $Z^{(n)}$:
+    $Z^{(n)} = E[Z | \mathcal F_n]$
+
+    Martingal convergence theorem: $Z^{(n)} \rightarrow E[Z | \sigma(\underbrace{\cup_n \mathcal F_n}_{\mathcal F'})]$
+    $$\mathcal F' = \sigma \{ X_r : r \le s , r \text{ dyadic } \} \overset{?}{=} \sigma \{ X_r : r \le s \} $$
+    \begin{itemize}
+    \item $\subseteq$ trivial.
+    \item $\supseteq$:It is enough to show that $X_r$ is $\mathcal F'$-measurable.
+      This follows by continuity.
+    \end{itemize}
+    
+  \end{proof}
+\end{itemize}
+
+
+\end{document}
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,124 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+
+\newcommand{\Q}[1]{\textbf{Ex #1}}
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+\newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+\newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+\newcommand{\esp}{{\mathbb E}}
+
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\err}{err}
+
+
+% parameters
+\geometry{hmargin=1.5cm,vmargin=1.5cm}
+\title{COS511 - Problem Set 1}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+\maketitle
+
+\Q{1}
+
+Let $h_{r^*}$ the true classifier.
+Denote $r_{\min} = \max \{ ||x_i|| : y_i = 1 \}$, let's consider the algorithm that choses $h_{r_{\min}}$.
+The algorithm labels corretly points $x$ outside the region $r_{\min} \le ||x|| \le r^*$.
+Let's call $A$ the r.v. that measures this region with respect to the distribution of $x$.
+
+For a sample of size $m$: $\mathbb P(A > \varepsilon) \ge (1 - \varepsilon)^m$, in order to make this quantity smaller than $\delta > 0$, it sufficies to choose $m \ge \frac{\log \frac1\delta}{\varepsilon}
+$
+c/c: $m_{\mathcal H}(\delta, \varepsilon) \le \lceil \frac{\log \frac1\delta}{\varepsilon} \rceil$
+
+\Q{2}
+
+\Q{3}
+\begin{itemize}
+\item
+  \begin{align*}
+    \mathbb P( X \ge t) &= \mathbb P( e^{\lambda X} \ge e^{\lambda t}) &\text{(because $\exp$ is increasing)}
+    \\& =  \mathbb P( e^{\lambda (X - t)} \ge 1)
+    \\&\le \esp[e^{\lambda (X - t)} ] &\text{(Markov inequality)}
+    \\&= e^{-\lambda t} \prod \esp e^{\lambda x_i} &\text{(By independence)}
+    \\& = e^{-\lambda t} (\esp e^{\lambda x_i})^k &x_i \sim x_1
+    \\& = e^{-\lambda t} (\frac12 (e^{\lambda} + e^{-\lambda}))^k 
+  \end{align*}
+\item
+  $e^{\lambda} + e^{-\lambda} = \sum^{\infty} \frac{\lambda^k}{k!} + (-1)^k \frac{\lambda^k}{k!} = 2 \sum^{\infty}  \frac{\lambda^{2k}}{(2k!)}$
+  $e^{\frac12 \lambda^2} = \sum \frac{\lambda^{2k}}{2^k k!}$
+  Since $\frac{(2k)!}{2^kk!} = \prod_{j = 1 \ldots 2k} \frac{k+j}{2} \ge 1$, $\frac12 e^{\lambda} + \frac12 e^{-\lambda} \le e^{\frac12 \lambda^2}$
+
+\item $\mathbb P(X \ge t) \le e^{-\lambda t} (\frac12 e^{\lambda} + \frac12 e^{-\lambda})^k \le e^{-\lambda t} e^{\frac k2 \lambda^2}$
+$\lambda \rightarrow \frac k2 \lambda^2 - \lambda t$ is quadratic function that attain its minimum for $\lambda = \frac tk$, and the minimum is $-\frac{t^2}k$, therefore $ \mathbb P(X \ge t) \le e^{-\frac{t^2}k}$.
+\end{itemize}
+
+\Q{4}
+\begin{itemize}
+\item
+  Let's prove this fact by contraposition. Let's suppose $f \not \in \mathcal H$, and prove that it can't be learnable by $\mathcal H$.
+  
+  $X$ and $Y$ are finite, so is $\mathcal H$.
+  
+  $f \not \in \mathcal H$, then $\forall h \in \mathcal H, \err(h) > 0$, and $\alpha = \min_{h \in \mathcal H} \err(h) > 0$.
+
+  For any algorithm producing a hyppotesis $h$ depending on a sample of an arbitrary size, $\err(h) > \alpha$ with probability 1.
+  As a result $f$ is not learnable by $\mathcal H$.
+  
+\item
+  Counter example:
+  
+  Choose $X = \mathbb N, Y = \{0, 1\}, f = 0, \mathcal H = \{ h_n(x) := 1_{x = n} : n \in \mathbb N \}$.
+  Let's call the joint distribution $\mathcal D$, and let $p_k = \mathbb P_{\mathcal D}(X = k)$
+  
+  It is clear that $f \not \in h$
+
+  For a sample $S = \{ (x_i, y_i) \}$ of finite size $m$, let's consider the algorithm $A(S)$ that returns $h_{\hat n}$ where $\hat n$ is choosen arbitrarly from the set $\mathbb N \setminus \{ x_i, i = 1, \ldots m \}$.
+  
+  $\err_{\mathcal D}(h_n) = \mathbb P_{X}(X = \hat n) = p_{\hat n}$.
+
+  For any $\varepsilon, \delta > 0$, $\mathbb{P}( p_{\hat n} > \varepsilon ) \le (1 - \varepsilon)^m$, if $m > \frac{-\log \delta} \varepsilon$ then this probability drops below $\delta$.
+
+\end{itemize}
+
+\Q{5}
+
+$X = \mathbb N$.
+
+$\varepsilon > 0, m, A$ fixed.
+
+Fix $g$, and let $\mathcal D$ be a distribution over $(x, g(x)), x \le 2m$
+
+\begin{align*}
+  Q &= \esp_f [ \esp_S \esp_x A(S)(x) \ne f(x)]
+  \\&=  
+\end{align*}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -22,7 +22,7 @@
 
 % parameters
 \geometry{hmargin=1cm,vmargin=1cm}
-\title{ORF527 - Problem Set 2}
+\title{ORF527 - Problem Set 1}
 \author{Bachir EL KHADIR }
 
 \begin{document}
@@ -71,15 +71,22 @@ so $Y \sim \mathcal N(0, 1)$.
 For a random variable $X$, let's call $\Phi_X$ its caracteristic function.
 \begin{enumerate}[label=(\alph*)]
 \item 
-  For $t \in \mathbb R^n$, $\Phi_{AV}(t) = \mathbb E[ e^{i V^TA^Tt} ] = \Phi_{V}(A^Tt) = e^{(A\mu)^TV - \frac12 (t^T A \Sigma A^T) t}$, so $V \sim \mathcal N(A\mu, A\Sigma A^T)$
+  For $t \in \mathbb R^n$, $\Phi_{AV}(t) = \mathbb E[ e^{i V^TA^Tt} ] = \Phi_{V}(A^Tt) = e^{(A\mu)^Tt - \frac12 (t^T A \Sigma A^T t)}$, so $V \sim \mathcal N(A\mu, A\Sigma A^T)$
 \item By symmetry of the gaussisan distribution, $-Y$ has the same distribution as $Y$. So it suffices to show that the result holds for $X+Y$.
   By independence: $\Phi_{X+Y}(t) = \Phi_X(t) \Phi_Y(t) = \Phi_X(t)^2 = e^{i2\mu t - \frac12 2 t^2 }$, so $X+Y \sim \mathcal N(0, 2)$.
-\item If $cov(X, Y) = 0$, the covariance matrix of the guassian process $(X, Y)$ is the identity, therefore $$\forall t = (t_1, t_2) \in \mathbb R^2 \; \Phi_{(X, Y)}(t) = E[e^{i \mu_X t_1 + i \mu_Y t_2 - \frac12 \sigma_X^2t_1^2 -  - \frac12 \sigma_Y^2t_2^2}] = \Phi_X(t_1) \Phi_Y(t_2)$$
+\item If $cov(X, Y) = 0$, the covariance matrix of the guassian process $(X, Y)$ is diagonal, therefore
+  $$\forall t = (t_1, t_2) \in \mathbb R^2 \; \Phi_{(X, Y)}(t) = E[e^{i \mu_X t_1 + i \mu_Y t_2 - \frac12 \sigma_X^2t_1^2 - \frac12 \sigma_Y^2t_2^2}] = \Phi_X(t_1) \Phi_Y(t_2)$$
   Where $X \sim \mathcal N(\mu_X, \sigma_X^2), Y \sim \mathcal N(\mu_Y, \sigma_Y^2)$.
   Therefore $X, Y$ are independent.
-\item Let $\alpha := \frac{\cov(X, Y)}{\var(X)}$. $(Y - \alpha X, X)$ is gaussian and $\cov(Y - \alpha X, X) = 0$. So $Y - \alpha X \perp X$. Therefore:
+\item
+  We consider that the guaussian vector is non degenerate otherwise one of the variables is proportinal to the other.
+  
+  $Y | X = x$ is gaussian because it has the density $f_{Y | X=x}(y) = \frac{f(x, y)}{\int_R f(x, s) ds} \propto e^{-Q(y)}$ where is a quadratic form in $y$.
+  
+  Let $\alpha := \frac{\cov(X, Y)}{\var(X)}$. $(Y - \alpha X, X)$ is gaussian and $\cov(Y - \alpha X, X) = 0$. So $Y - \alpha X \perp X$. Therefore:
   $$\mu_{Y | X = x} = E[Y | X = x] = E[Y - \alpha X]+ E[\alpha X | X = x] = \mu_Y - \alpha \mu_X + \alpha x = \mu_Y + \frac{\cov(X,Y)}{\var X} (x - \mu_X)$$
   $$\sigma_Y^2 = \var(Y | X = x) = \var(Y - \alpha X) + \underbrace{\var(\alpha X | X = x)}_{=0} = \var Y + \alpha^2 \var X - 2\alpha \cov(X, Y) = \sigma_Y^2 - \frac{\cov(X,Y)^2}{\var X}$$
+  
 \end{enumerate}
 
 \Q{3}
@@ -93,10 +100,17 @@ For a random variable $X$, let's call $\Phi_X$ its caracteristic function.
 
 \item
   For $s < t$, $cov(X_t, X_s) = g(t)g(s) (h(s) \wedge h(t))$, should be equal to $s(1-t)$.
-  We can take $g: t \rightarrow 1 - t$, $h: s \rightarrow \frac s{1 - s}$ defined on $[0, 1)$
+  We can take $g: t \rightarrow 1 - t$, $h: s \rightarrow \frac s{1 - s}$ defined on $(0, \frac12)$
 
 \item
-  Since the two guaissian processes $U_t$ and $X_t$ have the same mean (0) and covariance matrix, they have the same distribution. Therefore, $Y_t$ has the same distribution as $(1+t)X_{\frac{t}{1+t}} = (1+t)g(1+t)B_{h(\frac{t}{1+t})} = B_t$. In addition, $U_t$ is continuous as a composition of two continuous functions, it is a brownian motion.
+  $U_t$ is a gaussian because for all $t_1 \ldots t_n$, a linear combination oft $(U_{t_1}, \ldots U_{t_n})$ is a linear combination of  $(B_1, B_{t_1}, \ldots B_{t_n})$ which is guaussian.
+  For the same reasons, $(U_{\frac t{1+t}})_{t > 1}$ is a guaussian process, and so is $Y_t$.
+
+  For $s < t, \frac s{s+1} < \frac t{t+1} $: $\cov(Y_t, Y_s) = (1+t)(1+s)\cov(U_{\frac t{t+1}}, U_{\frac s{s+1}}) = (1+t)(1+s) \frac s{s+1} (1 - \frac t{t+1}) = s$
+  
+  $Y_t$ is a guaussian process with the same mean (0) and covariance as a Brownian Motion, therefore it has the same distribution  as a Borwnian Motion.
+  
+  In addition, $Y_t$ is continuous as a composition of two continuous functions, therefore it is a brownian motion.
   
 \end{enumerate}
 \end{document}
