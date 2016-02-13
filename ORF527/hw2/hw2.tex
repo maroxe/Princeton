@@ -1,0 +1,85 @@
+ 
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+
+\newcommand{\Q}[1]{\subsubsection*{Q.#1}}
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+
+\newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+\newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\var}{var}
+
+
+% parameters
+\geometry{hmargin=1cm,vmargin=1cm}
+\title{ORF527 - Problem Set 2}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+\maketitle
+\Q{1}
+$(W_{t_1}, \ldots W_{t_n})$ and $(W_{t_1}', \ldots W_{t_n}')$ are both guassian with the same mean and covariance matrix, so they do have the same carateristic function and therefore the same distribution.
+So $$\mathbb E f(W_{t_1}, \ldots W_{t_n}) = \mathbb E f(W_{t_1}', \ldots W_{t_n}') $$
+
+\Q{2}
+
+Since $B$ is closed, $W_t \not \in B \iff \exists \varepsilon > 0 \; \forall y \in B(y, \varepsilon) W_{y} \not \in B$
+$\{ \tau \le t\} = $
+
+\Q{3}
+Without loss of generality we can assume $i \in J \Rightarrow i+t \in J$.
+$(W_i)_{i \in J}$ is a discrete markov chain.
+Let $A \in \mathcal F_{\tau}$, so that $A \cap \{\tau \le t\} \in \mathcal F_t$.
+
+$E[1_A f(W_{t + \tau})] = E[1_A \int f(x) \frac{e^{-(x-W_{\tau})^2/2t}}{\sqrt{2\pi t}} dx]$
+
+\begin{align*}
+  E[1_A \int f(x) \frac{e^{-(x-W_{\tau})^2/2t}}{\sqrt{2\pi t}} dx]
+  &= \sum_J E[1_{A, \tau=i} \int f(x) \frac{e^{-(x-W_i)^2/2t}}{\sqrt{2\pi t}} dx]
+  \\&= \sum_J E[1_{A, \tau=i} E[f(W_{i+t}) | \mathcal F_i]] &\text{(Markov Property)}
+  \\&= \sum_J E[ E[ 1_{A, \tau=i}f(W_{i+t}) | \mathcal F_i]]&\text{(Because $A \in \mathcal F_{\tau}$)}
+  \\&= \sum_J E[ E[ 1_{A, \tau=i} f(W_{\tau+t}) | \mathcal F_i]]
+  \\&= \sum_J E[ 1_{A, \tau=i} f(W_{\tau+t})]
+  \\&= E[ 1_A f(W_{\tau+t})]
+\end{align*}
+
+Clearly, $\frac{e^{-(x-W_{\tau})^2/2t}}{\sqrt{2\pi t}}$ is $W_{\tau}$-measurable. so:
+$$E[W_{t+\tau} | \mathcal F_{\tau}] = \int f(x) \frac{e^{-(x-W_{\tau})^2/2t}}{\sqrt{2\pi t}}$$
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

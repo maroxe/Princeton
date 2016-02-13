@@ -1,0 +1,126 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+
+\newcommand{\Q}[1]{\subsection*{Q.#1}}
+\newenvironment{question}[1]
+{\Q{#1}}{}
+
+
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+\newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+\newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+\newcommand{\esp}{{\mathbb E}}
+\newcommand{\pr}{{\mathbb P}}
+
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\err}{err}
+
+
+% parameters
+\geometry{hmargin=1.5cm,vmargin=1.5cm}
+\title{ORF525 - Problem Set 1}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+\maketitle
+
+\begin{question}{1}
+
+  \begin{enumerate}
+  \item The conversion is necessary because otherwise we would have an unwanted order relation. For three similar houses A, B, C in zipcodes 98001, 98002, 98003, a linear model would be forced to affect a price for the house A that lies between the price for house A and C, which is a bug and not a future of the data itself.
+
+
+  \item 
+  \end{enumerate}
+\end{question}
+
+\begin{question}{2}
+
+
+  $$
+    ||Y - \theta||_2^2 + 4\tau^2 ||\theta||_0 = \sum (y_i - \theta_i)^2 + 4\tau^2 1_{\theta_i \ne 0} = \sum_i f(\theta_i)
+    $$
+    Where $f: \theta \rightarrow (y - \theta)^2 + 4\tau^2 1_{\theta \ne 0}$, eg
+    \[
+      f(\theta) = \left\{
+        \begin{array}{cc}
+          y^2 & \text{if } \theta = 0\\
+          (y - \theta)^2 + 4 \tau^2& \text{if } \theta \ne 0\\
+        \end{array}
+      \right.
+    \]
+    The problem is linearly separable, we can minimize on each variable $\theta_i$ independetly:
+    \begin{itemize}
+    \item If $|y| > 2\tau$, then $y^2 \ge 4\tau^2$ and  $(y - \theta)^2 + 4\tau^2 \ge 4\tau^2 = f(y)$.
+    \item If $|y| \le 2\tau$, then $f(0) = y^2 \le 4\tau^2 \le y^2 + (y-\theta) = f(\theta) \forall \theta \ne 0$.
+    \end{itemize}
+    So $\arg\min ||Y - \theta||_2^2 + 4\tau^2 = \hat \theta^{\text{hard}}$.
+
+
+    
+    $$
+    ||Y - \theta||_2^2 + 4\tau^2 ||\theta||_1 = \sum (y_i - \theta_i)^2 + 4\tau^2 |\theta_1| = \sum_i g(\theta_i)
+    $$
+    Where $g: \theta \rightarrow (y - \theta)^2 + 4\tau^2 |\theta|$, eg
+    \[
+      g(\theta) = \left\{
+        \begin{array}{cc}
+          y^2 & \text{if } \theta = 0\\
+          (y - \theta)^2 + 4 \tau^2 \theta& \text{if } \theta > 0\\
+          (y - \theta)^2 - 4 \tau^2 \theta& \text{if } \theta < 0\\
+        \end{array}
+      \right.
+    \]
+
+    $\min_{\theta} \theta \rightarrow (y - \theta)^2 + 4\tau^2\theta = $
+
+    
+    The problem is linearly separable, we can minimize on each variable $\theta_i$ independetly:
+    \begin{itemize}
+    \item If $|y| > 2\tau$, then $y^2 \ge 4\tau^2$ and  $(y - \theta)^2 + 4\tau^2|theta| \ge 4\tau^2 = g()$.
+    \end{itemize}
+    So $\arg\min ||Y - \theta||_2^2 + 4\tau^2 = \hat \theta^{\text{hard}}$.
+
+
+  \end{question}
+  \begin{question}{3}
+    \begin{enumerate}
+    \item
+      $M(x,y,z)$ is of rank 1 $\iff$ $(x y)$ and $(y z)$ are colinear and one of them is non zero  $\iff \exists \lambda \ne 0 \; (x y) = \lambda (y z) \text{ and } z \ne 0 \iff x = \lambda^2 z, y = \lambda z \text{ and } z \ne 0$.
+      
+      The op norm is the biggest eigen value in absolute value, in this case since one of the eigen values is 0 because the determinant is 0 the op norm is  $|tr(M(x, y, z))| = |x + z| = (1 + \lambda^2) |z|$
+
+      $||M(x, y, z)||_{op} = 1 \iff |z| = \frac{1}{1 + \lambda^2}$
+
+      c/c $\{ (x, \sqrt2 y, z) | rank(M) = 1, ||M||_{op} = 1 \} = \{ (\frac{\lambda^2}{1+\lambda^2}, \frac{\sqrt2 \lambda}{1+\lambda^2}, \frac 1 {1+\lambda^2} : \lambda \ne 0\} \cup\{ (\frac{-\lambda^2}{1+\lambda^2}, \frac{-\sqrt2 \lambda}{1+\lambda^2}, \frac {-1} {1+\lambda^2}: \lambda \ne 0 \} $
+    \end{enumerate}
+  \end{question}
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

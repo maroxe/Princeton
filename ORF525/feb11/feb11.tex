@@ -1,0 +1,109 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+%\usepackage[a4paper, total={7in, 10in}]{geometry}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem*{remark}{Remark}
+
+\title{ORF525 - Class Notes}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+\maketitle
+
+\begin{definition}[Oridnary Lease Squares Regression]
+$f_i = \{ f(x) = \beta^T X\}$
+$\hat \beta^{OLS} = \arg \min_{\beta} ||Y - X \beta||_2^2$
+$F(\beta) = Y^TY + \beta^TX^TX\beta - 2\beta^TX^TY$
+$\frac{\partial F(\beta)}{\partial \beta} = 2X^TX\beta - 2X^TY = 0 \implies \hat \beta = (X^TX)^{-1}X^TY$
+\end{definition}
+\begin{definition}[Model-based Interpretation of OLS]
+  Statistical Model $Y = \beta^TX + \varepsilon, \varepsilon \sim \mathcal N(0, 1)$
+  Joint-Loglikelihood
+  $$l_n(\beta, \sigma^2) =f \sum_{i=1}^n \log p_{\beta, \sigma^2}(Y_i, X_i) =  \sum_{i=1}^n \log p_{\beta, \sigma^2}(Y_i| X_i) + \underbrace{ \sum_{i=1}^n \log p(X_i) }_{\text{does not depend on $\beta$ or $\sigma^2$}}  $$
+  $\implies$
+  \begin{align*}
+    \arg\max_{\beta, \sigma^2} l_n(\beta, \sigma^2)
+    &= \arg\max_{\beta, \sigma^2}  \underbrace{\sum_{i=1}^n \log p_{\beta, \sigma^2}(Y_i| X_i)}_{\text{Conditional log-likelihood}}
+    \\& = \arg\max_{\beta, \sigma^2} \frac1{2\sigma^2} \sum (Y_i - \beta^TX_i)^2 + n \log(\frac1{\sqrt{2\pi\sigma^2}})
+  \end{align*}
+  $\implies$
+  $\hat \beta^{MLE} = \arg\min \sum (Y_i - \beta^T X_i)^2 = \hat \beta^{OLS}$
+\end{definition}
+
+\section{Linear Regression with Basis Expansion}
+From linear to non linear
+\begin{itemize}
+\item Input vairables can be transofrmation of original feautres: Handraft features, Box-Cox tranformation (find the best transmformation)
+\item Input can have interactions, eg $X_1X_2 \ldots$
+\item Inputs can have basis expansions. Instead of $f(x) = \beta^Tx$ we can have $f(x) = \sum_j \beta_j \underbrace{h_j}_{\text{Adaptative learning}}(x)$.
+\end{itemize}
+
+\begin{definition} [Categorical Variable]
+  A variable that can take on only one of a limited values.
+  \textbf{Dummy coding}
+\end{definition}
+
+\section{High Dimensional Regression}
+\begin{definition}[High Dimensional Regression]
+  Data when dimension $d$ is bigger than the sample size $n$.
+  \[
+    Y = \left(
+      \begin{array}{c}
+        Y_1\\\cdots\\Y_n
+      \end{array}
+    \right)
+  \]
+  \[
+    X = \left(
+      \begin{array}{ccc}
+        X_{11}&\ldots&X_{1n}\\&\cdots\\X_{n1}&\ldots&X_{nn}
+      \end{array}
+    \right)
+  \]
+\end{definition}
+Question: $\hat \beta^{OLS} = (\underbrace{X^TX}_{\text{not invertible}})^{-1}X^TY$, what should we do?
+\begin{itemize}
+\item Ridge Estimation $\hat \beta^{\lambda} =  (\underbrace{X^TX + \lambda I}_{\text{Tuning Parameters}})^{-1}X^TY$
+  $$\iff \hat \beta^{\lambda} = \arg\min_{\beta \in \mathbb R^d} ||Y - X\beta||_2^2 + \lambda ||\beta||_2^2$$
+  $$\iff \hat \beta^{t} = \arg\min_{||\beta||_2^2 < t} ||Y - X\beta||_2^2$$
+  
+\item Computation of Ridge:
+  \begin{itemize}
+  \item Convex Optimzation (QP)
+  \item Never naively use a \textit{general-purpose} solver. (CVX, AMPL)
+  \end{itemize}
+\item Question: How to choose the tuning parameter $\lambda$?
+  Model selection: $\Lambda = \{ \lambda_1, \ldots, \lambda_n \}$
+  Basic Method: $D = D_1 \cup D_2$, let $\hat \beta^{\lambda_1}, \ldots, \hat \beta^{\lambda_k}$ be ridge estimators on $D_1$.
+  We define the data split score $DS(k) = \frac1{n^2} \sum_{D_2} (Y_i - X_i^T \hat \beta^{\lambda_k})^2$
+  We then pick the model with the smallest DS score.
+  Intuition: Conditioning on $D_1$, $DS(k)$ is an unbiased estimator of $R(\hat \beta^{\lambda_1})$.
+  Pro:Theoritically and conceptually simple.
+  Con: Waste of the training sample. $\implies$ Cross validation.
+\end{itemize}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
