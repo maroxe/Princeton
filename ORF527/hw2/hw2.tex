@@ -33,28 +33,87 @@ So $$\mathbb E f(W_{t_1}, \ldots W_{t_n}) = \mathbb E f(W_{t_1}', \ldots W_{t_n}
 
 \Q{2}
 
-Since $B$ is closed, $W_t \not \in B \iff \exists \varepsilon > 0 \; \forall y \in B(y, \varepsilon) W_{y} \not \in B$
-$\{ \tau \le t\} = $
+\begin{align*}
+  t \le \tau &\iff \forall \varepsilon > 0 \; \exists s \le t + \varepsilon \; X_s \in B
+  \\&\iff \exists s \le t \; X_s \in B
+\end{align*}
+The last equivalence follows from the following:
+\begin{itemize}
+\item[$\Rightarrow$]  Trivial
+\item[$\Leftarrow$] Suppose $\forall n \in \mathbb N; \exists s_n \le t + \frac1n \; X_{s_n} \in B$
+  Without loss of generality, we can assume that $s_n$ converges to $s$ (by taking a subsequence)
+  It is easy to see that $s \le t$, $X$ that $X_{s_n} \rightarrow X_s$ (by continuity), and that $X_s \in B$ (because $B$ is closed).
+\end{itemize}
+\begin{align*}
+  t \le \tau &\iff \exists s \le t \; X_s \in B
+  \\&\iff \inf_{s \le t} d(X_s, B) = 0
+\end{align*}
+Where the last equivalence is due to the fact that when $B$ is closed $x \in B \iff d(x, B) = 0$
+
+Let's consider $f: x \rightarrow d(x, B)$. $f$ is continuous, $X_t$ is also continuous, therefore $\inf_{s \le t} f(X_s) = \inf_{s \le t, s \in \mathbb Q} f(X_s)$, and $\inf_{s \le t} f(X_s)$ is $\mathcal F_t$ measurable as a limit a countable number of $\mathcal F_t$-measurable functions.
 
 \Q{3}
-Without loss of generality we can assume $i \in J \Rightarrow i+t \in J$.
-$(W_i)_{i \in J}$ is a discrete markov chain.
-Let $A \in \mathcal F_{\tau}$, so that $A \cap \{\tau \le t\} \in \mathcal F_t$.
+\begin{enumerate}
+  \begin{enumerate}
+  \item
+    $\{ \tau \le t \} = \cap_{\varepsilon > 0} \underbrace{\{ \exists s \le t + \varepsilon, X_s \in B \}}_{U_{t+\varepsilon}}$,
+    $U_t = \{ \exists s \le t, X_s \in B \} \in \mathcal F_t$:
+    \begin{itemize}
+    \item $U_t = \cup_{s \le t} \{X_s \in B \} = \cup_{s \le t, s \in \mathbb Q} \{ X_s \in B \}$. Indeed,
+      Let $\omega \in \{ X_s \in B \}$ for some $s \le t$. Since $B$ is open there exist $\alpha > 0$
+      such that $\mathcal B(X_s(\omega), \alpha) \subset B$.
+      By continuity of $X_s$, there exist $s' \in \mathbb Q$ smaller than $t$ such that $|X_s(\omega) - X_{s'}(\omega)| < \alpha$,
+      therefore $\omega \in \{ X_{s'} \in B\}$
+    \item $\cup_{s \le t, s \in \mathbb Q} \{ X_s \in B \} \in \mathcal F_t$ as a countable union of sets in $\mathcal F_t$.
+    \end{itemize}
+    Let $a > 0$
+    $(U_{t + \varepsilon})_{\varepsilon > 0}$ is non-decreasing sequence. So $\cap_{\varepsilon > 0} U_{t + \varepsilon} \subseteq U_{t + a} \in \mathcal F_{t+a}$,
+    Therefore $\cap_{\varepsilon > 0} U_{t + \varepsilon} \cap_{\varepsilon > 0} \mathcal F_{t+\varepsilon}$
+    Since the filtration satisfies the usual conditions, $\{\tau \le t\} = \cap_{\varepsilon > 0} U_{t + \varepsilon}  \in \mathcal F_t$ and $\tau$ is a stopping times.
+  \end{enumerate}
+\item
+  $B = (0, \infty)$, $X_t$ BM, $\tau = \inf \{ t , X_t \in B\}$
+  $\{\tau \le 0\} = \{ (\forall \varepsilon > 0)\,(\exists s \le \varepsilon) \; X_s > 0 \}$
+  
+  $\mathcal F_0 = \{ \emptyset, \Omega \}$
 
-$E[1_A f(W_{t + \tau})] = E[1_A \int f(x) \frac{e^{-(x-W_{\tau})^2/2t}}{\sqrt{2\pi t}} dx]$
+  let $D$denote the dyadic numbers in $(0, 1)$
+  
+  $\emptyset \ne \{\tau \le 0\}$ because $\{ X_s > 0, \forall s \in (0, 1)\} \subseteq \{\tau \le 0\}$ and $\{ X_s > 0, \forall s \in (0, 1)\} = \{ X_s > 0, \forall s \in D \} = \cap_{s \in \mathbb D} \{ X_s > 0 \}$
+  $ \{\tau \le 0\} \ne \Omega$ because $\{ X_s \le 0, \forall s > 0\} \cap \{\tau \le 0\} = \emptyset$
+
+  si $\tau$ is not stopping time.
+  
+\end{enumerate}
+
+\Q{4}
+\begin{itemize}
+\item Without loss of generality we can assume
+  $i \in J \Rightarrow i+t \in J$.  $(W_i)_{i \in J}$ is a discrete
+  markov chain.  Let $A \in \mathcal F_{\tau}$, so that
+  $A \cap \{\tau \le t\} \in \mathcal F_t$.
+
+  $E[1_A f(W_{t + \tau})] = E[1_A \int f(x)
+  \frac{e^{-(x-W_{\tau})^2/2t}}{\sqrt{2\pi t}} dx]$
 
 \begin{align*}
   E[1_A \int f(x) \frac{e^{-(x-W_{\tau})^2/2t}}{\sqrt{2\pi t}} dx]
-  &= \sum_J E[1_{A, \tau=i} \int f(x) \frac{e^{-(x-W_i)^2/2t}}{\sqrt{2\pi t}} dx]
+  &= \sum_J E[1_{A, \tau=i} \int f(x) \frac{e^{-(x-W_i)^2/2t}}{\sqrt{2\pi t}} dx] &\text{Fubini for bounded r.v}
   \\&= \sum_J E[1_{A, \tau=i} E[f(W_{i+t}) | \mathcal F_i]] &\text{(Markov Property)}
   \\&= \sum_J E[ E[ 1_{A, \tau=i}f(W_{i+t}) | \mathcal F_i]]&\text{(Because $A \in \mathcal F_{\tau}$)}
   \\&= \sum_J E[ E[ 1_{A, \tau=i} f(W_{\tau+t}) | \mathcal F_i]]
   \\&= \sum_J E[ 1_{A, \tau=i} f(W_{\tau+t})]
-  \\&= E[ 1_A f(W_{\tau+t})]
+  \\&= E[ 1_A f(W_{\tau+t})] &\text{Fubini for bounded r.v}
 \end{align*}
 
-Clearly, $\frac{e^{-(x-W_{\tau})^2/2t}}{\sqrt{2\pi t}}$ is $W_{\tau}$-measurable. so:
+Clearly, $\frac{e^{-(x-W_{\tau})^2/2t}}{\sqrt{2\pi t}}$ is
+$W_{\tau}$-measurable. so:
 $$E[W_{t+\tau} | \mathcal F_{\tau}] = \int f(x) \frac{e^{-(x-W_{\tau})^2/2t}}{\sqrt{2\pi t}}$$
+
+\item
+
+  $$E[W_{t+\tau_k} | \mathcal F_{\tau_k}] = \int f(x) \frac{e^{-(x-W_{\tau_k})^2/2t}}{\sqrt{2\pi t}}$$
+\end{itemize}
 \end{document}
 
 %%% Local Variables:

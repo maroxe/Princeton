@@ -1,4 +1,4 @@
- \documentclass{article}
+\documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 \usepackage{graphicx}
@@ -10,8 +10,18 @@
 \newtheorem{definition}{Definition}
 \newtheorem{lemma}[theorem]{Lemma}
 
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+\newcommand{\esp}{{\mathbb E}}
+\newcommand{\pr}{{\mathbb P}}
+\newcommand{\norm}[1]{\Vert #1 \Vert}
+
 \newcommand{\notimplies}{
   \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\implies$}}}}
+\newcommand{\notconverge}{
+  \mathrel{{\ooalign{\hidewidth$\not\phantom{=}$\hidewidth\cr$\rightarrow$}}}}
 \begin{document}
 
 \begin{definition}[Total Variation]
@@ -98,11 +108,11 @@ $(X_t)$ continuous time process
     \end{enumerate}
 
     Without loss of generality let's assume that $s < t$ both in $\Pi$.
-    Let $X_n = M_{t_n}$. Then $X_n$ is a discrete time martingale with respect to the filtration $(\mathcal G_n = \Mathcal F_{t_n})_n$.
+    Let $X_n = M_{t_n}$. Then $X_n$ is a discrete time martingale with respect to the filtration $(\mathcal G_n = \mathcal F_{t_n})_n$.
   \item[Step 2)]
     $\tau$ any stop time.
     Introduce discrete step times $\tau_n \downarrow \tau$, take limits.
-    $\Pi_n := \{ s, t, \infty, k2^{-n}, k \in \mathabb Z\}$
+    $\Pi_n := \{ s, t, \infty, k2^{-n}, k \in \mathbb Z\}$
     $\tau_n = \inf \{ r \in \Pi_n r \ge \tau \}$ (We round up so it stays a stopping time)
     \begin{lemma}
       $\tau_n$ is a stopping time beacause $$\{ \tau_n \le t \} = \{ \tau \le \underbrace{\max \{s \in \Pi_n : s \le t \}}_{\le t} \}$$
@@ -111,13 +121,93 @@ $(X_t)$ continuous time process
     \begin{itemize}
     \item[a)] $M_{t\wedge \tau} = \lim_n M_{t \wedge \tau_n}$ (because $M$ is continuous) all $\mathcal F_t$-measurable
     \item[b)] $\mathbb E|M_{t \wedge \tau}|  = \mathbb E \lim\inf |M_{t \wedge \tau_n}| \underbrace{\le}_{\text{fatou}} \lim\inf \mathbb E \underbrace{|M_{t \wedge \tau_n}|}_{\text{(submartingale)}} \le E|M_t| < \infty$
+      
+    \item[c)]$\esp[M_{\tau_n \wedge t} | \mathcal F_s] = M_{\tau_n \wedge s}$
+      $M_{s \wedge \tau_n} \rightarrow M_{s \wedge \tau}$ as by continuity.
+      \textbf{Claim:} $M_{s \wedge \tau_n} \rightarrow M_{s \wedge \tau}$ in $L_1$.
+      Recall: $\esp[M_s | \mathcal F_{s \wedge \tau_n}] = M_{s \wedge \tau_n}$ (matringale in discrete time)
+      $\mathcal F_{s \wedge \tau_n} \downarrow$ as $n \rightarrow \infty$ so $M_{s \wedge \tau_n}$ is a reverse martingale, and any reverse martingale converges in $L_1$.
+      As a result, $\esp [M_{t \wedge \tau_n} | \mathcal F_s] \rightarrow \esp [M_{t \wedge \tau} | \mathcal F_s]$ in $L_1$
     \end{itemize}
 
   \end{enumerate}
 \end{proof}
+\begin{theorem}[Doob]
+  $(M_t)_t$ continuous mtg. Then
+  \begin{itemize}
+  \item $\pr[\sup_{0 \le t \le T} M_t  > x] \le \frac{\esp[|M_t|^p]}{x^p}$
+  \item $\norm{\sup_{0 \le t \le T} M_t}_p \le \frac{p}{p-1}\norm{M_T}_p$
+  \end{itemize}
+\end{theorem}
+\begin{proof}
+  $\max_{0 \le k \le 2^n} |M_{k2^{-n}T}| \uparrow \max_{0 \le t \le T} |M_t|$ by continuity.
+  Use Doob for discrete mtg + MCN.
+\end{proof}
+
+\begin{theorem}[Mtg conv thm]
+  $M_t$ continuous martingale.
+  \begin{itemize}
+  \item If $L_1$-bounded, then $M_t \rightarrow M_{\infty}$ as.
+  \item If $M_t$ are UI, then $M_t \rightarrow M_{\infty}$ in $L_1$.
+  \item If $L^p$-bounded, $M_t \rightarrow M_{\infty}$ in $L^p$
+  \end{itemize}
+\end{theorem}
+\begin{proof}
+  \begin{itemize}
+  \item $N_T^n(a, b)$ \# of up corssings of $(a, b)$ on a grid
+    $\Pi_n = \{\frac{k}{2^n}T , k \le 2^n \}$(number of upcrossing of
+    $(M_{t_i})_{t_i \in \Pi_n}$
+    $\esp N_T^n(a, b) \le \frac{\esp (M_T - a)_+}{b- a}$,
+    $(N_T^n(a, b))_n \uparrow N_T(a, b)$, by monotonuous convergence
+    $\esp N_T(a, b) \le \frac{\esp (M_T - a)_+}{b- a} \le\frac{\esp
+      |M_t| + |a|}{b- a}$ By $L_1$ boundedness,
+    $\esp \esp N_T(a, b) < C$. Let $T \rightarrow \infty$, (MON)
+    $\esp N_{\infty}(a, b) < \infty$
+
+    $\pr(M_t \notconverge M_{\infty}) = \pr(\exists a, b \in \mathbb
+    Q, \lim\inf M_t < a < b < \lim\sup M_t ) \le \sum_{a < b \in
+      \mathbb Q} \pr( \lim\inf M_t < a < b < \lim\sup M_t ) \le \le
+    \sum_{a < b \in \mathbb Q} \pr( N_{\infty}(a, b) = \infty) = 0$
+  \item convergence as  + UI $\implies$ convergence in $L_1$
+  \item Doob's inequality + dominated convergence theorem.
+  \end{itemize}
+
+\end{proof}
+
+\begin{theorem}[Some classical BM martingales]
+  $(B_t)_t$ BM
+  \begin{itemize}
+  \item $(B_t)_t$ is a mtg
+  \item $(B_t^2 - t)_t$ is a mtg
+  \item $(e^{\sigma B_t - \frac12 \sigma^2 t})_t$ is a mtg
+  \end{itemize}
+\end{theorem}
+\begin{theorem}[Stooping time]
+  $\tau = \inf \{ t, B_t = A \text{ or } B_t = B \} = \inf \{ t, B_t \in [A, B]\}$.
+  \begin{itemize}
+  \item $\pr(\tau < \infty) = 1$
+  \item $\pr(B_{\tau} = A) = \frac{B}{A+B}$
+  \item $\esp \tau = AB$
+  \end{itemize}
+
+  \begin{theorem}[Stooping time]
+  $\tau = \inf \{ t, B_t = A \}$
+  \begin{itemize}
+  \item $\pr(\tau < \infty) = 1$
+  \item $\esp \tau = \infty$
+  \item $\esp e^{-\lambda \tau} = e^{-|A|\sqrt{2 \lambda}}$
+  \end{itemize}
+\end{theorem}
+\begin{proof}
+  For b):
+  $e^{\lambda x} = 1 - x\int_0^{\lambda}e^{-\sigma x} d\sigma$
+  $\esp e^{\lambda x} = 1 - \int_0^{\lambda} E[x e^{-\sigma x}] d\sigma$ (fubini)
+  Take derivative at $\lambda = 0$.
+\end{proof}
 \end{document}
 
   
+
 
 
 

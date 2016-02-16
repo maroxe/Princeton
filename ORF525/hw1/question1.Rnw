@@ -1,39 +1,100 @@
+\documentclass[12pt]{article}
+
+\usepackage{times}
+\usepackage{hyperref}
+\hypersetup{pdfpagemode=UseNone} % don't show bookmarks on initial view
+\hypersetup{colorlinks, urlcolor={blue}}
+
+% revise margins
+%% \setlength{\headheight}{0.0in}
+%% \setlength{\topmargin}{0.0in}
+%% \setlength{\headsep}{0.0in}
+%% \setlength{\textheight}{8.65in}
+%% \setlength{\footskip}{0.35in}
+%% \setlength{\oddsidemargin}{0.0in}
+%% \setlength{\evensidemargin}{0.0in}
+%% \setlength{\textwidth}{6.5in}
+
+%% \setlength{\parskip}{6pt}
+%% \setlength{\parindent}{0pt}
+
+\begin{document}
+
+<<load_data, cache=TRUE>>=
 train.data <- read.csv('data/train.data.csv')
 test.data <- read.csv('data/test.data.csv')
+@
 
+\begin{enumerate}
+  \item The conversion is necessary because otherwise we would have an unwanted order relation. For three similar houses A, B, C in zipcodes 98001, 98002, 98003, a linear model would be forced to affect a price for the house A that lies between the price for house A and C, which is a bug and not a future of the data itself.
+
+<<convert_zip, cache=TRUE>>=
 train.data$zipcode <- as.factor(train.data$zipcode)
 test.data$zipcode <- as.factor(test.data$zipcode)
-
+@
+\item
+  
+<<build_linear_model, cache=TRUE>>=
 # Linear regression
 formula <- price ~ bedrooms + bathrooms + sqft_living + sqft_lot
 linear.model <- lm(formula, data=train.data)
 r2.train <- mean(residuals(linear.model)**2)
 r2.test <- mean((predict(linear.model, test.data) - test.data$price)**2)
+@
 
+\begin{enumerate}
+\item[a)]
+<<r2_error, cache=TRUE>>=
+r2.train <- mean(residuals(linear.model)**2)
+r2.test <- mean((predict(linear.model, test.data) - test.data$price)**2)
+@ 
+  
+  $R^2$ error:
+  \[
+  \begin{array}{c|c}
+    train & test \\
+    \hline
+    \Sexpr{r2.train} & \Sexpr{r2.test}
+  \end{array}
+  \]
+
+\item[b)]
+<<r2_error_with_zipcode, cache=TRUE>>=
 # Linear regression with zip code
-formula <- update(formula,    ~ . + zipcode)
+formula <- update(formula, ~ . + zipcode)
 linear.model.with.zipcode <- lm(formula, data=train.data)
 r2.train.with.zipcode <- mean(residuals(linear.model.with.zipcode)**2)
 r2.test.with.zipcode <- mean((predict(linear.model.with.zipcode, test.data) - test.data$price)**2)
+@
 
-# glmnet
+  $R^2$ error:
+  \[
+  \begin{array}{c|c}
+    train & test \\
+    \hline
+    \Sexpr{r2.train.with.zipcode} & \Sexpr{r2.test.with.zipcode}
+  \end{array}
+  \]
+
+\end{enumerate}
+
+\item
+<<glmnet, cache=TRUE>>=
 library(glmnet)
 feature.names <- colnames(train.data)[5:length(train.data)]
-#feature.names <- feature.names[feature.names != "zipcode"]
 formula <- as.formula(paste('~', paste(feature.names, collapse='+')))
-#formula <-  ~ bedrooms + bathrooms + price+ sqft_living + sqft_lot
-
 X.train <- model.matrix(formula, data=train.data)[,-1] #drop intercept
 y.train <- train.data$price
-
 X.test <- model.matrix(formula, data=test.data)[,-1]
 y.test <- test.data$price
+@
 
-lasso.model <- glmnet(X.train, y.train, alpha=0)
-ridge.model <- glmnet(X.train, y.train, alpha=1)
-
+\begin{itemize}
+\item[a)]
+<<regularization_path, cache=TRUE>>=
 # Plot lasso / ridge path
-plot.path <- function(fit, ...) {
+plot.path <- function(alpha, ...) {
+    fit <- glmnet(X.train, y.train, alpha=alpha)
     L <- length(fit$lambda)
     y.train <- fit$beta[, L]
     labs <- names(y.train)
@@ -43,9 +104,17 @@ plot.path <- function(fit, ...) {
     vnat=vnat[-1,ncol(vnat)]
     axis(4, at=vnat,line=-.5,label=labs,las=1,tick=FALSE, cex.axis=0.5) 
 }
+@
+<<lasso, dev='png', fig.height=5, fig.cap='lasso', fig.pos='h!', cache=TRUE>>=
+plot.path(alpha = 0)
+@
 
-plot.path(ridge.model)
+<<ridge, dev='png', fig.height=5, fig.cap='ridge', fig.pos='h!', cache=TRUE>>=
+plot.path(alpha = 1)
+@ 
 
+\item[b)]
+<<cv, fig.show='hold', cache=TRUE>>=
 do.cv <- function(alpha) {
     model <- glmnet(X.train, y.train, alpha=alpha)
     cv <- cv.glmnet(X.train,y.train, nfolds=5, alpha=alpha)
@@ -58,31 +127,43 @@ do.cv <- function(alpha) {
     plot(cv)
 }
 
-do.cv(1)
+do.cv(alpha=0)
+do.cv(alpha=1)
+@
 
+\item[c)]
+<<cv.test, cache=TRUE>>=
 evaluate.on.test <- function(alpha){
     model <- glmnet(X.train, y.train, alpha=alpha)
     cv <- cv.glmnet(X.train,y.train, nfolds=5, alpha=alpha)
     pred <- predict(cv, X.test, s="lambda.min")
     mse <- mean((pred - y.test)^2)
-    print(paste("MSE = ", mse))
 }
 
-evaluate.on.test(0)
+r2.cv.lasso <- evaluate.on.test(alpha=0)
+r2.cv.ridge <- evaluate.on.test(alpha=1)
+@
+$R^2$ error:
+\[
+  \begin{array}{c|c}
+    \mbox{lasso} & \mbox{ridge}\\
+    \hline
+    \Sexpr{r2.cv.lasso}&\Sexpr{r2.cv.ridge} \\
+  \end{array}
+\]
 
-evaluate.on.test(1)
+\end{itemize}
 
-
-# ----------------------------- Random forests -------------------------------
+\item
+  We regroup the zipcode by the city they are located in, We use the zipcode package to know in which cities are the hosues located:
+<<map, fig.height=3, cache=TRUE>>=
 library(ggplot2)
-library(maps)
 library(zipcode)
 library(randomForest)
-library(forestFloor)
+library(maps)
 
 state.map <- map_data('state', region = 'Washington')
 data(zipcode)
-
 
 areas.of.interest <- data.frame(zipcode=levels(train.data$zipcode))
 areas.of.interest <- merge(areas.of.interest, zipcode, by.x='zipcode', by.y ='zip')
@@ -94,29 +175,44 @@ g = ggplot(data=areas.of.interest)
 g = g + geom_polygon( data=state.map, aes(x=long, y=lat,group=group),colour="black", fill="white" )
 g = g + geom_point(aes(x=longitude, y=latitude, colour=city)) 
 g = g + theme_bw() 
-g = g + labs(x=NULL, y=NULL)
-g
+g + labs(x=NULL, y=NULL)
+@   
 
+The following adds a ``city'' column to the dataset.
+<<zip_to_city, cache=TRUE>>=
+# Utility function to find the city of the zipcode
 zip.to.city <- function(df) {
     city <- merge(df, zipcode, by.x='zipcode', by.y='zip')$city
     as.factor(city)
 }
 train.data$city <- zip.to.city(train.data)
 test.data$city <- zip.to.city(test.data)
+@
 
-
-
+The following trains a random forest 
+<<random forest, cache=TRUE>>=
 formula <- price ~ sqft_living + sqft_lot + bedrooms + bathrooms + floors + city
 random.forest.model <- randomForest(formula, data=train.data)
+@
 
+<<varimpplor, cache=TRUE>>=
 varImpPlot(random.forest.model)
+@
 
+<<partialvarimpplor, cache=TRUE>>=
 partialPlot(random.forest.model, train.data, "sqft_living")
+@
 
-X = model.matrix(~ sqft_living + sqft_lot + bedrooms + bathrooms + floors + city, data=train.data)[,-1] #drop intercept
-ff = forestFloor(rf.fit=random.forest.model, X = X, calc_np = FALSE,    # TRUE or FALSE both works, makes no difference
-  binary_reg = FALSE  # takes no effect here when rfo$type="regression"
-)
+\end{enumerate}
+
+
+
+\end{document}
+
+
+
+
+
 
 
 

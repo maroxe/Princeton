@@ -10,7 +10,7 @@ A=rgb2gray(A) ;
 [U,S,V] = svd(A);
 
 %% arrays initialization
-k_range = [25 50 100 200];
+k_range = [5 25 50 100 200];
 diff_norm = zeros('like', k_range);
 total_savings = zeros('like', k_range);
 
