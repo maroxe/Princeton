@@ -15,11 +15,17 @@ y2 = np.sin(theta) / np.sqrt(2)
 z2 = - 1 - x2
 
 
-
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
+
+# circle
 ax.scatter(x, y, z)
 ax.scatter(x2, y2, z2)
+
+# cylinder
+for i in range(0, len(x), 3):
+    ax.plot([x[i], x2[i]], [y[i], y2[i]], [z[i], z2[i]], color='k')
+
 
 #draw sphere
 u, v = np.mgrid[0:2*np.pi:30j, 0:np.pi:30j]
@@ -31,8 +37,10 @@ ax.plot_wireframe(x, y, z, color="r", alpha=0.4)
 # draw plane
 x, y=np.mgrid[-1.3:1.3:10j,-1.3:1.3:10j]
 z = 1 - x
+
 ax.plot_wireframe(x, y, z, alpha=0.4, color='g')
 ax.plot_wireframe(x, y, z-2, alpha=0.4, color='g')
+
 
 
 plt.xlim(-2, 2)
@@ -41,9 +49,13 @@ ax.set_zlim(-2, 2)
 plt.xlabel('x')
 plt.ylabel('y')
 ax.set_zlabel('z')
-ax.view_init(30, -60)
+ax.view_init(30, -40)
 plt.savefig('nucnormset1.png')
+ax.view_init(30, -60)
+plt.savefig('nucnormset2.png')
 
+
+exit()
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -61,6 +73,14 @@ ax.set_zlabel('z')
 ax.view_init(0, 80)
 plt.savefig('nucnormset2.png')
 plt.show()
+
+
+
+
+
+
+
+
 
 
 

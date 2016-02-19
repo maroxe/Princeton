@@ -6,6 +6,7 @@
 \newtheorem{definition}{Definition}
 \newtheorem{example}{Example}
 \newtheorem{remark}{Remak}
+\newtheorem{lemma}{Lemma}
 
 \newenvironment{class}[1]
 {\section{Class #1}}
@@ -182,6 +183,84 @@ Mathematically, the portfolio value $V^{(\pi)}(t) = \sum \Pi_i(t) X_i(t)$ satisf
     \item There exist a unique \textit{strong} solution if no more than 2 $X_i$'s collide $\iff k\rightarrow \sigma_k^2$ is concave. (Ichiba Karatzav, Misha '15)
     \end{itemize}
   \end{definition}
+
+  \textbf{Goal:} Derive a SDE for the ranked caps $X_{(1)}(t) \le \ldots \le X_{()}(t)$
+
+  \begin{theorem}[Only two processse]
+    $X = M^X + A^X, Y = M^Y + A^Y$ semi martingales.
+    Then $\max(X, Y)$ and $\min(X, Y)$ are semi martingales.
+    \[
+      \left\{
+        \begin{array}{c}
+          d \max(X, Y)_t = 1_{\{\max = X\}}  dX + 1_{ \{ \max = Y\} } dY + \frac12 dL_0^{\max(X,Y) - \min(X,Y)}(t)\\
+          d \min(X, Y)_t = 1_{\{\max = X\}}  dX + 1_{ \{ \max = Y\} } dY - \frac12 dL_0^{\max(X,Y) - \min(X,Y)}(t)\\
+        \end{array}
+      \right.
+    \]
+    
+  \end{theorem}
+  \begin{proof}
+    Key identity: $max(X, Y) =: X \vee Y = \frac{X+Y}2 + \frac{|X-Y|}2$
+
+    Ito Tanaka:
+    \begin{align*}
+      d X \vee Y &= \frac{dX + dY}2 + \frac12 \left(sign(X-Y) d(X-Y) + dL^{|X-Y|}_0(t) \right)\\
+                   &= \underbrace{\frac12(1 + sign(X-Y))}_{1_{X \ge Y}}dX + \frac12(1 - sign(X-Y))dY + \frac12 dL^{|\max-\min|}_0\\
+    \end{align*}
+
+  \end{proof}
+
+  \begin{theorem}[Back to the first order model]
+    Consider a first order model with 2 stocks:
+    $$dX_1(t) = 1_{\{X_1(t) = X_{(1)}(t)\}} (b_1 dt+ \sigma_1 dW_1(t)) + 1_{\{X_1(t) = X_{(2)}(t)\}} (b_2 dt+ \sigma_2 dW_2(t))$$
+    $$dX_2(t) = 1_{\{X_2(t) = X_{(1)}(t)\}} (b_2 dt+ \sigma_2 dW_2(t)) + 1_{\{X_2(t) = X_{(2)}(t)\}} (b_2 dt+ \sigma_2 dW_2(t))$$
+
+    There exist independent standard Brownian Motions $\beta_1, \beta_2$ such that:
+    $$dX_{(1)}(t) = b_1 dt + \sigma_1 d\beta_1(t) - \frac12 dL_0^{X_{(1)}-X_{(2)}}$$
+    $$dX_{(2)}(t) = b_2 dt + \sigma_2 d\beta_2(t) - \frac12 dL_0^{X_{(1)}-X_{(2)}}$$
+
+    ($X_{(1)} = \min$)
+  \end{theorem}
+  \begin{lemma}[Levy's caracterization of BM]
+    If $M_1, \ldots, M_n$ are continuous local martingales and $<M_i, M_j>(t) = t 1_{i = j}$, then:
+    $(M_1, \ldots, M_n)$ is a standard $n$-dimensional BM.
+  \end{lemma}
+  \begin{proof}
+    \begin{align*}
+      d X_{(1)}  &= d X_1 \vee X_2 \\
+                 &= 1_{X_1 = X_{(1)}} dX_1 + 1_{X_2 = X_{(1)}} dX_2 - \frac12 dL_0^{X_{(2)} - X_{(1)}}\\
+                 &= 1_{X_1 = X_{(1)}} (b_1 dt + \sigma_1 dW_1) + 1_{X_1 = X_{(1)} = X_2} (b_1 dt + \sigma_1 dW_2)
+      \\&+ 1_{X_2 = X_{(1)}} (b_1 dt + \sigma_2 dW_2) + 1_{X_2 = X_{(1)} = X_1} (b_1 dt + \sigma_1 dW_1)
+      \\&- \frac12 dL_0^{X_{(2)} - X_{(1)}}
+      \\&= 1_{X_1 = X_{(1)}} (b_1 dt + \sigma_1 dW_1) + 1_{X_2 = X_{(1)}} (b_1 dt + \sigma_1 dW_2) - \frac12 dL_0^{X_{(2)} - X_{(1)}}
+                 &(\{ t, 1_{X_1 = X_2}\} \text{has measure 0})
+      \\&= b_1 dt + \sigma_1 1_{X_1 = X_{(1)}} dW_1 + \sigma_2 1_{X_2 = X_{(1)}} dW_2
+    \end{align*}
+
+    $$dX_{(2)} = b_2 dt + \sigma_1 1_{X_1 = X_{(2)}} dW_1 + \sigma_2 1_{X_2 = X_{(2)}} dW_2 $$
+    $$d\beta_{(1)} = 1_{X_{(1)} = X_1} dW_1 + 1_{X_{(1)} = X_2} dW_2$$
+    $$d\beta_{(2)} = 1_{X_{(2)} = X_1} dW_1 + 1_{X_{(2)} = X_2} dW_2$$
+    
+    \textbf{Claim:} $\beta_1, \beta_2$ are independent standard BM. By the lemma. 
+    \begin{itemize}
+    \item a stochastic integral is continuous and a local martingale
+    \item Ito isometry
+    \end{itemize}
+  \end{proof}
+
+  \begin{theorem}[Banner, Fernholz, Karatzan '05]
+    Start with the first order model with $n$ companies:
+    $$dX_i(t) = \sum_{k = 1}^n 1_{\{X_i(t) = X_{(k)}(t)\}} b_k + \sum_{k = 1}^n 1_{\{X_i(t) = X_{(k)}(t)\}} \sigma_k dW_i(t)$$
+    Then there exist independent standard BM $\beta_1, \ldots, \beta_n$ such that
+    $dX_{(k)} = b_k dt + \sigma_k d\beta_k(t) - \frac12 dL_0^{X_{(k+1)} - X_{(k)}}(t) + \frac12 dL_0^{X_{(k)} - X_{(k-1)}}(t)$
+  \end{theorem}
+  \begin{proof}
+    Difficuties
+    \begin{itemize}
+    \item Why are there no loca times of the form $L^{X_{(l)} - X_{(k)}}$ for $l \ge k+2$?
+    \item Why is local time coefficient $\frac12$?
+    \end{itemize}
+  \end{proof}
 \end{document}
 
   

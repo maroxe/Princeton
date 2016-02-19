@@ -2,21 +2,22 @@
 
 \usepackage{times}
 \usepackage{hyperref}
+
 \hypersetup{pdfpagemode=UseNone} % don't show bookmarks on initial view
 \hypersetup{colorlinks, urlcolor={blue}}
 
 % revise margins
-%% \setlength{\headheight}{0.0in}
-%% \setlength{\topmargin}{0.0in}
-%% \setlength{\headsep}{0.0in}
-%% \setlength{\textheight}{8.65in}
-%% \setlength{\footskip}{0.35in}
-%% \setlength{\oddsidemargin}{0.0in}
-%% \setlength{\evensidemargin}{0.0in}
-%% \setlength{\textwidth}{6.5in}
+\setlength{\headheight}{0.0in}
+\setlength{\topmargin}{0.0in}
+\setlength{\headsep}{0.0in}
+\setlength{\textheight}{8.65in}
+\setlength{\footskip}{0.35in}
+\setlength{\oddsidemargin}{0.0in}
+\setlength{\evensidemargin}{0.0in}
+\setlength{\textwidth}{6.5in}
 
-%% \setlength{\parskip}{6pt}
-%% \setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
 
 \begin{document}
 
@@ -39,14 +40,18 @@ test.data$zipcode <- as.factor(test.data$zipcode)
 formula <- price ~ bedrooms + bathrooms + sqft_living + sqft_lot
 linear.model <- lm(formula, data=train.data)
 r2.train <- mean(residuals(linear.model)**2)
-r2.test <- mean((predict(linear.model, test.data) - test.data$price)**2)
+r2.test <- mean(
+(predict(linear.model, test.data) - test.data$price)**2
+)
 @
 
 \begin{enumerate}
 \item[a)]
 <<r2_error, cache=TRUE>>=
 r2.train <- mean(residuals(linear.model)**2)
-r2.test <- mean((predict(linear.model, test.data) - test.data$price)**2)
+r2.test <- mean(
+(predict(linear.model, test.data) - test.data$price)**2
+)
 @ 
   
   $R^2$ error:
@@ -63,8 +68,14 @@ r2.test <- mean((predict(linear.model, test.data) - test.data$price)**2)
 # Linear regression with zip code
 formula <- update(formula, ~ . + zipcode)
 linear.model.with.zipcode <- lm(formula, data=train.data)
-r2.train.with.zipcode <- mean(residuals(linear.model.with.zipcode)**2)
-r2.test.with.zipcode <- mean((predict(linear.model.with.zipcode, test.data) - test.data$price)**2)
+r2.train.with.zipcode <- mean(
+residuals(linear.model.with.zipcode)**2
+)
+r2.test.with.zipcode <- mean(
+(
+    predict(linear.model.with.zipcode, test.data) 
+    - test.data$price
+)**2)
 @
 
   $R^2$ error:
@@ -75,7 +86,7 @@ r2.test.with.zipcode <- mean((predict(linear.model.with.zipcode, test.data) - te
     \Sexpr{r2.train.with.zipcode} & \Sexpr{r2.test.with.zipcode}
   \end{array}
   \]
-
+The addiitional factor (zipcode) explain reduce the $R^2$-error by almost half. As we will see before, it is one of the most important factor for the prediction of houses price.
 \end{enumerate}
 
 \item
@@ -83,7 +94,7 @@ r2.test.with.zipcode <- mean((predict(linear.model.with.zipcode, test.data) - te
 library(glmnet)
 feature.names <- colnames(train.data)[5:length(train.data)]
 formula <- as.formula(paste('~', paste(feature.names, collapse='+')))
-X.train <- model.matrix(formula, data=train.data)[,-1] #drop intercept
+X.train <- model.matrix(formula, data=train.data)[,-1]
 y.train <- train.data$price
 X.test <- model.matrix(formula, data=test.data)[,-1]
 y.test <- test.data$price
@@ -102,46 +113,64 @@ plot.path <- function(alpha, ...) {
     plot(fit, xvar="norm", label=T)
     vnat=coef(fit)
     vnat=vnat[-1,ncol(vnat)]
-    axis(4, at=vnat,line=-.5,label=labs,las=1,tick=FALSE, cex.axis=0.5) 
+    axis(4, at=vnat,line=-.5,label=labs,las=1,
+         tick=FALSE, cex.axis=0.5) 
 }
 @
-<<lasso, dev='png', fig.height=5, fig.cap='lasso', fig.pos='h!', cache=TRUE>>=
-plot.path(alpha = 0)
+<<lasso, dev='png', fig.cap='lasso', fig.sho='asis', cache=TRUE>>=
+plot.path(alpha = 1)
 @
 
-<<ridge, dev='png', fig.height=5, fig.cap='ridge', fig.pos='h!', cache=TRUE>>=
-plot.path(alpha = 1)
+<<ridge, dev='png',  fig.cap='ridge', fig.sho='asis', cache=TRUE>>=
+plot.path(alpha = 0)
 @ 
 
+\textbf{Criteria for choosing:} The most important variables will be the first to take the value non zero (they best explain the price when we resitrict the norm to be too small), and don't go back to zero when we let the norm to be bigger (no other combination of the variablese explain the price better). The ridge/lasso path agree that the most important variables are:
+\begin{itemize}
+\item Is the house in zipcode 96039?
+\item Does the house have a waterfromt?
+\item What is the latitude of the location
+\item Is the house in zipcode 96112?
+\end{itemize}
+
+
 \item[b)]
-<<cv, fig.show='hold', cache=TRUE>>=
+<<cv,  cache=TRUE>>=
 do.cv <- function(alpha) {
     model <- glmnet(X.train, y.train, alpha=alpha)
-    cv <- cv.glmnet(X.train,y.train, nfolds=5, alpha=alpha)
+    cv <- cv.glmnet(X.train,y.train, nfolds=5, 
+                    alpha=alpha)
     l1.norm.min = sum(abs(coef(cv, s='lambda.min')[-1]))
 
     par(mfrow=c(2,1))
     plot(model, xvar="norm")
     abline(v=l1.norm.min, lty=2)
-    text(x=l1.norm.min*0.95, y=2e5, label="best coefficient")
+    text(x=l1.norm.min*0.95, y=2e5, 
+         label="best coefficient")
     plot(cv)
+    cv
 }
+@
+<<lassocv, fig.show='asis', fig.cap='lasso cross validation', cache=TRUE>>=
+lasso.model.cv <- do.cv(alpha=1)
+@
 
-do.cv(alpha=0)
-do.cv(alpha=1)
+<<ridgecv, fig.show='asis', fig.cap='ridge cross validation', cache=TRUE>>=
+ridge.model.cv <- do.cv(alpha=0)
 @
 
 \item[c)]
 <<cv.test, cache=TRUE>>=
 evaluate.on.test <- function(alpha){
     model <- glmnet(X.train, y.train, alpha=alpha)
-    cv <- cv.glmnet(X.train,y.train, nfolds=5, alpha=alpha)
+    cv <- cv.glmnet(X.train,y.train, nfolds=5, 
+                    alpha=alpha)
     pred <- predict(cv, X.test, s="lambda.min")
     mse <- mean((pred - y.test)^2)
 }
 
-r2.cv.lasso <- evaluate.on.test(alpha=0)
-r2.cv.ridge <- evaluate.on.test(alpha=1)
+r2.cv.lasso <- evaluate.on.test(alpha=1)
+r2.cv.ridge <- evaluate.on.test(alpha=0)
 @
 $R^2$ error:
 \[
@@ -165,14 +194,19 @@ library(maps)
 state.map <- map_data('state', region = 'Washington')
 data(zipcode)
 
-areas.of.interest <- data.frame(zipcode=levels(train.data$zipcode))
-areas.of.interest <- merge(areas.of.interest, zipcode, by.x='zipcode', by.y ='zip')
-areas.of.interest$region <- substr(areas.of.interest$zipcode, 1, 1)
+areas.of.interest <- data.frame(
+    zipcode=levels(train.data$zipcode)
+)
+areas.of.interest <- merge(areas.of.interest, zipcode,
+                           by.x='zipcode', by.y ='zip')
+areas.of.interest$region <- substr(areas.of.interest$zipcode, 
+                                   1, 1)
 num.cities <- length(unique(areas.of.interest$city)) #24
 
 # plot map
 g = ggplot(data=areas.of.interest)
-g = g + geom_polygon( data=state.map, aes(x=long, y=lat,group=group),colour="black", fill="white" )
+g = g + geom_polygon( data=state.map, aes(x=long, y=lat,group=group),
+                     colour="black", fill="white" )
 g = g + geom_point(aes(x=longitude, y=latitude, colour=city)) 
 g = g + theme_bw() 
 g + labs(x=NULL, y=NULL)
@@ -189,30 +223,56 @@ train.data$city <- zip.to.city(train.data)
 test.data$city <- zip.to.city(test.data)
 @
 
-The following trains a random forest 
+The following code trains a random forest
+
 <<random forest, cache=TRUE>>=
-formula <- price ~ sqft_living + sqft_lot + bedrooms + bathrooms + floors + city
+formula <- price ~ sqft_living + sqft_lot +
+    bedrooms + bathrooms + floors + city
 random.forest.model <- randomForest(formula, data=train.data)
 @
 
+
+Here we plot variable importance:
 <<varimpplor, cache=TRUE>>=
 varImpPlot(random.forest.model)
 @
 
+and partial importance for each variable:
 <<partialvarimpplor, cache=TRUE>>=
-partialPlot(random.forest.model, train.data, "sqft_living")
+par(mfrow=c(2, 3), xpd=NA)
+partialPlot(fit, train.data, x.var="sqft_living")
+partialPlot(fit, train.data, x.var="bathrooms")
+partialPlot(fit, train.data, x.var="sqft_lot")
 @
 
+\item
+  We use a lasso estimator computed in question c) using cross validation.
+<<house_pricing, cache=TRUE>>=
+# Convert donald trump to a dummmy variable understandable by glmnet
+donald.trump <-  list(bedrooms=8, bathrooms=25, 
+                      sqft_living=50000,
+                      sqft_lot=225000, floors=4, 
+                      condition=10, grade=10,
+                      waterfront=1, view=4, 
+                      sqft_above=37500, sqft_basement=12500,
+                      yr_built=1994,yr_renovated=2010, 
+                      lat=47.627606, long=-122.242054, 
+                      sqft_living15=5000,sqft_lot15=40000, 
+                      zipcode98039=1)
+trump.dummy <- 0*X.train[1,]
+for(entry in names(donald.trump)) 
+    trump.dummy[entry] <- donald.trump[entry]
+trump.dummy <- t(unlist(trump.dummy))
+
+house.donald.trump <- predict(lasso.model.cv, 
+                              trump.dummy, 
+                              s='lambda.min')
+@ 
+
+The price estimate is \textbf{\Sexpr{formatC(house.donald.trump /  1e6, format="f", digits=2)}M \$}.
 \end{enumerate}
 
 
 
 \end{document}
-
-
-
-
-
-
-
 

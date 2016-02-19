@@ -10,13 +10,26 @@
 \newtheorem{definition}{Definition}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem*{remark}{Remark}
+\newcommand{\esp}{{\mathbb E}}
+\newcommand{\pr}{{\mathbb P}}
+\newcommand{\norm}[1]{\Vert #1 \Vert}
+\newcommand{\fnorm}[1]{\Vert #1 \Vert_F}
+\newcommand{\nucnorm}[1]{\Vert #1 \Vert_*}
+\newcommand{\opnorm}[1]{\Vert #1 \Vert_{op}}
+\newcommand{\inner}[2]{\langle #1 \, , \, #2 \rangle}
+
 
 \title{ORF525 - Class Notes}
 \author{Bachir EL KHADIR }
 
+\newenvironment{class}[1]
+{\section*{Class #1}}
+{ ----------------------}
+
 \begin{document}
 \maketitle
 
+\begin{class}{1}
 \begin{definition}[Oridnary Lease Squares Regression]
 $f_i = \{ f(x) = \beta^T X\}$
 $\hat \beta^{OLS} = \arg \min_{\beta} ||Y - X \beta||_2^2$
@@ -88,8 +101,150 @@ Question: $\hat \beta^{OLS} = (\underbrace{X^TX}_{\text{not invertible}})^{-1}X^
   Pro:Theoritically and conceptually simple.
   Con: Waste of the training sample. $\implies$ Cross validation.
 \end{itemize}
+\end{class}
+\begin{class}{2}[Data spliting]
 
+\subsubsection{Pros and cons o f data splitting}
+\textbf{Pro:} Theoritically and computationaly simple.
+\textbf{Con:} Waste if training data $\implies$ cross validation.
+
+\begin{itemize}
+\item training / test split: conditional (on the training) prediction error.
+  $$\esp_{X, Y}[ |Y - \hat f_{D_{train}}(X)|^2 | D_{train}]$$
+\item cross validation: converges to expected training data.
+  $$\esp_D[ \esp[ |Y - \hat f_{D_{train}}(X)|^2 | D_{train}] ]$$
+\end{itemize}
+\begin{definition}[$J$-Fold Cross validation]
+  We split the data $\mathcal D$ into $J$-equally sized parts $\mathcal D_1, \ldots, \mathcal D_J$. This forms:
+  \begin{align*}
+    (DS1):& \mathcal D_1 \text{ vs } \mathcal D \setminus \mathcal D_1\\
+    \cdots\\
+    (DS1):& \mathcal D_1 \text{ vs } \mathcal D \setminus \mathcal D_n\\
+  \end{align*}
+  For $\lambda_k \in \Lambda$ we calculate the data splitting scores Using $DS1, \ldots DS2$. Denote the result as $DS_1(k), \ldots, DS_J(k)$. The cross validation is
+  $$CV(k) := \frac1J \sum_j^J DS_j(k)$$
+  We then pick $\arg\min CV(k)$.
+  In pratice, picke the most parsimonious model whose error is no more than one standard deviation above the smallest CV score.
+  
+\end{definition}
+Question: After CVm we pick $\hat \lambda_k$. Then what shall we do?
+\begin{itemize}
+\item Use $\lambda_k$ to fit the entire data, then deliver
+\item Take the average of the estimators.
+\end{itemize}
+
+\subsubsection{Model assessment vs selection}
+\begin{definition}[Lasso]
+  Bridge estimator with $\beta =1 $
+  Least absolute shrinkage and selection operator
+  Sparsity: Intersection of ellipsoid ($||Y - X\beta||_2^2 = cte$) and a polytope $||\beta||_1 = cte$)
+\end{definition}
+
+Sparsity: many ekements of $\beta$ are 0 $\implies$ model selection. (select variable with coefficient $\ne$ 0)
+
+
+\end{class}
+\begin{class}{3}[Persistency]
+  
+  \begin{tabular}{| l | l |}
+    Ridge & Lasso\\ \hline
+    Not Sparse &  Sparse \\ \hline
+    Handles collinearity &  Doesn't handle collinearity
+  \end{tabular}
+  \begin{definition}[Collinearity]
+    A phenomenon in which two or more predictor variables are highly correlated.
+  \end{definition}
+  
+  Question : Combine Ridge and Lasso?
+  Answer: \textbf{Elastic-Net}
+  $$\hat \beta^{\text{Elastic}} = \arg \min ||Y - X\beta||_2^2 + \lambda ( \alpha ||\beta|||_1 + (1-\alpha)||\beta||_2^2)$$
+  \begin{itemize}
+  \item $\alpha = 1 \implies$ Lasso.
+  \item $\alpha = 0 \implies$ Ridge.
+  \end{itemize}
+
+  Question: two tuning parameters, how to choose then?
+  Answer: Use a two stage approach:
+  \begin{itemize}
+  \item Use $\alpha = 1$, fit a full Lasso path, visualize the regularization path.
+  \item Use $\alpha = 0.6$, fit the regularization path pagain.
+    Then we examine whether there si significant change of the final path:
+    \begin{itemize}
+    \item If not $\implies \alpha = 1$ (Lasso)
+    \item o/w $\implies \alpha = 0.6$ (Elastic)
+    \end{itemize}
+  \end{itemize}
+
+  \subsubsection*{Insight of the Lasso Estimator}
+  \begin{definition}[SQRT-Lasso]
+    An equivalent representation of the lasso is called SQRT-Lasso:
+    \begin{equation}
+    \hat \beta^{\text{Elastic}} = \arg \min ||Y - X\beta||_2^2 + \lambda ||\beta||_1\label{eq:*}
+  \end{equation}
+
+    Symptoticcaly $\lambda^{\text{optimaly}} \sim 2.1 \sqrt{\frac t{\log d}{n}}$, $n > 10k$ + The model has to be linear 
+  \end{definition}
+  \begin{theorem}[Robust Optimization Representation of Lasso]
+    The SQRT-Lasso problem in (\ref{eq:*}) is equivalent to the following robust linear regression problem:
+    $$\min_{\betae} \max_{U \in \Omega_{\lambda}} ||Y - (X + U)\beta||_2$$
+    Where $\Omega_{\lambda} := \{ U = (U_1, \ldots, U_d)\in \mathbb R^{n \times d}, \max_j ||U_j||_2 \le \lambda \}$
+  \end{theorem}
+  \begin{proof}
+    We only need to prove
+    $\max_{U \in \Omega_{\Lambda}} ||Y - (X+U)\beta||_2 = ||Y - X\beta||_2 + \lambda ||\beta||_1$
+    \begin{itemize}
+    \item     $\max_{U \in \Omega_{\Lambda}} ||Y - (X+U)\beta||_2 \le ||Y - X\beta||_2 + \lambda ||\beta||_1$
+      $||Y - (X+U)\beta||_2 \le ||Y - X\beta||_2 + \sum_j  |\beta_j| \; ||U_j||_2 \le ||Y - X\beta||_2 + \lambda ||\beta||_1$
+    \item     $||Y - X\beta||_2 + \lambda ||\beta||_1 \le \max_{U \in \Omega_{\Lambda}} ||Y - (X+U)\beta||_2$
+      \[
+        u = \left\{
+          \begin{array}{cc}
+            \frac{Y - X\beta}{||Y-X\beta||_2} &\text{if } Y \ne X\beta\\
+            \text{arbitrary unit vector}&\text{o.w}
+          \end{array}
+        \right.
+      \]
+      And define:
+      
+      $$U^*_j = -\lambda sign(\beta_j) u$$
+      ($sign(0) = 1$)
+      
+      We can verify that $|U_j|_2 \le \lambda$
+      \begin{align*}
+        |(Y - (X+U^*)\beta|_2 \ge |(Y - X\beta - \sum_j \beta_jU^*_j|_2\\
+        &\ge |(Y - X\beta - \sum_j |\beta_j| \frac{Y - X\beta}{||Y-X\beta||_2}\\
+        &= | (|Y - X\beta)|_2 + \lambda |\beta|_1) \frac{Y - X\beta}{||Y-X\beta||_2} |_2\\
+        &= |Y - X\beta|_2 + \lambda |\beta|_1
+      \end{align*}
+
+
+    \end{itemize}
+    
+  \end{proof}
+
+  \begin{definition}[Theory of Lasso (Greenshtein and Ritov '2006)]
+    We define
+    $$R(\beta) = E_{Y, X} (Y - \beta^TX)^2, \hat R(\beta) = \frac1n \sum_j (Y_j - \beta^TX_i)^2$$
+    $\hat \beta = \arg\min_{|\beta|_1 \le L} \hat R(\beta)$: Lasso estimator
+    $\beta^* = \arg\min_{|\beta|_1 \le L} R(\beta)$: Lasso estimator
+  \end{definition}
+  \begin{definition}[Persistence]
+    An estimator $\hat \beta$ is persistent within a class ${\cal B}_n$ if $R(\hat \beta) - \inf_{\beta \in {\cal B}_n} R(\beta) \rightarrow_{\mathbb P} 0$ as $n \rightarrow \infty$
+  \end{definition}
+  \begin{theorem}[Lasso]
+    Assume $|Y_i| \le B$ and $|X|_{\infty} \le B$. Then
+    $$P\left(R(\hat \beta) - R(\beta^*) \le 2 (1 + L^2) \sqrt{\frac{2B^4\log(\frac{2d^2}{\delta})}n} \right) \ge 1 - \delta$$
+  \end{theorem}
+  \begin{theorem}[Persistency of the Lasso]
+    $\forall k > 0, d = O(n^k)$, ${\cal B}_n = \{\beta, |\beta|_1 \le L_n, L_ = o(\frac n{\log n})^{\frac14}\}$
+    Then:
+    $R(\hat \beta) - \inf_{\beta \in {\cal B}_n} R(\beta) \rightarrow_{\mathbb P} 0$ as $n \rightarrow \infty$
+  \end{theorem}
+\end{class}
 \end{document}
+
+
+
 
 
 
