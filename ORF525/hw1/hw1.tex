@@ -6,6 +6,7 @@
 \usepackage{amsfonts}
 \usepackage{enumitem}
 \usepackage{graphicx}
+\usepackage{pdfpages}
 
 
 \newcommand{\Q}[1]{\subsection*{Q.#1}}
@@ -26,6 +27,7 @@
 \newcommand{\nucnorm}[1]{\Vert #1 \Vert_*}
 \newcommand{\opnorm}[1]{\Vert #1 \Vert_{op}}
 \newcommand{\inner}[2]{\langle #1 \, , \, #2 \rangle}
+\newcommand{\row}[2]{\begin{pmatrix}#1 & #2\end{pmatrix}}
 
 \DeclareMathOperator{\cov}{cov}
 \DeclareMathOperator{\var}{var}
@@ -43,24 +45,8 @@
 \begin{document}
 \maketitle
 
-\begin{question}{1}
+\includepdf[pages=-]{question1.pdf}
 
-  \begin{enumerate}
-  \item The conversion is necessary because otherwise we would have an unwanted order relation. For three similar houses A, B, C in zipcodes 98001, 98002, 98003, a linear model would be forced to affect a price for the house A that lies between the price for house A and C, which is a bug and not a future of the data itself.
-
-
-  \item
-    \begin{enumerate}
-    \item[a)]
-      \begin{array}{cc}
-        R^2 test & R^2 train\\
-      \end{array}
-      
-    \item[b)]
-    \end{enumerate}
-
-  \end{enumerate}
-\end{question}
 
 \begin{question}{2}
   \begin{itemize}
@@ -123,7 +109,7 @@
     \end{itemize}
 
   \item if $y \le -2\tau$, by a similar argument, $\arg\min g$ in this
-    case is $y - 2\tau$.
+    case is $y + 2\tau$.
   \end{itemize}
   
   So
@@ -138,18 +124,18 @@
     \begin{figure}[ht]
       \centering
       \includegraphics[scale=0.4]{nucnormset1.png}
-      \includegraphics[scale=0.4]{nucnormset2.png}
-      \caption{\label{fig:q3} Set}
+      %\includegraphics[scale=0.4]{nucnormset2.png}
+      \caption{\label{fig:q3} Shapes of the two sets}
     \end{figure}
 
     \begin{enumerate}
     \item
-      $M(x,y,z)$ is of rank 1, so $(x y)$ and $(y z)$ are colinear, so  $ \exists \lambda  \in \mathbb{R} \; (x y) = \lambda (y z)  \text{ or } (y z) = \lambda (z y)$
+      $M(x,y,z)$ is of rank 1, so $\row{x}{y}$ and $\row{y}{z}$ are colinear, so  $ \exists \lambda  \in \mathbb{R} \; \row{x}{y} = \row{y}{z} \text{ or } \row{y}{z} = \lambda \row{z}{y}$
       \begin{enumerate}
-      \item Let's assume that $(x y) = \lambda (y z)$, and we can
+      \item Let's assume that $\row{x}{y} = \lambda \row{y}{z}$, and we can
         deduce the other case by symmetry.  In this case
         $x = \lambda^2 z, y = \lambda z$. Which means that $y^2 = \lambda^2z z = xz$.
-      \item When $(y z) = \lambda (x y)$, by a similar argument, $y^2 = xz$
+      \item When $\row{y}{z} = \lambda \row{x}{y}$, by a similar argument, $y^2 = xz$
       \end{enumerate}
       The op norm is the biggest eigen value in absolute value, in this case since one of the
       eigen values is 0 (because the determinant is 0) the op norm is:
@@ -157,8 +143,6 @@
       Letting $t = \sqrt y$, we have that:
       $\{ (x, \sqrt2 y, z) | \rank(M) = 1, \Vert M\Vert _{op} = 1 \} \subseteq \{ (x, t, z): x^2 + t^2 + z^2 = 1, |x+z|=1  \} $
 
-
-      
       For a matrix $M(x, y, z)$ such that $x^2 + z^2 + 2y^2 = 1$ and $|x+z|=1$, it is easy to see that:
       \begin{itemize}
       \item $\Vert M\Vert _{op} = |\tr(M)| = |x+z| = 1$
@@ -194,15 +178,21 @@
       \begin{align*}
         \Vert M\Vert ^* &= |\sigma_1| + |\sigma_2| \\
         tr(M) &= x + z = \sigma_1 + \sigma_2 \\
-        tr(M^TM) &= x^2 + z^2 - 2y^2 = \sigma_1^2 + \sigma_2^2\\
+        tr(M^TM) &= x^2 + z^2 + 2y^2 = \sigma_1^2 + \sigma_2^2\\
         \det(M) &= xz - y^2 = \sigma_1 \sigma_2
       \end{align*}
-      Therefore $(\sigma_1 - \sigma_2)^2 = \sigma_1^2 + \sigma_2^2 - 2 \sigma_1\sigma_2 = tr(M^TM) - 2\det(M) = x^2 + z^2 - 2y^2 - 2(xz - y^2) = (x - z)^2$
-      Since $\Vert M\Vert _*^2 = \max \{ |\sigma_1 + \sigma_2|^2, |\sigma_1 - \sigma_2|^2\}$, $\Vert M\Vert _*^2 = \max \{ (x+z)^2, (x-z)^2 \}$,
-      and therefore \[ \Vert M\Vert _* \le 1 \iff \left\{ \begin{array}{c} (x+z)^2 \le 1\\ (x-z)^2 \le 1 \end{array} \right.  \iff \left\{ \begin{array}{c} -1 \le x+z \le 1\\ -1 \le x-z \le 1 \end{array} \right. \]
+      Therefore $(\sigma_1 - \sigma_2)^2 = \sigma_1^2 + \sigma_2^2 - 2 \sigma_1\sigma_2 = tr(M^TM) - 2\det(M) = x^2 + z^2 + 2y^2 - 2(xz - y^2) = (x - z)^2 + 4y^2$
+      Since $\Vert M\Vert _*^2 = \max \{ |\sigma_1 + \sigma_2|^2, |\sigma_1 - \sigma_2|^2\}$, $\Vert M\Vert _*^2 = \max \{ (x+z)^2, (x-z)^2+4y^2 \}$,
+      and therefore \[ \Vert M\Vert _* \le 1 \iff \left\{ \begin{array}{c} (x+z)^2 \le 1\\ (x-z)^2+4y^2 \le 1 \end{array} \right.  \]
 
-      Which describes the square whose edges are $(1, 0), (0, 1), (-1, 0), (0, -1)$ in the plane $(X, Z)$.
-      In 3d it is the polyhedral obtained by extruding that square according to the $Y$-axis.
+
+      This can be rewritten in the orthornomal basis:
+      \[ \left\{ \begin{array}{cc} u &= \frac{x- z}{\sqrt 2}\\ v &= y \\ w &= \frac{x + z}{\sqrt 2} \end{array} \right. \]
+      \[ \left\{ \begin{array}{c} |w| \le 2 \\ u^2 + v^2 \le \frac14 \end{array} \right. \]
+      
+      This describe the part of the cylinder with axe $v$ radius $r = \frac12$ ($u^2 + v^2 \le \frac14$)  contained between the two planes $w = \pm 2$
+      In the $(x, t, x)$ this describes the cylinder whose axe is $(1, 0, 1)$, and contained between to the planes $x+z = \pm 1$.
+      
     \end{enumerate}
 
   \item If $A = uv^T$ has rank $\le 1$, $A$ has at most one non null singular value, then $\Vert A\Vert _{op} = |\tr(A)| = |v^Tu| = \Vert A\Vert _*$, if $\Vert A\Vert _{op} \le 1$, then $\Vert A\Vert _{*} \le 1$.
@@ -218,30 +208,43 @@
     \item For $A, B$ sqaure matrices of the same shape, $\Vert AB\Vert _F^2 = \tr(ABB^TA^T) = \tr(A^TA BB^T) =  \tr(BB^T A^TA) = \Vert B^TA^T\Vert _F^2$
     \item If $O$ is orthogonal, the $\Vert AO\Vert _F^2 = \tr(AOO^TA^T) = \tr(AA^T) = \Vert A\Vert _F^2$, $\Vert OA\Vert _F = \Vert A^TO^T\Vert _F = \Vert A^T\Vert _F = \Vert A\Vert _F$.
     \end{itemize}
-
+    Let $X = U\Lambda V^T$ be the SVD of $X$.
+    
     $\Vert X - XZ\Vert _F^2 = \Vert X (I - Z)\Vert _F^2 = \Vert U \Lambda V^T(I - Z)\Vert _F^2 = \Vert \Lambda V^T(I - Z)\Vert _F^2 = \Vert \Lambda V^T V(V^TV - V^TZV)V^T\Vert _F^2 = \Vert \Lambda (I - V^TZV)\Vert _F^2$.
 
-    Since $V$ is invertible, let's do the change of variable $Y = V^TZV$. Moreover, $V$ is orthogonal, so the singular values of $Y$ and $Z$ are the same as well as their nuclear norm. The problem can thus be reduced to:
+    Since $V$ is invertible, let's do the invertible change of variable $Y = V^TZV$. Moreover, $V$ is orthogonal, so the singular values of $Y$ and $Z$ are the same as well as their nuclear norm. The problem can thus be reduced to:
     $$\min_Y \Vert Y\Vert _* + \frac{\tau}2 \Vert \Lambda(I -  Y)\Vert _F^2$$
 
+    Moreover, we have that:
     \begin{align*}
       \fnorm{\Lambda (I - Y)}^2 &= \sum_{ij} [e_i^T \Lambda (I - Y)e_j]^2 \\
                                 &= \sum_{ij} [\Lambda_i e_i^T(e_j - Ye_j)]^2 \\
                                 &= \sum_{ij} [\Lambda_i (\delta_{ij} - Y_{ij})]^2 \\
                                 &= \sum_{i \ne j} \underbrace{\Lambda_i^2 y_{ij}^2}_{\ge 0}  + \sum_i \Lambda_i^2 (1 - y_{ii})^2  \\
                                 & \ge \sum_i \Lambda_i^2 (1 - y_{ii})^2  \\
+                                &= \fnorm{\Lambda (I - diag(Y))}^2
     \end{align*}
 
-    Let $Y = \sum_i \sigma_i(Y) u_iv_i^T$ be the SVD of $Y$, then $\tr(Y) = \sum_i \sigma_i(Y) \tr(u_iv_i^T)= \sum_i \sigma_i(Y) \underbrace{v_i^Tu_i}_{\le \norm{u_i}\norm{v_i} \le 1} \le \nucnorm{Y}$
-    As a result $\nucnorm{Y} + \frac{\tau}2 \fnorm{\Lambda - \Lambda Y}^2 \ge \sum_i y_{ii} + \frac{\tau} 2 \Lambda_i^2(1 - y_{ii})^2$
-    Minimizing the quadratic function $y \rightarrow y + \frac{\tau}2 \Lambda_i^2 (1 - y)^2$ leads to $y = (1 - \frac1{\tau \Lambda_i^2})^+$
-    Therefore $Y = $
+
+    And, for any matrix X:
+    $$\inner{diag(Y)}{ X} = \sum_i y_ii x_ii \le \sum_{u \ne j} y_{ii} x_ii + \sum_{i \ne j} y_{ij} x_ii = \inner{diag(Y)}{\tilde X}$$
+    Where $\tilde X_{ii} = X_{ii}$ and $\tilde X_{ij} = Y_{ij}$ when $i \ne j$
+    Which proves that $\opnorm{diag(Y)} \le \opnorm{Y}$
+    
+    As a result $\nucnorm{Y} + \frac{\tau}2 \fnorm{\Lambda - \Lambda Y}^2 \ge \nucnorm{diag(Y)} + \frac{\tau}2 \fnorm{\Lambda - \Lambda diag(Y)}^2$ with strict inequality if $Y$ is not diagonal, so we can resitrict the search for diagonla matrices only.
+
+    If $Y$ is diagonal, then
+    $\nucnorm{diag(Y)} + \frac{\tau}2 \fnorm{\Lambda - \Lambda diag(Y)}^2 = \sum_{i} \underbrace{|y_i| + \Lambda_i^2 (1 - y_{ii})^2}_{\phi(y_{ii})}$
+    
+    Minimizing the quadratic function $\Phi: y \rightarrow |y| + \frac{\tau}2 \Lambda_i^2 (1 - y)^2$ leads to the only solution $y = (1 - \frac1{\tau \Lambda_i^2})^+$
+    Therefore $Y = \max(0, I - \frac1{\tau}\Lambda^{-2})$
+    Doing the inverse change of variable we get that $Z = V^T\max(0, I - \frac1{\tau}\Lambda^{-2})V$.
   \end{enumerate}
   
 \end{question}
 \begin{question}{4}
   \begin{enumerate}
-  \item 
+  \item[4.1] 
     \begin{enumerate}
     \item
       Let $Y = U\Lambda V^T$ be the SVD decomposition of $Y$,
@@ -254,25 +257,41 @@
     \end{enumerate}
     c/c $\Vert Y\Vert _* = \max_{\Vert X\Vert _{op} \le 1} \langle Y, X\rangle $
 
-  \item for $\alpha \in (0, 1)$,
-    $\Vert \alpha Y + (1-\alpha)Z\Vert _* = \max_{\Vert X\Vert _{op} \le 1} \alpha \langle Y, X\rangle  + (1-\alpha) \langle Z, X\rangle  \le \alpha \max_{\Vert X\Vert _{op} \le 1} \langle Y, X\rangle  + (1-\alpha) \max \langle Z, X\rangle  \le \alpha \Vert Y\Vert _* + (1-\alpha) \Vert Z\Vert _*$
-  \item
+  \item[4.2]
+    
+    For $\alpha \in (0, 1)$,
+    $\Vert \alpha Y + (1-\alpha)Z\Vert _* = \max_{\Vert X\Vert _{op} \le 1} \alpha \langle Y, X\rangle  + (1-\alpha) \langle Z, X\rangle  \le \alpha \max_{\Vert X\Vert _{op} \le 1} \langle Y, X\rangle  + (1-\alpha) \max_{\opnorm{X} \le 1} \langle Z, X\rangle  \le \alpha \Vert Y\Vert _* + (1-\alpha) \Vert Z\Vert _*$.
+    
+    Where we used the fact $\max A + B = \max A + \max B$.
+    
+  \item[4.3]
     \begin{enumerate}
-    \item[$\Rightarrow$] Let's suppose $Z \in \partial \Vert A \Vert _*$
-      Then $\norm{B}_* \ge \norm{A}_* + \langle Z, B - A\rangle $.
-      For $B = Z$, $\norm{Z}_* \ge \norm{A}_* + \norm{Z}_F^2 - \langle Z, A\rangle $.
-      For $B = 0$,  $0 \ge \norm{A}_* - \langle Z, A\rangle \implies \langle Z, A\rangle \ge \norm{A}_*$.
-    \item[$\Leftarrow$]Let $Z$, such that $\norm{Z}_{op} = 1$ and $\langle Z, A\rangle  = \norm{A}_*$, then $\forall X \;  \langle Z, X\rangle  \le \norm{X}_*$ and:
+    \item[$\Rightarrow$] Let's suppose $Z \in \partial \Vert A \Vert _*$, then $\norm{B}_* \ge \norm{A}_* + \langle Z, B - A\rangle $ for all $B$.
+      \begin{itemize}
+      \item For $B = 2A$, $\norm{A}_* \ge \langle Z, A\rangle $.  
+      \item For $B = 0$,    $0 \ge \norm{A}_* - \langle Z, A\rangle \implies \langle Z,
+        A\rangle \ge \norm{A}_*$.
+      \end{itemize}
+      So $ \langle Z, A\rangle = \norm{A}_*$
+
+      Let $u, v$ two vectors of norm 1, then:
+      
+      By the triangular inequality of the nuclear norm:    $v^TZu = \inner{Z}{uv^T} \le \nucnorm{X_0 + uv^T} - \norm{X_0} \le \nucnorm{uv^T}$.
+      
+      But $u^Tv$ is of rank 1, so $\nucnorm{u^Tv} = |\tr(uv^T)| = |\inner{u}{v}| \le 1$,  which proves that $\opnorm{Z} \le 1$
+      
+    \item[$\Leftarrow$]Let $Z$, such that $\norm{Z}_{op} \le 1$ and $\langle Z, A\rangle  = \norm{A}_*$, then by 4.1 $\forall X \;  \langle \frac{Z}{\opnorm{Z}}, X\rangle  \le \norm{X}_* $ so that $\inner{Z}{X}\le \norm{X}_*\opnorm{Z} \le \nucnorm{X}$ and:
       $\norm{X}_* - \norm{A}_* \ge \langle Z, X\rangle  - \langle Z, A\rangle $, which means that $Z \in \partial \norm{A}_*$
       
     \end{enumerate}
-  \item
+  \item[4.4]
     \begin{enumerate}
     \item 
       \begin{align*}
         Z \in \partial \norm{A} &\implies \norm{Z}_{op} = 1, \norm{A}_* = \norm{\Lambda}_* = \inner{Z}{A}\\
                                 &\implies \norm{\Lambda}_* = \tr(Z^T U\Lambda V^T) = \tr( (U^TZV)^T \Lambda ) = \sum_i (U^TZV)_{ii} \Lambda_i\\
-                                & \implies \sum_i \underbrace{\Lambda_i ( 1- u_i^TZv_i)}_{\ge 0} = 0 &(|u_i^TZv_i| \le \norm{u_i}\norm{v_i}\opnorm{Z} \le 1)\\
+                                & \implies \sum_i \underbrace{\Lambda_i ( 1- u_i^TZv_i)}_{\ge 0} = 0\\
+                                & ( \text{because }|u_i^TZv_i| \le \norm{u_i}\norm{v_i}\opnorm{Z} \le 1)\\
                                 & \implies \forall i \; u_i^TZv_i = 1
       \end{align*}
       Let's complete the family $(u_i)_{i \le r}$ into $(u_i)_{i \le d_1}$ an orthonormal basis of $\mathbb R^{d_1}$.
@@ -280,14 +299,16 @@
 
       So $u_j^TZv_i = \delta_{ij} $ and $Zv_i = \sum_{j=1}^{d_1} u_j^TZv_i u_j = u_i^TZv_i u_i = u_i$. In matrix form: $ZV = U$, and using a similar arguement $U^TZ = V$.
       
-      Let $W := Z - UV^T$, then the last equations can be written as $U = (W + UV^T)V = WV + UV^TV = WV + U \implies WV = 0$ and similarly $U^TW = 0$
-      Let $x \in \mathbb R^{d_2}$, and let $x = x_1 + x_2$ be a decomposition according to  $\mathbb R^{d_2} = im(V) + im(V)^{\perp}$, and let $y \in \mathbb R^r$ such that $x_1 = Vy$. (note that $\norm{x}^2 = \norm{x_1} + \norm{x_2}^2$)
+      Let $W := Z - UV^T$, then the last equations can be written as $U = (W + UV^T)V = WV + UV^TV = WV + U \implies WV = 0$ and similarly $U^TW = 0$.
+
+      Let $x \in \mathbb R^{d_2}$, and let $x = x_1 + x_2$ be a decomposition according to  $\mathbb R^{d_2} = im(V) + im(V)^{\perp}$, and let $y \in \mathbb R^r$ such that $x_1 = Vy$. (note that $\norm{x}^2 = \norm{x_1}^2 + \norm{x_2}^2$)
 
       Then $\norm{Wx}^2 = \norm{\underbrace{ZV}_{U}y + Zx_2 - U\underbrace{V^TV}_{I_r}y - U\underbrace{V^Tx_2}_{=0}}^2 = \norm{Uy + Zx_2 - Uy}^2 = \norm{Zx_2}^2 \le \norm{x_2}^2 \le \norm{x}^2$
 
-      c/c $Z = U^TV + W, \opnorm{W} \le 1$.
+      c/c $Z = U^TV + W, \opnorm{W} \le 1$, $WV = U^TW = 0$.
       
-    \item Now take $Z$ of the form $UV^T + W$, and let's prove that $\opnorm{Z} \le 1$ and $\inner{Z}{A} = \nucnorm{A}$.
+    \item Now take $Z$ of the form $UV^T + W$, and let's prove that $\opnorm{Z} \le 1$ and $\inner{Z}{A} = \nucnorm{A}$ so we can conclude using the last question.
+      
       \begin{align*}
         \inner{UV^T + W}{A} &= \tr(V U^T U\Lambda V^T) + \tr(W^TU \Lambda V^T) \\
                             &= \tr(\Lambda)\\
@@ -303,23 +324,77 @@
       Let's write $x = x_1 + x_2$ according to the decomposition $\mathbb R^{d_2} = im(V) + im(V)^{\perp}$, and let $y \in \mathbb R^r$ such that $x_1 = Vy$. (note that $\norm{x_1} = \norm{y}$)
       $V^Tx = V^T x_1 + V^T x_2 = V^TVy = y$, 
       $Wx = WV y + Wx_2 = Wx_2$ 
-      so $\norm{(UV^T + W)x}^2 = \norm{y}^2 + \norm{Wx_2}^2 \le \norm{x_1}^2 + \norm{x_2}^2 = \norm{x}^2$, which proves that $\opnorm{UV^T + W} \le 1$.
+      so $\norm{(UV^T + W)x}^2 = \norm{y}^2 + \norm{Wx_2}^2 \le \norm{x_1}^2 + \norm{x_2}^2 = \norm{x}^2$, which proves that $\opnorm{UV^T + W} \le 1$. Which proves that $Z \in \partial \nucnorm{A}$.
       
     \end{enumerate}
-  \item
+  \item[4.5]
     \begin{itemize}
-    \item Let $Z \in \partial \nucnorm{A}$, then $Z$ can be written as $Z = UV^T + W$ where $U^TW = WV = 0$ and $\opnorm{W} \le 1$
-      $UV^T = U\frac V2^T + \frac U2V^T \in T$
-      Let's now prove that $W \perp T$. Let $X \in \mathbb R^{d_1 \times r}, Y \in \mathbb R^{d_2 \times r}$:
-      $\inner{UX^T + Y^TV}{W} = \tr(UX^TW) + \tr(Y^TVW) = \tr(WUX^T) = 0$.
-      As a conclusion $\Pi_T(Z) = UV^T, \Pi_{T^c}(Z) = W$, $\opnorm{\Pi_{T^c}(Z)} = \opnorm{W} \le 1$
-    \item Let $Z$ be such that $\Pi_T(Z) = UV^T$ and $\opnorm{\Pi_{T^c}(Z)} \le 1$
-      Let's note $W = Z - UV^T$.
-      To prove that $Z \in \partial \nucnorm{W}$,
-      it is enough to prove that $W = \Pi_{T^c}(Z)$.
-    \end{itemize}
-\end{enumerate}
+    \item Let $Z \in \partial \nucnorm{A}$, then $Z$ can be written as $Z = UV^T + W$ where $U^TW = WV = 0$ and $\opnorm{W} \le 1$.
 
+      $UV^T = U\frac V2^T + \frac U2V^T \in T$.
+      
+      Let's now prove that $W \perp T$, so that we can conclude that $\Pi_{T^c}(Z) = W$.
+
+      Let $X \in \mathbb R^{d_2 \times r}, Y \in \mathbb R^{d_2 \times r}$:
+      
+      $\inner{UX^T + Y^TV}{W} = \tr(UX^TW) + \tr(Y^TVW) = \tr(W^TUX^T) = 0$.
+      
+      As a conclusion $\Pi_T(Z) = UV^T, \Pi_{T^c}(Z) = W$, $\opnorm{\Pi_{T^c}(Z)} = \opnorm{W} \le 1$
+    \item Let $Z$ be such that $\Pi_T(Z) = UV^T$ and $\opnorm{\Pi_{T^c}(Z)} \le 1$.
+
+      Let's call $W := Z - UV^T$, so that $Z = W + UV^T$
+      
+      $\Pi_T(W) = \Pi_T(Z) - \Pi_T(UV^T) = UV^T - UV^T = 0$, so $W = \Pi_{T^c}(W) = \Pi_{T^c}(Z)$ and as a result $\opnorm{W} \le 1$, and for any $X \in \mathbb R^{d_2 \times r}, Y \in \mathbb R^{d_2 \times r}$ we have that: $\tr(W^TUX) + \tr(W^TY^TV) = 0$.
+
+      For $Y = 0$, we get that $W^TU$ is orthogonal to all matrices in $\mathbb R^{d_2 \times r}$, so $W^TU = 0$. Using a similar argument $VW = 0$
+      
+      Which proves $Z \in \partial \nucnorm{W}$.
+      
+    \end{itemize}
+  \item[4.6]
+
+      
+    Let's prove the hint first:
+    
+    Let $f$ be a convexe non-negative function, and consider the following problem:
+    $\min_X f(X)$ st $B = {\cal A}(X)$.
+    
+    Slater's condition are satisfied: The problem is feasible, the constraints are linear,  $f$ is convexe. $X$ is an optimal solution iff there exists $P \in \mathbb R^{d_1 \times d_2}$ such that the KKT condition is verified:  $0 \in \partial_X( f(X) - \inner{P}{{\cal A}(X) - B})$
+    
+    But:
+    \begin{align*}
+      \partial_X( f(X) - \inner{P}{{\mathcal A}(X) - B})
+      &= \partial_X f(X) - \partial_X \inner{\mathcal A^*(P)}{X}
+      \\&=  \partial_X f(X) - {\cal A}^*(P)
+    \end{align*}
+    
+    So  $0 \in \partial_X( f(X) - \inner{P}{{\cal A}(X) - B}) \iff \exists P \mathcal A^*(P) \in \partial_X f(X)$. Which proves the hint.
+
+    
+    Back to $f = \nucnorm{}$.
+    
+    $X_0$ is then clearly a solution to the problem because
+    \begin{itemize}
+    \item there exsits $P$ such taht
+    \item $\mathcal A(X_0) = B$
+    \item $\Pi_T(\mathcal A^*(P)) = UV^T, \opnorm{\Pi_{T^c}(\mathcal
+        A^*(P))} \le 1$, which means $\mathcal A^*(P) \in \partial_X \nucnorm{X_0}$.
+    \end{itemize}
+
+
+    Let's now prove uniqueness (I have not finished this part yet, those are the intermediate results I have proved).
+    
+    Take $X = U'\Lambda' {V'}^T$ to be an optimal solution to the minimization problem.
+    Then $B = \mathcal A(X) = \mathcal A(X_0)$, which means that $\mathcal A(X - X_0) = 0$
+
+    Also, there exists $Q$ in $\mathbb R^{d_1 \times d_2}$ such that $\mathcal A^*(Q) \in \partial_X \nucnorm{X}$.
+    
+    $\nucnorm{X} = \nucnorm{X_0} \implies \inner{X}{\mathcal A^*(Q)} = \inner{X_0}{\mathcal A^*(P)} \implies \inner{\mathcal A(X)}{Q} = \inner{\mathcal A(X_0)}{P}$
+    But $\mathcal A(X) = \mathcal A(X_0) = B$, so $\inner{B}{P} = \inner{B}{Q}$.
+
+    $\mathcal A$ injective on $T \implies null(\mathcal A) \cap T = \{0\} \implies Im(\mathcal A^*)^{\perp} \cap T = \{0\} \implies Im(\mathcal A^*) + T^c = \mathcal R^{d_1 \times d_2}$
+    
+\end{enumerate}
 \end{question}
 
 
