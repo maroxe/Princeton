@@ -25,3 +25,5 @@ Fall/
 /ORF527/Stochastic Calculus and Financial Applications.pdf
 *.csv
 Internship/*
+*fdb_latexmk
+ltxpng

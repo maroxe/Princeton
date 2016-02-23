@@ -42,7 +42,7 @@ Denote $r_{\min} = \max \{ ||x_i|| : y_i = 1 \}$, let's consider the algorithm t
 The algorithm labels corretly points $x$ outside the region $r_{\min} \le ||x|| \le r^*$.
 Let's call $A$ the r.v. that measures this region with respect to the distribution of $x$.
 
-For a sample of size $m$: $\pr(A > \varepsilon) \ge (1 - \varepsilon)^m$, in order to make this quantity smaller than $\delta > 0$, it sufficies to choose $m \ge \frac{\log \frac1\delta}{\varepsilon}
+For a sample of size $m$: $\pr(A > \varepsilon) \le (1 - \varepsilon)^m$, in order to make this quantity smaller than $\delta > 0$, it sufficies to choose $m \ge \frac{\log \frac1\delta}{\varepsilon}
 $
 c/c: $m_{\mathcal H}(\delta, \varepsilon) \le \lceil \frac{\log \frac1\delta}{\varepsilon} \rceil$
 \end{question}
@@ -92,12 +92,12 @@ $\lambda \rightarrow \frac k2 \lambda^2 - \lambda t$ is quadratic function that 
   
   It is clear that $f \not \in h$
 
-  For a sample $S = \{ (x_i, y_i) \}$ of finite size $m$, let's consider the algorithm $A(S)$ that returns $h_{\hat n}$ where $\hat n$ is choosen arbitrarly from the set $\mathbb N \setminus \{ x_i, i = 1, \ldots m \}$.
+  For a sample $S = \{ (x_i, y_i) \}$ of finite size $m$, let's consider the algorithm $A(S)$ that returns $h_{\hat n}$ where $\hat n = \max_{i=1\ldots m} x_i + 1$ .
   
-  $\err_{\mathcal D}(h_n) = \pr_{X}(X = \hat n) = p_{\hat n}$.
+  $\err_{\mathcal D}(\mathcal A(S)) = \pr_{X}(X = \hat n) \le \prod_{i=1\ldots m} \pr_{X}(X < x_i) \le \frac1{2^m}$
 
-  For any $\varepsilon, \delta > 0$, $\mathbb{P}( p_{\hat n} > \varepsilon ) \le (1 - \varepsilon)^m$, if $m > \frac{-\log \delta} \varepsilon$ then this probability drops below $\delta$.
-
+  For any $\varepsilon$, $\pr_{S \sim {\cal D}^m}( \err_{\mathcal D}(\mathcal A(S)) > \varepsilon ) \le 1 - 1_{\{ m > -\log_2(\varepsilon)\}}$, if $m > -\log_2 \varepsilon$ then this probability drops to 0.
+  Which means thant $f$ is learnable and still $f \not \in {\cal H}$.
 \end{itemize}
 \end{question}
 \begin{question}{5}
@@ -115,12 +115,14 @@ Fix $f$, and let $\mathcal D$ be the uniform distribution over $\{(x, f(x)), x \
   \\&+ \esp_{S,x} \underbrace{\esp_f  [A(S)(x) \ne f(x) | x \not \in S]}_{= \frac12} \underbrace{\mathbb{P}(x \not \in S)}_{\ge 1 - \varepsilon}
 \end{align*}
 Therefore $Q \ge 0 + \frac12 (1 - \varepsilon) \ge \frac12 - \varepsilon$, which means that there exist a concept $f$ such that
-$\err_{\mathcal D}(f) = f$ and $\esp_S \err A(S) \ge \frac12 - \varepsilon$.
+$\err_{\mathcal D}(f) = 0$ and $\esp_S \err A(S) \ge \frac12 - \varepsilon$.
 
 \end{question}
 
 
 \end{document}
+
+
 
 
 
