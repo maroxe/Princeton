@@ -1,0 +1,56 @@
+#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="../css/org-style.css" />
+#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="../css/special-block.css" />
+#+latex_header: \usepackage{amsthm}
+#+latex_header: \newtheorem{theorem}{Theorem}
+#+latex_header: \newtheorem{definition}{Definition}
+
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t broken-links:nil c:nil creator:nil
+#+OPTIONS: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+OPTIONS: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+OPTIONS: timestamp:t title:t toc:t todo:t |:t
+#+TITLE: notes
+#+DATE: <2016-02-23 Tue>
+#+AUTHOR: Bachir El khadir
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 24.5.1 (Org mode )
+
+#+OPTIONS: tex:imagemagick
+
+* OCO
+min regret $\sum f_t(x_t) - \min_{x^*} \sum_t f_t(x^*)$
+
+* OGD
+$x_{t+1} \leftarrow \Pi_K[x_t - \delta \nabla f)t(x_t)]$
+
+Regret(OGD) $\le O(\sqrt T)$
+
+* Statistical Learning
+
+minimize $E_{x, y \sim D}[l(h(x), y)]$
+
+reduction statistical learning $\Rightarrow$ Online learning.
+
+$f_t(h_t) = l(h_t(x_t), y_t)$
+
+
+#+begin_algorithm
+$h_t \leftarrow A(f_1, \ldots, f_{t-1})$
+$\hat h = \frac1T \sum_{t=1}^T h_t$
+#+end_algorithm
+
+#+begin_theorem
+With probability $\ge 1 - \delta$:
+$$err(\hat h) \le \min err(h^*) + \frac{Rg_t(A)}{T} + O(\frac{\log(1/delta)}{\sqrt T})$$
+#+end_theorem
+
+
+
+#+attr_html: :width 10px
+[[./example.png]]
+
+
+
+

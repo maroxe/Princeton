@@ -2,6 +2,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 
+\newcommand{\hbeta}{\hat \beta }
 \newcommand{\union}[1]{\underset{#1}{\cup} }
 \newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
 \newcommand{\inter}[1]{\underset{#1}{\cap} }
@@ -29,9 +30,9 @@
   \begin{align*}
     f^* &\le ||Y - X \beta_{\alpha}||_2^2 + \lambda ||\beta_{\alpha}||_1
     \\&= \norm{ \alpha (Y - X \beta_1) + (1-\alpha)(Y - X\beta_2)}_2^2
-      + \lambda \norm{\alpha \beta_1 + (1-\alpha)\beta_2}_1
+        + \lambda \norm{\alpha \beta_1 + (1-\alpha)\beta_2}_1
     \\&<
-      \alpha \left(||Y - X \beta_1||_2^2 + \lambda ||\beta_1||_1\right)
+        \alpha \left(||Y - X \beta_1||_2^2 + \lambda ||\beta_1||_1\right)
         + (1-\alpha)\left(||Y - X \beta_2||_2^2 + \lambda ||\beta_2||_1\right)p
         &\text{(By strict convexity of $\norm{.}_2^2$)}
     \\&\le f^*
@@ -41,17 +42,17 @@
 \item
   ${\cal L}(\beta^*, \lambda) = \frac12 \norm{Y-X\beta}_2^2 + \lambda \norm{\beta}_1$
 
+  $\partial \norm{\beta}_1 = \{ \alpha \in [-1, 1]^n, \alpha_j = sign(\hat \beta_j) \text{ when } \hat \beta_j \ne 0\}$
+  
   Let $(\beta^*, \lambda^*)$ be an optimal solution, then $0 \in \partial_{\lambda} L (\beta^*, \lambda^*)$
 
-  $\partial_{\lambda^*} L (\beta, \lambda^*) = \{ -X^T(Y-X\beta) +  \lambda^* \sum_{\beta_i \ne 0} sign(\beta_i) e_i + \lambda^* \sum_{\beta_i = 0}  \alpha_i e_i : \alpha \in [-1, 1] \}$
+  $\partial_{\lambda^*} L (\beta, \lambda^*) =  -X^T(Y-X\beta) +  \lambda^* \partial \norm{\beta}_1$
 
-  so there exist $\norm{\alpha}_{\infty} \le 1$ such that $-X^T(Y-X\beta) +  \lambda^* \sum_{\beta_i \ne 0} sign(\beta_i) e_i + \lambda^* \sum_{\beta_i = 0}  \alpha_i e_i = 0$
-  
   Coordinate wise, this gives for all $j$:
   
-  $ -X_j^T (Y - X\beta) + \lambda sign(\beta_j) = 0$ if $\beta_j \ne 0$
+  $ X_j^T (Y - X\beta) = \lambda sign(\beta_j)$ if $\beta_j \ne 0$
   
-  $ X (Y - X\beta)e_j + \lambda \alpha_i sign(\beta_j) = 0$ if $\beta_j = 0$
+  $ - X (Y - X\beta) = \lambda \alpha_i$ if $\beta_j = 0$
   
   e.g
   
@@ -59,12 +60,16 @@
   
   $ \lambda^* \ge |2  X_j^T(Y - X\beta^*)|$ if $\beta_j^* = 0$
   
+
   
 \item
   Let $\hat \beta$ be an optimal solution. Let $\chi = \{ j, \hat \beta_j \ne 0 \}$, and let's suppose it is non empty.
   Let $j$ such that $\hat \beta_j > 0$ (If such $j$ exists)
-  By 2.2,  $\lambda = X_j^T (Y - X \hat \beta)$, but since $\lambda > \norm{X^TY}_{\infty} \ge X_j^TY$, then $X_j^TX\hat \beta > 0$
+  
+  By 2.2,  $\lambda = X_j^T (Y - X \hat \beta)$, but since $\lambda > \norm{X^TY}_{\infty} \ge X_j^TY$, then $X_j^TX\hat \beta > 0$.
+  
   Similarly, if there for $j$ such that $\hat \beta < 0$, $X_j^TX\hat \beta < 0$.
+  
   c/c $\beta_j \ne 0 \implies \beta_j X_j^TX\hat \beta > 0$
 
   
@@ -81,29 +86,73 @@
   $$\lambda \in [\lambda_0, \lambda_1]$$
   Let $\chi(\lambda) = \{ j, \hat \beta_j(\lambda) \ne 0 \} := \chi$, $r = |\chi|$ (doesn't depend on $\lambda$ by assumption)
 
-  We have proved in 2.2 that for all there exist $\gamma(\lambda) \in \mathbb R^r$, such that:
-  $X_{\chi}^T(Y - X\hat \beta(\lambda)) = \lambda \gamma(\lambda) $ where  $\gamma(\lambda)_i = sign(\hat \beta(\lambda)_i), i \in \chi$.
+  We have proved in 2.2 that there exist $\alpha(\lambda)$
+  $$X^T(Y - X\hat \beta(\lambda)) = \lambda \alpha(\lambda) $$
+  where $\alpha(\lambda) \in \partial \norm{\hat \beta(\lambda)}_1$.
 
-  $\gamma := \gamma(\lambda)$ doesn't depend on $\lambda$ either.
+  It is easy to see that this KKT conditions is actualy necessary and sufficient (because we are minimizing a convexe function), since we are assuming uniqueness, $\hat \beta(\lambda)$ is the unique solution to :
+  $$(\exists \alpha(\lambda) \in \partial \norm{\hat \beta(\lambda)}_1) \; X^T(Y - X\hat \beta(\lambda)) = \lambda \alpha(\lambda) $$
+  
+  Note that by uniqueness of $X\beta$ and $\hat \beta(\lambda)$, $\alpha(\lambda)$ is unique when $\lambda > 0$.
+  
+  Note also, that since we assumed that the signs and support are unchanged, $\partial \norm{\hat \beta(\lambda)}_1 = \partial \norm{\hat \beta(\lambda_0)}_1$.
+  
+  The last condition becomes:
+  $$X^T(Y - X\hat \beta(\lambda)) \in \lambda \partial \norm{\hat \beta(\lambda_0)}_1$$
 
-  $X_{\chi}^T(Y - X\hat \beta(\lambda)) =  \lambda \gamma$
 
-  It is easy to see that the KKT conditions in 2.2 are actualy necessary and sufficient (because we are minimizing a convexe function), since we are assuming uniqueness, $\hat \beta(\lambda)$ is the unique solution to :
-  \begin{equation}
-    \left\{
-      \begin{array}{c}
-        X_{\chi}^T(Y - X\hat \beta(\lambda)) =  \lambda \gamma\\
-        \hat \beta(\lambda)_{\chi^c} = 0
-      \end{array}
-    \right.
-  \end{equation}
+  \textbf{Notation: } $ \alpha(\lambda_0) =  X^T \underbrace{\frac{(Y - X\hat \beta(\lambda))}{\lambda_0}}_v = X^Tv$,  $\gamma_0 = X^{\dagger} v$, $\delta = \hat \beta(\lambda_0) - (\lambda - \lambda_0) \gamma_0$. 
 
-  Let $\gamma_0$ be equal to $\gamma$ on $\chi$ and to 0 otherwise.
-  Let $\lambda = \hat \beta(\lambda_0) - (\lambda - \lambda_0) \gamma_0$, it is easy to see that $\lambda_{\chi^c} = 0$ and that:
-  $X_{\chi}^T(Y - X\alpha) = \underbrace{X_{\chi}^T(Y - X\hat \beta(\lambda_0))}_{\lambda_0 \gamma} + (\lambda - \lambda_0) X_{\chi}^T X \gamma_0$
+  Note that:
+  $$X^TX\gamma_0 = X^T XX^{\dagger} v = (V \Lambda U^T) (U\Lambda V^T)  (V \Lambda^{-1} U^T) v = V \Lambda U^T v = X^T v = \alpha(\lambda_0)$$
+  
+  
+  \begin{align*}
+    X^T(Y - X\delta)
+    &= \underbrace{X^T(Y - X\hat \beta(\lambda_0))}_{\lambda_0 \alpha(\lambda_0)} + (\lambda - \lambda_0) \underbrace{X^T X \alpha_0}_{\alpha(\lambda_0)}
+    \\&= \lambda \alpha(\lambda_0) \in \lambda \partial \norm{\hat \beta(\lambda_0)}_1
+  \end{align*}
+  Which proves that $\hat \beta(\lambda) = \delta = \hat \beta(\lambda_0) - (\lambda - \lambda_0) \alpha(\lambda_0)$
 
-  $X_{\chi}^T X \gamma_0 = X_{\chi}^T X_{\chi} \gamma$
+  
+
 \end{itemize}
+
+\begin{itemize}
+\item
+
+  Let's consider the unconstrained optimization problem:
+  $$\min ||Y - X \beta||^2$$
+  $\beta$ is optimal iff $X^TY = X^TX\beta$.
+  
+  We check easily that $(X^TX)^{\dagger}X^TY$ is a solution to the last equation, therefore it minimizes the $L_2$ risk.
+  
+  If $t > \norm{(X^TX)^{\dagger}X^TY}_{L_1}$, then it is also solution to the following problem:   $\min_{\norm{\beta}_{L_1} \le t} ||Y - X \beta||^2$.
+  
+\item
+  1.)
+  $X_i, Y_i, i \in V_k$ and $\hbeta_{\hat t}^{V_k}$ are independent.
+  $(Y - X^T \hbeta_{\hat t}^{V_k})^2 \le |Y|^2 + \norm{X}_{\infty}^2  \norm{\hbeta_{\hat t}^{V_k}}_1^2 \le b^2 (1 + \hat t^2) \le b^2(1 + t_n^2)$
+  
+  $$\underset{X_i, Y_i, i \in V_k}{\pr} \left( \left|\frac{1}{|V_k|} \sum_{i \in V_k} (Y_i - X_i^T\hbeta_{\hat t}^{V_k})^2 - \esp_{X, Y}[(Y - X^T\hbeta_{\hat t}^{V_k})^2]\right| > \varepsilon\right) \le 2 \exp( - \frac{|V_k| \varepsilon^2}{2b^4(1 + t_n^2)}) $$
+
+  $${\pr} \left( \hat R_{CV}(\hat t) - \frac1K \sum_k R(\hbeta^{V_k}_{\hat t}) > \varepsilon\right) \le 2K \exp( - \frac{n \varepsilon^2}{2Kb^4(1 + t_n^2)}) $$
+
+
+  2.)
+  $$\hat R_{CV}(\hat t) - \hat R_{CV}(t_{\max}) \le 0$$
+
+  
+  4.)
+
+  $$\hat R(\hbeta_{t_{\max}}) = \hat R(\hbeta_{t_n})$$
+  
+  5.)
+
+  $$ \pr(\hat R(\hbeta_{t_n}) - R(\hbeta_{t_n}) > \varepsilon) \le 2 \exp(-\frac{n \varepsilon^2}{2b^4(1+t_n^2)})$$
+
+\end{itemize}
+
 \end{document}
 
 

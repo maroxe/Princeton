@@ -32,6 +32,7 @@ y.test <- test.data$price
 lasso.model <- glmnet(X.train, y.train, alpha=0)
 ridge.model <- glmnet(X.train, y.train, alpha=1)
 
+
 # Plot lasso / ridge path
 plot.path <- function(fit, ...) {
     L <- length(fit$lambda)
@@ -56,9 +57,10 @@ do.cv <- function(alpha) {
     abline(v=l1.norm.min, lty=2)
     text(x=l1.norm.min*0.95, y=2e5, label="best coefficient")
     plot(cv)
+    cv
 }
 
-do.cv(1)
+ridge.model.cv <- do.cv(1)
 
 evaluate.on.test <- function(alpha){
     model <- glmnet(X.train, y.train, alpha=alpha)
@@ -113,10 +115,43 @@ varImpPlot(random.forest.model)
 
 partialPlot(random.forest.model, train.data, "sqft_living")
 
+importance(random.forest.model)
+
 X = model.matrix(~ sqft_living + sqft_lot + bedrooms + bathrooms + floors + city, data=train.data)[,-1] #drop intercept
 ff = forestFloor(rf.fit=random.forest.model, X = X, calc_np = FALSE,    # TRUE or FALSE both works, makes no difference
   binary_reg = FALSE  # takes no effect here when rfo$type="regression"
 )
+
+plot.partial.importance <- function(fit) {
+    importanceOrder=order(-fit$importance)
+    mynames=rownames(fit$importance)[importanceOrder]
+
+    for (name in mynames) {
+        print(name)
+
+
+    }
+}
+    par(mfrow=c(2, 3), xpd=NA)
+partialPlot(fit, train.data, x.var="sqft_living")
+partialPlot(fit, train.data, x.var="bathrooms")
+partialPlot(fit, train.data, x.var="sqft_lot")
+
+# Convert donald trump to a dummmy variable understandable by glmnet
+donald.trump <-  list(bedrooms=8, bathrooms=25, sqft_living=50000,sqft_lot=225000, floors=4, condition=10, grade=10,waterfront=1, view=4, sqft_above=37500, sqft_basement=12500, yr_built=1994,yr_renovated=2010, lat=47.627606, long=-122.242054, sqft_living15=5000,sqft_lot15=40000, zipcode98039=1)
+trump.dummy <- 0*X.train[1,]
+for(entry in names(donald.trump)) 
+    trump.dummy[entry] <- donald.trump[entry]
+trump.dummy <- t(unlist(trump.dummy))
+
+house.donald.trump <- predict(ridge.model.cv, trump.dummy, s='lambda.min')
+
+
+
+
+
+
+
 
 
 

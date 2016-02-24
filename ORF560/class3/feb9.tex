@@ -260,7 +260,84 @@ Mathematically, the portfolio value $V^{(\pi)}(t) = \sum \Pi_i(t) X_i(t)$ satisf
     \item Why are there no loca times of the form $L^{X_{(l)} - X_{(k)}}$ for $l \ge k+2$?
     \item Why is local time coefficient $\frac12$?
     \end{itemize}
+
+    From induction Hypothesis:
+    $$dX_{(k)}(t) = \sum_i^n 1_{X(k) = X_i(t)} \frac{1}{N_k(t)} dX_i(t) + \sum_l^{k-1}\frac{1}{N_k(t)} dL_0^{X_{(k)} - X_{(l)}}(t)
+    - \sum_{l=k+1}^n \frac{1}{N_k(t)} dL_0^{X_{(l)} - X_{(k)}}(t)
+    $$
+
+    Idea $X_{(1)} = \min(X_1, \ldots, X_n) = \min(X_1, \min(X_2, \ldots, X_n))$
+
+    Tasks at this point
+    \begin{itemize}
+    \item $N_k(t) =1$ for all k and lebesgue a.e.t with probability 1.
+    \item $L_0^{X_{(k)} - X{(k)}} = 0$ for all $|l - k| \ge 1$ with probability 1.
+    \item $N_k(t) = 2$ under $dL_0^{X_{(k+1) - X_{(k)}}}$ with probability 1, ie
+      $\mathbb P(\int_0^\infty 1_{\{N_k(t) \ne 2 \}} dL_0^{X_{(k+1) - X_{(k)}}} = 0)$
+    \end{itemize}
   \end{proof}
+
+  \subsubsection{Skrodhod problems and reflected Brownian motions}
+
+  \begin{definition}[Skorokhod problem in 1D]
+    Given a continuous path $\phi: [0, \infty) \rightarrow \mathcal{R}$ with $\phi(0) > 0$, want to find a non-decreasing path
+    $\eta: [0, \infty)\rightarrow \mathcal{R}^+$ s.t
+    \begin{itemize}
+    \item $\psi(t) = \phi(t) + \eta(t) \ge 0$ for all $t \ge 0$.
+    \item $\int_0^{\infty} 1_{\psi(t) \ne 0} d\eta(t)= 0$
+    \end{itemize}
+
+    \begin{theorem}[Skorokhold]
+      There exists a unique solution of the skorokhod problem for any continuous $\phi$ s.t $\phi(0) > 0$.
+    \end{theorem}
+    \begin{proof}
+      \begin{itemize}
+      \item $\eta(t) = \sup_{0 \le s \le t} \phi^-(s)$
+        $\int_0^{\infty} 1_{\psi(t) \ne 0} d\eta(t) = 0$?
+
+        Note that a point of increase t of $\eta$($\iff$ the support of the corresponding measure $d\eta$) have the property
+        $\phi(t)^- = \sup_{s \le t} \phi(s)^- = \eta(t)$.
+        
+        We need the show that $\psi(t) = 0$ for such a point $t$.
+        
+      \item Uniquenss: $(\eta, \psi), (\hat \eta, \hat \psi)$ two solutions.
+        
+        $\hat \psi - \psi = \hat \eta - \hat \eta$ BV process.
+
+        Ito: $\frac12 (\hat \psi - \psi)^2 = \int_0^t (\hat \psi - \psi)d(\hat \eta - \eta) =
+        - \int_0^t \hat \psi d\eta - \int_0^t  \psi d \hat \eta$
+      \end{itemize}
+    \end{proof}
+  \end{definition}
+
+  \begin{definition}[Reflected Brownian motion in 1D]
+    \begin{align*}
+      \Phi & : C([0, \infty), \mathbb R) &\longrightarrow &C([0, \infty), \mathbb R)\\
+           & : \phi &\longrightarrow & \psi 
+    \end{align*}
+    A reflected Brownian motion with drift $\mu$ and diffusion coefficient $\sigma$ is the process $\Phi(\mu t + \sigma B(t))$
+  \end{definition}
+  \begin{remark}
+
+    Consider a first order model with 2 companies:
+    $dX_i = 1_{X_i = X_(1)} b_1 dt + 1_{X_i = X_(2)} b_2 dt + 1_{X_i = X_(1)} \sigma_1 dW_1 + 1_{X_i = X_(2)} \sigma_2 dW_2$
+
+    Claim: $|X_1 - X_2| = X_{(2)} - X_{(1)}$ is a RBM with drift $b_2 - b_1$ and drift coefficient $\sqrt{\sigma_1^2 + \sigma_2}$.
+    $\underbrace{X_{(2)}(t) - X_{(1)}(t)}_{\psi(t)} = \underbrace{X_{(2)}(0) - X_{(1)}(0) + (b_2 - b_1)t + \sigma_2 \beta_2(t) - \sigma_1 \beta_1(t)}_{\phi(t)} + L_0^{X_{(2)} - X_{(1)}}(t)$
+    
+  \end{remark}
+  \begin{definition}[Skorokhod problem in $R_+^m$]
+    Consider a continuous path $\phi: \mathbb R_+ \rightarrow \mathbb R^m$ st $\phi(0) > 0$, and a matrix $R \in \mathbb R^{m \times n}$
+    . We want to find a continuous path $\eta \mathbb R_+ \rightarrow \mathbb R^m$ such that:
+    \begin{itemize}
+    \item all componoents of $\eta$ are non-decreasing.
+    \item $\psi(t) = \phi(t) + R \eta(t)$
+    \item  $\int_0^{\infty} 1_{t, \psi_k(t) \ne 0} d\eta_k(t) = 0$
+    \end{itemize}
+  \end{definition}
+  \begin{theorem}[Existence and Uniqueness of the Solution]
+    $R = I - Q$ and $Q$ has non negative entries, zero diagonal entries and spectral radius $<1$, then the skorokhod problem has unique solution. 
+  \end{theorem}
 \end{document}
 
   
