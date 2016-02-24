@@ -1,10 +1,5 @@
-# Local Variables:
-# require-final-newline: t
-# mode-require-final-newline: t
-# org-confirm-babel-evaluate: nil
-# eval: (setq org-export-async-init-file (expand-file-name "emacs-async.el"))
-# End:
-BLABLABALA
+#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="../../css/org-style.css" />
+#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
 * Discover Gravitational Wves in Your Room
 
 #+name: helper_function 
@@ -59,42 +54,47 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
 
 ** 1.1
-  
-#+name: load_data
-#+begin_src R :session :cache yes
+
+   Loading the Data
+   
+   #+name: load_data
+   #+begin_src R :session :cache yes
   ts <- read.table('LIGO.Hanford.Data.txt')
   ts.theory <- read.table('LIGO.Hanford.Theory.txt')
   names(ts) <- c("t", "y")
   names(ts.theory) <- c("t", "y")
   N <- length(ts$y)
-#+end_src
+   #+end_src
       
-#+RESULTS[89c5c8bb3ef6370c1efff00efd0251fcecc3b3bb]: load_data
-: 3441
+   #+RESULTS[89c5c8bb3ef6370c1efff00efd0251fcecc3b3bb]: load_data
+   : 3441
 
 
-#+name: matrix_C
-#+begin_src R :session :cache yes
+   
+   #+name: matrix_C
+   #+begin_src R :session :cache yes
   C <- matrix(sqrt(1 / N), N, N)
   for(j in 2:N) 
       for(k in 1:N)
           C[j, k] = sqrt(2 / T) * cos(pi * (2*k-1) * (j - 1) / (2*N) )
-#+end_src
+   #+end_src
 
-#+RESULTS[19ed51fbd27982def9ea7ff162bebb1f8ba50aec]: matrix_C
+   #+RESULTS[19ed51fbd27982def9ea7ff162bebb1f8ba50aec]: matrix_C
 
 
-#+name: lasso
-#+begin_src R :session :cache yes
+
+   #+name: lasso
+   #+begin_src R :session :cache yes
   library(glmnet)
   lasso.model <- cv.glmnet(C, ts$y, alpha=1, nfolds=10, intercept=F)
   w.hat <- coef(lasso.model, s='lambda.1se')[-1]
   w.inverse <- solve(C, ts$y)
   print(lasso.model$lambda.1se )
-#+end_src
+   #+end_src
 
-#+RESULTS[9278f3c2909ce5d94f5e6cbd40ba6a68848fb9bf]: lasso
-: 0.0035151690881434
+   #+RESULTS[9278f3c2909ce5d94f5e6cbd40ba6a68848fb9bf]: lasso
+   : 0.0035151690881434
+
 
 
 
@@ -107,9 +107,10 @@ p3 <- ggplot(data=NULL, aes(x=w.hat, y=w.inverse)) + geom_point()
 multiplot(p1, p2, p3)
 #+end_src
 
-
 #+RESULTS: plotting
 [[file:comparesignals.png]]
+
+
 
 
 [[file:comparesignals.png]]
@@ -129,6 +130,9 @@ The Lasso try to find a sparse solution in the time and frequency domain at the 
   print(paste("lambda 1se:", lasso.model$lambda.1se))
 #+end_src
 
+#+RESULTS[a129d1ad76e9080629900645618f4261ef7b6e42]:
+: lambda 1se: 0.0035151690881434
+
 
 
 
@@ -147,6 +151,7 @@ The Lasso try to find a sparse solution in the time and frequency domain at the 
 [[file:denoise.png]]
 
 
+
 [[file:denoise.png]]
 
 
@@ -154,7 +159,15 @@ The Lasso try to find a sparse solution in the time and frequency domain at the 
   
 ** 2.1
    
-#+include: "q2.tex"
+#+include: "q2.tex" :lines "33-278"
+
+
+
+
+
+
+
+
 
 
 

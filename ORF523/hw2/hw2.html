@@ -3,12 +3,12 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2016-02-23 Tue 13:43 -->
+<!-- 2016-02-24 Wed 16:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title></title>
+<title>Problem set 2, ORF523</title>
 <meta name="generator" content="Org-mode" />
-<meta name="author" content="bachir el khadir" />
+<meta name="author" content="Bachir El khadir" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center;
@@ -94,6 +94,8 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
+<link rel="stylesheet" type="text/css" href="../../css/org-style.css" />
+<link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -165,6 +167,7 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
+<h1 class="title">Problem set 2, ORF523</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
@@ -174,10 +177,15 @@ for the JavaScript code in this tag.
 <li><a href="#orgheadline3">3. Problem 3</a></li>
 <li><a href="#orgheadline4">4. Problem 4</a></li>
 <li><a href="#orgheadline5">5. Problem 5</a></li>
-<li><a href="#orgheadline6">6. Problem 6</a></li>
+<li><a href="#orgheadline7">6. Problem 6</a>
+<ul>
+<li><a href="#orgheadline6">6.1. \(P_2 \subseteq P_1\) ?</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
+
 
 
 <div id="outline-container-orgheadline1" class="outline-2">
@@ -224,142 +232,217 @@ We denote by \(X^{(k)}\) a quantity \(X\) that relates to the group \(k\), there
 Optmizing the individual CES:
 </p>
   \begin{align}
-  \text{maximize} \; &\null \langle \Theta^{(k)}, \alpha^{(k)} T + \beta^{(k)} A \rangle \\
-  \text{subject to} \; &\null A + T = 1,
+  \text{maximize} \; & \langle \Theta^{(k)}, \alpha^{(k)} T + \beta^{(k)} A \rangle \\
+  \text{subject to} \; & A + T = 1,
     \\& A, T \ge 0
     \\& \sum_4^i A_j \le  2 \sum_4^i T_j \quad i = 4, \ldots, 24
 \end{align}
 
-<p>
-#+name minsec
-</p>
 <div class="org-src-container">
 
-<pre class="src src-matlab"><span style="color: #607d8b; font-weight: bold; text-decoration: overline;">%% Input</span>
+<pre class="src src-matlab" id="orgsrcblock1"><span style="color: #b0bec5; font-weight: bold; text-decoration: overline;">%% Input</span>
 a = 2;
 b = 3;
 theta = [0.05 0.1 0.3];
-alpha = [<span style="color: #0097A7;">-</span>0.1 0.8 <span style="color: #0097A7;">-</span>0.3];
-beta = [1.4 <span style="color: #0097A7;">-</span>0.3 0.7];
+alpha = [<span style="color: #84ffff;">-</span>0.1 0.8 <span style="color: #84ffff;">-</span>0.3];
+beta = [1.4 <span style="color: #84ffff;">-</span>0.3 0.7];
 num_periods = 24;
 num_groups = 3;
 Theta = zeros(num_groups, num_periods);
-<span style="color: #00796b;">for</span> <span style="color: #EF6C00;">k</span>=<span style="color: #558b2f;">1:num_groups</span>
-    <span style="color: #00796b;">for</span> <span style="color: #EF6C00;">i</span>=<span style="color: #558b2f;">1:num_periods</span>
-        Theta(k, <span style="color: #558b2f;">i</span>) = 1 <span style="color: #0097A7;">-</span> (1<span style="color: #0097A7;">-</span>theta(k))<span style="color: #0097A7;">^</span>(num_periods<span style="color: #0097A7;">-</span><span style="color: #558b2f;">i</span><span style="color: #0097A7;">+</span>1);
-    <span style="color: #00796b;">end</span>
-<span style="color: #00796b;">end</span>
 
-<span style="color: #607d8b; font-weight: bold; text-decoration: overline;">%% Results</span>
-table = zeros(num_groups<span style="color: #0097A7;">+</span>1, num_groups);
+<span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">k</span>=<span style="color: #8bc34a;">1:num_groups</span>
+    <span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">i</span>=<span style="color: #8bc34a;">1:num_periods</span>
+        Theta(k, <span style="color: #8bc34a;">i</span>) = 1 <span style="color: #84ffff;">-</span> (1<span style="color: #84ffff;">-</span>theta(k))<span style="color: #84ffff;">^</span>(num_periods<span style="color: #84ffff;">-</span><span style="color: #8bc34a;">i</span><span style="color: #84ffff;">+</span>1);
+    <span style="color: #fff59d;">end</span>
+<span style="color: #fff59d;">end</span>
+
+<span style="color: #b0bec5; font-weight: bold; text-decoration: overline;">%% Results</span>
+table = zeros(num_groups<span style="color: #84ffff;">+</span>1, num_groups);
 figures = []
 
-<span style="color: #607d8b; font-weight: bold; text-decoration: overline;">%% Maximize individual CES</span>
-<span style="color: #00796b;">for</span> <span style="color: #EF6C00;">group</span>=<span style="color: #558b2f;">1:3</span>
+<span style="color: #b0bec5; font-weight: bold; text-decoration: overline;">%% Maximize individual CES</span>
+<span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">group</span>=<span style="color: #8bc34a;">1:3</span>
     cvx_begin quiet
     variable T(num_periods);
     variable A(num_periods);
-    maximize( Theta(group,<span style="color: #0097A7;">:</span>) <span style="color: #0097A7;">*</span> (<span style="color: #0097A7;">-</span>10000 <span style="color: #0097A7;">*</span> T <span style="color: #0097A7;">+</span> 1000 <span style="color: #0097A7;">*</span> A))
-    A <span style="color: #0097A7;">+</span> T <span style="color: #0097A7;">==</span> 1;
-    0 <span style="color: #0097A7;">&lt;=</span> T <span style="color: #0097A7;">&lt;=</span> 1;
-    0 <span style="color: #0097A7;">&lt;=</span> A <span style="color: #0097A7;">&lt;=</span> 1;
-    T(1<span style="color: #0097A7;">:</span>b) <span style="color: #0097A7;">==</span> 1;
-    <span style="color: #00796b;">for</span> <span style="color: #EF6C00;">i</span> = <span style="color: #558b2f;">4 : num_periods</span>
-        sum(A((b<span style="color: #0097A7;">+</span>1)<span style="color: #0097A7;">:</span><span style="color: #558b2f;">i</span>)) <span style="color: #0097A7;">&lt;=</span> a<span style="color: #0097A7;">*</span> sum(T((b<span style="color: #0097A7;">+</span>1)<span style="color: #0097A7;">:</span><span style="color: #558b2f;">i</span>))
-    <span style="color: #00796b;">end</span>
+    maximize( Theta(group,<span style="color: #84ffff;">:</span>) <span style="color: #84ffff;">*</span> (alpha(group) <span style="color: #84ffff;">*</span> T <span style="color: #84ffff;">+</span> beta(group) <span style="color: #84ffff;">*</span> A))
+    A <span style="color: #84ffff;">+</span> T <span style="color: #84ffff;">==</span> 1;
+    0 <span style="color: #84ffff;">&lt;=</span> T <span style="color: #84ffff;">&lt;=</span> 1;
+    0 <span style="color: #84ffff;">&lt;=</span> A <span style="color: #84ffff;">&lt;=</span> 1;
+    T(1<span style="color: #84ffff;">:</span>b) <span style="color: #84ffff;">==</span> 1;
+    <span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">i</span> = <span style="color: #8bc34a;">4 : num_periods</span>
+        sum(A((b<span style="color: #84ffff;">+</span>1)<span style="color: #84ffff;">:</span><span style="color: #8bc34a;">i</span>)) <span style="color: #84ffff;">&lt;=</span> a<span style="color: #84ffff;">*</span> sum(T((b<span style="color: #84ffff;">+</span>1)<span style="color: #84ffff;">:</span><span style="color: #8bc34a;">i</span>))
+    <span style="color: #fff59d;">end</span>
     cvx_end
 
-    figures(group) = <span style="color: #0097A7;">figure</span>(<span style="color: #689f38;">'visible'</span>, <span style="color: #689f38;">'off'</span>)
+    figures(group) = <span style="color: #84ffff;">figure</span>(<span style="color: #9ccc65;">'visible'</span>, <span style="color: #9ccc65;">'off'</span>)
     subplot(2,1,1)
-    title(<span style="color: #689f38;">'s_i'</span>)
-    <span style="color: #607d8b;">% calculate s_i</span>
-    <span style="color: #00796b;">for</span> <span style="color: #EF6C00;">k</span>=<span style="color: #558b2f;">1:3</span>
-        s = zeros(num_periods<span style="color: #0097A7;">+</span>1, 1);
-        <span style="color: #00796b;">for</span> <span style="color: #EF6C00;">i</span>=<span style="color: #558b2f;">2:(num_periods+1)</span>
-            s(<span style="color: #558b2f;">i</span>) = (1<span style="color: #0097A7;">-</span> theta(k)) <span style="color: #0097A7;">*</span> s(<span style="color: #558b2f;">i</span><span style="color: #0097A7;">-</span>1) <span style="color: #0097A7;">+</span> theta(k) <span style="color: #0097A7;">*</span> (alpha(k) <span style="color: #0097A7;">*</span> T(<span style="color: #558b2f;">i</span><span style="color: #0097A7;">-</span>1) <span style="text-decoration: underline;">...</span>
-                                                        <span style="color: #0097A7;">+</span> beta(k) <span style="color: #0097A7;">*</span> (1<span style="color: #0097A7;">-</span>T(<span style="color: #558b2f;">i</span><span style="color: #0097A7;">-</span>1)));
-        <span style="color: #00796b;">end</span>
+    title(<span style="color: #9ccc65;">'s_i'</span>)
+    <span style="color: #b0bec5;">% calculate s_i</span>
+    <span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">k</span>=<span style="color: #8bc34a;">1:3</span>
+        s = zeros(num_periods<span style="color: #84ffff;">+</span>1, 1);
+        <span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">i</span>=<span style="color: #8bc34a;">2:(num_periods+1)</span>
+            s(<span style="color: #8bc34a;">i</span>) = (1<span style="color: #84ffff;">-</span> theta(k)) <span style="color: #84ffff;">*</span> s(<span style="color: #8bc34a;">i</span><span style="color: #84ffff;">-</span>1) <span style="color: #84ffff;">+</span> theta(k) <span style="color: #84ffff;">*</span> (alpha(k) <span style="color: #84ffff;">*</span> T(<span style="color: #8bc34a;">i</span><span style="color: #84ffff;">-</span>1) <span style="text-decoration: underline;">...</span>
+                                                        <span style="color: #84ffff;">+</span> beta(k) <span style="color: #84ffff;">*</span> (1<span style="color: #84ffff;">-</span>T(<span style="color: #8bc34a;">i</span><span style="color: #84ffff;">-</span>1)));
+        <span style="color: #fff59d;">end</span>
         table(group, k) = sum(s);
-        hold on
-        plot(s(2<span style="color: #0097A7;">:</span>num_periods), <span style="color: #689f38;">'*-'</span>);
+        hold all
+        plot(s(2<span style="color: #84ffff;">:</span>num_periods), <span style="color: #9ccc65;">'*-'</span>);
         legend(int2str(k));
-    <span style="color: #00796b;">end</span>
+    <span style="color: #fff59d;">end</span>
+    legend(<span style="color: #9ccc65;">'1'</span>, <span style="color: #9ccc65;">'2'</span>, <span style="color: #9ccc65;">'3'</span>)
     subplot(2,1,2);
-    plot(A, <span style="color: #689f38;">'*-'</span>);
-    title(<span style="color: #689f38;">'Theory proportion'</span>);
-<span style="color: #00796b;">end</span>
+    plot(round(T, 2), <span style="color: #9ccc65;">'*-'</span>);
+    title(<span style="color: #9ccc65;">'Theory proportion'</span>);
+<span style="color: #fff59d;">end</span>
+<span style="color: #8bc34a;">ans</span> = table
 </pre>
 </div>
 
 
 
-<p>
-#+ATTR<sub>HTML</sub> :width 0.2
-<img src="./img/plan1.png" alt="plan1.png" />
-<img src="./img/plan2.png" alt="plan2.png" />
-<img src="./img/plan3.png" alt="plan3.png" />
-<img src="./img/plan4.png" alt="plan4.png" />
-</p>
+
 
 <p>
-Optmizing the minimum off all three CES:
+Maximizing the minimum of  all three CES at the same time
 </p>
 \begin{align}
-  \text{maximize} \; &\null t \\
-  \text{subject to} \; &\null A + T = 1,
+  \text{maximize} \; & t \\
+  \text{subject to} \; & A + T = 1,
   \\& A, T \ge 0
   \\& \sum_4^i A_j \le  2 \sum_4^i T_j \quad i = 4, \ldots, 24
-  \\& t \le \langle \Theta^{(k)}, \alpha^{(k)} T + \beta^{(k)} A \rangle \quad k = 1,2,3
+  \\& t = \min_{k = 1, 2, 3} \langle \Theta^{(k)}, \alpha^{(k)} T + \beta^{(k)} A \rangle 
 \end{align}
 
 
-
-<p>
-#+name minmaxsec  
-</p>
 <div class="org-src-container">
 
-<pre class="src src-matlab"><span style="color: #607d8b; font-weight: bold; text-decoration: overline;">%% max min CES</span>
-cvx_begin 
-variable T(num_periods)
-variable t
-maximize t
-0 <span style="color: #0097A7;">&lt;=</span> T <span style="color: #0097A7;">&lt;=</span> 1
-T(1<span style="color: #0097A7;">:</span>b) <span style="color: #0097A7;">==</span> 1
-<span style="color: #00796b;">for</span> <span style="color: #EF6C00;">i</span> = <span style="color: #558b2f;">4 : num_periods</span>
-    sum(1 <span style="color: #0097A7;">-</span> T(b<span style="color: #0097A7;">:</span><span style="color: #558b2f;">i</span>)) <span style="color: #0097A7;">&lt;=</span> a<span style="color: #0097A7;">*</span> T(b<span style="color: #0097A7;">:</span><span style="color: #558b2f;">i</span>)
-<span style="color: #00796b;">end</span>
-<span style="color: #00796b;">for</span> <span style="color: #EF6C00;">g</span> = <span style="color: #558b2f;">1 : num_groups</span>
-    t <span style="color: #0097A7;">&lt;=</span> ( Theta(g,<span style="color: #0097A7;">:</span>) <span style="color: #0097A7;">*</span> (alpha(g) <span style="color: #0097A7;">*</span> T <span style="color: #0097A7;">+</span> beta(g) <span style="color: #0097A7;">*</span> (1<span style="color: #0097A7;">-</span>T)) )
-<span style="color: #00796b;">end</span>
+<pre class="src src-matlab" id="orgsrcblock2"><span style="color: #b0bec5; font-weight: bold; text-decoration: overline;">%% max min CES</span>
+cvx_begin quiet
+variable T(num_periods);
+variable A(num_periods);
+maximize(
+min(
+Theta(1,<span style="color: #84ffff;">:</span>) <span style="color: #84ffff;">*</span> (alpha(1) <span style="color: #84ffff;">*</span> T <span style="color: #84ffff;">+</span> beta(1) <span style="color: #84ffff;">*</span> A),
+Theta(2,<span style="color: #84ffff;">:</span>) <span style="color: #84ffff;">*</span> (alpha(2) <span style="color: #84ffff;">*</span> T <span style="color: #84ffff;">+</span> beta(2) <span style="color: #84ffff;">*</span> A),
+Theta(3,<span style="color: #84ffff;">:</span>) <span style="color: #84ffff;">*</span> (alpha(3) <span style="color: #84ffff;">*</span> T <span style="color: #84ffff;">+</span> beta(3) <span style="color: #84ffff;">*</span> A)
+)
+)
+A <span style="color: #84ffff;">+</span> T <span style="color: #84ffff;">==</span> 1;
+0 <span style="color: #84ffff;">&lt;=</span> T <span style="color: #84ffff;">&lt;=</span> 1;
+0 <span style="color: #84ffff;">&lt;=</span> A <span style="color: #84ffff;">&lt;=</span> 1;
+T(1<span style="color: #84ffff;">:</span>b) <span style="color: #84ffff;">==</span> 1;
+<span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">i</span> = <span style="color: #8bc34a;">4 : num_periods</span>
+    sum(A((b<span style="color: #84ffff;">+</span>1)<span style="color: #84ffff;">:</span><span style="color: #8bc34a;">i</span>)) <span style="color: #84ffff;">&lt;=</span> a<span style="color: #84ffff;">*</span> sum(T((b<span style="color: #84ffff;">+</span>1)<span style="color: #84ffff;">:</span><span style="color: #8bc34a;">i</span>))
+<span style="color: #fff59d;">end</span>
 cvx_end
 
-figures(4) = <span style="color: #0097A7;">figure</span>(<span style="color: #689f38;">'visible'</span>, <span style="color: #689f38;">'off'</span>)
+figures(4) = <span style="color: #84ffff;">figure</span>(<span style="color: #9ccc65;">'visible'</span>, <span style="color: #9ccc65;">'off'</span>)
 
 subplot(2,1,1)
-title(<span style="color: #689f38;">'s_i'</span>)
-<span style="color: #607d8b;">% calculate s_i</span>
-<span style="color: #00796b;">for</span> <span style="color: #EF6C00;">k</span>=<span style="color: #558b2f;">1:3</span>
-    s = zeros(num_periods<span style="color: #0097A7;">+</span>1, 1);
-    <span style="color: #00796b;">for</span> <span style="color: #EF6C00;">i</span>=<span style="color: #558b2f;">2:(num_periods+1)</span>
-        s(<span style="color: #558b2f;">i</span>) = (1<span style="color: #0097A7;">-</span> theta(k)) <span style="color: #0097A7;">*</span> s(<span style="color: #558b2f;">i</span><span style="color: #0097A7;">-</span>1) <span style="color: #0097A7;">+</span> theta(k) <span style="color: #0097A7;">*</span> (alpha(k) <span style="color: #0097A7;">*</span> T(<span style="color: #558b2f;">i</span><span style="color: #0097A7;">-</span>1) <span style="text-decoration: underline;">...</span>
-                                                    <span style="color: #0097A7;">+</span> beta(k) <span style="color: #0097A7;">*</span> (1<span style="color: #0097A7;">-</span>T(<span style="color: #558b2f;">i</span><span style="color: #0097A7;">-</span>1)));
-    <span style="color: #00796b;">end</span>
+title(<span style="color: #9ccc65;">'s_i'</span>)
+<span style="color: #b0bec5;">% calculate s_i</span>
+<span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">k</span>=<span style="color: #8bc34a;">1:3</span>
+    s = zeros(num_periods<span style="color: #84ffff;">+</span>1, 1);
+    <span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">i</span>=<span style="color: #8bc34a;">2:(num_periods+1)</span>
+        s(<span style="color: #8bc34a;">i</span>) = (1<span style="color: #84ffff;">-</span> theta(k)) <span style="color: #84ffff;">*</span> s(<span style="color: #8bc34a;">i</span><span style="color: #84ffff;">-</span>1) <span style="color: #84ffff;">+</span> theta(k) <span style="color: #84ffff;">*</span> (alpha(k) <span style="color: #84ffff;">*</span> T(<span style="color: #8bc34a;">i</span><span style="color: #84ffff;">-</span>1) <span style="text-decoration: underline;">...</span>
+                                                    <span style="color: #84ffff;">+</span> beta(k) <span style="color: #84ffff;">*</span> (1<span style="color: #84ffff;">-</span>T(<span style="color: #8bc34a;">i</span><span style="color: #84ffff;">-</span>1)));
+    <span style="color: #fff59d;">end</span>
     table(4, k) = sum(s);
+    hold all
+    plot(s(2<span style="color: #84ffff;">:</span>num_periods), <span style="color: #9ccc65;">'*-'</span>)
+<span style="color: #fff59d;">end</span>
+legend(<span style="color: #9ccc65;">'1'</span>, <span style="color: #9ccc65;">'2'</span>, <span style="color: #9ccc65;">'3'</span>)
+subplot(2,1,2);
+plot(round(T, 2), <span style="color: #9ccc65;">'*-'</span>);
+title(<span style="color: #9ccc65;">'Theory proportion'</span>);
+<span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">p</span>=<span style="color: #8bc34a;">1:4</span>
+    saveas(figures(p),[ <span style="color: #9ccc65;">'img/plan'</span> int2str(p)], <span style="color: #9ccc65;">'png'</span>)
+<span style="color: #fff59d;">end</span>
 
-    hold on
-    plot(s(2<span style="color: #0097A7;">:</span>num_periods), <span style="color: #689f38;">'*-'</span>)
-<span style="color: #00796b;">end</span>
-subplot(2,1,2)
-plot(T, <span style="color: #689f38;">'*-'</span>)
-title(<span style="color: #689f38;">'Theory proportion'</span>)
-
-<span style="color: #00796b;">for</span> <span style="color: #EF6C00;">p</span> =<span style="color: #558b2f;">1:4</span>
-    saveas(figures(p),[ <span style="color: #689f38;">'plan'</span> int2str(p)], <span style="color: #689f38;">'png'</span>)
-<span style="color: #00796b;">end</span>
-
-<span style="color: #558b2f;">ans</span> = table
+<span style="color: #8bc34a;">ans</span> = round(table, 3)
 </pre>
+</div>
+
+
+
+
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
+<caption class="t-above"><span class="table-number">Table 1:</span> Table of CES for different groups / plans</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">group 1</th>
+<th scope="col" class="org-right">group 2</th>
+<th scope="col" class="org-right">group 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">plan 1</td>
+<td class="org-right">7.416</td>
+<td class="org-right">3.052</td>
+<td class="org-right">5.945</td>
+</tr>
+
+<tr>
+<td class="org-left">plan 2</td>
+<td class="org-right">-1.055</td>
+<td class="org-right">12.574</td>
+<td class="org-right">-6.5</td>
+</tr>
+
+<tr>
+<td class="org-left">plan 3</td>
+<td class="org-right">7.416</td>
+<td class="org-right">3.052</td>
+<td class="org-right">5.945</td>
+</tr>
+
+<tr>
+<td class="org-left">plan 4</td>
+<td class="org-right">1.816</td>
+<td class="org-right">9.215</td>
+<td class="org-right">-1.678</td>
+</tr>
+</tbody>
+</table>
+
+
+<div class="figure">
+<p><img src="./img/plan1.png" alt="plan1.png" width="500" />
+</p>
+<p><span class="figure-number">Figure 1:</span> Plan 1</p>
+</div>
+
+<div class="figure">
+<p><img src="./img/plan2.png" alt="plan2.png" width="500" />
+</p>
+<p><span class="figure-number">Figure 2:</span> Plan 2</p>
+</div>
+
+<div class="figure">
+<p><img src="./img/plan3.png" alt="plan3.png" width="500" />
+</p>
+<p><span class="figure-number">Figure 3:</span> Plan 3</p>
+</div>
+
+<div class="figure">
+<p><img src="./img/plan4.png" alt="plan4.png" width="500" />
+</p>
+<p><span class="figure-number">Figure 4:</span> Plan 4</p>
 </div>
 </div>
 </div>
@@ -417,65 +500,118 @@ Therefore we can adjoin the equality constraints \(Px = x \forall P \in \mathcal
 <h2 id="orgheadline5"><span class="section-number-2">5</span> Problem 5</h2>
 <div class="outline-text-2" id="text-5">
 <p>
-#+name distance
+The problem can be formulated as follow:
+\[\min_{x \in S_1, y \in S_2} ||x - y||\]
 </p>
-<pre class="example">
-1.9372
+
+<div class="org-src-container">
+
+<pre class="src src-matlab" id="orgsrcblock3"><span style="color: #b0bec5;">% Input</span>
+P = [ 1 <span style="color: #84ffff;">-</span>0.6 0.2; 
+      <span style="color: #84ffff;">-</span>0.6 2.6 0.6;
+      0.2 0.6 0.4
+    ] ;
+xc = [2 2 2]';
+n = 3;
+
+<span style="color: #b0bec5;">% Optimization</span>
+cvx_begin
+variable x(n)
+variable y(n)
+minimize norm(x <span style="color: #84ffff;">-</span> y)
+subject to
+norm(x, 1) <span style="color: #84ffff;">&lt;=</span> 1
+(y<span style="color: #84ffff;">-</span>xc)' <span style="color: #84ffff;">*</span> P <span style="color: #84ffff;">*</span> (y <span style="color: #84ffff;">-</span> xc) <span style="color: #84ffff;">&lt;=</span> 1
+cvx_end
+
+round(horzcat(x, y), 3)
 </pre>
+</div>
+
+
+<p>
+The optimal value is \(1.9372\), attained for:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">x</th>
+<th scope="col" class="org-right">y</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">0.305</td>
+<td class="org-right">1.458</td>
+</tr>
+
+<tr>
+<td class="org-right">0.695</td>
+<td class="org-right">1.849</td>
+</tr>
+
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">1.045</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
-<div id="outline-container-orgheadline6" class="outline-2">
-<h2 id="orgheadline6"><span class="section-number-2">6</span> Problem 6</h2>
+
+
+<div id="outline-container-orgheadline7" class="outline-2">
+<h2 id="orgheadline7"><span class="section-number-2">6</span> Problem 6</h2>
 <div class="outline-text-2" id="text-6">
+</div><div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6"><span class="section-number-3">6.1</span> \(P_2 \subseteq P_1\) ?</h3>
+<div class="outline-text-3" id="text-6-1">
 <ul class="org-ul">
 <li><p>
 \(P_1\) facet description
 \(P_2\) vertex description
-Algorithm: for each vertex \(v\) in \(P_2\) if \(v \in P_1\) (\(Av \le b\))
+Algorithm: Check that for each vertex \(v\) in \(P_2\) if \(v \in P_1\) (\(Av \le b\)), the result follow from the fact that \(P_2\) is the convex hull of its vertices.
 </p>
 
 <p>
 Complexity: \(O(D^2NM)\) where \(D\) is the dimension, \(M\) the number of facets, and \(N\) the number of vertices.
 </p></li>
 
-<li>\(P_1\) vertex description \(y_1, \ldots, y_m\)
+<li><p>
+\(P_1\) vertex description \(y_1, \ldots, y_m\)
 \(P_2\) vertex description \(x_1, \ldots, x_n\)
-algorithm: Check if every vertex in \(P_2\) is a convex combination of the vertices of \(P_1\): \(y_1, \ldots, y_m\). For that, check if the following LP problems are feasible: for all vertex \(x\) in \(P_2\), \(\min_{\lambda} 0\) st \(\sum \lambda_i y_i = x, \sum_i \lambda_i = 1, \lambda > 0\)</li>
+Algorithm: Check if every vertex in \(P_2\) is a convex combination of the vertices of \(P_1\): \(y_1, \ldots, y_m\).
+For that, check if the following LP problems are feasible for all vertex \(x\) in \(P_2\):  \(\min_{\lambda \in \mathbb{R}^D} 0\) st \(\sum \lambda_i y_i = x, \sum_i \lambda_i = 1, \lambda \ge 0\)
+</p>
+
+<p>
+Complexity: \(O(N R)\) where \(R\) is the time required to solve one of the above minimization problem. (This time is polynomial in \(D\) and \(N\))
+</p></li>
 
 <li>\(P_1\) facet description \(A_1x \le b_1\)
 \(P_2\) facet description \(A_2x \le b_2\)
-algorithm: Check if every row  \(a_i^T\) in \(A_1\): Check that the following problem has a non negative solution:
-\(\min_{A_2x \le b} (b_1)_i - a^T x\)</li>
+Algorithm: Check if every row  \(a_i^T\) in \(A_1\), eg Check that the following problem has a non negative solution:
+\(\min_{A_2x \le b} (b_1)_i - a^T x\)
+Complexity: \(O(M R)\) where \(R\) is the time required to solve the above minimization problem. (This time is polynomial in \(D\) and \(M\))</li>
 </ul>
 </div>
 </div>
 </div>
+</div>
 <div id="postamble" class="status">
-<p class="author">Author: bachir el khadir</p>
-<p class="date">Created: 2016-02-23 Tue 13:43</p>
+<p class="date">Date: <span class="timestamp-wrapper"><span class="timestamp">&lt;2016-02-23 Tue&gt;</span></span></p>
+<p class="author">Author: Bachir El khadir</p>
+<p class="date">Created: 2016-02-24 Wed 16:27</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
