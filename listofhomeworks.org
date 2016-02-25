@@ -1,0 +1,50 @@
+
+#+BEGIN_SRC python :exports results :session
+  import os
+
+  import glob
+  def createlinkstoall(ext):
+      def linkto(s):
+          parts = s.split('/')
+          return (s, parts[-3], parts[-1].split('.')[0])
+      return map(lambda s: ['[[./%s][%s - %s]]' % (linkto(s))], glob.glob('*/*/*.%s' % ext))
+#+END_SRC
+
+
+* List of html
+#+name: listofhtml
+#+BEGIN_SRC python :exports results :session      
+   createlinkstoall('html')
+#+END_SRC
+
+#+RESULTS: listofhtml
+| [[file:./ORF523/hw2/hw2.html][ORF523 - hw2]]   |
+| [[file:./ORF525/hw2/hw2.html][ORF525 - hw2]]   |
+| [[file:./ORF525/treebasedmethode/tree.html][ORF525 - tree]]  |
+| [[file:./ORF570/hw1/hw1.html][ORF570 - hw1]]   |
+| [[file:./ORF570/hw1/notes.html][ORF570 - notes]] |
+
+
+
+* List of ORG files
+#+name: listoforg
+#+BEGIN_SRC python :exports results :session
+createlinkstoall('org')
+#+END_SRC
+
+#+RESULTS: listoforg
+| [[file:./ORF523/hw2/homework2.org][ORF523 - homework2]] |
+| [[file:./ORF523/hw2/hw2.org][ORF523 - hw2]]       |
+| [[file:./ORF525/hw2/hw2.org][ORF525 - hw2]]       |
+| [[file:./ORF525/treebasedmethode/tree.org][ORF525 - tree]]      |
+| [[file:./ORF570/hw1/hw1.org][ORF570 - hw1]]       |
+| [[file:./ORF570/hw1/intro.org][ORF570 - intro]]     |
+| [[file:./ORF570/hw1/mynotes.org][ORF570 - mynotes]]   |
+| [[file:./ORF570/hw1/notes.org][ORF570 - notes]]     |
+| [[file:./ORF570/hw1/tests.org][ORF570 - tests]]     |
+
+
+
+
+
+

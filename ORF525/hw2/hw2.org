@@ -159,7 +159,7 @@ The Lasso try to find a sparse solution in the time and frequency domain at the 
   
 ** 2.1
    
-#+include: "q2.tex" :lines "33-278"
+#+include: "q2.tex" 
 
 
 

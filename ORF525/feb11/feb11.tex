@@ -186,7 +186,7 @@ Sparsity: many ekements of $\beta$ are 0 $\implies$ model selection. (select var
   \end{definition}
   \begin{theorem}[Robust Optimization Representation of Lasso]
     The SQRT-Lasso problem in (\ref{eq:*}) is equivalent to the following robust linear regression problem:
-    $$\min_{\betae} \max_{U \in \Omega_{\lambda}} ||Y - (X + U)\beta||_2$$
+    $$\min_{\beta} \max_{U \in \Omega_{\lambda}} ||Y - (X + U)\beta||_2$$
     Where $\Omega_{\lambda} := \{ U = (U_1, \ldots, U_d)\in \mathbb R^{n \times d}, \max_j ||U_j||_2 \le \lambda \}$
   \end{theorem}
   \begin{proof}
@@ -235,11 +235,38 @@ Sparsity: many ekements of $\beta$ are 0 $\implies$ model selection. (select var
     Assume $|Y_i| \le B$ and $|X|_{\infty} \le B$. Then
     $$P\left(R(\hat \beta) - R(\beta^*) \le 2 (1 + L^2) \sqrt{\frac{2B^4\log(\frac{2d^2}{\delta})}n} \right) \ge 1 - \delta$$
   \end{theorem}
+
+    \begin{proof}
+      \begin{align*}
+        R(\hat \beta) - R(\beta^*)
+        &=  R(\hat \beta) - \hat R(\hat \beta) + \hat R(\hat \beta) - R(\beta^*)\\
+        &\le R(\hat \beta) - \hat R(\hat \beta) + \hat R(\beta^*) - R(\beta^*)\\
+        &\le 2 \sup_{\norm{\beta}_{L_1} \le L} |R(\beta) - R(\hat \beta)|
+      \end{align*}
+
+      Let $Z = (Y, X^T)^T$, $r = (-1, \beta^T)^T$
+
+      $$R(\beta) = \esp(Y - \beta^TX)^2 = \esp(r^TZZ^Tr) = r^T \esp(ZZ^T)r = r^T \Sigma r$$
+      $$\hat R(\beta) = \frac1n \sum (Y_i - \beta^TX_i)^2 =  r^T \frac1n \sum Z_iZ_i^T r = r^T \hat \Sigma r$$
+
+      Therefore
+      
+      \begin{align*}
+        \sup_{\norm{\beta}_{L_1} \le L} |R(\beta) - R(\hat \beta)|
+        &= \sup |r^T(\hat \Sigma - \Sigma)r|
+        \\&\le \norm{r(\beta)}_1^2 \norm{\hat \Sigma - \Sigma}_{\infty}
+      \end{align*}
+      By Hoeding
+      $$\pr(\norm{\hat \Sigma - \Sigma}_{\infty} > t) \le \sum \pr(\hat \Sigma_{ij} - \Sigma_{ij} > t) \le 2 d^2 \exp(-\frac{nt^2}{2B^4})$$
+      
+    \end{proof}
+    
   \begin{theorem}[Persistency of the Lasso]
     $\forall k > 0, d = O(n^k)$, ${\cal B}_n = \{\beta, |\beta|_1 \le L_n, L_ = o(\frac n{\log n})^{\frac14}\}$
     Then:
     $R(\hat \beta) - \inf_{\beta \in {\cal B}_n} R(\beta) \rightarrow_{\mathbb P} 0$ as $n \rightarrow \infty$
   \end{theorem}
+
 \end{class}
 \end{document}
 

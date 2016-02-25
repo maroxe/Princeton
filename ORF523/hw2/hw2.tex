@@ -1,4 +1,4 @@
-% Created 2016-02-23 Tue 14:00
+% Created 2016-02-24 Wed 16:43
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -14,10 +14,9 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
+\usepackage{minted}
 \usepackage{amsmath}
 \usepackage{amsfonts}
-\usepackage{enumitem}
-\usepackage{graphicx}
 \newcommand{\Problem}[1]{\subsection*{Problem #1}}
 \newcommand{\Q}[1]{\subsubsection*{Q.#1}}
 \newcommand{\union}[1]{\underset{#1}{\cup} }
@@ -28,31 +27,32 @@
 \newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
 \DeclareMathOperator{\cov}{cov}
 \DeclareMathOperator{\var}{var}
-\author{bachir el khadir}
-\date{\today}
-\title{}
+\author{Bachir El khadir}
+\date{\textit{<2016-02-23 Tue>}}
+\title{Problem set 2, ORF523}
 \hypersetup{
- pdfauthor={bachir el khadir},
- pdftitle={},
+ pdfauthor={Bachir El khadir},
+ pdftitle={Problem set 2, ORF523},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 25.1.50.1 (Org mode )}, 
+ pdfcreator={Emacs 24.5.1 (Org mode )}, 
  pdflang={English}}
 \begin{document}
 
-\tableofcontents
+\maketitle
 
 
 
 \section{Problem 1}
 \label{sec:orgheadline1}
-Let's consider a polynomial of degree 2: \(P(x) = x^TQx + bx + c\), \(\nabla P = x^T(Q + Q^T) + b\), \(\nabla^2 P = Q + Q^T\)
+Let's consider a polynomial of degree 2: \(P(x) = x^TQx + bx + c\), \(P(x)\) can also be written as \(\frac12 x^T(Q + Q^T)x + bx + c\), so we can assume without loss of generality that \(Q\) is symmetric.
 
-\(Q + Q^T\) is symmetric, so it by the eigen value decomposition theorem there exist \(U\) an orthogonal matrix and \(\Lambda\) a diagonal matrix such that \(Q+Q^T = U\Lambda U^T\).
+If \(Q\) is symmetric, so it by the eigen value decomposition theorem there exist \(U\) an orthogonal matrix and \(\Lambda\) a diagonal matrix such that \(Q = U\Lambda U^T\).
 
-Let's denote \(\Lambda^+ = max(\Lambda, 0)\), \(\Lambda^- = min(-\Lambda, 0)\), then: \(Q+Q^T = \underbrace{U\Lambda^+ U^T}_{S^+} -  \underbrace{U\Lambda^- U^T}_{S^-}\).
-Let's consider the polynomial \(P_1(x) = \frac12 x^TS^+x - \frac12 x^TS^-x + bx + c\). \(P_1 = P\), indeed, \(\nabla P_1 = x^T(S^+ - S^-) + b = x^T(Q+Q^T) + b= \nabla P\), and \(P_1(0) = P(0) = c\).
-We have that \(\frac12 x^TS^+x + bx + c\) and \(\frac12 x^TS^-x\) are both convexe because their hessian (\(S^+\) and \(S^-\) respectively) is non-negative.
+Let's denote \(\Lambda^+ = max(\Lambda, 0)\), \(\Lambda^- = min(-\Lambda, 0)\), then: \(Q = \underbrace{U\Lambda^+ U^T}_{S^+} -  \underbrace{U\Lambda^- U^T}_{S^-}\).
+
+
+We have that \(\frac12 x^TS^+x + bx + c\) and \(\frac12 x^TS^-x\) are both convexe because their hessians (\(S^+\) and \(S^-\) respectively) is non-negative.
 
 \section{Problem 2}
 \label{sec:orgheadline2}
@@ -78,8 +78,7 @@ Optmizing the individual CES:
     \\& \sum_4^i A_j \le  2 \sum_4^i T_j \quad i = 4, \ldots, 24
 \end{align}
 
-\#+name minsec
-\begin{verbatim}
+\begin{minted}[frame=lines,linenos=true]{matlab}
 %% Input
 a = 2;
 b = 3;
@@ -126,48 +125,50 @@ for group=1:3
                                                         + beta(k) * (1-T(i-1)));
         end
         table(group, k) = sum(s);
-        hold on
+        hold all
         plot(s(2:num_periods), '*-');
         legend(int2str(k));
     end
+    legend('1', '2', '3')
     subplot(2,1,2);
-    plot(A, '*-');
+    plot(round(T, 2), '*-');
     title('Theory proportion');
 end
 ans = table
-\end{verbatim}
+\end{minted}
 
 
 
-\includegraphics[width=.9\linewidth]{./img/plan1.png}
-\includegraphics[width=.9\linewidth]{./img/plan2.png}
-\includegraphics[width=.9\linewidth]{./img/plan3.png}
 
 
-Optmizing the minimum off all three CES:
+Maximizing the minimum of  all three CES at the same time
 \begin{align}
   \text{maximize} \; & t \\
   \text{subject to} \; & A + T = 1,
   \\& A, T \ge 0
   \\& \sum_4^i A_j \le  2 \sum_4^i T_j \quad i = 4, \ldots, 24
-  \\& t \le \langle \Theta^{(k)}, \alpha^{(k)} T + \beta^{(k)} A \rangle \quad k = 1,2,3
+  \\& t = \min_{k = 1, 2, 3} \langle \Theta^{(k)}, \alpha^{(k)} T + \beta^{(k)} A \rangle 
 \end{align}
 
 
-
-\begin{verbatim}
+\begin{minted}[frame=lines,linenos=true]{matlab}
 %% max min CES
-cvx_begin 
-variable T(num_periods)
-variable t
-maximize t
-0 <= T <= 1
-T(1:b) == 1
+cvx_begin quiet
+variable T(num_periods);
+variable A(num_periods);
+maximize(
+min(
+Theta(1,:) * (alpha(1) * T + beta(1) * A),
+Theta(2,:) * (alpha(2) * T + beta(2) * A),
+Theta(3,:) * (alpha(3) * T + beta(3) * A)
+)
+)
+A + T == 1;
+0 <= T <= 1;
+0 <= A <= 1;
+T(1:b) == 1;
 for i = 4 : num_periods
-    sum(1 - T(b:i)) <= a* T(b:i)
-end
-for g = 1 : num_groups
-    t <= ( Theta(g,:) * (alpha(g) * T + beta(g) * (1-T)) )
+    sum(A((b+1):i)) <= a* sum(T((b+1):i))
 end
 cvx_end
 
@@ -183,35 +184,54 @@ for k=1:3
                                                     + beta(k) * (1-T(i-1)));
     end
     table(4, k) = sum(s);
-
-    hold on
+    hold all
     plot(s(2:num_periods), '*-')
 end
-subplot(2,1,2)
-plot(T, '*-')
-title('Theory proportion')
-
-for p =1:4
-    saveas(figures(p),[ 'plan' int2str(p)], 'png')
+legend('1', '2', '3')
+subplot(2,1,2);
+plot(round(T, 2), '*-');
+title('Theory proportion');
+for p=1:4
+    saveas(figures(p),[ 'img/plan' int2str(p)], 'png')
 end
 
-ans = table
-\end{verbatim}
+ans = round(table, 3)
+\end{minted}
 
 
+
+
+
+
+\begin{table}[htb]
+\caption{Table of CES for different groups / plans}
+\centering
+\begin{tabular}{lrrr}
+ & group 1 & group 2 & group 3\\
+\hline
+plan 1 & 7.416 & 3.052 & 5.945\\
+plan 2 & -1.055 & 12.574 & -6.5\\
+plan 3 & 7.416 & 3.052 & 5.945\\
+plan 4 & 1.816 & 9.215 & -1.678\\
+\end{tabular}
+\end{table}
 
 \begin{center}
-\begin{tabular}{llll}
- & group 1 & group 2 & group 3\\
-plan 1 &  &  & \\
-plan 2 &  &  & \\
-plan 3 &  &  & \\
-plan 4 &  &  & \\
-\end{tabular}
+\includegraphics[width=.9\linewidth]{./img/plan1.png}
+\captionof{figure}{Plan 1}
 \end{center}
-
-
+\begin{center}
+\includegraphics[width=.9\linewidth]{./img/plan2.png}
+\captionof{figure}{Plan 2}
+\end{center}
+\begin{center}
+\includegraphics[width=.9\linewidth]{./img/plan3.png}
+\captionof{figure}{Plan 3}
+\end{center}
+\begin{center}
 \includegraphics[width=.9\linewidth]{./img/plan4.png}
+\captionof{figure}{Plan 4}
+\end{center}
 
 
 \section{Problem 3}
@@ -234,42 +254,91 @@ so \(\bar x \in Q\).
 b) \(f(\bar x) \le \sum_i \frac1k f(Q_ix) = \frac1k \sum_i  f(x) = f(x)\)
 
 c) Let \(x\) be a solution to the convex \$\mathcal G\$-invariant. Then \(\bar x \in \mathcal F\) is also a solution. Indeed:
--- \$f\(_{\text{0}}\)(\bar x) \(\le\) f(\bar x) \$
--- for \(j\), \(f_j(x) \le 0 \implies \forall i f_j(Q_i x) \le 0 \implies  \frac1k \sum_i f_j(Q_i x) \le 0\)
--- \(f_j\) is convexe, so \(f_j(\bar x)  \le \frac1k \sum_i f_j(Q_i x) \le 0\)
+
+\begin{itemize}
+\item \(f_0(\bar x) \le f(\bar x)\)
+\item for \(j\), \(f_j(x) \le 0 \implies \forall i f_j(Q_i x) \le 0 \implies  \frac1k \sum_i f_j(Q_i x) \le 0\)
+\item \(f_j\) is convexe, so \(f_j(\bar x)  \le \frac1k \sum_i f_j(Q_i x) \le 0\)
+\end{itemize}
+
 c/c: \(f(\bar x) \le f(x)\) and \(\bar x\) is in the feasible set, which means \(\bar x\) is optimal.
 
-d) Let \$\mathcal G \$ be the set of all permutations in \(\mathbb R^{n \times n}\). It is clear that this set is a finite (of size \(n!\) ) group.
-Therefore we can adjoin the equality constraints \(Px = x \forall P \in \mathcal G\). Let \(x\) be apoint satisfying such condition, and let \(i, j \le n\), and \(Q\) be the matrix that permutates the ith and jth vector of the canonical basis. Then \(x_i = (Px)_i = x_j\). Therefore \(x\)  has the form \(x_11, x_1 \in \mathbb R\).
+d) Let \(\mathcal G\) be the set of all permutations in \(\mathbb R^{n \times n}\). It is clear that this set is a finite (of size \(n!\) ) group.
+
+Let \(x\) be a point satisfying such condition, and let \(i, j \le n\), and \(Q\) be the matrix that permutates the ith and jth vector of the canonical basis.
+Then \(x_i = (Px)_i = x_j\).
+Therefore \(x\)  has the form \(x_11, x_1 \in \mathbb R\).
 
 \section{Problem 5}
 \label{sec:orgheadline5}
 
-\#+name distance
-\begin{verbatim}
-1.9372
-\end{verbatim}
+The problem can be formulated as follow:
+$$\min_{x \in S_1, y \in S_2} ||x - y||$$
+
+\begin{minted}[frame=lines,linenos=true]{matlab}
+% Input
+P = [ 1 -0.6 0.2; 
+      -0.6 2.6 0.6;
+      0.2 0.6 0.4
+    ] ;
+xc = [2 2 2]';
+n = 3;
+
+% Optimization
+cvx_begin
+variable x(n)
+variable y(n)
+minimize norm(x - y)
+subject to
+norm(x, 1) <= 1
+(y-xc)' * P * (y - xc) <= 1
+cvx_end
+
+round(horzcat(x, y), 3)
+\end{minted}
 
 
-1.9372
+The optimal value is \(1.9372\), attained for:
+
+\begin{center}
+\begin{tabular}{rr}
+x & y\\
+\hline
+0.305 & 1.458\\
+0.695 & 1.849\\
+0 & 1.045\\
+\end{tabular}
+\end{center}
+
+
 
 \section{Problem 6}
 \label{sec:orgheadline6}
-
 \begin{itemize}
+\item \(P_2 \subseteq P_1\) ?
+\begin{itemize}
+\item \begin{itemize}
 \item \(P_1\) facet description
-\(P_2\) vertex description
-Algorithm: for each vertex \(v\) in \(P_2\) if \(v \in P_1\) (\(Av \le b\))
+\item \(P_2\) vertex description
+\item \textbf{Algorithm}: Check that for each vertex \(v\) in \(P_2\) if \(v \in P_1\) (\(Av \le b\)), the result follow from the fact that \(P_2\) is the convex hull of its vertices.
 
-Complexity: \(O(D^2NM)\) where \(D\) is the dimension, \(M\) the number of facets, and \(N\) the number of vertices.
+\item \textbf{Complexity}: \(O(D^2NM)\) where \(D\) is the dimension, \(M\) the number of facets, and \(N\) the number of vertices.
+\end{itemize}
 
+\item \begin{itemize}
 \item \(P_1\) vertex description \(y_1, \ldots, y_m\)
-\(P_2\) vertex description \(x_1, \ldots, x_n\)
-algorithm: Check if every vertex in \(P_2\) is a convex combination of the vertices of \(P_1\): \(y_1, \ldots, y_m\). For that, check if the following LP problems are feasible: for all vertex \(x\) in \(P_2\), \(\min_{\lambda} 0\) st \(\sum \lambda_i y_i = x, \sum_i \lambda_i = 1, \lambda > 0\)
+\item \(P_2\) vertex description \(x_1, \ldots, x_n\)
+\item \textbf{Algorithm}: Check if every vertex in \(P_2\) is a convex combination of the vertices of \(P_1\): \(y_1, \ldots, y_m\). For that, check if the following LP problems are feasible for all vertex \(x\) in \(P_2\):  \(\min_{\lambda \in \mathbb{R}^D} 0\) st \(\sum \lambda_i y_i = x, \sum_i \lambda_i = 1, \lambda \ge 0\).
+\item \textbf{Complexity}: \(O(N R)\) where \(R\) is the time required to solve one of the above minimization problem. (This time is polynomial in \(D\) and \(N\))
+\end{itemize}
 
+\item \begin{itemize}
 \item \(P_1\) facet description \(A_1x \le b_1\)
-\(P_2\) facet description \(A_2x \le b_2\)
-algorithm: Check if every row  \(a_i^T\) in \(A_1\): Check that the following problem has a non negative solution:
+\item \(P_2\) facet description \(A_2x \le b_2\)
+\item \textbf{Algorithm}: Check if every row  \(a_i^T\) in \(A_1\), eg Check that the following problem has a non negative solution:
 \(\min_{A_2x \le b} (b_1)_i - a^T x\)
+\item \textbf{Complexity}: \(O(M R)\) where \(R\) is the time required to solve the above minimization problem. (This time is polynomial in \(D\) and \(M\))
+\end{itemize}
+\end{itemize}
 \end{itemize}
 \end{document}

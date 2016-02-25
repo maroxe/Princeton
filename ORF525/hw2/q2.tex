@@ -21,6 +21,7 @@
 
 \begin{document}
 
+\section{P2}
 \begin{itemize}
 \item
   Let's assume  $X\beta_1 \ne X\beta_2$.
@@ -101,7 +102,7 @@
   $$X^T(Y - X\hat \beta(\lambda)) \in \lambda \partial \norm{\hat \beta(\lambda_0)}_1$$
 
 
-  \textbf{Notation: } $ \alpha(\lambda_0) =  X^T \underbrace{\frac{(Y - X\hat \beta(\lambda))}{\lambda_0}}_v = X^Tv$,  $\gamma_0 = X^{\dagger} v$, $\delta = \hat \beta(\lambda_0) - (\lambda - \lambda_0) \gamma_0$. 
+  \textbf{Notation: } $ \alpha(\lambda_0) =  X^T \underbrace{\frac{(Y - X\hat \beta(\lambda_0))}{\lambda_0}}_v = X^Tv$,  $\gamma_0 = X^{\dagger} v$, $\delta = \hat \beta(\lambda_0) - (\lambda - \lambda_0) \gamma_0$. 
 
   Note that:
   $$X^TX\gamma_0 = X^T XX^{\dagger} v = (V \Lambda U^T) (U\Lambda V^T)  (V \Lambda^{-1} U^T) v = V \Lambda U^T v = X^T v = \alpha(\lambda_0)$$
@@ -115,9 +116,24 @@
   Which proves that $\hat \beta(\lambda) = \delta = \hat \beta(\lambda_0) - (\lambda - \lambda_0) \alpha(\lambda_0)$
 
   
+\item
+  \textbf{Notation}: For a vector $v$, let $v^+ = \max(v, 0), v^- = -\min(-v, 0)$, $sign(v), supp(v)$ the sign and support of $v$, $\phi(v) = (supp(v^+), supp(v^-))$
+  
+  The number of values $\phi(v)$ can take is finite and at most $n^2$ because $\phi(v) \in \mathcal P(\{1 \ldots n\})^2$.
+
+  Notice that in the last part, we have proven a stronger result:
+  if for $\lambda_1, \lambda_2$, $\phi(\beta(\lambda_1)) = \phi(\beta(\lambda_2))$, then $\beta(\lambda_2) = \beta(\lambda_1) - (\lambda_2 - \lambda_1) \gamma_0$, where $\gamma_0$ depend only on $\lambda_1$. This proves a segment of the path $C$ is fully caracterized by the $\phi(v)$ where $v(C)$ is one of the element of $C$ chosen arbitrarly.
+  
+
+  Let $\mathcal A$ denote the set of segments that form the lasso path, and consider the following application:
+  
+  ${\cal A} \rightarrow {\cal B}; C \rightarrow \phi(v(C)) $  Where $v$ is an arbitrary element in $C$.
+
+  We have proven that this application is injective, so $|{\cal A}| \le n^2 < \infty $.
 
 \end{itemize}
 
+\section{P3}
 \begin{itemize}
 \item
 
@@ -136,9 +152,11 @@
   
   $$\underset{X_i, Y_i, i \in V_k}{\pr} \left( \left|\frac{1}{|V_k|} \sum_{i \in V_k} (Y_i - X_i^T\hbeta_{\hat t}^{V_k})^2 - \esp_{X, Y}[(Y - X^T\hbeta_{\hat t}^{V_k})^2]\right| > \varepsilon\right) \le 2 \exp( - \frac{|V_k| \varepsilon^2}{2b^4(1 + t_n^2)}) $$
 
-  $${\pr} \left( \hat R_{CV}(\hat t) - \frac1K \sum_k R(\hbeta^{V_k}_{\hat t}) > \varepsilon\right) \le 2K \exp( - \frac{n \varepsilon^2}{2Kb^4(1 + t_n^2)}) $$
+  $${\pr} \left( \frac1K \sum_k R(\hbeta^{V_k}_{\hat t}) - \hat R_{CV}(\hat t) > \varepsilon\right) \le 2K \exp( - \frac{n \varepsilon^2}{2Kb^4(1 + t_n^2)}) $$
 
+  Since $R$ is convexe, $\frac1K \sum_k R(\hbeta^{V_k}_{\hat t}) \ge R(\frac1K \sum_k \hbeta^{V_k}_{\hat t}) \ge R(\hbeta_{\hat t})$, so:
 
+  $${\pr} \left( R(\hbeta_{\hat t}) - \frac1K \sum_k R(\hbeta^{V_k}_{\hat t}) - \hat R_{CV}(\hat t) > \varepsilon\right) \le 2K \exp( - \frac{n \varepsilon^2}{2Kb^4(1 + t_n^2)}) $$
   2.)
   $$\hat R_{CV}(\hat t) - \hat R_{CV}(t_{\max}) \le 0$$
 
@@ -147,14 +165,36 @@
 
   $$\hat R(\hbeta_{t_{\max}}) = \hat R(\hbeta_{t_n})$$
   
-  5.)
-
+  5.)  Hoefdding:
   $$ \pr(\hat R(\hbeta_{t_n}) - R(\hbeta_{t_n}) > \varepsilon) \le 2 \exp(-\frac{n \varepsilon^2}{2b^4(1+t_n^2)})$$
-
+  6.) We did this one in class:
+  $$\pr\left(R(\hat \beta) - R(\beta^*) > 2 (1 + t_n^2) \sqrt{\frac{2b^4\log(\frac{2d^2}{\delta})}n} \right) \le \delta$$
 \end{itemize}
 
-\end{document}
 
+\section{Proof of Hoeffding}
+  
+\begin{itemize}
+\item
+  \begin{align*}
+    \pr( X \ge t) &= \pr( e^{\lambda X} \ge e^{\lambda t}) &\text{(because $\exp$ is increasing)}
+    \\& =  \pr( e^{\lambda (X - t)} \ge 1)
+    \\&\le \esp[e^{\lambda (X - t)} ] &\text{(Markov inequality)}
+    \\&= e^{-\lambda t} \prod \esp e^{\lambda x_i} &\text{(By independence)}
+    \\& = e^{-\lambda t} (\esp e^{\lambda x_i})^k &x_i \sim x_1
+    \\& = e^{-\lambda t} (\frac12 (e^{\lambda} + e^{-\lambda}))^k 
+  \end{align*}
+\item
+  $e^{\lambda} + e^{-\lambda} = \sum^{\infty} \frac{\lambda^k}{k!} + (-1)^k \frac{\lambda^k}{k!} = 2 \sum^{\infty}  \frac{\lambda^{2k}}{(2k!)}$
+  $e^{\frac12 \lambda^2} = \sum \frac{\lambda^{2k}}{2^k k!}$
+  Since $\frac{(2k)!}{2^kk!} = \prod_{j = 1 \ldots 2k} \frac{k+j}{2} \ge 1$, $\frac12 e^{\lambda} + \frac12 e^{-\lambda} \le e^{\frac12 \lambda^2}$
+
+\item $\pr(X \ge t) \le e^{-\lambda t} (\frac12 e^{\lambda} + \frac12 e^{-\lambda})^k \le e^{-\lambda t} e^{\frac k2 \lambda^2}$
+  $\lambda \rightarrow \frac k2 \lambda^2 - \lambda t$ is quadratic function that attain its minimum for $\lambda = \frac tk$, and the minimum is $-\frac{t^2}k$, therefore $\pr(X \ge t) \le e^{-\frac{t^2}k}$.
+\end{itemize}
+
+
+\end{document}
 
 
 
