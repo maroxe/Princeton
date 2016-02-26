@@ -1,7 +1,10 @@
 # -*- mode: org; org-confirm-babel-evaluate: nil; -*-
 
-#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="../../css/org-style.css" />
+
 #+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+#+HTML_HEAD: <link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet"></link>
+
+
 
 #+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
 #+OPTIONS: author:t broken-links:nil c:nil creator:nil
@@ -38,7 +41,7 @@
 
 
 * Problem 1
-  Let's consider a polynomial of degree 2: $P(x) = x^TQx + bx + c$, $P(x)$ can also be written as $\frac12 x^T(Q + Q^T)x + bx + c$, so we can assume without loss of generality that $Q$ is symmetric.
+ 1) Let's consider a polynomial of degree 2: $P(x) = x^TQx + bx + c$, $P(x)$ can also be written as $\frac12 x^T(Q + Q^T)x + bx + c$, so we can assume without loss of generality that $Q$ is symmetric.
 
   If $Q$ is symmetric, so it by the eigen value decomposition theorem there exist $U$ an orthogonal matrix and $\Lambda$ a diagonal matrix such that $Q = U\Lambda U^T$.
   
@@ -46,7 +49,54 @@
 
 
   We have that $\frac12 x^TS^+x + bx + c$ and $ \frac12 x^TS^-x$ are both convexe because their hessians ($S^+$ and $S^-$ respectively) is non-negative.
+
   
+ 2)
+
+    #+name: taylor expansion
+    #+BEGIN_SRC matlab :exports both :session :cache yes
+    syms x y z;
+    f = (x^2 + 9/4* y^2 + z^2 - 1)^3 - x^2 * z^3 - 9/80*y^2 * z^3;
+    tf = simplify(taylor(f, [x, y, z], [0, 1/2, 1/2], 'Order', 3));
+    ans=char(tf)
+    #+END_SRC
+
+    #+RESULTS: taylor expansion
+    : (5319*y)/1280 + (2421*z)/1280 - (837*y*z)/320 - (5*x^2)/256 - (13437*y^2)/5120 - (639*z^2)/1280 - 16371/10240
+
+
+    #+BEGIN_SRC matlab :exports none :session :cache yes
+a, b, c, d, e, f, g, h = 5/256, 13437 / 5120, 639/1280, 837/320, 5319 / 1280, 2421 / 1280, 2421 / 1280, 16371 / 10240;
+
+ [rats(f+d^2 / (4 * b), 100) rats(d / (2*b), 100)]'
+ans= eig([-b -d; 0 -c]);
+    #+END_SRC
+
+    #+RESULTS[e770a410f8d24d2e55e2a54cc825068b2dc2ab3c]:
+    | -2.6244 |
+    | -4.9922 |
+
+
+
+
+
+
+
+
+ \begin{align*}
+ P(x, y, z) &= -\frac{5}{256} x^2 - \frac{13437}{5120}y^2 - \frac{639}{1280}z^2 - \frac{837}{320}yz
+ + \frac{5319}{1280} y + \frac{2421}{1280} z  - \frac{16371}{10240}\\
+ &= -a x^2 - b y^2 - c z^2 - d yz + e y + fz - h
+ \\&=  \underbrace{(f + \frac{d^2}{4b}) z^2}_{\text{convexe}}  - \underbrace{(a x^2 - e y - fz + h + b(y + \frac{d}{2b}z)^2)}_{\text{convexe}} 
+ \end{align*}
+
+ With numbers:
+ 
+     $P(x, y, z) = \frac{2862801}{32000} z^2 - (\frac{5}{256} x^2 - \frac{5319}{1280} y - \frac{2421}{1280} z + \frac{16371}{10240} + \frac{13437}{5120}(y + \frac{1674}{25}z)^2)$
+    
+
+
+      
 * Problem 2
 
   
@@ -138,8 +188,6 @@ The next constraints $A_1 + A_2 + A_3 + \ldots  + A_i \le 2\max(0, T_1 + T_2 + T
 
 
 
-
-
   Maximizing the minimum of  all three CES at the same time
   \begin{align}
     \text{maximize} \; & t \\
@@ -153,16 +201,13 @@ The next constraints $A_1 + A_2 + A_3 + \ldots  + A_i \le 2\max(0, T_1 + T_2 + T
 #+name: minmaxsec  
 #+begin_src matlab :cache yes  :session
   %% max min CES
-  cvx_begin quiet
+  cvx_begin
   variable T(num_periods);
   variable A(num_periods);
-  maximize(
-  min(
-  Theta(1,:) * (alpha(1) * T + beta(1) * A),
-  Theta(2,:) * (alpha(2) * T + beta(2) * A),
-  Theta(3,:) * (alpha(3) * T + beta(3) * A)
-  )
-  )
+  maximize( min(...
+  [Theta(1,:) * (alpha(1) * T + beta(1) * A);
+  Theta(2,:) * (alpha(2) * T + beta(2) * A);
+  Theta(3,:) * (alpha(3) * T + beta(3) * A)]))
   A + T == 1;
   0 <= T <= 1;
   0 <= A <= 1;
@@ -195,16 +240,14 @@ The next constraints $A_1 + A_2 + A_3 + \ldots  + A_i \le 2\max(0, T_1 + T_2 + T
       saveas(figures(p),[ 'img/plan' int2str(p)], 'png')
   end
 
-  ans = round(table, 3)
+  ans = table
 #+end_src 
 
-#+RESULTS[1d9b3671e447427ca9316fdace2a8b84c7e29b46]: minmaxsec
-|  7.416 |  3.052 |  5.945 |
-| -1.055 | 12.574 |   -6.5 |
-|  7.416 |  3.052 |  5.945 |
-|  1.816 |  9.215 | -1.678 |
-
-
+#+RESULTS[4fc5d440d2954e8355d32d8004cab567f9918a64]: minmaxsec
+|  7.4159 | 3.0522 |  5.9452 |
+| -1.0548 | 12.574 | -6.5001 |
+|  7.4159 | 3.0522 |  5.9452 |
+|  5.1884 | 4.9813 |  4.9813 |
 
 
 
@@ -216,7 +259,8 @@ The next constraints $A_1 + A_2 + A_3 + \ldots  + A_i \le 2\max(0, T_1 + T_2 + T
 | plan 1 |   7.416 |   3.052 |   5.945 |
 | plan 2 |  -1.055 |  12.574 |    -6.5 |
 | plan 3 |   7.416 |   3.052 |   5.945 |
-| plan 4 |   1.816 |   9.215 |  -1.678 |
+| plan 4 |  5.1884 |  4.9813 |  4.9813 |
+
 
 #+caption: Plan 1
 #+ATTR_HTML: :width 500
@@ -299,6 +343,7 @@ The next constraints $A_1 + A_2 + A_3 + \ldots  + A_i \le 2\max(0, T_1 + T_2 + T
 | 0.305 | 1.458 |
 | 0.695 | 1.849 |
 |     0 | 1.045 |
+
 
 
 The optimal value is $1.9372$, attained for:

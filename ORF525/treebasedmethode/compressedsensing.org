@@ -1,0 +1,91 @@
+#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="./org-style.css" />
+#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="./special-block.css" />
+#+latex_header: \usepackage{amsthm}
+#+latex_header: \newtheorem{theorem}{Theorem}
+#+latex_header: \newtheorem{definition}{Definition}
+#+latex_header: \newtheorem{algorithm}{Algorithm}
+
+
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t broken-links:nil c:nil creator:nil
+#+OPTIONS: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+OPTIONS: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+OPTIONS: timestamp:t title:t toc:t todo:t |:t
+#+TITLE: Compressed Sensing and Random Matrices
+#+DATE: <2016-02-25 Thu 9:30>
+#+AUTHOR: Bachir El Khadir
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Bachir El Khadir
+
+
+
+*** Setup
+
+  #+name: Problem Setup
+  #+begin_definition
+  Given an unkown true signal $\beta \in \mathbb R^d$, we observe $Y = X\beta$ where $X \in \mathbb R^{n \times d}$ is a sensing matrix.
+  We aim to recover $\beta$ using Y and $X$ (In general $n << d$, $\implies$ compressed)
+  #+end_definition
+
+  Key Questions:
+  1) Deterministic: Conditions of $X$ and $\beta$ to have a perfect recovery.
+  2) Random: How to construct $X$ (random matrix) that satisfies the above conditions.
+
+
+  Naive Recovery:
+  $Y = X\beta$,  Directly solve the linear equation systems: $\beta^* + null(X)$
+
+*** $L_2$ Recovery: Corresponding to Ridge Regression
+    
+    $\hat \beta = \arg \min \frac12 ||\beta||_2^2$, st $X\beta = Y$
+
+    #+name:     
+    #+begin_theorem
+    If $XX^T \in \mathbb R^{n \times n}$ is invertive, then we have 
+    $$\hat \beta = X^T (XX^T)^{-1} Y$$
+    Further, if $\beta^* \in row(X)$, then $\hat \beta = \beta^*$
+    #+end_theorem
+
+
+    #+begin_proof
+    - Primal Optimality $\beta = X^T \lambda$
+    - Primal Feasibility $X\beta = Y$
+    #+end_proof
+
+*** $L_1$ Recovery
+    $\hat \beta = \arg \min ||\beta||_1$, st $X\beta = Y$ (Basis Pursuit)
+    
+    #+begin_theorem
+    There exsists a solution $\hat \beta$ that has no more than $n$ non zero entries.
+    #+end_theorem
+
+    #+begin_proof
+    $S = supp(\alpha)$
+
+    $h \in null X_S, h_{S^c} = 0$
+
+    For $\varepsilon > 0$ small enough $sign(\alpha + \varepsilon h) = sign(\alpha)$
+
+    $||\alpha + \varepsilon h||_1 = ||\alpha||_1  + \varepsilon <h, sign(\alpha)> \le ||\alpha||_1$
+
+    Take $\varepsilon$ large enough so that $sign(\alpha + \varepsilon h) \ne sign(\alpha)$
+    #+end_proof
+
+    Remark: Similar sparsity property is also true for the Lasso in
+    the regression setting.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

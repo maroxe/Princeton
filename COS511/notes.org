@@ -48,8 +48,17 @@ $$err(\hat h) \le \min err(h^*) + \frac{Rg_t(A)}{T} + O(\frac{\log(1/delta)}{\sq
 
 
 
-#+attr_html: :width 10px
-[[./example.png]]
+
+
+
+
+
+
+
+
+
+
+
 
 
 

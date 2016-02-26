@@ -326,7 +326,7 @@ Mathematically, the portfolio value $V^{(\pi)}(t) = \sum \Pi_i(t) X_i(t)$ satisf
     $\underbrace{X_{(2)}(t) - X_{(1)}(t)}_{\psi(t)} = \underbrace{X_{(2)}(0) - X_{(1)}(0) + (b_2 - b_1)t + \sigma_2 \beta_2(t) - \sigma_1 \beta_1(t)}_{\phi(t)} + L_0^{X_{(2)} - X_{(1)}}(t)$
     
   \end{remark}
-  \begin{definition}[Skorokhod problem in $R_+^m$]
+  \begin{definition}[Skorokhod problem in $R_+^m$ (SP)]
     Consider a continuous path $\phi: \mathbb R_+ \rightarrow \mathbb R^m$ st $\phi(0) > 0$, and a matrix $R \in \mathbb R^{m \times n}$
     . We want to find a continuous path $\eta \mathbb R_+ \rightarrow \mathbb R^m$ such that:
     \begin{itemize}
@@ -338,6 +338,61 @@ Mathematically, the portfolio value $V^{(\pi)}(t) = \sum \Pi_i(t) X_i(t)$ satisf
   \begin{theorem}[Existence and Uniqueness of the Solution]
     $R = I - Q$ and $Q$ has non negative entries, zero diagonal entries and spectral radius $<1$, then the skorokhod problem has unique solution. 
   \end{theorem}
+  \begin{proof}
+    Define $C_0 = \{ \eta: [0, \infty) \rightarrow (R^+)^m \text{ non decreasing componenents starting at } 0\}$
+    $\Pi: C_0 \rightarrow C_0; \eta \rightarrow \sup_{0 \le s \le t} (\phi(s) - Q\eta(s))$
+    \textbf{Claim:}
+    $$\eta \text{ Solution to SP } \iff \Pi(\eta) = \eta$$
+
+    $\implies$ existence and uniqueness Banach fixed point theorem. (starting from 0)
+  \end{proof}
+  \begin{proof}[Fixed point]
+    \begin{itemize}
+    \item[$\Rightarrow$] If $\Pi(\eta) = eta$, then $\eta$ solves SP.
+      \begin{itemize}
+      \item $\eta(t) = \sup_{s \le t}(\phi(s) - Q\eta(s))$, $\eta$ is  non-decresaing, $\eta(0) = 0$. 
+      \item Non negativity:
+        $$\psi(t) = \phi(t) + \eta(t) - Q \eta(t) \ge \eta(t) + (\phi(t) - Q\eta(t)) \ge 0$$
+      \item $\{ \text{points of increase of } \eta_i \} \subseteq \{ t; \psi_i(t) = 0\}$
+
+        Let $t^*$ be a point of increast of $\eta_i$. so we have:
+        $$\sup_{0 \le s \le t^*} (\phi_i(s) - \sum_{j=1}^m Q_{ij} \eta_j(s))^- = (\phi_i(t^*) - \sum_{j=1}^m Q_{ij} \eta_j(t^*))^- $$
+
+        
+        \begin{align*}
+          0 \le \psi(t^*) &= \phi(t^*) + (I-Q)\eta(t^*) \\
+                    &= \underbrace{(\phi_i(t^*) - Q \eta(t^*))^+}_0 + (\phi_i(t^*) - Q \eta(t^*))^- + \eta(t^*)\\
+                    &\le 0
+        \end{align*}
+
+      \end{itemize}
+    \item[$\Leftarrow$]
+      Steps:
+      \begin{itemize}
+      \item $v$ a fixed point , $\eta$ a solution, then $v \le \eta$
+      \item Suppose $\eta_i(t) > v_i(t)$, for i, t, then $\eta_i(t^*) > v_i(t^*)$ for a $t^*$ which is a point of increase of $\eta_i$
+      \item $0 = \psi(t^*) = \phi(t^*) - (Q\eta)_i(t^*) + \eta_i(t^*) =  \underbrace{( \phi(t^*) - (Q\eta)_i(t^*) )^+}_0 - \underbrace{(\phi(t^*) - (Q\eta)_i(t^*))^-}_{\le v_i(t^*)} + \eta_i(t^*)$
+        so $v_i(t^*) \ge  + \eta_i(t^*)$.
+      \end{itemize}
+    \end{itemize}
+  \end{proof}
+  \begin{theorem}[Banach Fixed Point Theorem]
+    If $(S, d)$ a complete metric space, and $\Pi: S \rightarrow S$ $\alpha$-contractant, $\alpha < 1$.
+    Then there exists a unique fixed point of $\Pi$
+  \end{theorem}
+
+  \begin{proof}[Application]
+    Define
+    $C_0^T = \{ \eta: [0, T] \rightarrow (R^+)^m \text{ non decreasing
+      componenents starting at } 0\}$ Consider the space $C_0^T$ with
+    the distance:  $d(\eta, \tilde \eta) = sup_{[0, T]} ||\eta(t) - \tilde
+    \eta(t)||_{\infty}$
+    $\Pi: C_0^T \rightarrow C_0^T$ is not a contraction unfortunately.
+    Instead:
+    for a matrix $Q$ with non negative entries and $spec(Q) < 1$ then there exist a diagonal $D$ with positive entries s.t. $DQD^{-1}$ has column sums of the new matrix < 1.
+    If we have a solution to SP with $DQD^{-1}$, then the image under $D^{-1}$ of the new reflected path is the desired $\Psi$.
+    $\Pi: C_0^T \rightarrow C_0^T$ is a contraction for $DQD^{-1} = \tilde Q$.
+  \end{proof}
 \end{document}
 
   
