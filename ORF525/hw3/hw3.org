@@ -1,0 +1,158 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+#+HTML_HEAD: <link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet"></link>
+#+HTML_HEAD: <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+#+HTML_HEAD: <script src="http://127.0.0.1:60000/autoreload.js"></script>
+#+LATEX_HEADER: \usepackage{pdfpages}
+
+#+OPTIONS: toc:nil  
+
+#+name: Watch changes
+#+BEGIN_HTML 
+@@html:<script>@@
+@@html:AutoReload.Watch('localhost:60000');@@
+@@html:</script>@@
+#+END_HTML
+
+#+BEGIN_SRC emacs-lisp :exports none
+(defun add-caption-header-and-center (caption header )
+  (concat (format "org\n#+attr_html: :class center\n#+caption: %s\n%s" caption header)))
+
+  (defun add-caption-and-center (caption)
+    (concat (format "org\n#+attr_html: :class center\n#+caption: %s" caption)))
+
+#+END_SRC
+
+#+RESULTS:
+: add-caption-and-center
+
+
+
+#+BEGIN_SRC R :session :exports none
+library(dplyr)
+library(ggplot2)
+library(rpart)
+library(rpart.plot)
+library(pander)
+library(randomForest)
+
+set.seed(525)
+#+END_SRC
+
+#+RESULTS:
+
+
+* Money Ball: Who You Will Buy?
+
+** Individual Trees
+
+#+name: loaddata
+#+BEGIN_SRC R  :session :results none
+data <- tbl_df(read.csv('MLB2008.csv'))
+data.train <- data[1:154, ]
+data.test <- data[155:dim(data)[1], ]
+#+END_SRC
+
+#+RESULTS: loaddata
+
+
+#+name: treemodel
+#+BEGIN_SRC R :session :cache yes :results graphics :file img/tree.png :exports both
+feature.names <- colnames(data)[6:length(data)]
+formula <- as.formula(paste('SALARY ~', paste(feature.names, collapse='+')))
+rpart.model <- rpart(formula, data=data.train, method='anova')
+prp(rpart.model)
+#+END_SRC
+
+#+RESULTS[e97e6c22d5ed61991266e2dcbf002e6b654e6c21]: treemodel
+[[file:img/tree.png]]
+
+
+
+#+name: Prune and MSE
+#+BEGIN_SRC R :session  :exports both :cache yes :wrap (add-caption-header-and-center "Caption" "|Prune|train|test|")
+mse <- data.frame(
+    prune=0,
+    train=norm(predict(rpart.model) - data.train$SALARY, type="2"), 
+    test=norm(predict(rpart.model, data.test) - data.test$SALARY, type="2")
+)
+for(prune in (1:10 / 10.)) {
+    rpart.model.prune <- prune(rpart.model, cp=prune)
+    mse <- rbind(mse,
+                 c(  
+                     prune=prune,
+                     train=norm(predict(rpart.model.prune) - data.train$SALARY, type="2"), 
+                     test=norm(predict(rpart.model.prune, data.test) - data.test$SALARY, type="2")
+                 ))
+}
+mse
+#+END_SRC
+
+#+RESULTS[78157abb31ff1a932811967013022b9c0875fbaa]: Prune and MSE
+#+BEGIN_org
+#+attr_html: :class center
+#+caption: Caption
+| Prune |            train |             test |
+|     0 | 36198240.8617805 | 72784943.1305674 |
+|   0.1 | 44735392.6910594 | 74445712.3863091 |
+|   0.2 | 44735392.6910594 | 74445712.3863091 |
+|   0.3 | 52769875.8870473 | 73588157.3153948 |
+|   0.4 | 52769875.8870473 | 73588157.3153948 |
+|   0.5 | 52769875.8870473 | 73588157.3153948 |
+|   0.6 | 52769875.8870473 | 73588157.3153948 |
+|   0.7 | 52769875.8870473 | 73588157.3153948 |
+|   0.8 | 52769875.8870473 | 73588157.3153948 |
+|   0.9 | 52769875.8870473 | 73588157.3153948 |
+|     1 | 52769875.8870473 | 73588157.3153948 |
+#+END_org
+
+
+Plotting the result
+#+name: plotmse
+#+BEGIN_SRC R :session :cache yes :results graphics :file img/mse.png :exports both
+ggplot(mse) + 
+geom_point(aes(x = prune, y = train, color='train')) + geom_line(aes(x = prune, y = train, color='train')) + 
+geom_point(aes(x = prune, y = test, color='test')) +
+xlab("B cp") + ylab("MSE")
+#+END_SRC
+
+#+RESULTS[d8bf5e441882e78f71e1dbeabd660a7527196f1f]: plotmse
+[[file:img/mse.png]]
+
+
+
+** Random Forest
+
+#+name: forestmodel
+#+BEGIN_SRC R :session :cache yes :results none
+mse.forest <-  data.frame(B=integer(), train=numeric(), test=numeric()) 
+for(B in 10:100) {
+    randomForest.model <- randomForest(formula, data=data.train, ntree=B)
+    mse.forest <- rbind(mse.forest,
+                        data.frame(  
+                            B=B,
+                            train=norm(predict(randomForest.model, data.train) - data.train$SALARY, type="2"), 
+                            test=norm(predict(randomForest.model, data.test) - data.test$SALARY, type="2")
+                        ))
+}
+
+#+END_SRC
+
+#+name: plotrfmse
+#+BEGIN_SRC R :session :cache yes :results graphics :file img/rfmse.png :exports both :wrap (add-caption-and-center "MSE for random Forest" )
+ggplot(mse.forest) + 
+geom_point(aes(x = B, y = train, color='train')) + geom_line(aes(x = B, y = train, color='train')) + 
+geom_point(aes(x = B, y = test, color='test')) +
+xlab("B") + ylab("MSE")
+#+END_SRC
+
+#+RESULTS[c10bbc40327c1b0b4c515e6920065d65562718d1]: plotrfmse
+#+BEGIN_org
+#+attr_html: :class center
+#+caption: MSE for random Forest
+[[file:img/rfmse.png]]
+#+END_org
+
+
+
+
+

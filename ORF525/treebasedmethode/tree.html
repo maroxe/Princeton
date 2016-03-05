@@ -3,12 +3,12 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2016-02-23 Tue 10:43 -->
+<!-- 2016-02-25 Thu 09:35 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Tree-based Methode (regression)</title>
 <meta name="generator" content="Org-mode" />
-<meta name="author" content="bachir el khadir" />
+<meta name="author" content="Bachir El Khadir" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center;
@@ -178,11 +178,17 @@ for the JavaScript code in this tag.
 <li><a href="#orgheadline2">1.2. Pros and Cons of Tree</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline4">2. Bagging (Bootstrap Aggregation)</a></li>
-<li><a href="#orgheadline5">3. Random Forest</a></li>
+<li><a href="#orgheadline5">2. Bagging (Bootstrap Aggregation)</a>
+<ul>
+<li><a href="#orgheadline4">2.1. Bagging vs Tree</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline6">3. Random Forest</a></li>
 </ul>
 </div>
 </div>
+
+
 
 <div id="outline-container-orgheadline3" class="outline-2">
 <h2 id="orgheadline3"><span class="section-number-2">1</span> Tree</h2>
@@ -259,17 +265,39 @@ Still overfits.
 </div>
 
 
-<div id="outline-container-orgheadline4" class="outline-2">
-<h2 id="orgheadline4"><span class="section-number-2">2</span> Bagging (Bootstrap Aggregation)</h2>
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5"><span class="section-number-2">2</span> Bagging (Bootstrap Aggregation)</h2>
+<div class="outline-text-2" id="text-2">
+<div class="algorithm">
+<p>
+For \(b = 1, \ldots, B\)
+a. Draw a boostrap \({Z_{1:n}^*}^{(b)}\) of size \(n\) from \(Z_{1:n}\)
+b. Fit a regression tree on the bootstrapped data (with minimum node size \(K_{\min}\), no pruning)
+Output: \(\hat f^{\text{bagging}} = \frac1B \sum_{b=1}^B \hat f^b(x)\)
+</p>
+
+</div>
+</div>
+<div id="outline-container-orgheadline4" class="outline-3">
+<h3 id="orgheadline4"><span class="section-number-3">2.1</span> Bagging vs Tree</h3>
+<div class="outline-text-3" id="text-2-1">
+<ol class="org-ol">
+<li>\(\hat f^{\text{bagging}}\) has the same bias as \(\hat f^b(x)\), but potentially smaller variance.</li>
+<li>The larger \(B\) is, the better (but diminishing return)</li>
+<li>Works well only if \(\hat f^1(X), \ldots, \hat f^B(x)\) are decorrelated.</li>
+</ol>
+</div>
+</div>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-2">
-<h2 id="orgheadline5"><span class="section-number-2">3</span> Random Forest</h2>
+<div id="outline-container-orgheadline6" class="outline-2">
+<h2 id="orgheadline6"><span class="section-number-2">3</span> Random Forest</h2>
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: bachir el khadir</p>
-<p class="date">Created: 2016-02-23 Tue 10:43</p>
+<p class="date">Date: <span class="timestamp-wrapper"><span class="timestamp">&lt;2016-02-23 Tue&gt;</span></span></p>
+<p class="author">Author: Bachir El Khadir</p>
+<p class="date">Created: 2016-02-25 Thu 09:35</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

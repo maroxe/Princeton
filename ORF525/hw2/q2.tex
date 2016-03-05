@@ -1,6 +1,7 @@
 \documentclass[12pt]{article}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage[ margin=1in]{geometry}
 
 \newcommand{\hbeta}{\hat \beta }
 \newcommand{\union}[1]{\underset{#1}{\cup} }
@@ -21,9 +22,9 @@
 
 \begin{document}
 
-\section{P2}
+\section*{P2}
 \begin{itemize}
-\item
+\item[2.1]
   Let's assume  $X\beta_1 \ne X\beta_2$.
   
   Let $f^*$ be the optimal value, $\alpha = \frac12$, $\beta_{\alpha} = \alpha \beta_1 + (1-\alpha) \beta_2$.
@@ -40,56 +41,58 @@
   \end{align*}
   Contradicition.
   
-\item
+\item[2.2]
   ${\cal L}(\beta^*, \lambda) = \frac12 \norm{Y-X\beta}_2^2 + \lambda \norm{\beta}_1$
 
   $\partial \norm{\beta}_1 = \{ \alpha \in [-1, 1]^n, \alpha_j = sign(\hat \beta_j) \text{ when } \hat \beta_j \ne 0\}$
   
   Let $(\beta^*, \lambda^*)$ be an optimal solution, then $0 \in \partial_{\lambda} L (\beta^*, \lambda^*)$
 
-  $\partial_{\lambda^*} L (\beta, \lambda^*) =  -X^T(Y-X\beta) +  \lambda^* \partial \norm{\beta}_1$
+  We know that $\partial_{\lambda^*} L (\beta, \lambda^*) =  -X^T(Y-X\beta) +  \lambda^* \partial \norm{\beta}_1$.
 
   Coordinate wise, this gives for all $j$:
   
   $ X_j^T (Y - X\beta) = \lambda sign(\beta_j)$ if $\beta_j \ne 0$
   
-  $ - X (Y - X\beta) = \lambda \alpha_i$ if $\beta_j = 0$
+  $ - X (Y - X\beta) = \lambda \alpha_i$ if $\beta_j = 0$ with $\alpha_i \in [0, 1]$
   
   e.g
   
   $ \lambda^* = -sign(\beta_j^*) X_j^T(Y - X\beta^*)$ if $\beta_j^* \ne 0$
   
-  $ \lambda^* \ge |2  X_j^T(Y - X\beta^*)|$ if $\beta_j^* = 0$
+  $ \lambda^* \ge | X_j^T(Y - X\beta^*)|$ if $\beta_j^* = 0$
   
 
   
-\item
-  Let $\hat \beta$ be an optimal solution. Let $\chi = \{ j, \hat \beta_j \ne 0 \}$, and let's suppose it is non empty.
-  Let $j$ such that $\hat \beta_j > 0$ (If such $j$ exists)
-  
-  By 2.2,  $\lambda = X_j^T (Y - X \hat \beta)$, but since $\lambda > \norm{X^TY}_{\infty} \ge X_j^TY$, then $X_j^TX\hat \beta > 0$.
-  
-  Similarly, if there for $j$ such that $\hat \beta < 0$, $X_j^TX\hat \beta < 0$.
-  
-  c/c $\beta_j \ne 0 \implies \beta_j X_j^TX\hat \beta > 0$
+\item[2.3]
+  Let $\hat \beta$ be an optimal solution. Let $\chi = \{ j, \hat \beta_j \ne 0 \}$, and let's suppose it is non empty.   Let $j \in \chi$.
 
+  \begin{itemize}
+  \item If $\hat \beta_j > 0$, then by 2.2,   $\lambda = X_j^T (Y - X \hat \beta)$, but since  $\lambda > \norm{X^TY}_{\infty} \ge X_j^TY$, we have that  $X_j^TX\hat \beta > 0$.
+  \item   Similarly, if there for $j$ such that $\hat \beta_j < 0$,  $X_j^TX\hat \beta < 0$.
+  \item  As a conclusion $\beta_j \ne 0 \implies \beta_j X_j^TX\hat \beta > 0$
+  \end{itemize}
   
   \begin{align*}
     \frac12 \norm{Y - X\beta}_2^2 + \lambda \norm{\beta}_1
     &= \frac12 \norm{Y}_2^2 - \hat \beta^TX^TY + \frac12 \beta^T X^TX \hat \beta +  \lambda \sum_{i \in \chi} |\hat \beta_i|
-    \\&\ge \frac12 \norm{Y}_2^2 + \sum_{i \in \chi} |\hat \beta_i| (\lambda - |X_i^TY|)
+    \\&=\frac12 \norm{Y}_2^2 +
+        \sum_{i \in \chi} |\hat \beta_i| (\lambda - sign(\beta_i) X_i^TY)
+        + \frac12  \sum_{i \in \chi} \hat\beta_i X_i^TX\hat \beta
+    \\&\ge \frac12 \norm{Y}_2^2 +
+        \sum_{i \in \chi} |\hat \beta_i| \underbrace{(\lambda - |X_i^TY|)}_{\ge 0}
         + \frac12  \underbrace{\sum_{i \in \chi} \hat\beta_i X_i^TX\hat \beta}_{> 0}
     \\&> \frac12 \norm{Y}_2^2
     \\&= \frac12 \norm{Y - X0}_2^2 + \lambda\norm{0}_1
   \end{align*}
-  Contradiction, so $\hat \beta = 0$
-\item
+  Contradiction, so $\hat \beta = 0$.
+\item[2.4]
   $$\lambda \in [\lambda_0, \lambda_1]$$
   Let $\chi(\lambda) = \{ j, \hat \beta_j(\lambda) \ne 0 \} := \chi$, $r = |\chi|$ (doesn't depend on $\lambda$ by assumption)
 
-  We have proved in 2.2 that there exist $\alpha(\lambda)$
+  We have proved in 2.2 that there exist  $\alpha(\lambda) \in \partial \norm{\hat \beta(\lambda)}_1$ such that:
   $$X^T(Y - X\hat \beta(\lambda)) = \lambda \alpha(\lambda) $$
-  where $\alpha(\lambda) \in \partial \norm{\hat \beta(\lambda)}_1$.
+
 
   It is easy to see that this KKT conditions is actualy necessary and sufficient (because we are minimizing a convexe function), since we are assuming uniqueness, $\hat \beta(\lambda)$ is the unique solution to :
   $$(\exists \alpha(\lambda) \in \partial \norm{\hat \beta(\lambda)}_1) \; X^T(Y - X\hat \beta(\lambda)) = \lambda \alpha(\lambda) $$
@@ -122,20 +125,34 @@
   The number of values $\phi(v)$ can take is finite and at most $n^2$ because $\phi(v) \in \mathcal P(\{1 \ldots n\})^2$.
 
   Notice that in the last part, we have proven a stronger result:
-  if for $\lambda_1, \lambda_2$, $\phi(\beta(\lambda_1)) = \phi(\beta(\lambda_2))$, then $\beta(\lambda_2) = \beta(\lambda_1) - (\lambda_2 - \lambda_1) \gamma_0$, where $\gamma_0$ depend only on $\lambda_1$. This proves a segment of the path $C$ is fully caracterized by the $\phi(v)$ where $v(C)$ is one of the element of $C$ chosen arbitrarly.
+  if for $\lambda_1, \lambda_2$, $\phi(\beta(\lambda_1)) = \phi(\beta(\lambda_2))$, then $\beta(\lambda_2) = \beta(\lambda_1) - (\lambda_2 - \lambda_1) \gamma_0$, where $\gamma_0$ depend only on $\lambda_1$. This proves a segment of the path $C$ is fully caracterized by $\phi(v(C))$ where $v(C)$ is one of the element of $C$ chosen arbitrarly.
   
 
   Let $\mathcal A$ denote the set of segments that form the lasso path, and consider the following application:
   
-  ${\cal A} \rightarrow {\cal B}; C \rightarrow \phi(v(C)) $  Where $v$ is an arbitrary element in $C$.
+  ${\cal A} \rightarrow {\cal B}; C \rightarrow \phi(v(C)) $  
 
-  We have proven that this application is injective, so $|{\cal A}| \le n^2 < \infty $.
+  We have proven that this application is injective, so $|{\cal A}| \le n^2 < \infty $. Which proves that the number of segments in the lasso path is finite.
+  Let $\lambda_0$ be small enough so that $(0, \lambda_0]$ corresponds to last segment, and let $0 < \lambda < \lambda_0$
+  then $\hbeta(\lambda) = \hbeta(\lambda_0) - (\lambda - \lambda_0)\gamma_0$.
 
+  This proves that the $\hbeta(\lambda)$ has $\hbeta(\lambda_0) + \lambda_0 \gamma_0$ as limit at $0^+$. Let's call $\hbeta$ that limit.
+  
+  Recall the definition of $\gamma_0$: $X^{\dagger} \frac{(Y - X\hat \beta(\lambda_0))}{\lambda_0}$, and sine $X$ is full rank, $XX^{\dagger} = I_n$. So $X\hbeta = \hbeta(\lambda_0) +  XX^{\dagger}(Y - X\hbeta(\lambda_0)) = Y$
+
+  Suppose by contradiction that $\hbeta \ne \hbeta^{CS}$, e.g  $\norm{\hbeta^{CS}}_1 < \norm{\hbeta}_1$.
+
+  By continuity of norms in finite dimensional space, $\norm{\hbeta(\lambda)}_1 \rightarrow \norm{\hbeta}_1$. Let $\lambda$ be small enought so that
+  $$ \norm{\hbeta^{CS}}_1 < \norm{\hbeta(\lambda)} $$
+  Which would imply that   $ \lambda \norm{\hbeta^{CS}}_1 < \lambda \norm{\hbeta(\lambda)} + \norm{Y - X\hbeta(\lambda)}_2^2$, which contradicts the minimality of $\hbeta(\lambda)$.
+  
+  Conclusion:  $\hbeta = \hbeta^{CS}$
+  
 \end{itemize}
 
-\section{P3}
+\section*{P3}
 \begin{itemize}
-\item
+\item[3.1]
 
   Let's consider the unconstrained optimization problem:
   $$\min ||Y - X \beta||^2$$
@@ -146,52 +163,108 @@
   If $t > \norm{(X^TX)^{\dagger}X^TY}_{L_1}$, then it is also solution to the following problem:   $\min_{\norm{\beta}_{L_1} \le t} ||Y - X \beta||^2$.
   
 \item
-  1.)
-  $X_i, Y_i, i \in V_k$ and $\hbeta_{\hat t}^{V_k}$ are independent.
-  $(Y - X^T \hbeta_{\hat t}^{V_k})^2 \le |Y|^2 + \norm{X}_{\infty}^2  \norm{\hbeta_{\hat t}^{V_k}}_1^2 \le b^2 (1 + \hat t^2) \le b^2(1 + t_n^2)$
+  We adopt the following  notations:
+\begin{itemize}
   
-  $$\underset{X_i, Y_i, i \in V_k}{\pr} \left( \left|\frac{1}{|V_k|} \sum_{i \in V_k} (Y_i - X_i^T\hbeta_{\hat t}^{V_k})^2 - \esp_{X, Y}[(Y - X^T\hbeta_{\hat t}^{V_k})^2]\right| > \varepsilon\right) \le 2 \exp( - \frac{|V_k| \varepsilon^2}{2b^4(1 + t_n^2)}) $$
+\item $$\gamma = (-1, \beta)^T, |\gamma|_{1} = |\beta| + 1, Z_i = (Y_i, X_i^T)^T$$
+  
+\item $$R(\beta) = \gamma^T \Sigma \gamma$$
+  
+\item $$\hat R(\beta) = \gamma^T \hat \Sigma \gamma$$
+  
+\item $$\hat R^{(V_k)}(\beta) := \frac{1}{|V_K|}\sum_{i \in V_k} (Y_i - X_i^T\beta)^2 = \gamma^T \hat \Sigma^{V_k} \gamma$$
+  
+\item $$\hat R^{(-V_k)}(\beta) := \sum_{j \ne k} \frac{1}{|V_j|} \sum_{i \in V_j} (Y_i - X_i^T\beta)^2 = \gamma^T \underbrace{(\hat \Sigma - \hat \Sigma^{V_k})}_{\hat \Sigma^{(-V_k)}} \gamma$$
+  Note that $|Z_i| \le 2 b, |Z_iZ_i^T| \le 4b^2$ , by Hoeffding inequality:
+  \begin{itemize}
+  \item $$\pr(||\Sigma - \hat \Sigma||_{\infty} \ge \varepsilon) \le 2 \exp(\frac{-n\varepsilon^2}{8b^4})$$
 
-  $${\pr} \left( \frac1K \sum_k R(\hbeta^{V_k}_{\hat t}) - \hat R_{CV}(\hat t) > \varepsilon\right) \le 2K \exp( - \frac{n \varepsilon^2}{2Kb^4(1 + t_n^2)}) $$
+  \item $$\pr(||\Sigma - \hat \Sigma^{(V_k)}||_{\infty} \ge \varepsilon) \le 2 \exp(\frac{-|V_k|\varepsilon^2}{8b^4})$$
+  \item $$\pr(||\Sigma - \hat \Sigma^{(-V_k)}||_{\infty} \ge \varepsilon) \le 2 \exp(\frac{-(n-|V_k|)\varepsilon^2}{8b^4}) \le 2 \exp(\frac{-|V_k|\varepsilon^2}{8b^4})$$
+  
+  \item $$\pr(||\hat \Sigma - \hat \Sigma^{(V_k)}||_{\infty} \ge \varepsilon) \le \pr(||\Sigma - \hat \Sigma^{(V_k)}||_{\infty} \ge \frac{\varepsilon}2) + \pr(||\Sigma - \hat \Sigma||_{\infty} \ge \frac{\varepsilon}2) \le 4 \exp(\frac{-|V_k| \varepsilon^2}{32b^4})$$
 
-  Since $R$ is convexe, $\frac1K \sum_k R(\hbeta^{V_k}_{\hat t}) \ge R(\frac1K \sum_k \hbeta^{V_k}_{\hat t}) \ge R(\hbeta_{\hat t})$, so:
+  
+  \item $$\pr(||\hat \Sigma^{(-V_k)} - \hat \Sigma^{(V_k)}||_{\infty} \ge \varepsilon) \le \pr(||\Sigma - \hat \Sigma^{(V_k)}||_{\infty} \ge \frac{\varepsilon}2) + \pr(||\Sigma - \hat \Sigma^{(-V_k)}||_{\infty} \ge \frac{\varepsilon}2) \le 4 \exp(\frac{-|V_k| \varepsilon^2}{32b^4})$$
+  \end{itemize}
+  \end{itemize}
+  1.)
 
-  $${\pr} \left( R(\hbeta_{\hat t}) - \frac1K \sum_k R(\hbeta^{V_k}_{\hat t}) - \hat R_{CV}(\hat t) > \varepsilon\right) \le 2K \exp( - \frac{n \varepsilon^2}{2Kb^4(1 + t_n^2)}) $$
+    $$R(\hbeta_{\hat t}) - \hat R_{CV}(\hat t)
+    =  R(\hbeta_{\hat t}) - \hat R(\hbeta_{\hat t}) + \hat R(\hbeta_{\hat t}) - \hat R_{CV}(\hat t)$$
+
+
+  $$R(\hbeta_{\hat t}) - \hat R(\hbeta_{\hat t}) = \hbeta_{\hat t} (\Sigma - \hat \Sigma) \hbeta_{\hat t} \le ||\Sigma - \hat \Sigma||_{\infty} |\gamma|_1 \le ||\Sigma - \hat \Sigma||_{\infty} (1+t_n)$$
+
+  \begin{align*}
+    \hat R(\hbeta_{\hat t}) - \hat R_{CV}(\hat t)
+    &= \frac 1K \sum_k (\hat R(\hbeta_{\hat t}) - \hat R^{V_k}(\hbeta_{\hat t}^{(V_k)})
+    \\&\le \frac 1K \sum_k \hat R(\hbeta^{V_k}_{\hat t}) - \hat R^{V_k}(\hbeta_{\hat t}^{(V_k)}
+    \\&= \frac 1K \sum \hat (\gamma^{V_k}_{\hat t})^T (\hat \Sigma - \hat \Sigma^{V_k})\hat \gamma^{V_k}_{\hat t}
+    \\&\le \frac1K |\gamma^{V_k}_{\hat t}|_{L_1}^2 \sum ||\hat \Sigma - \hat \Sigma^{V_k}||_{\infty}
+    \\&\le \frac1K (1+t_n)^2 \sum ||\hat \Sigma - \hat \Sigma^{V_k}||_{\infty}
+  \end{align*}
+
+  Using the property $\pr(\frac1K \sum_k Y_i \ge \varepsilon) \le \sum_k \pr(Y_i \ge \varepsilon)$:
+  
+  \begin{align*}
+    \mathbb P ( (i) \ge \varepsilon)
+    &\le \mathbb P( ||\Sigma - \hat \Sigma||_{\infty} \ge \frac{\varepsilon}{(1+t_n)^2}) + \sum_{k} \pr( \frac1K ||\hat \Sigma - \hat \Sigma^{(V_k)}||_{\infty} \ge \frac{\varepsilon}{(1+t_n)^2K})
+    \\& \le 2 \exp(\frac{-n \varepsilon^2}{16 b^4 (1+t_n^2)^2}) + 2K \exp(\frac{-|V_1| \varepsilon^2}{16 b^4 (1+t_n^2)^2})
+    \\&\le 2(1+K) \exp(\frac{-|V_1| \varepsilon^2}{16 b^4 (1+t_n^2)^2})
+    \\&\le C_1 K \exp(\exp(\frac{-|V_1| \varepsilon^2}{C_2 b^4 (1+t_n^2)^2})
+  \end{align*}
+  Where $C_1 \ge 4, C_2 \ge 32$
+  
   2.)
+  By definition of $\hat t$:
   $$\hat R_{CV}(\hat t) - \hat R_{CV}(t_{\max}) \le 0$$
 
-  
-  4.)
-
-  $$\hat R(\hbeta_{t_{\max}}) = \hat R(\hbeta_{t_n})$$
-  
-  5.)  Hoefdding:
-  $$ \pr(\hat R(\hbeta_{t_n}) - R(\hbeta_{t_n}) > \varepsilon) \le 2 \exp(-\frac{n \varepsilon^2}{2b^4(1+t_n^2)})$$
-  6.) We did this one in class:
-  $$\pr\left(R(\hat \beta) - R(\beta^*) > 2 (1 + t_n^2) \sqrt{\frac{2b^4\log(\frac{2d^2}{\delta})}n} \right) \le \delta$$
-\end{itemize}
-
-
-\section{Proof of Hoeffding}
-  
-\begin{itemize}
-\item
-  \begin{align*}
-    \pr( X \ge t) &= \pr( e^{\lambda X} \ge e^{\lambda t}) &\text{(because $\exp$ is increasing)}
-    \\& =  \pr( e^{\lambda (X - t)} \ge 1)
-    \\&\le \esp[e^{\lambda (X - t)} ] &\text{(Markov inequality)}
-    \\&= e^{-\lambda t} \prod \esp e^{\lambda x_i} &\text{(By independence)}
-    \\& = e^{-\lambda t} (\esp e^{\lambda x_i})^k &x_i \sim x_1
-    \\& = e^{-\lambda t} (\frac12 (e^{\lambda} + e^{-\lambda}))^k 
+  3.)
+  \begin{align*}&\hat R_{CV}(t_{\max} ) - \hat R(\hbeta_{t_{\max}})
+    \\&= \frac1K \sum_{k} \hat R^{V_k}(\hat \beta^{V_k}_{t_{\max}}) - \hat R(\hat \beta_{t_{\max}})
+    \\&= \frac1K \sum_{k} \hat R^{V_k}(\hat \beta^{V_k}_{t_{\max}}) + R^{-V_k}(\hat \beta^{V_k}_{t_{\max}}) + \underbrace{R^{-V_k}(\hat \beta^{V_k}_{t_{\max}}) -  \hat R^{-V_k}(\hat \beta_{t_{\max}}) }_{\le 0} - \hat R^{V_k}(\hat \beta_{t_{\max}})
+    \\&\le \frac1K \sum_{k} \hat R^{V_k}(\hat \beta^{V_k}_{t_{\max}}) - R^{-V_k}(\hat \beta^{V_k}_{t_{\max}})
+    \\&= \frac1K \sum_{k}  (\hat \gamma^{V_k}_{t_{\max}})^T(\hat \Sigma^{V_k} - \hat \Sigma^{-V_k})\hat \gamma^{V_k}_{t_{\max}}
+    \\&\le \frac{(1+t_n)^2}K \sum_k ||\hat \Sigma^{V_k} - \hat \Sigma^{-V_k}||_{\infty}
   \end{align*}
-\item
-  $e^{\lambda} + e^{-\lambda} = \sum^{\infty} \frac{\lambda^k}{k!} + (-1)^k \frac{\lambda^k}{k!} = 2 \sum^{\infty}  \frac{\lambda^{2k}}{(2k!)}$
-  $e^{\frac12 \lambda^2} = \sum \frac{\lambda^{2k}}{2^k k!}$
-  Since $\frac{(2k)!}{2^kk!} = \prod_{j = 1 \ldots 2k} \frac{k+j}{2} \ge 1$, $\frac12 e^{\lambda} + \frac12 e^{-\lambda} \le e^{\frac12 \lambda^2}$
 
-\item $\pr(X \ge t) \le e^{-\lambda t} (\frac12 e^{\lambda} + \frac12 e^{-\lambda})^k \le e^{-\lambda t} e^{\frac k2 \lambda^2}$
-  $\lambda \rightarrow \frac k2 \lambda^2 - \lambda t$ is quadratic function that attain its minimum for $\lambda = \frac tk$, and the minimum is $-\frac{t^2}k$, therefore $\pr(X \ge t) \le e^{-\frac{t^2}k}$.
+  \begin{align*}\pr( iii \ge \varepsilon)
+    &\le K \pr(||\hat \Sigma^{V_1} - \hat \Sigma^{-V_1}||_{\infty} \ge \frac{\varepsilon}{(1+t_n)^2})
+    \\&\le 4K exp(\frac{-|V_1|\varepsilon^2}{32(1+t_n)^2b^4})
+    \\&\le C_1K exp(\frac{-|V_1|\varepsilon^2}{C_2(1+t_n)^2b^4})
+    \end{align*}
+
+  4.)
+  
+  $$t_{\max} \le t_n \implies \hat R(\hbeta_{t_{\max}}) \le \hat R(\hbeta_{t_n})$$
+  
+  5. and 6.) 
+  \begin{align*}
+    \hat R(\hbeta_{t_n}) - R(\beta_{t_n})
+    \\&\le\hat R(\beta_{t_n}) - R(\beta_{t_n})
+    \\&\le  \gamma_{t_n}(\hat \Sigma  - \Sigma) \gamma_{t_n}
+    \\&\le (1+t_n)^2|\hat \Sigma  - \Sigma|_{\infty}
+  \end{align*}
+  
+  \begin{align*}
+    \pr(v + vi \ge \varepsilon) &\le \mathbb P( ||\Sigma - \hat \Sigma||_{\infty} \ge \frac{\varepsilon}{(1+t_n)^2})
+    \\&\le 2 \exp(-\frac{n \varepsilon^2}{8b^4(1+t_n)^2})
+    \\&\le C_1 K \exp(-\frac{|V_1| \varepsilon^2}{C_2b^4(1+t_n)^2})
+  \end{align*}
+  
+  \begin{align*}
+    \pr( i + ii + iii + iv + v + vi \ge \varepsilon)
+    &= \pr( i \ge \varepsilon/ 3) + \pr( i \ge \varepsilon / 3) + \pr(v + vi \ge \varepsilon /3)
+    \\&\le 3 C_1 K \exp(-\frac{|V_1| \varepsilon^2}{9 C_2 b^4(1+t_n)^2})
+    \\&\le C K \exp(-\frac{n\varepsilon^2}{CK (1+t_n)^2})
+  \end{align*}
+  Where $C \ge \max(3C_1, 9C_2b^4)$
+
+  Which gives the result by setting $\delta$ to $C K \exp(-\frac{n\varepsilon^2}{CK (1+t_n)^2})$, or equivalently setting $\varepsilon$ to $C(1+t_n^2) \sqrt{\log (\frac{CK}{\delta}) K/ n}$
+  
 \end{itemize}
+
 
 
 \end{document}

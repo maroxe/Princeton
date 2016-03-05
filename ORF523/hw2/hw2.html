@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2016-02-24 Wed 16:27 -->
+<!-- 2016-02-26 Fri 16:41 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Problem set 2, ORF523</title>
@@ -94,8 +94,10 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<link rel="stylesheet" type="text/css" href="../../css/org-style.css" />
 <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+<link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet"></link>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="http://127.0.0.1:60000/autoreload.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -168,47 +170,58 @@ for the JavaScript code in this tag.
 <body>
 <div id="content">
 <h1 class="title">Problem set 2, ORF523</h1>
-<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#orgheadline1">1. Problem 1</a></li>
-<li><a href="#orgheadline2">2. Problem 2</a></li>
-<li><a href="#orgheadline3">3. Problem 3</a></li>
-<li><a href="#orgheadline4">4. Problem 4</a></li>
-<li><a href="#orgheadline5">5. Problem 5</a></li>
-<li><a href="#orgheadline7">6. Problem 6</a>
-<ul>
-<li><a href="#orgheadline6">6.1. \(P_2 \subseteq P_1\) ?</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
 
 
 
 <div id="outline-container-orgheadline1" class="outline-2">
 <h2 id="orgheadline1"><span class="section-number-2">1</span> Problem 1</h2>
 <div class="outline-text-2" id="text-1">
-<p>
-Let's consider a polynomial of degree 2: \(P(x) = x^TQx + bx + c\), \(\nabla P = x^T(Q + Q^T) + b\), \(\nabla^2 P = Q + Q^T\)
+<ol class="org-ol">
+<li><p>
+Let's consider a polynomial of degree 2: \(P(x) = x^TQx + bx + c\), \(P(x)\) can also be written as \(\frac12 x^T(Q + Q^T)x + bx + c\), so we can assume without loss of generality that \(Q\) is symmetric.
 </p>
 
 <p>
-\(Q + Q^T\) is symmetric, so it by the eigen value decomposition theorem there exist \(U\) an orthogonal matrix and \(\Lambda\) a diagonal matrix such that \(Q+Q^T = U\Lambda U^T\).
+If \(Q\) is symmetric, by the eigen value decomposition theorem there exist \(U\) an orthogonal matrix and \(\Lambda\) a diagonal matrix such that \(Q = U\Lambda U^T\).
 </p>
 
 <p>
-Let's denote \(\Lambda^+ = max(\Lambda, 0)\), \(\Lambda^- = min(-\Lambda, 0)\), then: \(Q+Q^T = \underbrace{U\Lambda^+ U^T}_{S^+} -  \underbrace{U\Lambda^- U^T}_{S^-}\).
-Let's consider the polynomial \(P_1(x) = \frac12 x^TS^+x - \frac12 x^TS^-x + bx + c\). \(P_1 = P\), indeed, \(\nabla P_1 = x^T(S^+ - S^-) + b = x^T(Q+Q^T) + b= \nabla P\), and \(P_1(0) = P(0) = c\).
-We have that \(\frac12 x^TS^+x + bx + c\) and \( \frac12 x^TS^-x\) are both convexe because their hessian (\(S^+\) and \(S^-\) respectively) is non-negative.
+Let's denote \(\Lambda^+ = max(\Lambda, 0)\), \(\Lambda^- = min(-\Lambda, 0)\), then: \(Q = \underbrace{U\Lambda^+ U^T}_{S^+} -  \underbrace{U\Lambda^- U^T}_{S^-}\).
+</p>
+
+<p>
+We have that \(\frac12 x^TS^+x + bx + c\) and \( \frac12 x^TS^-x\) are both convexe because their hessians (\(S^+\) and \(S^-\) respectively) is non-negative.
+</p></li>
+<li><div class="org-src-container">
+
+<pre class="src src-matlab" id="orgsrcblock1">syms x y z;
+f = (x<span style="color: #84ffff;">^</span>2 <span style="color: #84ffff;">+</span> 9<span style="color: #84ffff;">/</span>4<span style="color: #84ffff;">*</span> y<span style="color: #84ffff;">^</span>2 <span style="color: #84ffff;">+</span> z<span style="color: #84ffff;">^</span>2 <span style="color: #84ffff;">-</span> 1)<span style="color: #84ffff;">^</span>3 <span style="color: #84ffff;">-</span> x<span style="color: #84ffff;">^</span>2 <span style="color: #84ffff;">*</span> z<span style="color: #84ffff;">^</span>3 <span style="color: #84ffff;">-</span> 9<span style="color: #84ffff;">/</span>80<span style="color: #84ffff;">*</span>y<span style="color: #84ffff;">^</span>2 <span style="color: #84ffff;">*</span> z<span style="color: #84ffff;">^</span>3;
+tf = simplify(taylor(f, [x, y, z], [0, 1<span style="color: #84ffff;">/</span>2, 1<span style="color: #84ffff;">/</span>2], <span style="color: #9ccc65;">'Order'</span>, 3));
+<span style="color: #8bc34a;">ans</span>=char(tf)
+</pre>
+</div></li>
+</ol>
+
+\begin{align*}
+P(x, y, z) &= -\frac{5}{256} x^2 - \frac{13437}{5120}y^2 - \frac{639}{1280}z^2 - \frac{837}{320}yz
++ \frac{5319}{1280} y + \frac{2421}{1280} z  - \frac{16371}{10240}\\
+&= -a x^2 - b y^2 - c z^2 - d yz + e y + fz - h
+\\&=  \underbrace{(f + \frac{d^2}{4b}) z^2}_{\text{convexe}}  - \underbrace{(a x^2 - e y - fz + h + b(y + \frac{d}{2b}z)^2)}_{\text{convexe}} 
+\end{align*}
+
+<p>
+With numbers:
+</p>
+
+<p>
+\(P(x, y, z) = \frac{2862801}{32000} z^2 - (\frac{5}{256} x^2 - \frac{5319}{1280} y - \frac{2421}{1280} z + \frac{16371}{10240} + \frac{13437}{5120}(y + \frac{1674}{25}z)^2)\)
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2"><span class="section-number-2">2</span> Problem 2</h2>
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3"><span class="section-number-2">2</span> Problem 2</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The constraints \(A_1+A_2+A_3 \le 2 \max(0, T_1+T_2+T_3 - 3)\) leads to \(A_1 = A_2 = A_3\), eg \(T_1 + T_2 + T_3 = 3 = b\).
@@ -219,8 +232,17 @@ The next constraints \(A_1 + A_2 + A_3 + \ldots  + A_i \le 2\max(0, T_1 + T_2 + 
 <p>
 Let \(N = 24\)
 Let \(\gamma_i := \theta(\alpha T_i + \beta A_i)\), then \(s_i = (1-\theta)s_{i-1} + \gamma_i\), by immediate induction \(s_i = \sum_{j=1}^i (1-\theta)^{i-j} \gamma_j\),
-and \[S = \sum_{i=1}^{N} \sum_{j \le i} (1-\theta)^{i-j} \gamma_j = \sum_{j=1}^N \gamma_j (\sum_{i=j}^N(1-\theta)^{i-j}) = \sum_{j=1}^N \gamma_j \frac{1 - (1-\theta)^{N-j+1}}{\theta}  \]
-\[S = \sum_{j=1}^N (\alpha T_i + \beta A_i) (1 - (1-\theta)^{N-j+1}) = \langle \Theta, \alpha T + \beta A \rangle  \]
+and
+</p>
+
+\begin{align*}S &= \sum_{i=1}^{N} \sum_{j \le i} (1-\theta)^{i-j} \gamma_j
+\\&= \sum_{j=1}^N \gamma_j (\sum_{i=j}^N(1-\theta)^{i-j})
+\\&= \sum_{j=1}^N \gamma_j \frac{1 - (1-\theta)^{N-j+1}}{\theta} 
+\\&= \sum_{j=1}^N (\alpha T_i + \beta A_i) (1 - (1-\theta)^{N-j+1})
+\\&= \langle \Theta, \alpha T + \beta A \rangle
+\end{align*}
+
+<p>
 Where \(\Theta_i = (1 - (1-\theta)^{N-i+1})\)
 </p>
 
@@ -240,7 +262,7 @@ Optmizing the individual CES:
 
 <div class="org-src-container">
 
-<pre class="src src-matlab" id="orgsrcblock1"><span style="color: #b0bec5; font-weight: bold; text-decoration: overline;">%% Input</span>
+<pre class="src src-matlab" id="orgsrcblock2"><span style="color: #b0bec5; font-weight: bold; text-decoration: overline;">%% Input</span>
 a = 2;
 b = 3;
 theta = [0.05 0.1 0.3];
@@ -301,8 +323,6 @@ figures = []
 
 
 
-
-
 <p>
 Maximizing the minimum of  all three CES at the same time
 </p>
@@ -317,17 +337,14 @@ Maximizing the minimum of  all three CES at the same time
 
 <div class="org-src-container">
 
-<pre class="src src-matlab" id="orgsrcblock2"><span style="color: #b0bec5; font-weight: bold; text-decoration: overline;">%% max min CES</span>
-cvx_begin quiet
+<pre class="src src-matlab" id="orgsrcblock3"><span style="color: #b0bec5; font-weight: bold; text-decoration: overline;">%% max min CES</span>
+cvx_begin
 variable T(num_periods);
 variable A(num_periods);
-maximize(
-min(
-Theta(1,<span style="color: #84ffff;">:</span>) <span style="color: #84ffff;">*</span> (alpha(1) <span style="color: #84ffff;">*</span> T <span style="color: #84ffff;">+</span> beta(1) <span style="color: #84ffff;">*</span> A),
-Theta(2,<span style="color: #84ffff;">:</span>) <span style="color: #84ffff;">*</span> (alpha(2) <span style="color: #84ffff;">*</span> T <span style="color: #84ffff;">+</span> beta(2) <span style="color: #84ffff;">*</span> A),
-Theta(3,<span style="color: #84ffff;">:</span>) <span style="color: #84ffff;">*</span> (alpha(3) <span style="color: #84ffff;">*</span> T <span style="color: #84ffff;">+</span> beta(3) <span style="color: #84ffff;">*</span> A)
-)
-)
+maximize( min(<span style="text-decoration: underline;">...</span>
+[Theta(1,<span style="color: #84ffff;">:</span>) <span style="color: #84ffff;">*</span> (alpha(1) <span style="color: #84ffff;">*</span> T <span style="color: #84ffff;">+</span> beta(1) <span style="color: #84ffff;">*</span> A);
+Theta(2,<span style="color: #84ffff;">:</span>) <span style="color: #84ffff;">*</span> (alpha(2) <span style="color: #84ffff;">*</span> T <span style="color: #84ffff;">+</span> beta(2) <span style="color: #84ffff;">*</span> A);
+Theta(3,<span style="color: #84ffff;">:</span>) <span style="color: #84ffff;">*</span> (alpha(3) <span style="color: #84ffff;">*</span> T <span style="color: #84ffff;">+</span> beta(3) <span style="color: #84ffff;">*</span> A)]))
 A <span style="color: #84ffff;">+</span> T <span style="color: #84ffff;">==</span> 1;
 0 <span style="color: #84ffff;">&lt;=</span> T <span style="color: #84ffff;">&lt;=</span> 1;
 0 <span style="color: #84ffff;">&lt;=</span> A <span style="color: #84ffff;">&lt;=</span> 1;
@@ -360,15 +377,12 @@ title(<span style="color: #9ccc65;">'Theory proportion'</span>);
     saveas(figures(p),[ <span style="color: #9ccc65;">'img/plan'</span> int2str(p)], <span style="color: #9ccc65;">'png'</span>)
 <span style="color: #fff59d;">end</span>
 
-<span style="color: #8bc34a;">ans</span> = round(table, 3)
+<span style="color: #8bc34a;">ans</span> = table
 </pre>
 </div>
 
 
-
-
-
-
+<div class="org">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
 <caption class="t-above"><span class="table-number">Table 1:</span> Table of CES for different groups / plans</caption>
 
@@ -383,7 +397,7 @@ title(<span style="color: #9ccc65;">'Theory proportion'</span>);
 </colgroup>
 <thead>
 <tr>
-<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">plans</th>
 <th scope="col" class="org-right">group 1</th>
 <th scope="col" class="org-right">group 2</th>
 <th scope="col" class="org-right">group 3</th>
@@ -392,34 +406,40 @@ title(<span style="color: #9ccc65;">'Theory proportion'</span>);
 <tbody>
 <tr>
 <td class="org-left">plan 1</td>
-<td class="org-right">7.416</td>
-<td class="org-right">3.052</td>
-<td class="org-right">5.945</td>
+<td class="org-right">7.4159</td>
+<td class="org-right">3.0522</td>
+<td class="org-right">5.9452</td>
 </tr>
 
 <tr>
 <td class="org-left">plan 2</td>
-<td class="org-right">-1.055</td>
+<td class="org-right">-1.0548</td>
 <td class="org-right">12.574</td>
-<td class="org-right">-6.5</td>
+<td class="org-right">-6.5001</td>
 </tr>
 
 <tr>
 <td class="org-left">plan 3</td>
-<td class="org-right">7.416</td>
-<td class="org-right">3.052</td>
-<td class="org-right">5.945</td>
+<td class="org-right">7.4159</td>
+<td class="org-right">3.0522</td>
+<td class="org-right">5.9452</td>
 </tr>
 
 <tr>
 <td class="org-left">plan 4</td>
-<td class="org-right">1.816</td>
-<td class="org-right">9.215</td>
-<td class="org-right">-1.678</td>
+<td class="org-right">5.1884</td>
+<td class="org-right">4.9813</td>
+<td class="org-right">4.9813</td>
 </tr>
 </tbody>
 </table>
 
+</div>
+</div>
+
+
+
+<ol class="org-ol"><li><a id="orgheadline2"></a>Figures<br  /><div class="outline-text-3" id="text-2-1">
 
 <div class="figure">
 <p><img src="./img/plan1.png" alt="plan1.png" width="500" />
@@ -444,37 +464,38 @@ title(<span style="color: #9ccc65;">'Theory proportion'</span>);
 </p>
 <p><span class="figure-number">Figure 4:</span> Plan 4</p>
 </div>
-</div>
-</div>
-
-
-<div id="outline-container-orgheadline3" class="outline-2">
-<h2 id="orgheadline3"><span class="section-number-2">3</span> Problem 3</h2>
-<div class="outline-text-2" id="text-3">
-<p>
-\(S \subseteq \mathbb R^n\)
-Let \(C\) a convex contating set containing \(S\), and let \(x = \sum_i \lambda_i x_i\) convex combination of element of \(S\) and thus of element of \(C\), so \(x \in C\). Therefore \(conv(S) \subset \cap_{S \subset C, C \text{ convexe}} C\)
-</p>
-
-<p>
-The convex hull is a convexe set containing \(S\), so \(\cap_{S \subset C, C \text{ convexe}} C \subset  conv(S)\).
-</p>
-
-<p>
-c/c \(conv(S) = \cap_{S \subset C, C \text{ convexe}} C\).
-</p>
-</div>
+</div></li></ol>
 </div>
 
 
 <div id="outline-container-orgheadline4" class="outline-2">
-<h2 id="orgheadline4"><span class="section-number-2">4</span> Problem 4</h2>
+<h2 id="orgheadline4"><span class="section-number-2">3</span> Problem 3</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+\(S \subseteq \mathbb R^n\).
+</p>
+
+<ul class="org-ul">
+<li>Let \(C\) a convex contating set containing \(S\), and let \(x = \sum_i \lambda_i x_i\) convex combination of element of \(S\) and thus of element of \(C\), so \(x \in C\). Therefore \(conv(S) \subset \cap_{S \subset C, C \text{ convexe}} C\)</li>
+
+<li>The convex hull is a convexe set containing \(S\), so \(\cap_{S \subset C, C \text{ convexe}} C \subset  conv(S)\).</li>
+</ul>
+
+<p>
+As a conclusion: \(conv(S) = \cap_{S \subset C, C \text{ convexe}} C\).
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5"><span class="section-number-2">4</span> Problem 4</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 a)
 \(\mathcal G \rightarrow \mathcal G, Q \rightarrow Q_iQ\)  is an injection because \(Q_i\) is invertible, so it is a bijection (because \(\mathcal G\) is finite), therefore:
 \[Q\bar x = \frac1k \sum_{Q \in \mathcal G} Q_iQ = \frac1k \sum_{Q \in \mathcal G} Qx = \bar x\]
-so \(\bar x \in Q\).
+so \(\bar x \in \mathcal F\).
 </p>
 
 <p>
@@ -482,22 +503,37 @@ b) \(f(\bar x) \le \sum_i \frac1k f(Q_ix) = \frac1k \sum_i  f(x) = f(x)\)
 </p>
 
 <p>
-c) Let \(x\) be a solution to the convex $\mathcal G$-invariant. Then \(\bar x \in \mathcal F\) is also a solution. Indeed:
-&#x2013; $f<sub>0</sub>(\bar x) &le; f(\bar x) $
-&#x2013; for \(j\), \(f_j(x) \le 0 \implies \forall i f_j(Q_i x) \le 0 \implies  \frac1k \sum_i f_j(Q_i x) \le 0\)
-&#x2013; \(f_j\) is convexe, so \(f_j(\bar x)  \le \frac1k \sum_i f_j(Q_i x) \le 0\)
-c/c: \(f(\bar x) \le f(x)\) and \(\bar x\) is in the feasible set, which means \(\bar x\) is optimal.
+c) Let \(x\) be a solution to the \(\mathcal{G}\) invariant optmization problem. Then \(\bar x \in \mathcal F\) is also a solution. Indeed:
+</p>
+
+<ul class="org-ul">
+<li>\(f_0(\bar x) \le f_0(\bar x)\)</li>
+<li>for \(j\), \(f_j(x) \le 0 \implies \forall i f_j(Q_i x) \le 0 \implies  \frac1k \sum_i f_j(Q_i x) \le 0\)</li>
+<li>\(f_j\) is convexe, so \(f_j(\bar x)  \le \frac1k \sum_i f_j(Q_i x) \le 0\)</li>
+</ul>
+
+<p>
+Conclusion: \(f_0(\bar x) \le f_0(x)\) and \(\bar x\) is in the feasible set, which means \(\bar x\) is optimal.
 </p>
 
 <p>
-d) Let $\mathcal G $ be the set of all permutations in \(\mathbb R^{n \times n}\). It is clear that this set is a finite (of size \(n!\) ) group.
-Therefore we can adjoin the equality constraints \(Px = x \forall P \in \mathcal G\). Let \(x\) be apoint satisfying such condition, and let \(i, j \le n\), and \(Q\) be the matrix that permutates the ith and jth vector of the canonical basis. Then \(x_i = (Px)_i = x_j\). Therefore \(x\)  has the form \(x_11, x_1 \in \mathbb R\).
+d) Let \(\mathcal G\) be the set of all permutations in \(\mathbb R^{n \times n}\). It is clear that this set is a finite (of size \(n!\) ) group.
+</p>
+
+<p>
+Let \(x\) be a minimizer that is stable with respect to all permutations (such \(x\) exists by the previous question), and let \(2 \le j \le n\), and \(Q\) be the matrix that permutates the 1st and jth vector of the canonical basis.
+Then \(x_1 = (Px)_1 = x_j\).
+</p>
+
+<p>
+Therefore \(x\)  has the form \(x_11, x_1 \in \mathbb R\).
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-2">
-<h2 id="orgheadline5"><span class="section-number-2">5</span> Problem 5</h2>
+
+<div id="outline-container-orgheadline6" class="outline-2">
+<h2 id="orgheadline6"><span class="section-number-2">5</span> Problem 5</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 The problem can be formulated as follow:
@@ -506,7 +542,7 @@ The problem can be formulated as follow:
 
 <div class="org-src-container">
 
-<pre class="src src-matlab" id="orgsrcblock3"><span style="color: #b0bec5;">% Input</span>
+<pre class="src src-matlab" id="orgsrcblock4"><span style="color: #b0bec5;">% Input</span>
 P = [ 1 <span style="color: #84ffff;">-</span>0.6 0.2; 
       <span style="color: #84ffff;">-</span>0.6 2.6 0.6;
       0.2 0.6 0.4
@@ -527,6 +563,7 @@ cvx_end
 round(horzcat(x, y), 3)
 </pre>
 </div>
+
 
 
 <p>
@@ -572,37 +609,43 @@ The optimal value is \(1.9372\), attained for:
 <div id="outline-container-orgheadline7" class="outline-2">
 <h2 id="orgheadline7"><span class="section-number-2">6</span> Problem 6</h2>
 <div class="outline-text-2" id="text-6">
-</div><div id="outline-container-orgheadline6" class="outline-3">
-<h3 id="orgheadline6"><span class="section-number-3">6.1</span> \(P_2 \subseteq P_1\) ?</h3>
-<div class="outline-text-3" id="text-6-1">
 <ul class="org-ul">
-<li><p>
-\(P_1\) facet description
-\(P_2\) vertex description
-Algorithm: Check that for each vertex \(v\) in \(P_2\) if \(v \in P_1\) (\(Av \le b\)), the result follow from the fact that \(P_2\) is the convex hull of its vertices.
-</p>
+<li>\(P_2 \subseteq P_1\) ?
+<ul class="org-ul">
+<li><ul class="org-ul">
+<li>\(P_1\) facet description</li>
+<li>\(P_2\) vertex description</li>
+<li><b>Algorithm</b>: Check that for each vertex \(v\) in \(P_2\) if \(v \in P_1\) (\(Av \le b\)), the result follow from the fact that \(P_2\) is the convex hull of its vertices.</li>
 
-<p>
-Complexity: \(O(D^2NM)\) where \(D\) is the dimension, \(M\) the number of facets, and \(N\) the number of vertices.
-</p></li>
+<li><b>Complexity</b>: \(O(N D^2M)\) where \(D\) is the dimension, \(M\) the number of facets, and \(N\) the number of vertices.</li>
+</ul></li>
 
-<li><p>
-\(P_1\) vertex description \(y_1, \ldots, y_m\)
-\(P_2\) vertex description \(x_1, \ldots, x_n\)
-Algorithm: Check if every vertex in \(P_2\) is a convex combination of the vertices of \(P_1\): \(y_1, \ldots, y_m\).
-For that, check if the following LP problems are feasible for all vertex \(x\) in \(P_2\):  \(\min_{\lambda \in \mathbb{R}^D} 0\) st \(\sum \lambda_i y_i = x, \sum_i \lambda_i = 1, \lambda \ge 0\)
-</p>
+<li><ul class="org-ul">
+<li>\(P_1\) vertex description \(y_1, \ldots, y_m\)</li>
+<li>\(P_2\) vertex description \(x_1, \ldots, x_n\)</li>
+<li><b>Algorithm</b>: Check if every vertex in \(P_2\) is a convex combination of the vertices of \(P_1\): \(y_1, \ldots, y_m\). For that, check if the following LP problems are feasible for all vertex \(x\) in \(P_2\):  \(\min_{\lambda \in \mathbb{R}^D} 0\) st \(\sum \lambda_i y_i = x, \sum_i \lambda_i = 1, \lambda \ge 0\).</li>
+<li><b>Complexity</b>: \(O(N R)\) where \(R\) is the time required to solve one of the above minimization problem. (This time is polynomial in \(D\) and \(N\))</li>
+</ul></li>
 
-<p>
-Complexity: \(O(N R)\) where \(R\) is the time required to solve one of the above minimization problem. (This time is polynomial in \(D\) and \(N\))
-</p></li>
-
-<li>\(P_1\) facet description \(A_1x \le b_1\)
-\(P_2\) facet description \(A_2x \le b_2\)
-Algorithm: Check if every row  \(a_i^T\) in \(A_1\), eg Check that the following problem has a non negative solution:
-\(\min_{A_2x \le b} (b_1)_i - a^T x\)
-Complexity: \(O(M R)\) where \(R\) is the time required to solve the above minimization problem. (This time is polynomial in \(D\) and \(M\))</li>
+<li><ul class="org-ul">
+<li>\(P_1\) facet description \(A_1x \le b_1\)</li>
+<li>\(P_2\) facet description \(A_2x \le b_2\)</li>
+<li><b>Algorithm</b>: Check if every row  \(a_i^T\) in \(A_1\), eg Check that the following problem has a non negative solution:
+\(\min_{A_2x \le b} (b_1)_i - a^T x\), which is true iff \(A_2x \le b_2 \implies A_1x \le b_1\).</li>
+<li><b>Complexity</b>: \(O(M R)\) where \(R\) is the time required to solve the above minimization problem. (This time is polynomial in \(D\) and \(M\))</li>
+</ul></li>
+</ul></li>
 </ul>
+
+
+
+<div class="HTML">
+<p>
+<script>
+AutoReload.Watch('localhost:60000');  
+</script>
+</p>
+
 </div>
 </div>
 </div>
@@ -610,7 +653,7 @@ Complexity: \(O(M R)\) where \(R\) is the time required to solve the above minim
 <div id="postamble" class="status">
 <p class="date">Date: <span class="timestamp-wrapper"><span class="timestamp">&lt;2016-02-23 Tue&gt;</span></span></p>
 <p class="author">Author: Bachir El khadir</p>
-<p class="date">Created: 2016-02-24 Wed 16:27</p>
+<p class="date">Created: 2016-02-26 Fri 16:41</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

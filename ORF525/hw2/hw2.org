@@ -1,9 +1,28 @@
-#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="../../css/org-style.css" />
-#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+#+HTML_HEAD: <link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet"></link>
+#+HTML_HEAD: <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+#+HTML_HEAD: <script src="http://127.0.0.1:60000/autoreload.js"></script>
+#+LATEX_HEADER: \usepackage{pdfpages}
+
+#+OPTIONS: toc:nil  
+
+#+name: Watch changes
+#+BEGIN_HTML 
+@@html:<script>@@
+@@html:AutoReload.Watch('localhost:60000');@@
+@@html:</script>@@
+#+END_HTML
+
+
+
+
 * Discover Gravitational Wves in Your Room
 
+
 #+name: helper_function 
-#+begin_src R :exports none :session :tangle yes
+#+begin_src R :exports none :session 
+setwd('~/Documents/Princeton/ORF525/hw2/')
+
 library(ggplot2)
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   library(grid)
@@ -51,11 +70,9 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
     set.seed(10)
 #+end_src
 
+*1.1)*
 
-
-** 1.1
-
-   Loading the Data
+Loading the Data
    
    #+name: load_data
    #+begin_src R :session :cache yes
@@ -70,6 +87,9 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
    : 3441
 
 
+
+
+  Calculate the matrix $C$
    
    #+name: matrix_C
    #+begin_src R :session :cache yes
@@ -82,6 +102,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
    #+RESULTS[19ed51fbd27982def9ea7ff162bebb1f8ba50aec]: matrix_C
 
 
+   Solve the lasso, and use 10-fold cross-validation to choose $\lambda$
 
    #+name: lasso
    #+begin_src R :session :cache yes
@@ -89,81 +110,88 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
   lasso.model <- cv.glmnet(C, ts$y, alpha=1, nfolds=10, intercept=F)
   w.hat <- coef(lasso.model, s='lambda.1se')[-1]
   w.inverse <- solve(C, ts$y)
-  print(lasso.model$lambda.1se )
+  lasso.model$lambda.1se
    #+end_src
 
-   #+RESULTS[9278f3c2909ce5d94f5e6cbd40ba6a68848fb9bf]: lasso
+   #+RESULTS[87d1191fa9c1ab99ec4e52c8acc4d8f8417b1d03]: lasso
    : 0.0035151690881434
 
 
 
 
+#+begin_src python :exports results :var data=lasso
+return "lambda.1se =  %.4g" % data
+#+end_src
+
+#+RESULTS:
+: lambda.1se =  0.003515
+
 
 #+name: plotting
-#+begin_src R :session :file comparesignals.png :results graphics
-p1 <- ggplot(data=NULL, aes(x=ts$t, y=w.hat)) + geom_point()
-p2 <- ggplot(data=NULL, aes(x=ts$t, y=w.inverse)) + geom_point()
-p3 <- ggplot(data=NULL, aes(x=w.hat, y=w.inverse)) + geom_point()
-multiplot(p1, p2, p3)
+#+begin_src R :session :file comparesignals.png :results graphics :exports results
+p1 <- ggplot(data=NULL, aes(x=ts$t, y=ts$y)) + geom_line() +  ggtitle("Raw signal") + labs(x="t",y="w")
+p2 <- ggplot(data=NULL, aes(x=ts$t, y=C %*% w.hat)) + geom_line() +  ggtitle("Lasso") + labs(x="t",y="y")
+multiplot(p1, p2)
 #+end_src
 
 #+RESULTS: plotting
 [[file:comparesignals.png]]
 
 
-
-
-[[file:comparesignals.png]]
-
-
-** 1.2
-
-
-We write $\beta$ as $(\underbrace{\beta_1}_n, \underbrace{\beta_2}_n)$ , then $\Psi \beta = \beta_1 +  C \beta_2$
-The Lasso try to find a sparse solution in the time and frequency domain at the same time.
-
-
-#+begin_src R :session :cache yes
-  phi <- cbind(diag(N), C)
-  lasso.model.2 <- cv.glmnet(phi, ts$y, alpha=1, nfolds=10, intercept=F)
-  beta.hat <- coef(lasso.model.2, s='lambda.1se')[-1]
-  print(paste("lambda 1se:", lasso.model$lambda.1se))
+#+name: plottingspectrum
+#+begin_src R :session :file comparesignalsspec.png :results graphics :exports results
+p1 <- ggplot(data=NULL, aes(x=w.inverse, y=w.hat)) + geom_point() +  ggtitle("w.inverse vs w.hat") + labs(x="Raw signal spectrum",y="Lasso estimated spectrum")
+p1
 #+end_src
 
-#+RESULTS[a129d1ad76e9080629900645618f4261ef7b6e42]:
-: lambda 1se: 0.0035151690881434
+#+RESULTS: plottingspectrum
+[[file:comparesignalsspec.png]]
 
+The lasso behaves like a high-pass filter, it eliminates the lowest frequencies.
 
+*1.2)*
 
-
-
-
-#+begin_src R :session :file denoise.png :results graphics
-  ts$y.denoised <- beta.hat[1:N] + C%*%beta.hat[N + 1:N]
-  ts$y.lasso <- C %*% w.hat
-  p1 <- ggplot(data=ts, aes(x=t, y=y.denoised)) + geom_point()
-  p2 <- ggplot(data=ts, aes(x=t, y=y.lasso)) + geom_point()
-  p3 <- ggplot(data=ts.theory, aes(x=t, y=y)) + geom_point()
-  multiplot(p1, p2, p3, cols=1)
-#+end_src
-
-#+RESULTS:
-[[file:denoise.png]]
-
-
-
-[[file:denoise.png]]
-
-
-* Q2
-  
-** 2.1
+   The denoised signal is $\tilde y + C \tilde w = \Psi \tilde \beta$
+   #+name: lasso2
+   #+begin_src R :session :cache yes
+     psi <- cbind(diag(N), C)
+     lasso.model2 <- cv.glmnet(psi, ts$y, alpha=1, nfolds=10, intercept=F)
+     beta.tilde <- coef(lasso.model2, s='lambda.1se')[-1]
+     y.tilde <- psi %*% beta.tilde
+     lasso.model2$lambda.1se
+   #+end_src
    
-#+include: "q2.tex" 
+   #+RESULTS[0e209a41490c146b4aa421d3c0b5517eac22bd46]: lasso2
+   : 0.00443564030901467
 
 
+   #+begin_src python :exports results :var data=lasso2
+   return "lambda.1se =  %.4g" % data
+   #+end_src
+
+   #+RESULTS:
+   : lambda.1se =  0.004436
 
 
+   #+name: plotting2
+   #+begin_src R :session :file comparesignals2.png :results graphics :exports results
+     p1 <- ggplot(data=NULL, aes(x=ts.theory$t, y=ts.theory$y)) + geom_line() + ggtitle("Theoritical simulation") + labs(x="t",y="y")
+     p2 <- ggplot(data=NULL, aes(x=ts$t, y=ts$y)) + geom_line() + ggtitle("Raw signal")+ labs(x="t",y="y")
+     p3 <- ggplot(data=NULL, aes(x=ts$t, y=y.tilde)) + geom_line() + ggtitle("Signal obtained in q 1.2")+ labs(x="t",y="y")
+     p4 <- ggplot(data=NULL, aes(x=ts$t, y=(C %*% w.hat))) + geom_line() + ggtitle("Signal obtained in q 1.1")+ labs(x="t",y="y")
+     multiplot(p1, p2, p3, p4)
+   #+end_src
+
+   #+RESULTS: plotting2
+   [[file:comparesignals2.png]]
+
+   - The first method eliminates large spikes (low frequencies), but is sensitive to recurrent small variations. 
+   - The second method is more robust to small variations but is sensitive to large outliers.
+   
+   The second method is more meaningful because it looks for sparsity in time and frequency domain, and there is no reason for the noise to be added in one domain and not the other.
+
+   
+#+latex: \includepdf[pages=-]{q2.pdf} 
 
 
 

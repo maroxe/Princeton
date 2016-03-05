@@ -1,3 +1,13 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+#+HTML_HEAD: <link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet"></link>
+#+HTML_HEAD: <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+#+HTML_HEAD: <script src="http://127.0.0.1:60000/autoreload.js"></script>
+#+BEGIN_HTML
+@@html:<script>@@
+AutoReload.Watch('localhost:60000');  
+@@html:</script>@@
+#+END_HTML
+
 
 #+BEGIN_SRC python :exports results :session
   import os
@@ -9,6 +19,8 @@
           return (s, parts[-3], parts[-1].split('.')[0])
       return map(lambda s: ['[[./%s][%s - %s]]' % (linkto(s))], glob.glob('*/*/*.%s' % ext))
 #+END_SRC
+
+#+RESULTS:
 
 
 * List of html
@@ -29,22 +41,176 @@
 * List of ORG files
 #+name: listoforg
 #+BEGIN_SRC python :exports results :session
-createlinkstoall('org')
+sorted(createlinkstoall('org'))
 #+END_SRC
 
 #+RESULTS: listoforg
-| [[file:./ORF523/hw2/homework2.org][ORF523 - homework2]] |
-| [[file:./ORF523/hw2/hw2.org][ORF523 - hw2]]       |
-| [[file:./ORF525/hw2/hw2.org][ORF525 - hw2]]       |
-| [[file:./ORF525/treebasedmethode/tree.org][ORF525 - tree]]      |
-| [[file:./ORF570/hw1/hw1.org][ORF570 - hw1]]       |
-| [[file:./ORF570/hw1/intro.org][ORF570 - intro]]     |
-| [[file:./ORF570/hw1/mynotes.org][ORF570 - mynotes]]   |
-| [[file:./ORF570/hw1/notes.org][ORF570 - notes]]     |
-| [[file:./ORF570/hw1/tests.org][ORF570 - tests]]     |
+| [[file:./COS511/hw2/hw2.org][COS511 - hw2]]                |
+| [[file:./Internship/sig/cptapplication.org][Internship - cptapplication]] |
+| [[file:./ORF523/hw2/homework2.org][ORF523 - homework2]]          |
+| [[file:./ORF523/hw2/hw2.org][ORF523 - hw2]]                |
+| [[file:./ORF525/hw2/hw2.org][ORF525 - hw2]]                |
+| [[file:./ORF525/treebasedmethode/compressedsensing.org][ORF525 - compressedsensing]]  |
+| [[file:./ORF525/treebasedmethode/tree.org][ORF525 - tree]]               |
+| [[file:./ORF527/hw3/hw3.org][ORF527 - hw3]]                |
+| [[file:./ORF570/hw1/hw1.org][ORF570 - hw1]]                |
+| [[file:./ORF570/hw1/intro.org][ORF570 - intro]]              |
+| [[file:./ORF570/hw1/mynotes.org][ORF570 - mynotes]]            |
+| [[file:./ORF570/hw1/notes.org][ORF570 - notes]]              |
+| [[file:./ORF570/hw1/tests.org][ORF570 - tests]]              |
 
 
 
 
 
+
+
+
+
+* List of PDF files
+#+name: ma list of pdf
+#+BEGIN_SRC python :exports results :session
+sorted(createlinkstoall('pdf'))
+#+END_SRC
+
+#+RESULTS: ma list of pdf
+| [[file:./COS511/hw1/hw1.pdf][COS511 - hw1]]                                    |
+| [[file:./COS511/hw2/hw2.pdf][COS511 - hw2]]                                    |
+| [[file:./Fall/ORF522/vanderbei.pdf][Fall - vanderbei]]                                |
+| [[file:./Fall/ORF524/Statistical Inference (Casella & Berger).pdf][Fall - Statistical Inference (Casella & Berger)]] |
+| [[file:./Fall/ORF538/hw1.pdf][Fall - hw1]]                                      |
+| [[file:./Internship/SSN/ss-5.pdf][Internship - ss-5]]                               |
+| [[file:./Internship/jp/COS & ML_BachirElKhadir.pdf][Internship - COS & ML_BachirElKhadir]]            |
+| [[file:./Internship/sig/cptadvisor.pdf][Internship - cptadvisor]]                         |
+| [[file:./ORF523/hw1/ORF523_S16_HW1.pdf][ORF523 - ORF523_S16_HW1]]                         |
+| [[file:./ORF523/hw1/hw1.pdf][ORF523 - hw1]]                                    |
+| [[file:./ORF523/hw1/prv_hw1.pdf][ORF523 - prv_hw1]]                                |
+| [[file:./ORF523/hw2/hw2.pdf][ORF523 - hw2]]                                    |
+| [[file:./ORF525/feb11/feb11.pdf][ORF525 - feb11]]                                  |
+| [[file:./ORF525/feb9/class2.pdf][ORF525 - class2]]                                 |
+| [[file:./ORF525/hw1/1-s2.0-0024379592904072-main.pdf][ORF525 - 1-s2]]                                   |
+| [[file:./ORF525/hw1/hw1.pdf][ORF525 - hw1]]                                    |
+| [[file:./ORF525/hw1/main.pdf][ORF525 - main]]                                   |
+| [[file:./ORF525/hw1/output.pdf][ORF525 - output]]                                 |
+| [[file:./ORF525/hw1/question1.pdf][ORF525 - question1]]                              |
+| [[file:./ORF525/hw1/test1.pdf][ORF525 - test1]]                                  |
+| [[file:./ORF525/hw1/test2.pdf][ORF525 - test2]]                                  |
+| [[file:./ORF525/hw2/hw2.pdf][ORF525 - hw2]]                                    |
+| [[file:./ORF525/hw2/q2.pdf][ORF525 - q2]]                                     |
+| [[file:./ORF525/treebasedmethode/compressedsensing.pdf][ORF525 - compressedsensing]]                      |
+| [[file:./ORF525/treebasedmethode/tree.pdf][ORF525 - tree]]                                   |
+| [[file:./ORF527/feb10/feb10.pdf][ORF527 - feb10]]                                  |
+| [[file:./ORF527/feb17/feb17.pdf][ORF527 - feb17]]                                  |
+| [[file:./ORF527/feb3/course.pdf][ORF527 - course]]                                 |
+| [[file:./ORF527/feb8/class3.pdf][ORF527 - class3]]                                 |
+| [[file:./ORF527/hw1/hw1.pdf][ORF527 - hw1]]                                    |
+| [[file:./ORF527/hw2/hw2.pdf][ORF527 - hw2]]                                    |
+| [[file:./ORF527/hw3/hw3.pdf][ORF527 - hw3]]                                    |
+| [[file:./ORF527/pdf/class3.pdf][ORF527 - class3]]                                 |
+| [[file:./ORF527/pdf/course.pdf][ORF527 - course]]                                 |
+| [[file:./ORF527/pdf/feb10.pdf][ORF527 - feb10]]                                  |
+| [[file:./ORF560/class1/class1.pdf][ORF560 - class1]]                                 |
+| [[file:./ORF560/class2/class2.pdf][ORF560 - class2]]                                 |
+| [[file:./ORF560/class3/feb9.pdf][ORF560 - feb9]]                                   |
+| [[file:./ORF570/class1/class1-pics.pdf][ORF570 - class1-pics]]                            |
+| [[file:./ORF570/class1/class1.pdf][ORF570 - class1]]                                 |
+| [[file:./ORF570/class1/plots-pics.pdf][ORF570 - plots-pics]]                             |
+| [[file:./ORF570/class1/plots.pdf][ORF570 - plots]]                                  |
+| [[file:./ORF570/hw1/hw1.pdf][ORF570 - hw1]]                                    |
+| [[file:./ORF570/hw1/notes.pdf][ORF570 - notes]]                                  |
+| [[file:./ORF570/hw1/tests.pdf][ORF570 - tests]]                                  |
+
+#+RESULTS: list of pdf
+| [[file:./COS511/hw1/hw1.pdf][COS511 - hw1]]                                    |
+| [[file:./COS511/hw2/hw2.pdf][COS511 - hw2]]                                    |
+| [[file:./Fall/ORF522/vanderbei.pdf][Fall - vanderbei]]                                |
+| [[file:./Fall/ORF524/Statistical Inference (Casella & Berger).pdf][Fall - Statistical Inference (Casella & Berger)]] |
+| [[file:./Fall/ORF538/hw1.pdf][Fall - hw1]]                                      |
+| [[file:./Internship/SSN/ss-5.pdf][Internship - ss-5]]                               |
+| [[file:./Internship/jp/COS & ML_BachirElKhadir.pdf][Internship - COS & ML_BachirElKhadir]]            |
+| [[file:./Internship/sig/cptadvisor.pdf][Internship - cptadvisor]]                         |
+| [[file:./ORF523/hw1/ORF523_S16_HW1.pdf][ORF523 - ORF523_S16_HW1]]                         |
+| [[file:./ORF523/hw1/hw1.pdf][ORF523 - hw1]]                                    |
+| [[file:./ORF523/hw1/prv_hw1.pdf][ORF523 - prv_hw1]]                                |
+| [[file:./ORF523/hw2/hw2.pdf][ORF523 - hw2]]                                    |
+| [[file:./ORF525/feb11/feb11.pdf][ORF525 - feb11]]                                  |
+| [[file:./ORF525/feb9/class2.pdf][ORF525 - class2]]                                 |
+| [[file:./ORF525/hw1/1-s2.0-0024379592904072-main.pdf][ORF525 - 1-s2]]                                   |
+| [[file:./ORF525/hw1/hw1.pdf][ORF525 - hw1]]                                    |
+| [[file:./ORF525/hw1/main.pdf][ORF525 - main]]                                   |
+| [[file:./ORF525/hw1/output.pdf][ORF525 - output]]                                 |
+| [[file:./ORF525/hw1/question1.pdf][ORF525 - question1]]                              |
+| [[file:./ORF525/hw1/test1.pdf][ORF525 - test1]]                                  |
+| [[file:./ORF525/hw1/test2.pdf][ORF525 - test2]]                                  |
+| [[file:./ORF525/hw2/hw2.pdf][ORF525 - hw2]]                                    |
+| [[file:./ORF525/hw2/q2.pdf][ORF525 - q2]]                                     |
+| [[file:./ORF525/treebasedmethode/compressedsensing.pdf][ORF525 - compressedsensing]]                      |
+| [[file:./ORF525/treebasedmethode/tree.pdf][ORF525 - tree]]                                   |
+| [[file:./ORF527/feb10/feb10.pdf][ORF527 - feb10]]                                  |
+| [[file:./ORF527/feb17/feb17.pdf][ORF527 - feb17]]                                  |
+| [[file:./ORF527/feb3/course.pdf][ORF527 - course]]                                 |
+| [[file:./ORF527/feb8/class3.pdf][ORF527 - class3]]                                 |
+| [[file:./ORF527/hw1/hw1.pdf][ORF527 - hw1]]                                    |
+| [[file:./ORF527/hw2/hw2.pdf][ORF527 - hw2]]                                    |
+| [[file:./ORF527/hw3/hw3.pdf][ORF527 - hw3]]                                    |
+| [[file:./ORF527/pdf/class3.pdf][ORF527 - class3]]                                 |
+| [[file:./ORF527/pdf/course.pdf][ORF527 - course]]                                 |
+| [[file:./ORF527/pdf/feb10.pdf][ORF527 - feb10]]                                  |
+| [[file:./ORF560/class1/class1.pdf][ORF560 - class1]]                                 |
+| [[file:./ORF560/class2/class2.pdf][ORF560 - class2]]                                 |
+| [[file:./ORF560/class3/feb9.pdf][ORF560 - feb9]]                                   |
+| [[file:./ORF570/class1/class1-pics.pdf][ORF570 - class1-pics]]                            |
+| [[file:./ORF570/class1/class1.pdf][ORF570 - class1]]                                 |
+| [[file:./ORF570/class1/plots-pics.pdf][ORF570 - plots-pics]]                             |
+| [[file:./ORF570/class1/plots.pdf][ORF570 - plots]]                                  |
+| [[file:./ORF570/hw1/hw1.pdf][ORF570 - hw1]]                                    |
+| [[file:./ORF570/hw1/notes.pdf][ORF570 - notes]]                                  |
+| [[file:./ORF570/hw1/tests.pdf][ORF570 - tests]]                                  |
+
+#+RESULTS: listofpdf
+| [[file:./COS511/hw1/hw1.pdf][COS511 - hw1]]                                    |
+| [[file:./COS511/hw2/hw2.pdf][COS511 - hw2]]                                    |
+| [[file:./Fall/ORF522/vanderbei.pdf][Fall - vanderbei]]                                |
+| [[file:./Fall/ORF524/Statistical Inference (Casella & Berger).pdf][Fall - Statistical Inference (Casella & Berger)]] |
+| [[file:./Fall/ORF538/hw1.pdf][Fall - hw1]]                                      |
+| [[file:./Internship/SSN/ss-5.pdf][Internship - ss-5]]                               |
+| [[file:./Internship/jp/COS & ML_BachirElKhadir.pdf][Internship - COS & ML_BachirElKhadir]]            |
+| [[file:./Internship/sig/cptadvisor.pdf][Internship - cptadvisor]]                         |
+| [[file:./ORF523/hw1/ORF523_S16_HW1.pdf][ORF523 - ORF523_S16_HW1]]                         |
+| [[file:./ORF523/hw1/hw1.pdf][ORF523 - hw1]]                                    |
+| [[file:./ORF523/hw1/prv_hw1.pdf][ORF523 - prv_hw1]]                                |
+| [[file:./ORF523/hw2/hw2.pdf][ORF523 - hw2]]                                    |
+| [[file:./ORF525/feb11/feb11.pdf][ORF525 - feb11]]                                  |
+| [[file:./ORF525/feb9/class2.pdf][ORF525 - class2]]                                 |
+| [[file:./ORF525/hw1/1-s2.0-0024379592904072-main.pdf][ORF525 - 1-s2]]                                   |
+| [[file:./ORF525/hw1/hw1.pdf][ORF525 - hw1]]                                    |
+| [[file:./ORF525/hw1/main.pdf][ORF525 - main]]                                   |
+| [[file:./ORF525/hw1/output.pdf][ORF525 - output]]                                 |
+| [[file:./ORF525/hw1/question1.pdf][ORF525 - question1]]                              |
+| [[file:./ORF525/hw1/test1.pdf][ORF525 - test1]]                                  |
+| [[file:./ORF525/hw1/test2.pdf][ORF525 - test2]]                                  |
+| [[file:./ORF525/hw2/hw2.pdf][ORF525 - hw2]]                                    |
+| [[file:./ORF525/hw2/q2.pdf][ORF525 - q2]]                                     |
+| [[file:./ORF525/treebasedmethode/compressedsensing.pdf][ORF525 - compressedsensing]]                      |
+| [[file:./ORF525/treebasedmethode/tree.pdf][ORF525 - tree]]                                   |
+| [[file:./ORF527/feb10/feb10.pdf][ORF527 - feb10]]                                  |
+| [[file:./ORF527/feb17/feb17.pdf][ORF527 - feb17]]                                  |
+| [[file:./ORF527/feb3/course.pdf][ORF527 - course]]                                 |
+| [[file:./ORF527/feb8/class3.pdf][ORF527 - class3]]                                 |
+| [[file:./ORF527/hw1/hw1.pdf][ORF527 - hw1]]                                    |
+| [[file:./ORF527/hw2/hw2.pdf][ORF527 - hw2]]                                    |
+| [[file:./ORF527/hw3/hw3.pdf][ORF527 - hw3]]                                    |
+| [[file:./ORF527/pdf/class3.pdf][ORF527 - class3]]                                 |
+| [[file:./ORF527/pdf/course.pdf][ORF527 - course]]                                 |
+| [[file:./ORF527/pdf/feb10.pdf][ORF527 - feb10]]                                  |
+| [[file:./ORF560/class1/class1.pdf][ORF560 - class1]]                                 |
+| [[file:./ORF560/class2/class2.pdf][ORF560 - class2]]                                 |
+| [[file:./ORF560/class3/feb9.pdf][ORF560 - feb9]]                                   |
+| [[file:./ORF570/class1/class1-pics.pdf][ORF570 - class1-pics]]                            |
+| [[file:./ORF570/class1/class1.pdf][ORF570 - class1]]                                 |
+| [[file:./ORF570/class1/plots-pics.pdf][ORF570 - plots-pics]]                             |
+| [[file:./ORF570/class1/plots.pdf][ORF570 - plots]]                                  |
+| [[file:./ORF570/hw1/hw1.pdf][ORF570 - hw1]]                                    |
+| [[file:./ORF570/hw1/notes.pdf][ORF570 - notes]]                                  |
+| [[file:./ORF570/hw1/tests.pdf][ORF570 - tests]]                                  |
 
