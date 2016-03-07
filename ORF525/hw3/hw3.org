@@ -3,6 +3,8 @@
 #+HTML_HEAD: <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 #+HTML_HEAD: <script src="http://127.0.0.1:60000/autoreload.js"></script>
 #+LATEX_HEADER: \usepackage{pdfpages}
+#+LATEX_HEADER: \newcommand{\inner}[2]{\langle #1 \, , \, #2 \rangle}
+#+LATEX_HEADER: \newcommand{\norm}[1]{\Vert #1 \Vert}
 
 #+OPTIONS: toc:nil  
 
@@ -12,6 +14,9 @@
 @@html:AutoReload.Watch('localhost:60000');@@
 @@html:</script>@@
 #+END_HTML
+
+
+* Codes :noexport:
 
 #+BEGIN_SRC emacs-lisp :exports none
 (defun add-caption-header-and-center (caption header )
@@ -27,7 +32,7 @@
 
 
 
-#+BEGIN_SRC R :session :exports none
+#+BEGIN_SRC R :session :exports none :cache yes
 library(dplyr)
 library(ggplot2)
 library(rpart)
@@ -38,7 +43,8 @@ library(randomForest)
 set.seed(525)
 #+END_SRC
 
-#+RESULTS:
+#+RESULTS[19a76ddbaedbb14e8db38dfd22594da7e3c85b8d]:
+
 
 
 * Money Ball: Who You Will Buy?
@@ -46,13 +52,18 @@ set.seed(525)
 ** Individual Trees
 
 #+name: loaddata
-#+BEGIN_SRC R  :session :results none
+#+BEGIN_SRC R  :session  :cache yes
 data <- tbl_df(read.csv('MLB2008.csv'))
 data.train <- data[1:154, ]
 data.test <- data[155:dim(data)[1], ]
+0
 #+END_SRC
 
-#+RESULTS: loaddata
+#+RESULTS[b7f7da921aecb8dfaa0cdafa7c8241817280ad64]: loaddata
+: 0
+
+
+
 
 
 #+name: treemodel
@@ -115,15 +126,16 @@ geom_point(aes(x = prune, y = test, color='test')) +
 xlab("B cp") + ylab("MSE")
 #+END_SRC
 
-#+RESULTS[d8bf5e441882e78f71e1dbeabd660a7527196f1f]: plotmse
+#+RESULTS[1f5085e8c35be52ad55596a935e38f57e259eb5c]: plotmse
 [[file:img/mse.png]]
+
 
 
 
 ** Random Forest
 
 #+name: forestmodel
-#+BEGIN_SRC R :session :cache yes :results none
+#+BEGIN_SRC R :session :cache yes 
 mse.forest <-  data.frame(B=integer(), train=numeric(), test=numeric()) 
 for(B in 10:100) {
     randomForest.model <- randomForest(formula, data=data.train, ntree=B)
@@ -134,11 +146,14 @@ for(B in 10:100) {
                             test=norm(predict(randomForest.model, data.test) - data.test$SALARY, type="2")
                         ))
 }
-
+0
 #+END_SRC
 
+#+RESULTS[74967b1f077c0f6ee167633d50c493c0c02db23f]: forestmodel
+: 0
+
 #+name: plotrfmse
-#+BEGIN_SRC R :session :cache yes :results graphics :file img/rfmse.png :exports both :wrap (add-caption-and-center "MSE for random Forest" )
+#+BEGIN_SRC R :session :cache yes :results graphics :file img/rfmse.png :exports both :wrap (add-caption-and-center "MSE for random Forest" ) 
 ggplot(mse.forest) + 
 geom_point(aes(x = B, y = train, color='train')) + geom_line(aes(x = B, y = train, color='train')) + 
 geom_point(aes(x = B, y = test, color='test')) +
@@ -151,6 +166,130 @@ xlab("B") + ylab("MSE")
 #+caption: MSE for random Forest
 [[file:img/rfmse.png]]
 #+END_org
+
+** TODO part 3
+
+* TODO Tame Categorical Variables in Tree Regression
+2.1.
+
+\begin{align*}
+\sum_i (Y_i - f(X_i))^2 &= \sum_i Y_i^2 + \sum_s  \sum_{X_i = s}  f(s)^2 - 2  Y_i f(s)
+\\&= \sum_i Y_i^2 +  \sum_s |\{X_i = s\}| [f(s)^2 - 2 \bar Y_s f(s)]
+\end{align*}
+
+$$ \sum_{L_k} \sum_{s \in L_k} |\{X_i = s\}| [\alpha_k^2 - 2 \bar Y_s \alpha_k] $$
+$$ \sum_{L_k} \alpha_k^2 (\sum_{s \in L_k} |\{X_i = s\}|)  - 2  \alpha_k \sum_{s \in L_k} |\{X_i = s\}| \bar Y_s$$
+
+
+
+$$\sum_{k} |L_k| (\alpha_k^2   - 2  \alpha_k  avg(L_k))$$
+  
+
+$$ |\{X_i = u\}| [\alpha_k^2 - 2 \bar Y_u \alpha_k] $$
+$$ |\{X_i = v\}| [\alpha_{k'}^2 - 2 \bar Y_v \alpha_{k'}] $$
+$$ |\{X_i = w\}| [\alpha_k^2 - 2 \bar Y_w \alpha_k] $$
+
+
+
+$$ |\{X_i = u\}| [\alpha_k^2 - 2 \bar Y_u \alpha_k] $$
+$$ |\{X_i = v\}| [\alpha_{k}^2 - 2 \bar Y_v \alpha_{k}] $$
+$$ |\{X_i = w\}| [\alpha_k^2 - 2 \bar Y_w \alpha_k] $$
+
+
+2.2
+$K = 2$
+
+The set of partitions $(L_1, L_2)$ admits a one to one mapping to the set of functions $\{0, 1\}^{\{1, \ldots M\}}$, so:
+$\mathcal N_1 = 2^{M}$
+
+In this case, we know that $L_1$ is of the form $\{1, \ldots j\}$, so
+$\mathcal N_2 = M$
+
+$\frac{\mathcal N_2}{\mathcal N_1} = \frac{M}{2^M}$
+
+
+* TODO Baggin and Random Forest
+3.1
+
+
+* Explore the Boundary of RIP Conditions
+4.1
+
+Since $x$ and $y$ have distinct support, $\norm{x - y}_2^2 =  \norm{x+y}_2^2 = \norm{x}_2^2 + \norm{y}_2^2$ and $\norm{x + y}_0 = \norm{x-y}_0 = \norm{x}_0 + \norm{y}_0 \le s + t$
+\begin{align*}
+\inner{Ax}{Ay}
+&= \frac14 (\norm{Ax + Ay}^2 - \norm{Ax - Ay}^2)
+\\&\le \frac14 ( (1+\delta_{s+t})\norm{x+y}_2^2 - (1-\delta_{s+t})\norm{x-y}_2^2)
+\\&\le \delta_{s+t}  \frac12 \norm{x+y}_2^2
+\end{align*}
+
+4.2
+-[ ] *step 1:*
+- *step 2*:
+$\norm{x-z}_0 \le 2s$
+$$\norm{Ax - Az}_2^2 \ge (1- \delta_{2s}) \norm{x - z}_2^2 \ge (1 - \delta_{2s}) \frac{s}2 \ge \frac{s}4$$
+Which proves that the center of two balls are distant by more than twice their radiuses.
+- *step 3:*
+  For $x \in U$, $\norm{Ax}_2 \le (1 + \delta_s) \norm{x}_2^2 \le \frac 32 s$
+  So the balls of the centered at $Ax$ where $x \in \chi$ with raidus $\sqrt{\frac{s}{16}}$ are contained in the ball centered at 0 with radius $(\sqrt{\frac 32} + \frac 14) \sqrt s$.
+  Since such balls are disjoint, their total volume  $|\chi| Vol(\sqrt{\frac s{16}})$, where $Vol(r)$ is the volume of the the ball of radius $r$. We know that $Vol(r) = r^n Vol(1)$, so:
+  $$|\chi| (\frac{s}{16})^{n/2} Vol(1) \le Vol(1) (\sqrt{\frac 32} + \frac 14)^{n/2}  s^{n/2}$$
+  Taking the $\log$ and using step 1:
+  $$\frac{s}2 \log(\frac ds)  \le  \frac n2 \log(16 (\sqrt{\frac 32} + \frac 14)) $$  
+  So:
+  $$Cs \log(\frac ds)  \le  n  $$  
+
+4.3.
+#+BEGIN_SRC matlab :session *MATLAB*
+  number_monte_carlo = 1;
+  epsilon = 0.01;
+  d = 1024;
+  s = 100;
+  n = 100;
+  L = 10
+  probabilities = zeros(L, L);
+  for i=1:number_monte_carlo
+      A = 1/sqrt(n+1000)*randn(d,d);
+      for n=1:L
+          beta = randn(d, 1);
+          X = 1/sqrt(n+1000) * A(1:(n+1000),1:d);
+          for s=1:L
+              beta(d-(s+1000), 1) = 0;
+              Y = X * beta;
+              probabilities(s, n) = probabilities(s, n) + (norm(l1eq_pd(0*beta, X, 0*X, Y) - beta) < epsilon);
+          end
+      end
+  end
+  ans = probabilities;
+#+END_SRC
+
+#+RESULTS:
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

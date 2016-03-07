@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2016-03-06 Sun 17:54 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Problem set 5, ORF527</title>
+<meta name="generator" content="Org-mode" />
+<meta name="author" content="Bachir El khadir" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+<link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet"></link>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="http://127.0.0.1:60000/autoreload.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Problem set 5, ORF527</h1>
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1"><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> Q1 (7.2 in Steel)</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+A convex function &phi; is a sup of affine function below it $\{ ax + b \}.
+Let \(\tau_n\) be a localizing sequence of \((X_t)\), so that \(X_{t \wedge \tau_n}\) is bounded, and since \(\phi\) is continuous, \(Y_{t \wedge \tau_n} = \phi(X_{t \wedge n})\) is bounded.
+So for \(s < t\), \(E[Y_{t \wedge \tau_n} | F_s] = E[\phi(X_{t \wedge \tau_n}) | F_s] \underbrace{\le}_{\text{Jensen}} \phi(E[X_{t \wedge \tau_n} | F_s]) = \phi(Y_{s \wedge n})\)
+\(\phi = X\)
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> Q1 (7.3)</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+blablba
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3"><span class="section-number-2">3</span> Q2</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+a. By Ito isometry and linearity:
+\[E[ (\int_0^T X_s^n dW_s - \int_0^T X_s dW_s)^2 ] =  E[ \int_0^T (X_s^n - X_s)^2 ds ] \rightarrow 0\]
+</p>
+
+<p>
+b. Let \(\tau_n\) be a localizing sequence.
+By markov inequality:
+\[P(|\int_0^T X_{t \wedge \tau_n} dW_t| \ge \varepsilon) \le \frac{E[|\int_0^T X_{t \wedge \tau_n} dW_t|^2]}{\varepsilon^2}\]
+By Ito:
+\[P(|\int_0^T X_{t \wedge \tau_n} dW_t| \ge \varepsilon) \le \frac{E[\int_0^T X^2_{t \wedge \tau_n} dt]}{\varepsilon^2}\]
+</p>
+
+<p>
+c. By b.
+\[P(|\int_0^T (X_t - X^n_t) dW_t|^2 > \varepsilon) \le P(\int_0^T (X_t - X^n_t)^2 dt \ge \varepsilon) + \frac N{\varepsilon^2}\]
+Taking the \(\lim\sup\) with respect to \(n\):
+  \[\lim\sup_n P(|\int_0^T (X_t - X^n_t) dW_t|^2 > \varepsilon) \le \frac N{\varepsilon^2}\]
+  And thus for all \(N > 0\). We conclude by taking the \(N \rightarrow 0\).
+</p>
+
+<p>
+d. Let \(X \in \mathcal H^{loc}[0, T]\), let \(\tau_n\) be a localizing sequence, so that \(X1_{[0, \tau_n]} \in \mathcal H[0, T]\).
+Since \(\mathcal H_0[0, T]\) is dense in \(\mathcal H[0, T]\) with respect to the \(L_2(\Omega \times [0, T])\) norm, there exist a sequence \(X_n \in \mathcal H_0\) such that:
+\(E[\int_0^T (X1_{[0, \tau_n]}(s) - X_n(s))^2 ds] \rightarrow_n 0\).
+</p>
+
+<p>
+\(P(\int_0^T (X(s)1_{[0, \tau_n]}(s) - X_n(s))^2 ds > \varepsilon) \le \frac{E[\int_0^T (X1_{[0, \tau_n]}(s) - X_n(s))^2 ds]}{\varepsilon} \rightarrow_n 0\)
+</p>
+
+<p>
+So \(\int_0^T (X(s)1_{[0, \tau_n]}(s) - X_n(s))^2\) converges to 0 in probability.
+We also know that \(\int_0^T X^2(s)1_{[0, \tau_n]}(s) ds \rightarrow \int_0^T X^2(s) ds\) alsmost surely, and thus in probability.
+</p>
+
+<p>
+Now, \(\int_0^T (X(s) - X_n(s))^2 ds \le \int_0^T (X(s) - X(s)1_{[0, \tau_n]}(s))^2 + \int_0^T (X1_{[0, \tau_n]}(s) - X_n(s))^2 \overset{P}{\rightarrow} 0\), which gives the result.
+</p>
+
+<p>
+Using c., We can definie the integral of  \(X \in \mathcal H^{loc}[0, T]\) as the limit in probability of a sequence of simple function that converge to \(X\) in the sense of c.
+</p>
+
+<p>
+To prove that such construction is sound, we have to prove that the limit doesn't depend on the sequence of simple functions chosen, or equivalenty, that by linearity that if \(X_n \overset{c.}{\rightarrow} 0\), \(\int_0^T X_n dW_t \overset{P}{\rightarrow} 0\).
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4"><span class="section-number-2">4</span> Q3</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+a. \(d(e^tW_t) = e^tW_t dt + e^tdW_t\)
+b. \(f x \rightarrow \frac1{1+x^2}\), \(f'(x) = \frac{-2x}{(1+x^2)^2}\), \(f''(x) = \frac{-2(1+x^2)^2 + 8x^2(1+x^2)}{(1+x^2)^4} = \frac{-2 + 6x^2}{(1+x^2)^3}\)
+\[d(1+W_t^2)^{-1} = \frac{-2W_t}{(1+W_t^2)^2}dW_t + \frac{-1 + 3W_t^2}{(1+W_t^2)^3}dt\]
+c.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: <span class="timestamp-wrapper"><span class="timestamp">&lt;2016-03-04 Fri&gt;</span></span></p>
+<p class="author">Author: Bachir El khadir</p>
+<p class="date">Created: 2016-03-06 Sun 17:54</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+# -*- mode: org; org-confirm-babel-evaluate: nil; org-speed-commands-user: nil; org-use-speed-commands: t; -*-
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+#+HTML_HEAD: <link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet"></link>
+#+HTML_HEAD: <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+#+HTML_HEAD: <script src="http://127.0.0.1:60000/autoreload.js"></script>
+
+
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t broken-links:nil c:nil creator:nil
+#+OPTIONS: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+OPTIONS: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+OPTIONS: timestamp:t title:t toc:t todo:t |:t
+#+OPTIONS: toc:nil h:2
+
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 24.5.1 (Org mode )
+
+
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+
+#+LATEX_HEADER:  \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{amsfonts}
+
+#+LATEX_HEADER: \newcommand{\Problem}[1]{\subsection*{Problem #1}}
+#+LATEX_HEADER: \newcommand{\Q}[1]{\subsubsection*{Q.#1}}
+#+LATEX_HEADER: \newcommand{\union}[1]{\underset{#1}{\cup} }
+#+LATEX_HEADER: \newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+#+LATEX_HEADER: \newcommand{\inter}[1]{\underset{#1}{\cap} }
+#+LATEX_HEADER: \newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+#+LATEX_HEADER: \newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+#+LATEX_HEADER: \newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+#+LATEX_HEADER: \DeclareMathOperator{\cov}{cov}
+#+LATEX_HEADER: \DeclareMathOperator{\var}{var}
+
+#+BEGIN_SRC emacs-lisp :exports none
+(defun add-caption-header-and-center (caption header )
+  (concat (format "org\n#+attr_html: :class center\n#+caption: %s\n%s" caption header)))
+(defun add-caption-and-center (caption)
+  (concat (format "org\n#+attr_html: :class center\n#+caption: %s" caption)))
+
+#+END_SRC
+
+#+RESULTS:
+: add-caption-and-center
+
+
+#+TITLE: Problem set 5, ORF527
+#+DATE: <2016-03-04 Fri>
+#+AUTHOR: Bachir El khadir
+
+* DONE Q1 (7.2 in Steel)
+
+Let $\tau_n = inf\{t, |X_t| \ge n\}$ be a localizing sequence of $(X_t)$, so that $X_{t \wedge \tau_n}$ is bounded. $\tau_n$ is non-decreasing and diverges to $\infinity$ because the continuous function $t \rightarrow X_t$ is bounded on every compact set $[0, T]$, and if $n$ is larger than this bounde then $\tau_n \ge T$.
+
+Since $\phi$ is continuous, $Y_{t \wedge \tau_n} = \phi(X_{t \wedge n})$ is bounded.
+
+So for $s < t$, $E[Y_{t \wedge \tau_n} | F_s] = E[\phi(X_{t \wedge \tau_n}) | F_s] \underbrace{\le}_{\text{Jensen}} \phi(E[X_{t \wedge \tau_n} | F_s]) = \phi(Y_{s \wedge n})$
+Counter example:
+- $\Omega = (0, 1)$, $P$ the uniform measure.
+- $\phi(x) = x^2$
+- $X(t, \omega) = \frac{1}{\omega^{\frac 12}}$ is a (constant) martingale, but $\phi(X) = \frac{1}{\omega}$ is not integrable.
+
+
+* DONE Q1 (7.3)
+Let $X_t$ be a continuous local submartingale martingale verifying (7.35), and $\tau_n$ a localizing sequence, and $s < t < T$, then:
+
+- $E[|X_t|] \le E[\sup_{[0, T]} |X_s|] < \infty$
+- $E[X_{t \wedge \tau_n} | F_s] \ge X_{s \wedge \tau_n}$
+
+Using the fact that $X_{s \wedge \tau_n}$ is uniformly bounded by the $L_1$ function $\sup_{[0, T]} |X_s|$, we use dominated convergence theorem to prove that
+$E[X_t | F_s] \le X_s$
+
+A bounded local martingale trivially verifies (7.35)
+
+* TODO Q2
+  a. By Ito isometry and linearity:
+  $$E[ (\int_0^T X_s^n dW_s - \int_0^T X_s dW_s)^2 ] =  E[ \int_0^T (X_s^n - X_s)^2 ds ] \rightarrow 0$$
+  
+  b. Let $\tau_n$ be a localizing sequence.
+  By markov inequality:
+  $$P(|\int_0^T X_{t \wedge \tau_n} dW_t| \ge \varepsilon) \le \frac{E[|\int_0^T X_{t \wedge \tau_n} dW_t|^2]}{\varepsilon^2}$$
+  By Ito:
+  $$P(|\int_0^T X_{t \wedge \tau_n} dW_t| \ge \varepsilon) \le \frac{E[\int_0^T X^2_{t \wedge \tau_n} dt]}{\varepsilon^2}$$
+
+  c. By b.
+  $$P(|\int_0^T (X_t - X^n_t) dW_t|^2 > \varepsilon) \le P(\int_0^T (X_t - X^n_t)^2 dt \ge \varepsilon) + \frac N{\varepsilon^2}$$
+  Taking the $\lim\sup$ with respect to $n$:
+    $$\lim\sup_n P(|\int_0^T (X_t - X^n_t) dW_t|^2 > \varepsilon) \le \frac N{\varepsilon^2}$$
+    And thus for all $N > 0$. We conclude by taking the $N \rightarrow 0$.
+    
+  d. Let $X \in \mathcal H^{loc}[0, T]$, let $\tau_n$ be a localizing sequence, so that $X1_{[0, \tau_n]} \in \mathcal H[0, T]$.
+  
+  Since $\mathcal H_0[0, T]$ is dense in $\mathcal H[0, T]$ with respect to the $L_2(\Omega \times [0, T])$ norm, there exist a sequence $X_n \in \mathcal H_0$ such that:
+  $E[\int_0^T (X1_{[0, \tau_n]}(s) - X_n(s))^2 ds] \rightarrow_n 0$.
+
+  $P(\int_0^T (X(s)1_{[0, \tau_n]}(s) - X_n(s))^2 ds > \varepsilon) \le \frac{E[\int_0^T (X1_{[0, \tau_n]}(s) - X_n(s))^2 ds]}{\varepsilon} \rightarrow_n 0$
+
+  So $\int_0^T (X(s)1_{[0, \tau_n]}(s) - X_n(s))^2$ converges to 0 in probability.
+  
+  We also know that $\int_0^T X^2(s)1_{[0, \tau_n]}(s) ds \rightarrow \int_0^T X^2(s) ds$ alsmost surely, and thus in probability.
+
+  Now, $\int_0^T (X(s) - X_n(s))^2 ds \le \int_0^T (X(s) - X(s)1_{[0, \tau_n]}(s))^2 + \int_0^T (X1_{[0, \tau_n]}(s) - X_n(s))^2 \overset{P}{\rightarrow} 0$, which gives the result.
+
+  Using c., We can definie the integral of  $X \in \mathcal H^{loc}[0, T]$ as the limit in probability of a sequence of simple function that converge to $X$ in the sense of c.
+
+  To prove that such construction is sound, we have to prove that the limit doesn't depend on the sequence of simple functions chosen, or equivalenty, that by linearity that if $X_n \overset{c.}{\rightarrow} 0$, $\int_0^T X_n dW_t \overset{P}{\rightarrow} 0$.
+  
+  
+* TODO Q3
+a. $d(e^tW_t) = e^tW_t dt + e^tdW_t$
+b. $f x \rightarrow \frac1{1+x^2}$, $f'(x) = \frac{-2x}{(1+x^2)^2}$, $f''(x) = \frac{-2(1+x^2)^2 + 8x^2(1+x^2)}{(1+x^2)^4} = \frac{-2 + 6x^2}{(1+x^2)^3}$
+$$d(1+W_t^2)^{-1} = \frac{-2W_t}{(1+W_t^2)^2}dW_t + \frac{-1 + 3W_t^2}{(1+W_t^2)^3}dt$$
+c. $$f: (t, x) \rightarrow e{\alpha x + \sigma t} cos(\int_0^t \sqrt{|x|} $$
+
+
+
+
+
+
+
+
+
+
+
+
+

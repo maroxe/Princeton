@@ -60,11 +60,11 @@ gradf0 = [zeros(N,1); ones(N,1)];
 % starting point --- make sure that it is feasible
 if (largescale)
   if (norm(A(x0)-b)/norm(b) > cgtol)
-    disp('Starting point infeasible; using x0 = At*inv(AAt)*y.');
+      %disp('Starting point infeasible; using x0 = At*inv(AAt)*y.');
     AAt = @(z) A(At(z));
     [w, cgres, cgiter] = cgsolve(AAt, b, cgtol, cgmaxiter, 0);
     if (cgres > 1/2)
-      disp('A*At is ill-conditioned: cannot find starting point');
+        %disp('A*At is ill-conditioned: cannot find starting point');
       xp = x0;
       return;
     end
@@ -72,11 +72,11 @@ if (largescale)
   end
 else
   if (norm(A*x0-b)/norm(b) > cgtol)
-    disp('Starting point infeasible; using x0 = At*inv(AAt)*y.');
+      %disp('Starting point infeasible; using x0 = At*inv(AAt)*y.');
     opts.POSDEF = true; opts.SYM = true;
     [w, hcond] = linsolve(A*A', b, opts);
     if (hcond < 1e-14)
-      disp('A*At is ill-conditioned: cannot find starting point');
+        %disp('A*At is ill-conditioned: cannot find starting point');
       xp = x0;
       return;
     end
@@ -127,7 +127,7 @@ while (~done)
     h11pfun = @(z) -A(1./sigx.*At(z));
     [dv, cgres, cgiter] = cgsolve(h11pfun, w1p, cgtol, cgmaxiter, 0);
     if (cgres > 1/2)
-      disp('Cannot solve system.  Returning previous iterate.  (See Section 4 of notes for more information.)');
+        %disp('Cannot solve system.  Returning previous iterate.  (See Section 4 of notes for more information.)');
       xp = x;
       return
     end
@@ -140,7 +140,7 @@ while (~done)
     opts.POSDEF = true; opts.SYM = true;
     [dv,hcond] = linsolve(H11p, w1p, opts);
     if (hcond < 1e-14)
-      disp('Matrix ill-conditioned.  Returning previous iterate.  (See Section 4 of notes for more information.)');
+        %disp('Matrix ill-conditioned.  Returning previous iterate.  (See Section 4 of notes for more information.)');
       xp = x;
       return
     end
@@ -175,7 +175,7 @@ while (~done)
     s = beta*s;
     backiter = backiter + 1;
     if (backiter > 32)
-      disp('Stuck backtracking, returning last iterate.  (See Section 4 of notes for more information.)')
+        %disp('Stuck backtracking, returning last iterate.  (See Section 4 of notes for more information.)')
       xp = x;
       return
     end
@@ -212,12 +212,12 @@ while (~done)
   
   done = (sdg < pdtol) | (pditer >= pdmaxiter);
   
-  disp(sprintf('Iteration = %d, tau = %8.3e, Primal = %8.3e, PDGap = %8.3e, Dual res = %8.3e, Primal res = %8.3e',...
-    pditer, tau, sum(u), sdg, norm(rdual), norm(rpri)));
+  %disp(sprintf('Iteration = %d, tau = %8.3e, Primal = %8.3e, PDGap = %8.3e, Dual res = %8.3e, Primal res = %8.3e',...
+  %pditer, tau, sum(u), sdg, norm(rdual), norm(rpri)));
   if (largescale)
-    disp(sprintf('                  CG Res = %8.3e, CG Iter = %d', cgres, cgiter));
+      %disp(sprintf('                  CG Res = %8.3e, CG Iter = %d', cgres, cgiter));
   else
-    disp(sprintf('                  H11p condition number = %8.3e', hcond));
+      %disp(sprintf('                  H11p condition number = %8.3e', hcond));
   end
   
 end

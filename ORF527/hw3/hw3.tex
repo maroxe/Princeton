@@ -1,0 +1,309 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{enumitem}
+
+\newcommand{\Q}[1]{\subsubsection*{Q.#1}}
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+
+\newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+\newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\var}{var}
+\newcommand{\esp}{{\mathbb E}}
+\newcommand{\pr}{{\mathbb P}}
+\newenvironment{problem}[1]
+{\section*{Problem #1}}{}
+
+
+% parameters
+\geometry{hmargin=1cm,vmargin=1cm}
+\title{ORF527 - Problem Set 3}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+\maketitle
+
+
+\begin{problem}{4.4}
+  \begin{itemize}
+    
+  \item
+
+    Let's prove that $(Z_t = X_{t + \varepsilon} = Y_{\varepsilon + t} - Y_{\varepsilon})_{t \ge 0}$ is a BM. Indeed:
+    \begin{itemize}
+    \item $Z_t$ is clearly a continuous guassian process.
+    \item for $t \ge s$, $cov(Z_t, Z_s) = cov(Y_{\varepsilon + t}, Y_{\varepsilon + s}) -  cov(Y_{\varepsilon + t}, Y_{\varepsilon}) + cov(Y_{\varepsilon + s}, Y_{\varepsilon}) + cov(Y_{\varepsilon}, Y_{\varepsilon})= \varepsilon + s - \varepsilon - \varepsilon + \varepsilon  = s
+      $
+    \end{itemize}
+
+    It follows that $(X_t)_{t \ge \varepsilon}$ is martingale (with respect to its natural filtration $\mathcal F_t$).
+    
+  \item For $0 < s \le t$, let $\varepsilon = \frac{s}2$, then $t - s = \esp( Y_t - Y_{\varepsilon} - ( Y_s - Y_{\varepsilon}) )^2 = \esp  (Y_t - Y_s)^2$
+    
+
+  \item
+
+    $\esp[Y_t^2] = t^2 \esp[B_{\frac1t}^2] = t$, so $Y_t \rightarrow_{L_2} 0$, and therefore in probability, so there exist a subsequence $t_n > 0$, $(Y_{t_n})_n$ such that $t_n \rightarrow 0$ and $Y_{t_n} \rightarrow 0$ a.s.
+    
+    Let $n \in \mathbb N^*$, $(Y_{t_n + t}-Y_{t_n})_{t \ge 0}$ is a martingale, and $\esp[Y_t^2] = t$, by doobs maximal inequality
+    $$\pr( \sup_{t \in [t_{m}, t_n]} |Y_t - Y_{t_{m}}| > \alpha) \le \frac{t_n}{\alpha^2}$$
+    so:
+    $$\pr( \sup_{t \in [t_{m}, t_n]} |Y_t| - |Y_{t_{m}}| > \alpha) \le \frac{t_n}{\alpha^2}$$
+    so:
+    $$\pr( \sup_{t \in [t_{m}, t_n]} |Y_t|  > \alpha + |Y_{t_m}|) \le \frac{t_n}{\alpha^2}$$
+    
+    $\sup_{t \in [t_{m}, t_n]} |Y_t|  \rightarrow_m \sup_{t \in (0, t_n]} |Y_t|$ a.s, because: 
+    \begin{itemize}
+    \item $(\sup_{t \in [t_{m}, t_n]} |Y_t|)_m$ is non-decreasing, so it has a limit $L$.      
+    \item $(0, t_n] = \cup_m [t_m, t_n]$, so $\sup_{t \in (0, t_n]} |Y_t| = \sup_m \sup_{t \in [t_{m}, t_n]} |Y_T| = L$
+    \end{itemize}
+
+    So $\sup_{t \in [t_{m}, t_n]} |Y_t|  - |Y_{t_m}| \rightarrow_m \sup_{t \in (0, t_n]} |Y_t|$ a.s. and in distribution.
+    Therefore $\pr(\sup_{t \in (0, t_n]} |Y_t| \ge \alpha) \le \frac{t_n}{\alpha^2}$
+
+    $$\pr(\lim\sup_0 |Y_t| \ge \frac{\alpha}2) = \lim_n \pr(\sup_{t \le t_n} |Y_t| \ge \frac{\alpha}2) \le \frac{4t_n}{\alpha^2} \rightarrow 0$$
+    ie $P(\lim\sup_0 |Y_t| \ne 0) = P(\exists n \in \mathbb N^+ \; \lim\sup_0 |Y_t| \le \frac1n) \le \sum_{n > 0} P(\lim\sup_0 |Y_t| \le \frac1n) = 0$.
+  \end{itemize}
+\end{problem}
+\begin{problem}{4.6}
+  \begin{itemize}
+  \item   $X_{t \wedge \tau}$ is a bounded martingale
+
+  \item   $\tau$ is finite a.s
+
+  \item   $X_{t \wedge \tau} \rightarrow X_{\tau}$ a.s
+
+  \item   Dominated convergence theorem :
+    $$1 = \esp[X_\tau] = \pr(B_{\tau} = A) \exp(\alpha A) E[\exp(-\alpha^2 \tau / 2) | B_{\tau} = A] + \pr(B_{\tau} = -A) \exp(-\alpha A) E[\exp(-\alpha^2 \tau / 2) |  B_{\tau} = -A]$$
+  \item 
+    By symmetry of the brownian motion $B_t$, is it easy that $P(\tau \le t | B_\tau = A) = P(\tau \le t | B_\tau = -A)$, so $\tau$ is independent of $\{B_{\tau} = A\}$, and the last equation becomes:
+    $$1 = \esp[X_\tau] = \pr(B_{\tau} = A) \exp(\alpha A) E[\exp(-\alpha^2 \tau / 2)] + \pr(B_{\tau} = -A) \exp(-\alpha A) E[\exp(-\alpha^2 \tau / 2)]$$
+
+    By symmetry: $\pr(B_{\tau} = A) = \pr(B_{\tau} = -A) = \frac12$
+  \end{itemize}
+  so $1 = \frac12 (\exp(\alpha A) + \exp(-\alpha A)) \Phi(-\alpha^2/2)$
+  If $\lambda > 0$, set $\alpha = \sqrt{2 \lambda}$,  $\Phi(\lambda) = \frac2{\exp(\sqrt{2\lambda}A) + \exp(-\sqrt{2\lambda}A)}$
+
+
+  \begin{itemize}
+  \item $e^{\lambda x} = 1 - \int_0^{\lambda} x e^{-\sigma x} d\sigma$
+  \item $xe^{\lambda x} = x -\int_0^{\lambda} x^2 e^{-\sigma x} d\sigma$
+  \end{itemize}
+  By fubini
+  \begin{itemize}
+  \item $\esp[\tau e^{\lambda \tau}] = 1 - \int_0^{\lambda} \esp[\tau
+    e^{-\sigma \tau}] d\sigma$
+  \item   $\esp[\tau^2 e^{\lambda \tau}] = 1 - \int_0^{\lambda} \esp[\tau^2
+    e^{-\sigma \tau}] d\sigma$
+  \end{itemize}
+  e.g.
+  \begin{itemize}
+  \item $\Phi'(\lambda) = \esp[-\tau e^{-\lambda \tau}] = -1 +
+    \int_0^{\lambda} \esp[\tau^2 e^{-\sigma \tau}] d\sigma$
+  \item $\Phi''(\lambda) = \esp[\tau^2 e^{-\sigma \tau}]$
+  \item $\Phi''(0) = E[\tau^2]$
+  \end{itemize}
+
+  Let $x = \lambda 2 A^2$, then:
+  \begin{align*}
+    \Phi(x) &= \frac{1}{\cosh(\sqrt{x})}
+    \\& = \frac1{1 + \frac x2 + \frac {x^2}{4!} + o(x^2)}
+    \\& = 1 - (\frac x2 + \frac {x^2}{4!}) + (\frac x2 + \frac {x^2}{4!})^2 + o(x^2)
+    \\&= 1 - \frac x2 + (\frac14 - \frac1{4!}) x^2 + o(x^2)
+    \\&= 1 - A^2 x + A^4 \frac56 x^2 + o(x^2)
+  \end{align*}
+  so $\Phi''(0) = \frac{5A^4}3$
+  
+  $$E[\tau^2] = \frac{5A^4}3$$
+  When the boundary is not symmetric, we face the difficulty of calculating figuring out the dependence between $\tau$ and $B_{\tau}$
+\end{problem}
+
+\begin{problem}{2}
+  \begin{enumerate}
+  \item
+    $\tau_A = \inf \{ t \ge 0: W_t = A \} = \inf \{ t \ge 0:
+    \frac{W_t}{A} = 1 \} = \inf \{ A^2 t : t \ge 0, \frac{W_{tA^2}}A = 1 \} = A^2 \underbrace{\inf\{ t \ge 0, \tilde
+      W_t = 1 \}}_{\tilde \tau_1} $ Where
+    $\tilde W_t = \frac{W_{tA^2}}{A}$ is a brownian motion,
+    so $ \tilde \tau_1 \overset{d}{=} \tau_1$, indeed:
+    \begin{itemize}
+    \item By continuity of the brownian motion:
+    
+      $\{\tau \le t\} = \cap_{\varepsilon > 0} \cup_{s \le t, s \in
+        \mathbb Q} \{d(W_s, A) < \varepsilon\}$
+    
+    \item       The measure of this quantity depends only on the distribution of
+      $(W_s)_{s \in Q}$, which is the same for all brownian motions.
+      That is true because they all have the same finite distribution,
+      and Kolmogorov extension theorem garantees the uniqueness when
+      we extend that to countably many variable.
+    \end{itemize}
+    
+    Therefore
+    $\tau_A \overset{d}{=}A^2 \tau_1$.
+  \item
+    \begin{align*}
+   \mathbb P (W_t \le 0 \; \forall t \le T) &\le \mathbb P (W_t \le\frac{A}2 \; \forall t \le T)
+      \\&\le \mathbb P(T \le \tau_A)
+      \\&= \mathbb P(\frac{T}{A^2} \le \tau_1) \rightarrow_{A 0} \mathbb P(\infty \le \tau_1)
+      \\&= 0
+    \end{align*}
+
+    (because $\frac{T}{A^2} \rightarrow \infty$ as and $\tau_1 < \infty$)
+    
+  \item
+
+    Beucase of the continuity of $(W_t)$, $W_t = 0 $ has a finite  number of solutions on $[0, T)$ $\implies $ there exists  $n \in \mathbb{N*}$, $n \ge \frac1{T}$ such that $W_t$   dones't change sign on $[0, \frac1n]$.
+
+  \begin{align*}
+    &P(W_t = 0 \text{ for finitely many } t \in [0, T]) \\&\le P((\exists n \ge \frac1{T}) \; (\forall t \; \le \frac1n W_t \ge 0) \vee (\forall t \; \le \frac1n W_t \le 0)   )
+    \\& \le \sum_{n \in \mathbb{N^*}} P(\forall t \le \frac1n   W_t \le 0) + P(\forall t \le \frac1n   W_t \ge 0) &\text{(Union bound)}
+    \\&= \sum_{n \in \mathbb{N^*}} 2 P(\forall t \le \frac1n   W_t \le 0) &\text{(By considering $-W_t$)}
+    \\&=0
+  \end{align*}
+
+\end{enumerate}
+
+
+\end{problem}
+\begin{problem}{3}
+  \begin{enumerate}
+  \item[a)]
+    \begin{itemize}
+    \item[$\le$] follows from the fact that
+      $\sup (A+B) \le \sup A + \sup B$ for any
+      $A, B \subset \mathbb R$
+    \item[$\ge$] Let $0 = t_0 \le \ldots \le t_n = t$ be partition included in $0 = s_0 \le \ldots \le s_m = t$, then
+      $\sum_k (g(t_k) - g(t_{k-1}))^+ = \sum_k (\sum_{t_{k-1} \le s_i \le t_{k}} g(s_i) - g(s_{i-1}))^+ \le \sum_k \sum_{t_{k-1} \le s_i \le t_{k}} (g(s_i) - g(s_{i-1}))^+ \le \sum_i (g(s_i) - g(t_{i-1}))^+ $
+
+      Let's call $\pi_n = \{ t_1 \le \ldots \le t_n \}$  a partition of $n$ elements, and call $|\pi_n| = \max_i |t_{i+1} - t_i|$,  and for two parition $\pi^1, \pi^2$, let $\pi^1 \vee \pi^2$ be the smallest partition including $\pi^1$ and $\pi^2$. We have proved the sup over partitions can only increase when $n$ increases or when taking the union of two partitions.
+      Therefore
+     \begin{align*}
+       g^+(t) + g^-(t) 
+       &=\lim_n \sup_{\pi_n} \sum_{t_k \in \pi^1_n} (g(t_k) - g(t_{k-1}))^+ + \lim_n \sup_{\pi^2_n} \sum_{t_k \in \pi_n} (g(t_k) - g(t_{k-1}))^+ 
+       \\&\le \lim_n \sup_{\pi = \pi^1_n \vee {\pi^2}_n} \sum_{t_k \in \pi} (g(t_k) - g(t_{k-1}))^+ + \sum_{t_k \in \pi} (g(t_k) - g(t_{k-1}))^-
+       \\&\le \lim_n \sup_{\pi = \pi^1_n \vee {\pi^2}_n} \sum_{t_k \in \pi} |g(t_k) - g(t_{k-1})|
+       \\&\le TV[g, t]
+      \end{align*}
+
+    \end{itemize}     
+    \item[b)]
+      Let $\pi^1_n, \pi^2_n$ two sequences of partitions that converge to the sup, eg:
+      $g^+(t) = \lim_n \sum_{\pi^1_n} (g(t_k) - g(t_{k+1}))^+$
+      $g^-(t) = \lim_n \sum_{\pi^2_n} (g(t_k) - g(t_{k+1}))^-$
+      
+      But $\lim_n \sum_{\pi^1_n} (g(t_k) - g(t_{k+1}))^+ \le \lim_n \sum_{\pi^1_n \vee \pi^2_n} (g(t_k) - g(t_{k+1}))^+ \le g^+(t)$
+      so
+      $g^+(t) = \lim_n \sum_{\pi^1_n \vee \pi^2_n} (g(t_k) - g(t_{k+1}))^+$
+      Similarly:
+      $g^-(t) = \lim_n \sum_{\pi^1_n \vee \pi^2_n} (g(t_k) - g(t_{k+1}))^-$
+
+      so $g^+(t) - g^-(t) =  \lim_n \sum_{\pi^1_n \vee \pi^2_n} (g(t_k) - g(t_{k+1}))^+ - (g(t_k) - g(t_{k+1}))^- = g(t) - g(0)$
+      
+    \item[c)] $g^+, g^-$ are both non-decreasing functions. Indeed, for $s \le t$, for any partition of $[0, t]$, we can always include the point $s$, and we can see that $g^+(t) - g^+(s)$ is a limit of a non-negative quantity.
+
+      
+    \item[d)] if $g$ is non-decreasing, $\sup_{n, \pi_n} \sum_{k} |g(t_k) - g(t_{k+1})| = \sup_{n, \pi_n} \sum_{k} (g(t_k) - g(t_{k+1})) = g(t)  - g(0) < \infty$
+      
+    \item[e)] part b) proved that if $g$ has finite variation, it can be written as the difference of two nondecreasing functions.
+      By the triangular inequality we can prove that fow two functions $g, f$, $TV[g + f, t] \le TV[g] + TV[f]$, so the variation of the difference of two nondecreasing functions is smaller than the sum of their respective variation, so its finite.
+      
+    \item[f)] The difference of two right continuous functions is right continuous, if they both have finite variation, then their difference has finite variation and is rightconinuous.
+
+      Let $f$ be a right continuous function with finite variation, and let's prove that $g^+$ is right continuous.
+      Fix $t$, we know that $f^+$ is non-decreasing, so $f^+$ has a right limit at $t$. Let's prove that this limit is equal to $g^+(t)$.
+
+      Notation: $\Pi_n[a, b]$ the set of partitions of $[a, b]$ .
+      $TV(f)[a, b] := \sup_{\pi \in \Pi_n[a, b]} \sum_{t_k \in \pi} |f(t_{k+1}) - f(t_k)|$ .
+      
+      If $c \in (a, b)$, by adding $c$ to any parition of $[a, b]$ we can see that $TV(f)[a, b] := TV(f)[a, c] + TV(f)[c, b]$. 
+
+      Let $\delta > 0$
+      \begin{itemize}
+      \item $f$ is rightcontinuous at $t$. For $\varepsilon$ smaller than some threshold $\varepsilon_0$: $f(t+\varepsilon) - f(t) \le \delta$.
+        
+      \item $f$ has finite variation, let
+        $\pi$ be a parition of $[t, t+\varepsilon_0]$ such that:
+
+        $$\sum_{t_k \in \pi} (f(t_{k+1}) -
+        f(t_k))^+ \ge TV(f)[t, t+\varepsilon_0] - \delta$$
+        
+      \item Let $t_{\delta}$ the smallest element in $\pi$ bigger than $t$. Again, without loss of generality, we can assume $t_{\delta}-t < \varepsilon_0$.
+        
+        Therefore:
+        $$\sum_{t_k \in \pi} (f(t_{k+1}) - f(t_k))^+ = (f(t_{k*}) - f(t))^+ + \sum_{t_k \in \pi, t_k \ne t_{\delta}} (f(t_{k+1}) - f(t_k))^+ \le  \delta + TV[f](t+t_{\delta}, t+\varepsilon_0)$$
+        
+      \item We have proved that:
+        $TV(f)[t, t+\varepsilon_0] - \delta \le \delta + TV(f)[t+t_{\delta}, t+\varepsilon_0]$
+
+        e.g
+        $TV(f)[t, t+t_{\delta}] \le \delta + \delta$
+
+        eg
+        $f(t+t_{\delta}) - f(t) \le 2\delta$
+        
+      \end{itemize}
+      By taking $\delta = \frac{1}{2n}$, we get the existence of subsequence $t_n^*$ such that:
+      $t_n^* \rightarrow 0$, such that $0 \le g^+(t_n^*) - g^+(t) \le \frac1n \rightarrow 0$.
+      So the $g^+$ is right continuous, and $g^- = g^+(t) - g(t) + g(0)$ also is right continuous and $g = g^+ - g^- + g(0)$
+      
+    \item[g)]
+      Let's first prove the equality of the two integrals when $f$ is simple and $h = h_+$
+
+      Let $R$ denote the Riemann-Stieltjes integral and $L$ define the Lebesgue ingtegral.
+      
+      $$R(f) = \sum_{i = 1}^n f(t_i) (h(t_i) - h(t_{i-1}))$$
+      $$L(f) = \sum_{i = 1}^n f(t_i) \mu_h([t_i, t_{i-1}]) = \sum_{i = 1}^n f(t_i) (h(t_{i-1}) - h(t_{i-1}))$$
+
+      This equality holds for $h = h_+ - h_-$ by linearity of the two integrals.
+
+      Now let $f$ be Riemann-Stieltjes integrable as a uniform limit of simple functions $f_n(t) = \sum_i f_n(t^n_i) 1_{[t^n_{i-1} - t^n_{i+1}] }$, then we consider
+      $g_n(t) = \sum_i \max(f_n(t^n_i), f(t^n_i)) 1_{[t^n_{i-1} - t^n_{i+1}] }$, and $f^{\uparrow}_n = \max_{k \le n} g_n$, it is easy to see that $f_n^{\uparrow}$ converge uniformly to  to $f$, and $f_n^{\uparrow} \uparrow f$.
+
+      \begin{itemize}
+      \item $R(f^\uparrow_n) \rightarrow R(f)$ by uniform convergence.
+      \item $L(f^\uparrow_n) \rightarrow L(f)$ by monotone convergence theorem.
+      \end{itemize}
+
+  \end{enumerate}
+\end{problem}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

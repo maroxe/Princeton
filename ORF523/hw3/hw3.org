@@ -10,7 +10,7 @@
 #+OPTIONS: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
 #+OPTIONS: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
 #+OPTIONS: timestamp:t title:t toc:t todo:t |:t
-#+OPTIONS: toc:nil h:2
+#+OPTIONS: toc:nil h:nil
 
 #+LANGUAGE: en
 #+SELECT_TAGS: export
@@ -22,6 +22,10 @@
 
 #+LATEX_HEADER:  \usepackage{amsmath}
 #+LATEX_HEADER: \usepackage{amsfonts}
+#+LATEX_HEADER: \usepackage{amsthm}
+
+#+LATEX_HEADER: \newtheorem{thm}{Lemma}
+
 
 #+LATEX_HEADER: \newcommand{\Problem}[1]{\subsection*{Problem #1}}
 #+LATEX_HEADER: \newcommand{\Q}[1]{\subsubsection*{Q.#1}}
@@ -54,4 +58,175 @@
     (concat (format "org\n#+attr_html: :class center\n#+caption: %s" caption)))
 
 #+END_SRC
+
+#+RESULTS:
+: add-caption-and-center
+
+
+
+* Problem 1
+  1. The treatment planning problem minimizes the penalty $E = \sum_{i \not \in \mathcal T} (a_i b - D^{\text{other}})^+$, where $a_i$ is the i-th row of $A$,  under the constraints: $\forall i \in \mathcal T\; a_i b \ge D^{\text{target}}$, $0 \le b \le B_{\max}$
+     - For all $i \not \in \mathcal T$, $b \rightarrow a_ib - D^{\text{other}}$ is linear, $(.)+$ is convex, and so is its composition with a linear function. As a sum of such functions $E$ is a convex.
+     - The constraints are all linear inequalities of $b$.
+     So the problem is convex.
+  2. Without loss of generality, we can
+
+#+name: solve     
+#+BEGIN_SRC matlab :session *MATLAB* :cache yes
+       treatment_planning_data;
+       
+       cvx_begin quiet
+       variable b(n)
+       variable dtumor(mtumor)
+       variable dother(mother)
+       variable E;
+       minimize sum(max(dother - Dother, 0))
+       subject to
+       dother == Aother * b
+       dtumor == Atumor * b
+       dtumor >= Dtarget
+       0 <= b <= Bmax
+       cvx_end
+       ans = cvx_optval
+#+END_SRC
+
+#+RESULTS[8817ca2160b87ebb02d2b7a2ec4af05a543b2a68]: solve
+: 1.3882
+
+#+name: plot
+#+BEGIN_SRC matlab :session *MATLAB* :results graphic :file img/histogram.png :cache yes
+% hist(dother)
+% hist(dtumor)
+#+END_SRC
+
+#+RESULTS: plot
+[[file:img/histogram.png]]
+
+
+* Problem 2
+1. Let's first prove that $dom(M_c)$ is convex.
+   Let $\alpha \in (0, 1)$, $x, y \in dim(M_c)$, and let $a > M_c(x), b > M_c(y)$, then $\frac xa, \frac yb \in dom(M_c)$. 
+   Let $\lambda = \frac1 { 1  + \frac ba \frac{1-\alpha}\alpha}$ and $t = \alpha a + (1-\alpha) b$, it is clear that:
+   - $\lambda \in (0, 1)$, $t > 0$.
+   - $\frac{\alpha x + (1-\alpha) y}t = \lambda \frac xa + (1-\lambda) \frac yb \in C$ because $C$ is convex.
+Let's now prove that $M_c$ is convex. We have just proved that $M_c(\alpha x + (1-\alpha)y) \le t = \alpha a + (1-\alpha) b$, and this for all $a > M_c(x)$ and $b > M_c(y)$. If we take the $\inf$ we respect to $a$ and $b$ we find that
+$$M_c(\alpha x + (1-\alpha)y) \le \alpha M_c(x) + (1-\alpha) M_c(y)$$
+and the function $M_c$ is convex.
+1.
+   
+   #+begin_thm
+    $\forall a > 0 \; M_c(a x) = \inf \{ t > 0 | \frac {ax}t \in C\} =  \inf \{ t > 0 | \frac {x}{t/a} \in C\} = a  \inf \{ \frac{t}a > 0 | \frac {x}{t/a} \in C\} = a M_c(a)$
+    #+end_thm
+
+       #+begin_thm
+     $M_c(-x) = \inf \{ t > 0 | \frac {-x}t \in C\} = \inf \{ t > 0 | \frac {x}t \in C\} = M_C(x)$ because $x \in C \iff -x \in C$
+     #+end_thm
+       
+    $M_C$ is a norm, indeed
+   - $dom(M_C) = \mathbb R^n$: $C$ has non empty interior, so it contains a ball $B(x, \varepsilon)$, by symmetry it contains also $B(-x, \varepsilon)$. Let's prove that it contain $B(0, \varepsilon)$, for this, consider $y \in \mathbb R^d$ whose norm is smaller than $\varepsilon$, then $y = \frac12 \underbrace{(x + y)}_{\in B(x, \varepsilon)} + \frac12 \underbrace{(-x + y)}_{\in B(-x, \varepsilon)} \in C$. Now for $z \in \mathbb{R}^d$, $\varepsilon\frac{z}{2||z||} \in B(0, \varepsilon) \subseteq C$
+   - Triangular inequlity:
+     \begin{align*}
+     M_C(x+y) &= 2 M_C(\frac12 x + \frac12 y) 
+     \\&\le 2 (\frac12 M_C(x) + \frac12 M_C(y)) &\text{Convexity}
+     \\&= M_C(x) + M_C(y)
+     \end{align*}
+   - Zero vector: Let $x$ be such that $M_C(x) = 0$, this implies that there exist a sequence $t_n \downarrow 0$ such that $\frac{x}{t_n} \in C$. $C$ being compact, there exist a subsequence $\frac x{t_{n_k}}$ that converges to $x_0 \in C$. If $x \ne 0$ then $||x_0|| = ||x|| \lim \frac1{t_{n_k}} = \infty$ would be a contradiction, so $x = 0$.
+   - Absolute homogeneity: Let $x \in C$, $a \in \mathbb{R}$ and let's prove $M_C(ax) = |a|M_C(x)$.
+     -- For the case $a = 0$ look at previous point
+     -- For $a > 0$ look at lemma 1.
+     -- For $a < 0$, $M_C(ax) = M_C( (-a) -x) \underbrace{=}_{lemma 1} (-a) M_C(-x) = |a| M_C(-x) \underbrace{=}_{\text{lemma 2}} |a| M_C(x)$.
+
+     Let's prove that the unit ball $B$ is equal to $C$: 
+     - Let $x$ such that $M_C(x) \le 1$, and let $t_n$ a non-increasing sequence to $M_C(x)$ such that $\frac{x}{t_n} \in C$, by compactness of $C$ the limit $\frac{x}{M_C(x)} \in C$. By convexity of $C$, $x = M_C(x) \frac{x}{M_C(x)} + (1-M_C(x)) 0 \in C$.
+     - if $x \in C$, then $M_C(x) \le 1$
+3. convex $\implies$ quasi convex.
+   Let's now consider that $p(x)$ is quasi convex and homogeneous. Then $\forall t > 0$, $p(t x) = t^d p(x)$, $p(x) \ge 0$ and $Q := \{ x, p(x) \le 1 \}$ is convex.
+   $p(x) = \inf\{ t > 0 | \frac{p(x)}{t} \le 1\} = \inf\{ t > 0 | p(\frac{x}{t^{\frac1d}}) \le 1\} = \inf\{ t > 0 | \frac{x}{t^{\frac1d}} \in Q\} = \inf\{ t > 0 | \frac{x}{t} \in Q\}^d = M_Q(x)^d$
+   
+   
+* Problem 3
+Let $A$ be a double sotchastic matrix. Let $G = (U_1\times U_2, V, E)$ be the associated bipartite graph as follow:
+- $U_1 = U_2 = \{1, \ldots, n\}$ the set of nodes.
+- $E = \{e_{ij} = 1_{a_{ij} > 0}\}$ the set of edges where $e_{ij} = 1$ if the nodes $i \in U_1$ and $j \in U_2$ are connected.
+- Let $B$ be the associated incidence matrix.
+The feasible set to the relaxed maximum matching program ( program (3) in note 6) is a bounded polyhedral, so the optimal value is attained in one of the vertices. Since the incidence matrix is TUM, there exist an integral solution that we represent by $P \in \mathbb R^{n^2}$ where $P_{ij} = 1$ if and only if the two nodes $i$ and $j$ are connected in the solution. 
+To see that $P$ is in fact a perfect matching, consider the feasible solution $A'$ that gives to each edge $e_{ij}$ the value $a_{ij}$ (It is feasible by construction of the graph $G$). The value of this solution is exactly $n$ because the matrix is doubly stochastic, so it is a perfect matching and so is $P$. As a conclusion, $P$ is a permutation.
+
+let $\alpha \le 1$ be maximal real number verifying $A_1 := A - \alpha P \ge 0$. It is easy to see that:
+- If $\alpha = 1$ we are done. We assume that $\alpha > 0$
+- $\frac{A_1}{1-\alpha}$ is doubly stochastic.
+- $\frac{A_1}{1-\alpha}$ contains at most one additional zero than $A$.
+
+By induction apply the same technique to $A_1$ to obtain a convex decomposition $\frac{A_1}{1-\alpha} = \sum_{i=1}^d \alpha_i P_i$ where all the $P_i$ are permutations, and conclude by noticing that:
+$$A = \sum_{i=1}^d \frac{\alpha_i}{1-\alpha} P_i + \alpha P$$
+
+  
+* Problem 4
+  Let's assume that $A$ is TUM. Then  $A_1 = (A \; ; \; -I_n )$ where $I_n$ is the $n \times n$ identity matrix is also TUM. Indeed, take a submatrix of $A_1$, if doesn't contain a cloumn coming from $-I_n$, then we are done, if it does, let $m$ denote the number of such columns. Develop the determinant of the submatrix with respect to one of them, we see immediately that it is equal to the determinant of a submatrix of $A_1$ containing $m-1$ columns coming from $-I_n$, we conclude by induction.
+
+  Now we can write:
+  \[\{ x | x \ge 0 Ax \le b\} = \{ x |  (A \; ; \; -I ) x \le \begin{pmatrix}b \\ 0\end{pmatrix}  \}\]
+
+  We proved in class that the vertices of the RHS are integrale if $b$ is integrale.
+
+  Let's now assume that $A$ is not TUM, and let's prove that there exist of $b$ for which the polyhedron is not integrale.
+
+  First, let's prove some lemmas:
+    #+begin_thm
+    $A$ not TUM $\implies$ there exist a submatrix of size $n \times n$ that of \[ C := \begin{pmatrix}A \\ I_n\end{pmatrix} \]  has determinant not in $\{0, 1, -1\}$ 
+  #+end_thm
+
+    #+begin_proof
+    Let's assume $A$ is not $TUM$, then there exist $\tilde A$ a submatrix of B that has determinant not in $\{0, 1, -1\}$.
+    Let's choose $\tilde A$ to have maximal size, and suppose by contradiction that $p$, the size of $\tilde A$, is smaller than $n$.
+    Let's call $c_1 < \ldots c_p$, (resp $r_1 < \ldots r_p$) the indices corresponding to the columns (resp rows) used to construct $\tilde A$.
+    
+    Pick a column $c$ in $C$ that has not been used in the construction of $\tilde A$, and note $i$ the index of the of the $1$ appearing in $c$ and comming from $I_n$, so that the $i^{th}$ row of $C$ is $r := (0, \ldots,\underbrace{1}_{i}, 0\lodts )$.
+    Construct $\tilde A_1$ by the following:
+
+    \[
+    \tilde A_1 = \begin{pmatrix}
+    && c_{c_1} \\
+    &\tilde A & \vdots \\
+    && c_{c_p} \\
+    0&\ldots&0 & 1
+    \end{pmatrix}
+    \]
+
+    By developping the determinant of $\tilde A_1$ with respect to the last row we can see that it is the same as $\tilde A$
+    We have just construct a matrix whose determinant is not in  $\{0, 1, -1\}$ and is bigger than $\tilde A$. Contradiction.
+  #+end_proof
+
+By the symmetry of the determiant with respect to transposing rows and columns, it is easy to see that the same applies for $(A \;;\; I_n)$
+
+
+  #+begin_thm
+  $det(A) \not \in \{1, 0, -1\} \implies \exists t \; A^{-1}t \text{ integrale with } t \text{ not integrale }$
+  #+end_thm
+  
+  #+begin_proof
+  Assume that $det(A) \not \in \{1, 0, -1\}$.
+  Then the $det(A^{-1}) = \frac1{ det(A) } \not \in \mathbb{Z}$, then there exist an entry $a_{ij}$ in $A^{-1}$ that is not integer.
+  Let $u$ be the vector with zeros except  the $i^{th}$ entry which is equal to $1$, then $A^{-1}u$ is not integer because $A^{-1}u = a_{ij}$, but $A \underbrace{(\tilde A u)}_{t}$ is integer.
+  #+end_proof
+
+\[\{ x | x \ge 0 Ax \le b\} = \{ y := (x, s) \ge 0 |  \begin{pmatrix}A \\ I_n\end{pmatrix} y = b \} = \{ y \ge 0 | Cy =  b\}\]
+
+It is clear that a vertices of the RHS are equal to the vertices of LHS.
+
+By using the first Lemma, there exist a submatrix $\tilde C$ of $C$ of size $n \times n$ such that $\det(\tilde C) \not \in \{0, 1, -1\}$. Using the second lemma, there exist an non integrale vector $t$ such that $\tilde C t$ is integrale.
+
+Without loss of generality let's assume that
+ \[ C = \begin{pmatrix}\tilde C\\D\end{pmatrix} \]
+ Let's take $y$ be equal to  \[ \begin{pmatrix}t\\0\end{pmatrix} \] with the same decomposition as $C$.
+ If $1$ is the vector with all ones, then there exist $n \in \mathbb{N}$ large enough so that $y' := y + n1 \ge 0$. $y'$ is not integrale as sum of one integrale and one non integrale vector.
+ Then $C y' = \tilde C y + n \tilde C 1$ is integrale
+ Take $b$ to be equal to $C y'$, then 
+
+\[ \{ y \ge 0 | Cy =  b\} \]
+
+has a least one vertex ($y'$) that is not integrale. Which conclude the proof.
+
+
+
 

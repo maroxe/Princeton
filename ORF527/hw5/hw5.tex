@@ -1,0 +1,95 @@
+% Created 2016-03-06 Sun 20:12
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\newcommand{\Problem}[1]{\subsection*{Problem #1}}
+\newcommand{\Q}[1]{\subsubsection*{Q.#1}}
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+\newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+\newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\var}{var}
+\author{Bachir El khadir}
+\date{\textit{<2016-03-04 Fri>}}
+\title{Problem set 5, ORF527}
+\hypersetup{
+ pdfauthor={Bachir El khadir},
+ pdftitle={Problem set 5, ORF527},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 24.5.1 (Org mode )}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+\section{{\bfseries\sffamily TODO} Q1 (7.2 in Steel)}
+\label{sec:orgheadline1}
+A convex function \(\phi\) is a sup of affine function below it \$$\backslash${ ax + b $\backslash$}.
+Let \(\tau_n\) be a localizing sequence of \((X_t)\), so that \(X_{t \wedge \tau_n}\) is bounded, and since \(\phi\) is continuous, \(Y_{t \wedge \tau_n} = \phi(X_{t \wedge n})\) is bounded.
+So for \(s < t\), \(E[Y_{t \wedge \tau_n} | F_s] = E[\phi(X_{t \wedge \tau_n}) | F_s] \underbrace{\le}_{\text{Jensen}} \phi(E[X_{t \wedge \tau_n} | F_s]) = \phi(Y_{s \wedge n})\)
+\(\phi = X\)
+
+\section{{\bfseries\sffamily TODO} Q1 (7.3)}
+\label{sec:orgheadline2}
+blablba
+
+\section{Q2}
+\label{sec:orgheadline3}
+a. By Ito isometry and linearity:
+$$E[ (\int_0^T X_s^n dW_s - \int_0^T X_s dW_s)^2 ] =  E[ \int_0^T (X_s^n - X_s)^2 ds ] \rightarrow 0$$
+
+b. Let \(\tau_n\) be a localizing sequence.
+By markov inequality:
+$$P(|\int_0^T X_{t \wedge \tau_n} dW_t| \ge \varepsilon) \le \frac{E[|\int_0^T X_{t \wedge \tau_n} dW_t|^2]}{\varepsilon^2}$$
+By Ito:
+$$P(|\int_0^T X_{t \wedge \tau_n} dW_t| \ge \varepsilon) \le \frac{E[\int_0^T X^2_{t \wedge \tau_n} dt]}{\varepsilon^2}$$
+
+c. By b.
+$$P(|\int_0^T (X_t - X^n_t) dW_t|^2 > \varepsilon) \le P(\int_0^T (X_t - X^n_t)^2 dt \ge \varepsilon) + \frac N{\varepsilon^2}$$
+Taking the \(\lim\sup\) with respect to \(n\):
+  $$\lim\sup_n P(|\int_0^T (X_t - X^n_t) dW_t|^2 > \varepsilon) \le \frac N{\varepsilon^2}$$
+  And thus for all \(N > 0\). We conclude by taking the \(N \rightarrow 0\).
+
+d. Let \(X \in \mathcal H^{loc}[0, T]\), let \(\tau_n\) be a localizing sequence, so that \(X1_{[0, \tau_n]} \in \mathcal H[0, T]\).
+Since \(\mathcal H_0[0, T]\) is dense in \(\mathcal H[0, T]\) with respect to the \(L_2(\Omega \times [0, T])\) norm, there exist a sequence \(X_n \in \mathcal H_0\) such that:
+\(E[\int_0^T (X1_{[0, \tau_n]}(s) - X_n(s))^2 ds] \rightarrow_n 0\).
+
+\(P(\int_0^T (X(s)1_{[0, \tau_n]}(s) - X_n(s))^2 ds > \varepsilon) \le \frac{E[\int_0^T (X1_{[0, \tau_n]}(s) - X_n(s))^2 ds]}{\varepsilon} \rightarrow_n 0\)
+
+So \(\int_0^T (X(s)1_{[0, \tau_n]}(s) - X_n(s))^2\) converges to 0 in probability.
+We also know that \(\int_0^T X^2(s)1_{[0, \tau_n]}(s) ds \rightarrow \int_0^T X^2(s) ds\) alsmost surely, and thus in probability.
+
+Now, \(\int_0^T (X(s) - X_n(s))^2 ds \le \int_0^T (X(s) - X(s)1_{[0, \tau_n]}(s))^2 + \int_0^T (X1_{[0, \tau_n]}(s) - X_n(s))^2 \overset{P}{\rightarrow} 0\), which gives the result.
+
+Using c., We can definie the integral of  \(X \in \mathcal H^{loc}[0, T]\) as the limit in probability of a sequence of simple function that converge to \(X\) in the sense of c.
+
+To prove that such construction is sound, we have to prove that the limit doesn't depend on the sequence of simple functions chosen, or equivalenty, that by linearity that if \(X_n \overset{c.}{\rightarrow} 0\), \(\int_0^T X_n dW_t \overset{P}{\rightarrow} 0\).
+
+
+\section{{\bfseries\sffamily TODO} Q3}
+\label{sec:orgheadline4}
+a. \(d(e^tW_t) = e^tW_t dt + e^tdW_t\)
+b. \(f x \rightarrow \frac1{1+x^2}\), \(f'(x) = \frac{-2x}{(1+x^2)^2}\), \(f''(x) = \frac{-2(1+x^2)^2 + 8x^2(1+x^2)}{(1+x^2)^4} = \frac{-2 + 6x^2}{(1+x^2)^3}\)
+$$d(1+W_t^2)^{-1} = \frac{-2W_t}{(1+W_t^2)^2}dW_t + \frac{-1 + 3W_t^2}{(1+W_t^2)^3}dt$$
+c. $$f: (t, x) \rightarrow e{\alpha x + \sigma t} cos(\int_0^t \sqrt{|x|} $$
+\end{document}
