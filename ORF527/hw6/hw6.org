@@ -1,0 +1,230 @@
+# -*- mode: org; org-confirm-babel-evaluate: nil; org-speed-commands-user: nil; org-use-speed-commands: t; -*-
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+#+HTML_HEAD: <link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet"></link>
+#+HTML_HEAD: <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+#+HTML_HEAD: <script src="http://127.0.0.1:60000/autoreload.js"></script>
+
+
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t broken-links:nil c:nil creator:nil
+#+OPTIONS: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+OPTIONS: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+OPTIONS: timestamp:t title:t toc:t todo:t |:t
+#+OPTIONS: toc:nil h:2
+
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 24.5.1 (Org mode )
+
+
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+
+#+LATEX_HEADER:  \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{amsfonts}
+
+#+LATEX_HEADER: \newcommand{\Problem}[1]{\subsection*{Problem #1}}
+#+LATEX_HEADER: \newcommand{\Q}[1]{\subsubsection*{Q.#1}}
+#+LATEX_HEADER: \newcommand{\union}[1]{\underset{#1}{\cup} }
+#+LATEX_HEADER: \newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+#+LATEX_HEADER: \newcommand{\inter}[1]{\underset{#1}{\cap} }
+#+LATEX_HEADER: \newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+#+LATEX_HEADER: \newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+#+LATEX_HEADER: \newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+#+LATEX_HEADER: \DeclareMathOperator{\cov}{cov}
+#+LATEX_HEADER: \DeclareMathOperator{\var}{var}
+
+#+BEGIN_SRC emacs-lisp :exports none
+(defun add-caption-header-and-center (caption header )
+  (concat (format "org\n#+attr_html: :class center\n#+caption: %s\n%s" caption header)))
+(defun add-caption-and-center (caption)
+  (concat (format "org\n#+attr_html: :class center\n#+caption: %s" caption)))
+
+#+END_SRC
+
+#+RESULTS:
+: add-caption-and-center
+
+
+#+TITLE: Problem set 6, ORF527
+#+DATE: <2016-03-24 Thu>
+#+AUTHOR: Bachir El khadir
+
+* Q1 (8.2 in Steele)
+
+  $f(t, x) = h(t)x \in C^{1,2}(R^+ \times R)$, $f_t = h'(x), f_x = h(t), f_{xx} = 0$
+  
+  So by Ito formula:
+  
+  $$d(h(t)B_t) = h'(t)B_t dt + h(t)dB_t$$
+  
+  e.g
+  
+  $$\int_0^t h(s) dB_s = h(t)B_t - \int_0^t h'(s)B_sds$$
+
+* Q2
+  *a.*
+
+  $f \in C^{\infty}$, $f_t = (\mu - \sigma^2/2)f$, $f_x = \sigma f$, $f_xx = \sigma^2 f$, By ito formula:
+
+  $dX_t = df(t, W_t) = (f_t + \frac12 f_xx) dt + f_x dW_t = \mu X_t dt + \sigma X_t dW_t$
+
+  $dX_tdX_t = \sigma^2 X_t^2 dt$
+
+  $\log' = \frac1x, \log'' = -\frac1{x^2}$, so:
+
+  $d\log(X_t) = \frac{1}{X_t} dX_t - \frac12 \frac1{X_t} \sigma^2 X_t^2 dt = (\mu - \sigma^2/2)dt + \sigma dW_t$
+
+  *b.*
+
+  $\tau_n = \inf \{ t \ge 0, X_t \le \frac1n \}$
+
+  $\tau_n$ is non-decreasing, and since $X_t > 0$, $\tau_n \rightarrow \infty$ (otherwise $X_{\tau_n} \rightarrow X_{\lim \tau_n} = 0$)
+
+  Let  $\phi \in C^{\infty}(\mathbb R^+)$ such that:
+  \[\phi(x) = \begin{array}{cc}
+  1 & \text{when } x \ge 1\\
+  0 & \text{when } x \le \frac12
+  \end{array}
+  \]
+  (The construction has been done in class)
+  
+  Let $f^n(t, x) = f(t, x)\phi(nx) \in C^{1, 2}(\mathbb R^+ \times R^+)$. $f^n$ is equal to $f$ when $x \in[\frac1n, \infty)$. 
+
+  Then $\forall t \ge 0$, $f(t \wedge \tau_n, X_{t \wedge \tau_n}) = f^n(t \wedge \tau_n, X_{t \wedge \tau_n})$
+
+  Let $n$ be large enough so that $\frac1n < X_0$. Ito formula applied to $f^n$:
+
+  $f^n(t, X_t) = f^n(0, X_0) + \int_0^t (f^n_t + \frac{[X]_s}2 f^n_{xx})(s, X_s) ds + \int_0^t (f^n_t + \frac{[X]_s}2 f^n_{xx})(s, X_s) ds$
+
+  So:
+  \begin{align*}
+  f(t \wedge \tau_n, X_{t \wedge \tau_n})
+  &= f^n(t \wedge \tau_n, X_{t \wedge \tau_n})
+  \\&= f(0, X_0) + \int_0^{t\wedge \tau_n} (f^n_t + \frac{[X]_s}2 f^n_{xx})(s, X_s) ds + \int_0^{t\wedge \tau_n} f^n_{x}(s, X_s) dX_s
+  \\&= f(0, X_0) + \int_0^{t\wedge \tau_n} (f_t + \frac{[X]_s}2 f_{xx})(s, X_s) ds + \int_0^{t\wedge \tau_n} f_{x}(s, X_s) dX_s
+  \end{align*}
+
+
+  $| f(s) - f^n(s)1_{s \le \tau_n}| \le |f(s) - f^n(s)| + |1_{s \le \tau_n} - 1| |f^n(s)| \le |f - f^n|_{\infty} + 2|1_{s \le \tau_n} - 1| |f|_{\infty}$
+
+  As a conclusion
+
+  $$f(t, X_t)
+  = f(0, X_0) + \int_0^t (f_t + \frac{[X]_s}2 f_{xx})(s, X_s) ds + \int_0^t  f_{x}(s, X_s) dX_s$$
+
+
+* Q3
+
+  *a.*
+
+  $$QV[B, t] = \lim_{n \infty} \frac{t}{2^n} \sum_{k=1}^{2^n} |N_k|^2$$
+  
+  Where $N_k \overset{iid}{\sim} \mathcal N(0, 1)$ 
+
+
+  By law of large number $QV[B, t] \rightarrow t E[N_1^2] = t$
+
+
+  *b.* 
+  $$X_t = X_0 + \int_0^t F_s ds + \int_0^t G_s dB_s$$
+
+  Using $(b-a)^2 = b^2 - a^2 - 2a(b-a)$
+
+  \begin{align*}
+  QV[X, T]
+  &= \lim_{n \infty} \sum_{k=1}^{2^n} (X_{k2^{-n}t} - X_{(k-1)2^{-n}t})^2
+  \\&= \lim_{n \infty} \sum_{k=1}^{2^n} (X_{k2^{-n}t}^2 - X_{(k-1)2^{-n}t}^2) + \sum_{k=1}^{2^n} 2 X_{(k-1)2^{-n}t}(X_{k2^{-n}t} -  X_{(k-1)2^{-n}t})
+  \\&= X_t^2 - X_0^2  + 2 \lim_{n \infty} \sum_{k=1}^{2^n} X_{(k-1)2^{-n}t}(X_{k2^{-n}t} -  X_{(k-1)2^{-n}t})
+  \end{align*}
+
+
+  \begin{align*}
+  \sum_{k=1}^{2^n} X_{(k-1)2^{-n}t}(X_{k2^{-n}t} -  X_{(k-1)2^{-n}t})
+  &= \sum_{k=1}^{2^n} X_{(k-1)2^{-n}t} \int_{t_{k-1}}^{t_k} F_s ds + X_{(k-1)2^{-n}t} \int_{t_{k-1}}^{t_k} G_s dB_s
+  \\&=  \int_0^t \tilde X^n_s F_s ds + \int_0^t  \tilde X^n_s G_s dB_s
+  \end{align*}
+
+  Where $\tilde X^n_t = \sum_{k=1}^{2^n} X_{t_k} 1_{t_k \le t \le t_{k+1}}$
+
+  $|\int_0^t \tilde X^n_s F_s ds - \int_0^t \tilde X_s F_s ds| \le \int_0^t |\tilde X^n_s - X_s| |F_s| ds \le \underbrace{\sup_{|u-v| \le 2^{-n}} |X_u - X_v|}_{\rightarrow_n 0 \text{(uniform continuity)}} |F|_{H_1}$
+
+  Let $\tau_m = \inf\{t , |G_t| \ge M \vee |X_t| \ge M\}$ be a localising sequence. Note that since $G_t, X_t$ are finite a.s, $\tau_m < \infty$ too.
+
+  \begin{align*}
+  P(|\int_0^t \tilde X_s^nG_sdB_s -  \int_0^t X_sG_sdB_s| > \varepsilon)
+  &\le P(|\int_0^t \tilde X_s^nG_sdB_s -  \int_0^t X_sG_sdB_s| > \varepsilon, t \le \tau_m) + P(t \ge \tau_m)
+  \\&\le P(|\int_0^{t \wedge \tau_m} \tilde X_s^nG_sdB_s -  \int_0^{t \wedge \tau_m} X_sG_sdB_s| > \varepsilon) + P(t \ge \tau_m)
+  \\&\le \frac1{\varepsilon^2}E|\int_0^{t \wedge \tau_m} (\tilde X_s^n - X_s)G_sdB_s |^2 + P(t \ge \tau_m)
+  &\text{(markov)}
+  \\&\le \frac{m^2}{\varepsilon^2}\int_0^t E| 1_{t \le \tau_m} (\tilde X_s^n - X_s)^2 |ds + P(t \ge \tau_m)
+  \\&\le \frac{m^2t}{\varepsilon^2}\int_0^t E 1_{t \le \tau_m} (\tilde X_s^n - X_s)^2 ds + P(t \ge \tau_m)
+  \end{align*}
+
+  By continuity: $\forall s \; \tilde X_s^n  \rightarrow X_s$, and $|1_{t \le \tau_m} (\tilde X_s^n - X_s)^2| \le m$, by dominated convergence theorem:
+
+  $$\int_0^t E 1_{t \le \tau_m} (\tilde X_s^n - X_s)^2 ds  \rightarrow_n 0$$
+
+  so $\lim\sup_n P(|\int_0^t \tilde X_s^nG_sdB_s -  \int_0^t X_sG_sdB_s| > \varepsilon) \le P(t \ge \tau_m) \rightarrow_m 0$
+
+  We have just proved that
+  $$QV(X, t) \overset{\mathbb P}{\rightarrow} X_t^2 - X_0^2 - 2\int_0^2 X_s dX_s$$
+
+  *c*
+
+  By Ito formula
+
+  $d(X_t^2) = 2X_tdX_t + G_t^2 dt$
+
+  So $X_t^2 - X_0^2 - \int_0^t X_s dX_s = \int_0^t G_s^2 ds$
+
+  e.g $QV(X, t) = \int_0^t G_s^2 ds$.
+
+* Q4
+
+  Let's assume $X_0 + \int_0^t F_s ds + \sum_{k=1}^m \int_0^t G_s^k
+  dW^k_s = \tilde X_0 + \int_0^t \tilde F_s ds + \sum_{k=1}^m \int_0^t
+  \tilde G_s^k dW^k_s$
+
+  By setting $t$ to $0$, $X_0 = \tilde X_0$
+
+  By linearity: $\int_0^t (F_s - \tilde F_s) ds = \sum_{k=1}^m \int_0^t
+  (\tilde G_s^k - G_s^k) dW^k_s$,
+
+  Taking the quadratic variation of both sides, we find that:
+
+  $$0 = \sum_{k=1}^m \int_0^t (\tilde G_s^k - G_s)^2 ds$$ Which proves
+  $\forall T \ge t \ge 0 \; \int_0^t ||\tilde G_s - \tilde G_s||^2 ds =
+  0$, e.g $G_s \overset{H^2}{=} \tilde G_s$ and that $\sum_{k=1}^m
+  \int_0^t (\tilde G_s^k - G_s^k) dW^k_s = 0$.
+
+  This leads to $\forall T \ge t \ge 0 \; \int_0^t F_s - \tilde F_s =
+  0$, by taking the derivative, $F_s = \tilde F_s$, therefore
+  $\int_0^t |F_t - \tilde F_t| dt = 0$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,4 +1,4 @@
-% Created 2016-03-03 Thu 10:50
+% Created 2016-04-08 Fri 18:31
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -19,8 +19,9 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
 \newtheorem{algorithm}{Algorithm}
+\usepackage[margin=0.5in]{geometry}
 \author{Bachir El Khadir}
-\date{\textit{<2016-03-01 Tue 09:30>}}
+\date{\today}
 \title{Compressed Sensing and Random Matrices}
 \hypersetup{
  pdfauthor={Bachir El Khadir},
@@ -32,8 +33,6 @@
 \begin{document}
 
 \maketitle
-\tableofcontents
-
 \begin{quote}
 I pledge my honor that I have not violated the honor code
 \end{quote}
@@ -127,7 +126,7 @@ the inequality also holds for \(\varepsilon h \; (\forall \varepsilon > 0)\)
 \end{itemize}
 \end{proof}
 
-Drawback: Depends on \(\beat^*\).
+Drawback: Depends on \(\beta^*\).
 \(\implies\) Need a stronger but more tractable condition (restricted isometry property: RIP)
 
 \begin{definition}

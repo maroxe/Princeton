@@ -1,0 +1,257 @@
+% Created 2016-04-12 Tue 18:00
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\newcommand{\Problem}[1]{\subsection*{Problem #1}}
+\newcommand{\Q}[1]{\subsubsection*{Q.#1}}
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+\newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+\newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\var}{var}
+\author{Bachir El khadir}
+\date{\today}
+\title{Problem set 8, ORF527}
+\hypersetup{
+ pdfauthor={Bachir El khadir},
+ pdftitle={Problem set 8, ORF527},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 25.1.50.1 (Org mode )}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+\section{9.2 (Steele)}
+\label{sec:orgheadline1}
+
+\begin{itemize}
+\item \(\mu(t, x) = tx\)
+\item \(\sigma(t, x) = e^{\frac{t^2}2}\)
+
+For \(t \le T\), \(\mu, \sigma\), are trivially lipschiz in \(x\) uniformly in \(t\).
+
+Let \(X_t\) be the unique solution, and define \(U_t = X_te^{-\frac{t^2}2}\), then:
+$$dU_t = -tU_t dt + e^{-\frac{t^2}2} dX_t = -tU_tdt + tU_tdt + dB_t = dB_t$$
+
+so \(U_t = U_0 + B_t = 1 + B_t\), and therefore \(X_t = e^{\frac{t^2}2}(1+B_t)\)
+\end{itemize}
+
+\section{9.4 (Steele)}
+\label{sec:orgheadline2}
+
+Let \(f\) be a smooth function:
+
+\begin{align*}
+dY_t &= \frac12 \sigma^2(X_t) f''(X_t)dt + f'(X_t) dX_t
+\\&= (\frac12 \sigma^2 f'' + af')(X_t) dt + (\sigma f')(X_t) dB_t
+\end{align*}
+
+Take
+\begin{itemize}
+\item \(f(x) = \int_0^x \frac1{\sigma(s)} ds\), note that \(f' = \frac1{\sigma} > 0\) , so \(f\) is increasing. Since \(f\) continuous it is invertible.
+\item Define \(b\) as \(b(f(x)) = (\frac12 \sigma^2f'' + f'a)(x)\), or equivalently \(b(y) = (- \frac12 \sigma' + \frac a{\sigma})(f^{-1}(y))\)
+
+Note that:
+
+\item \(\sigma(x) f'(x) = 1\)
+\item \(\frac12 \sigma^2(x) f''(x) + a(x) =  b(f(x))\)
+\end{itemize}
+
+so that \(dY_t = b(f(X_t)) dt + dB_t\), and \(Y_t = Y_0 + \int_0^t b(Y_s) ds + B_t\)
+
+\section{Q.2}
+\label{sec:orgheadline5}
+\textbf{a}
+
+Let \(b, d = 0\)
+
+Consider:
+\[\left\{\begin{array}{c}dZ_t = aZ_tdt + cZ_t dW_t\\Z_0 = X_0\end{array}\right.\]
+
+\(Z_t = X_0e^{(a-\frac12 c^2) t + cW_t}\)
+We check easily that this is a solution to the SDE. It is also the unique solution because the coefficients are linear in \(x\) and don't depend on \(t\).
+
+Now consider the general equation:
+\[\left\{\begin{array}{c}dX_t = (aX_t+b)dt + (cX_t+d) dW_t\\X_0 = x_0\end{array}\right.\]
+
+\(Z_t > 0\) a.s
+
+\(f(x, z) = \frac xz\)
+
+Let \(U_t = \frac{X_t}{Z_t}\)
+
+\begin{align*}
+dU_t &= \frac1{Z_t} dX_t - \frac{X_t}{Z_t^2}dZ_t + \frac12 [ -2\frac{(cX_t+d)cZ_t}{Z_t^2} + 2(cZ_t)^2\frac{X_t}{Z_t^3}]dt
+\\&= \frac1{Z_t} dX_t - \frac{X_t}{Z_t}\frac{dZ_t}{Z_t} + [ -\frac{(c^2X_t+cd)}{Z_t} + c^2\frac{X_t}{Z_t}]dt
+\\&= \frac1{Z_t} dX_t - \frac{X_t}{Z_t^2}dZ_t - \frac{cd}{Z_t} dt
+\\&= \frac1{Z_t} (dX_t - X_t \frac{dZ_t}{Z_t} - cd \, dt)
+\\&= \frac1{Z_t} ( X_t(a dt+c dW_t) + b dt + d dW_t - X_t (a dt+c dW_t)  - cd \, dt)
+\\&= \frac1{Z_t} ((b-cd) dt + d dW_t)
+\end{align*}
+Since \(X_0 = Z_0\):
+
+\[X_t = U_tZ_t = Z_t\left[1 + (b+cd) \int_0^t \frac{ds}{Z_s} + d  \int_0^t \frac{dW_s}{Z_s}\right]\]
+
+\textbf{b}
+
+\(dX_t = aX_t(b-X_t)dt + cX_t dW_t = X_t( a(b-X_t)dt + cdW_t)\)
+
+Define \(U_t := \frac1{X_t}\)
+
+Ito:
+\begin{align*}
+dU_t
+&=d\frac1{X_t}
+\\&= -\frac1{X_t^2}dX_t + \frac1{X_t^3}(cX_t)^2dt
+\\&= -\frac1{X_t} \frac{dX_t}{X_t} +  c^2\frac1{X_t} dt
+\\&= -U_t [ab dt - aX_t dt + c dW_t] +  c^2U_t dt
+\\&=  -abU_t dt + a dt - c U_tdW_t +  c^2U_t dt
+\\&=  \left[a + (-ab + c^2) U_t\right] dt  - c U_t dW_t 
+\end{align*}
+
+Define \(V_t\) the solution to the homogenious SDE:
+$$dV_t = (-ab + c^2)V_t dt - cV_t dW_t, V_0 = U_0$$
+
+so that:
+
+\[V_t= U_0 \exp\left((\frac12 c^2 - ab) t - c W_t\right) \]
+
+by part a):
+\(U_t = V_t\left[1 + a \int_0^t \frac{ds}{V_s}\right]\)
+
+
+\[X_t = \frac1{U_t} = \frac1{V_t\left[ 1 + a \int_0^t \frac{ds}{V_s}\right]}\]
+When \(a > 0\), since \(V_t > 0\), this solution is well definied, and we can check easily that it verifies the SDE.
+
+If \(a < 0, c \ne 0\), we prove that with positive probability, \(\exists t > 0, \int_0^t \frac{ds}{V_s} \ge -\frac1a\), and as a result \(X_t\) is not well defined.
+
+Define the stopping times:
+\begin{itemize}
+\item \(\tau_1 = \inf\{ t > 0, W_t = 1-\frac1a \}\)
+\item \(\tau_2 = \inf\{ t \ge \tau_1, W_t = 2-\frac1a \}\)
+\item \(\tau_3 = \inf\{ t \ge \tau_2, W_t = 1-\frac1a \}\)
+\end{itemize}
+
+All the \(\tau_i\) are finite a.s.
+
+Furthermore, if \(\tau_3 \ge \tau_2 +1\), \(\int_0^t \frac{ds}{V_s} \ge \int_{\tau_2}^{\tau_3} \frac{ds}{V_s} \ge -\frac1a\)
+
+Now, by strong markov property: \(\mathbb P(\tau_3 \ge \tau_2 + 1) = \mathbb P(\tau_1 \ge 1 | W_0 = 2 - \frac1a)\). This probability is positive because \(E[\tau_1] = \infty\)
+
+\textbf{Q.3}
+
+\textbf{a}
+\begin{align*}
+.|X_t^n - X_t| &= |\int_0^t [b(X_s) - b(X^n_s)] ds + \rho (W^n_t - W_t)|
+\\&\le L \int_0^t |X_s - X^n_s| ds + |\rho| |W^n_t - W_t|
+\\&\le L \int_0^t \underbrace{|X_s - X^n_s|}_{f(s)} ds + \underbrace{|\rho| \sup_{s \le s} |W^n_s - W_s|}_{g(t)}
+\end{align*}
+
+
+\(g\) is non-descreasing, Gronwall implies:
+$$|X_t^n - X_t| \le |\rho(W_t^n - W_t)| \exp(LT)$$
+
+so that:
+
+$$\sup_{[0, T]} |X_t^n - X_t| \le |\rho| \sup|W_t^n - W_t| \exp(LT) \rightarrow_n 0$$
+
+\textbf{b}
+
+\begin{enumerate}
+\item SDE of \(Z_t\)
+\label{sec:orgheadline3}
+
+
+First assume that \(Z_t\) exists. Write:
+
+\(Z_t = \mu(Z_t) dt + \alpha(Z_t)\)
+
+If we definie \(f, c\) as in 9.4,
+\(c(y) = (- \frac12 \alpha' + \frac \mu{\alpha})(f^{-1}(y))\)
+
+we have that:
+
+\[\begin{pmatrix}
+f(Z_t) &= f(Z_0) &+ \int_0^t c(f(Z_s)) ds &+ B_t\\
+\uparrow & \uparrow & \uparrow & \uparrow\\
+f(Z^n_t) & f(Z^n_0) & \int_0^t c(f(Z^n_s)) ds & B^n_t\\
+\end{pmatrix}\]
+
+Where the convergence holds a.s.
+
+
+To find a candidate for the SDE, let's assume:
+\(\forall n \; f(Z^n_t) = f(Z^n_0) + \int_0^t c(f(Z^n_s)) ds + B^n_t\)
+
+
+
+Note that:
+\begin{itemize}
+\item \(f' = \frac1{\alpha}\), \(f'' = -\frac{\alpha'}{\alpha^2}\)
+\item \({f^{-1}}'(y) = \frac1{f'(f^{-1}(y))} = \frac1{f'(z)} = \alpha(z)\)
+\item \({f^{-1}}''(y) = (\frac1{f'(f^{-1}(y))})' = -\frac{f''(f^{-1}(y))}{((f^{-1}(y))')^2} = \alpha'(z)\alpha(z)\)
+\end{itemize}
+
+
+Note \(Y^n_t = f(Z_n^t)\)
+\begin{align*}
+dZ^n_t &= df^{-1}( Y_n^t)
+\\&= {f^{-1}}'(Y_t^n) dY^n_t
+\\&= \alpha(Z^n_t) (c(Y_n^t) dt + dB^n_t) 
+\\&= \alpha(Z_n^t) c(Y_n^t) dt + \underbrace{\alpha}_{\sigma}(Z^n_t) dB^n_t
+\\&= \underbrace{(\mu - \frac12 \alpha \alpha')}_{b}(Z_t^n)dt + \underbrace{\alpha}_{\sigma}(Z^n_t) dB^n_t
+\end{align*}
+
+
+By identification, \(\alpha = \sigma\), \(\mu = b + \frac12 \alpha \alpha'\)
+In conclusion, \(Z_t\) verifies:
+
+\(dZ_t = (b+\frac12\sigma\sigma')(Z_t) dt + \sigma(Z_t) dB_t\)
+
+In the next part we consider the solution to this SDE, and we prove that, indeed, \(Z_t^n\) converges to \(Z_t\) uniformly in t.
+
+\item Existence of \(Z_t\)
+\label{sec:orgheadline4}
+Define \(Z_t\) as the solution of the SDE:
+
+\[dZ_t = \underbrace{b+\frac12\sigma\sigma'}_{\text{Lipschiz}}(Z_t) dt + \underbrace{\sigma}_{\text{Lipschiz}}(Z_t) dB_t\]
+
+Following the last part,
+\[ df(Z_t) = c\circ f(Z_t) dt + dB_t \]
+
+We also have that:
+
+\(df(Z_t^n) = f'(Z_t^n) dZ_t^n = \frac{b}{\sigma}(Z_t^n) dt + dB^n_t\)
+\(b/\sigma\) is Lipschiz, by part \textbf{a}:
+
+\(\sup_{t \in [0, T]} |f(Z_t^n) - f(Z_t)| \rightarrow_n 0\)
+
+We know also that \(f^{-1}\) is Lipschiz in \([0, T]\). Indeed, \({f^{-1}}'(y) = \sigma(f^{-1}(y))\) is bounded in that interval.
+
+So
+\[\sup_{[0, T]} |Z_t- Z^n_t| = \sup_{[0, T]}|f^{-1}\circ f(Z_t) - f^{-1}\circ f(Z^n_t)| \le ||{f^{-1}}'||_{\infty} \sup_{t \in [0, T]} |f(Z_t^n) - f(Z_t)| \rightarrow_n 0\]
+
+Which proves the existence of \(Z_t\).
+\end{enumerate}
+\end{document}

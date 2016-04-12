@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2016-03-06 Sun 17:54 -->
+<!-- 2016-03-08 Tue 20:59 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Problem set 5, ORF527</title>
@@ -94,10 +94,6 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
-<link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet"></link>
-<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script src="http://127.0.0.1:60000/autoreload.js"></script>
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -170,30 +166,63 @@ for the JavaScript code in this tag.
 <body>
 <div id="content">
 <h1 class="title">Problem set 5, ORF527</h1>
+<p>
++HTML<sub>HEAD</sub>: &lt;link rel="stylesheet" type="text/css" href="../../css/special-block.css" /&gt;
++HTML<sub>HEAD</sub>: &lt;link href="<a href="http://thomasf.github.io/solarized-css/solarized-dark.min.css">http://thomasf.github.io/solarized-css/solarized-dark.min.css</a>" rel="stylesheet"&gt;&lt;/link&gt;
++HTML<sub>HEAD</sub>: &lt;script type="text/javascript" src="<a href="http://code.jquery.com/jquery-latest.min.js">http://code.jquery.com/jquery-latest.min.js</a>"&gt;&lt;/script&gt;
++HTML<sub>HEAD</sub>: &lt;script src="<a href="http://127.0.0.1:60000/autoreload.js">http://127.0.0.1:60000/autoreload.js</a>"&gt;&lt;/script&gt;
+</p>
 
 <div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1"><span class="section-number-2">1</span> <span class="todo TODO">TODO</span> Q1 (7.2 in Steel)</h2>
+<h2 id="orgheadline1"><span class="section-number-2">1</span> <span class="done DONE">DONE</span> Q1 (7.2 in Steel)</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-A convex function &phi; is a sup of affine function below it $\{ ax + b \}.
-Let \(\tau_n\) be a localizing sequence of \((X_t)\), so that \(X_{t \wedge \tau_n}\) is bounded, and since \(\phi\) is continuous, \(Y_{t \wedge \tau_n} = \phi(X_{t \wedge n})\) is bounded.
-So for \(s < t\), \(E[Y_{t \wedge \tau_n} | F_s] = E[\phi(X_{t \wedge \tau_n}) | F_s] \underbrace{\le}_{\text{Jensen}} \phi(E[X_{t \wedge \tau_n} | F_s]) = \phi(Y_{s \wedge n})\)
-\(\phi = X\)
+Let \(\tau_n = inf\{t, |X_t| \ge n\}\) be a localizing sequence of \((X_t)\), so that \(X_{t \wedge \tau_n}\) is bounded. \(\tau_n\) is non-decreasing and diverges to \(\infinity\) because the continuous function \(t \rightarrow X_t\) is bounded on every compact set \([0, T]\), and if \(n\) is larger than this bounde then \(\tau_n \ge T\).
 </p>
+
+<p>
+Since \(\phi\) is continuous, \(Y_{t \wedge \tau_n} = \phi(X_{t \wedge n})\) is bounded.
+</p>
+
+
+<p>
+So for \(s < t\), \(E[Y_{t \wedge \tau_n} | F_s] = E[\phi(X_{t \wedge \tau_n}) | F_s] \underbrace{\le}_{\text{Jensen}} \phi(E[X_{t \wedge \tau_n} | F_s]) = \phi(Y_{s \wedge n})\)
+Counter example:
+</p>
+<ul class="org-ul">
+<li>\(\Omega = (0, 1)\), \(P\) the uniform measure.</li>
+<li>\(\phi(x) = x^2\)</li>
+<li>\(X(t, \omega) = \frac{1}{\omega^{\frac 12}}\) is a (constant) martingale, but \(\phi(X) = \frac{1}{\omega}\) is not integrable.</li>
+</ul>
 </div>
 </div>
 
+
 <div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2"><span class="section-number-2">2</span> <span class="todo TODO">TODO</span> Q1 (7.3)</h2>
+<h2 id="orgheadline2"><span class="section-number-2">2</span> <span class="done DONE">DONE</span> Q1 (7.3)</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-blablba
+Let \(X_t\) be a continuous local submartingale martingale verifying (7.35), and \(\tau_n\) a localizing sequence, and \(s < t < T\), then:
+</p>
+
+<ul class="org-ul">
+<li>\(E[|X_t|] \le E[\sup_{[0, T]} |X_s|] < \infty\)</li>
+<li>\(E[X_{t \wedge \tau_n} | F_s] \ge X_{s \wedge \tau_n}\)</li>
+</ul>
+
+<p>
+Using the fact that \(X_{s \wedge \tau_n}\) is uniformly bounded by the \(L_1\) function \(\sup_{[0, T]} |X_s|\), we use dominated convergence theorem to prove that
+\(E[X_t | F_s] \le X_s\)
+</p>
+
+<p>
+A bounded local martingale trivially verifies (7.35)
 </p>
 </div>
 </div>
 
 <div id="outline-container-orgheadline3" class="outline-2">
-<h2 id="orgheadline3"><span class="section-number-2">3</span> Q2</h2>
+<h2 id="orgheadline3"><span class="section-number-2">3</span> <span class="todo TODO">TODO</span> Q2</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 a. By Ito isometry and linearity:
@@ -201,12 +230,30 @@ a. By Ito isometry and linearity:
 </p>
 
 <p>
-b. Let \(\tau_n\) be a localizing sequence.
+b.  \(\tau_n = \inf \{t ,  \int_0^t X_s^2 ds \ge n\} \wedge T\) is a localizing sequence.
 By markov inequality:
 \[P(|\int_0^T X_{t \wedge \tau_n} dW_t| \ge \varepsilon) \le \frac{E[|\int_0^T X_{t \wedge \tau_n} dW_t|^2]}{\varepsilon^2}\]
 By Ito:
 \[P(|\int_0^T X_{t \wedge \tau_n} dW_t| \ge \varepsilon) \le \frac{E[\int_0^T X^2_{t \wedge \tau_n} dt]}{\varepsilon^2}\]
 </p>
+
+<ul class="org-ul">
+<li><p>
+For \(0 < \delta < \varepsilon\)
+</p>
+\begin{align}
+P(|\int_0^T X_t dW_t| \ge \varepsilon)
+&\le P(|\int_0^{\tau_n} X_t dW_t| \ge \varepsilon-\delta) + P(|\int_{\tau_n}^T X_t dW_t| \ge \delta)
+\\&\le \frac{E[|\int_0^{\tau_n} X_t dW_t|^2]}{(\varepsilon-\delta)^2} + P(|\int_{\tau_n}^T X_t dW_t| \ge \delta)
+\\&\le \frac{E[\int_0^{\tau_n} X_t^2 dt]}{(\varepsilon-\delta)^2} + P(|\int_{\tau_n}^T X_t dW_t| \ge \delta)
+\\&\le \frac{N}{(\varepsilon-\delta)^2} +  P(\tau_n < T)
+\\&\le \frac{N}{(\varepsilon-\delta)^2} +  P(\int_0^T X_s^2 \ge N)
+\end{align}
+
+<p>
+We get the result by taking  \(\delta\) to 0.
+</p></li>
+</ul>
 
 <p>
 c. By b.
@@ -218,6 +265,9 @@ Taking the \(\lim\sup\) with respect to \(n\):
 
 <p>
 d. Let \(X \in \mathcal H^{loc}[0, T]\), let \(\tau_n\) be a localizing sequence, so that \(X1_{[0, \tau_n]} \in \mathcal H[0, T]\).
+</p>
+
+<p>
 Since \(\mathcal H_0[0, T]\) is dense in \(\mathcal H[0, T]\) with respect to the \(L_2(\Omega \times [0, T])\) norm, there exist a sequence \(X_n \in \mathcal H_0\) such that:
 \(E[\int_0^T (X1_{[0, \tau_n]}(s) - X_n(s))^2 ds] \rightarrow_n 0\).
 </p>
@@ -228,6 +278,9 @@ Since \(\mathcal H_0[0, T]\) is dense in \(\mathcal H[0, T]\) with respect to th
 
 <p>
 So \(\int_0^T (X(s)1_{[0, \tau_n]}(s) - X_n(s))^2\) converges to 0 in probability.
+</p>
+
+<p>
 We also know that \(\int_0^T X^2(s)1_{[0, \tau_n]}(s) ds \rightarrow \int_0^T X^2(s) ds\) alsmost surely, and thus in probability.
 </p>
 
@@ -247,13 +300,82 @@ To prove that such construction is sound, we have to prove that the limit doesn'
 
 
 <div id="outline-container-orgheadline4" class="outline-2">
-<h2 id="orgheadline4"><span class="section-number-2">4</span> Q3</h2>
+<h2 id="orgheadline4"><span class="section-number-2">4</span> <span class="done DONE">DONE</span> Q3</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 a. \(d(e^tW_t) = e^tW_t dt + e^tdW_t\)
+</p>
+
+<p>
 b. \(f x \rightarrow \frac1{1+x^2}\), \(f'(x) = \frac{-2x}{(1+x^2)^2}\), \(f''(x) = \frac{-2(1+x^2)^2 + 8x^2(1+x^2)}{(1+x^2)^4} = \frac{-2 + 6x^2}{(1+x^2)^3}\)
 \[d(1+W_t^2)^{-1} = \frac{-2W_t}{(1+W_t^2)^2}dW_t + \frac{-1 + 3W_t^2}{(1+W_t^2)^3}dt\]
 c.
+</p>
+<ul class="org-ul">
+<li>\(Y_t = \int_0^t \sqrt{|W_s|} dW_s\), \(dY_t = \sqrt{|W_s|} dW_s\)</li>
+<li>\(d \cos(Y_t) = -\sin(Y_t) dY_t - \frac12 \cos(Y_t) d < Y >_t = -\sin(Y_t) dY_t - \frac12 \cos(Y_t) |W_s| ds\)</li>
+
+<li>\(Z_t = e^{\alpha W_t + \sigma t}\)</li>
+<li>\(dZ_t = \sigma Z_t dt + \alpha Z_t dW_t + \frac12 \alpha^2 Z_t dt = Z_t( (\sigma + \frac12 \alpha^2)dt + \alpha dW_t)\)</li>
+<li>\(U_t = e^{\alpha W_t + \sigma t} \cos(\int_0^t \sqrt{|W_s|} dW_s)\)</li>
+<li>\(V_t = e^{\alpha W_t + \sigma t} \sin(\int_0^t \sqrt{|W_s|} dW_s)\)</li>
+<li>\(d\cos(Y_t) dZ_t = -\alpha sin(Y_t)\sqrt{|W_t|}Z_t dt = -\alpha \sqrt{|W_t|} V_t\)</li>
+</ul>
+
+\begin{align*}
+d(e^{\alpha W_t + \sigma t} \cos(\int_0^t \sqrt{|W_s|} dW_s))
+&= \cos(Y_t) dZ_t + Z_t d\cos(Y_t) + dZ_t dcos(Y_t)
+\\&= \cos(Y_t)  Z_t( (\sigma + \frac12 \alpha^2)dt + \alpha dW_t) - Z_t (\sin(Y_t) dY_t + \frac12 \cos(Y_t) |W_t| dt)
+- \alpha sin(Y_t)\sqrt{|W_t|}Z_t dt
+\\&= U_t  (\sigma + \frac12 \alpha^2)dt + U_t \alpha dW_t - Z_t \sin(Y_t) dY_t - \frac12 U_t |W_t| dt
+- \alpha sin(Y_t)\sqrt{|W_t|}Z_t dt
+\\&= U_t(\sigma + \frac12 \alpha^2 - \frac{|W_t|}2) dt + (\alpha U_t - \sin(Y_t) \sqrt{|W_t|}Z_t) dW_t
+- \alpha sin(Y_t)\sqrt{|W_t|}Z_t dt
+\\&= \left(U_t(\sigma + \frac12 \alpha^2 - \frac{|W_t|}2) - \alpha  \sqrt{|W_t|} V_t \right) dt + (\alpha U_t -  \sqrt{|W_t|} V_t) dW_t
+\end{align*}
+
+<p>
+d.
+</p>
+<ul class="org-ul">
+<li>\(U_t = \int_0^t W_s d\tilde W_s\)</li>
+<li>\(dU_t = W_s d\tilde W_s\)</li>
+<li>\(V_t = W_t U_t\)</li>
+<li>\(dV_t = W_t dU_t + U_t dW_t = W_t^2 d\tilde W_t + U_t dW_t\)</li>
+<li>\(d\exp(V_t) = \exp(V_t)(dV_t + \frac12( W_t^4 + U_t^2)dt)\)</li>
+</ul>
+
+
+\begin{align*}
+d(\exp(W_t \int_0^t W_s d\tilde W_s)W_t)
+& = d(\exp(V_t)W_t)
+\\& = W_t d(\exp(V_t)) + \exp(V_t) dW_t + d(\exp(V_t)) dW_t
+\\& = W_t \exp(V_t)(dV_t + \frac12( W_t^4 + U_t^2)dt) + \exp(V_t) dW_t  + \exp(V_t) U_t dt
+\\& = W_t \exp(V_t)(W_t^2 d\tilde W_t + U_t dW_t + \frac12(W_t^4 + U_t^2)dt) + \exp(V_t) dW_t  + \exp(V_t) U_t dt
+\\& = \exp(V_t) W_t^3 d\tilde W_t + \exp(V_t) \left( W_t U_t + 1 \right) dW_t  + \exp(V_t) \left(\frac12 W_t^5 + \frac12 W_t U_t^2 +  U_t\right) dt
+\end{align*}
+
+
+
+<p>
+e.
+Ito Forumla:
+\[cos(W_t) = cos(0) - \underbrace{\int_0^t \sin(W_s) dW_s}_{\text{martingale}} - \frac12 \int_0^t cos(W_s)ds\]
+</p>
+
+<p>
+Taking the expectation on both sides, and swapping \(E\) and \(\int\) because \(\cos\) is bounded:
+\[E[cos(W_t)] = 1 - \frac12 \int_0^t E[cos(W_s)] ds\]
+</p>
+
+<p>
+So \(t \rightarrow E[cos(W_t)]\) is solution the differential equation: \(f = 1 - \frac12 \int_0^t f\)
+Since the solution is unique(\(e^{-\frac s2}\)):
+\[E[cos(W_t)] = e^{-\frac{t}2}\]
+</p>
+
+<p>
+\[\frac{\partial}{\partial t} E[cos(W_t)] = -\frac12 e^{-\frac{t}2}\]
 </p>
 </div>
 </div>
@@ -261,7 +383,7 @@ c.
 <div id="postamble" class="status">
 <p class="date">Date: <span class="timestamp-wrapper"><span class="timestamp">&lt;2016-03-04 Fri&gt;</span></span></p>
 <p class="author">Author: Bachir El khadir</p>
-<p class="date">Created: 2016-03-06 Sun 17:54</p>
+<p class="date">Created: 2016-03-08 Tue 20:59</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

@@ -1,0 +1,1241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2016-04-08 Fri 21:42 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Problem set 5, ORF525</title>
+<meta name="generator" content="Org-mode" />
+<meta name="author" content="Bachir El khadir" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+<link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet"></link>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="http://127.0.0.1:60000/autoreload.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Problem set 5, ORF525</h1>
+
+
+
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1"><span class="section-number-2">1</span> Q1</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>1.1</b>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-R">load(<span style="color: #9ccc65;">'Wikipedia.RData'</span>)
+first.names <span style="color: #8bc34a;">&lt;-</span> data.frame(name=dat$name[1:3], profession=c(<span style="color: #9ccc65;">"actor"</span>, <span style="color: #9ccc65;">"jurist"</span>, <span style="color: #9ccc65;">"physicist"</span>))
+first.names
+</pre>
+</div>
+
+<div class="org">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
+<caption class="t-above"><span class="table-number">Table 1:</span> First 3 names</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Name</th>
+<th scope="col" class="org-left">Profession</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">Michel Che</td>
+<td class="org-left">actor</td>
+</tr>
+
+<tr>
+<td class="org-left">Hossein Modarressi</td>
+<td class="org-left">jurist</td>
+</tr>
+
+<tr>
+<td class="org-left">Xiao-Gang Wen</td>
+<td class="org-left">physicist</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+
+
+<p>
+Run script 1
+</p>
+
+
+<div class="org">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
+<caption class="t-above"><span class="table-number">Table 2:</span> Dimensions</caption>
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Number of individuals</th>
+<th scope="col" class="org-right">Number of words</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">812</td>
+<td class="org-right">6910</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+
+
+
+
+<div class="org-src-container">
+
+<pre class="src src-R">words <span style="color: #8bc34a;">&lt;-</span> colnames(dtm.mat.raw)
+words.occurence <span style="color: #8bc34a;">&lt;-</span> colSums(dtm.mat.raw)
+top.ten <span style="color: #8bc34a;">&lt;-</span> t(words[order(words.occurence, decreasing=T)[1:10]])
+</pre>
+</div>
+
+<div class="org">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
+<caption class="t-above"><span class="table-number">Table 3:</span> Most used words</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">the</td>
+<td class="org-left">and</td>
+<td class="org-left">univers</td>
+<td class="org-left">for</td>
+<td class="org-left">was</td>
+<td class="org-left">his</td>
+<td class="org-left">from</td>
+<td class="org-left">has</td>
+<td class="org-left">with</td>
+<td class="org-left">new</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+
+
+<div class="org-src-container">
+
+<pre class="src src-R">hist(words.occurence, probability=T, xlim=c(1, 1000), breaks=1000)
+</pre>
+</div>
+
+<div class="org">
+
+<div class="figure">
+<p><img src="img/hist.png" alt="hist.png" class="center" />
+</p>
+<p><span class="figure-number">Figure 1:</span> Histogram</p>
+</div>
+
+</div>
+
+
+
+
+<div class="org-src-container">
+
+<pre class="src src-R">round(t(quantile(words.occurence,  probs = c(1, 25, 50, 75, 99)/100)))
+</pre>
+</div>
+
+<div class="org">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
+<caption class="t-above"><span class="table-number">Table 4:</span> Quantiles</caption>
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">1%</th>
+<th scope="col" class="org-right">25%</th>
+<th scope="col" class="org-right">50%</th>
+<th scope="col" class="org-right">75%</th>
+<th scope="col" class="org-right">99%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">3</td>
+<td class="org-right">5</td>
+<td class="org-right">14</td>
+<td class="org-right">295</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+
+
+
+
+<p>
+<b>1.2</b>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-R"><span style="color: #8bc34a;">source</span>(<span style="color: #9ccc65;">"script2_HW6.R"</span>)
+words <span style="color: #8bc34a;">&lt;-</span> colnames(dtm.mat)
+words.occurence <span style="color: #8bc34a;">&lt;-</span> colSums(dtm.mat)
+top.ten <span style="color: #8bc34a;">&lt;-</span> t(words[order(words.occurence, decreasing=T)[1:10]])
+</pre>
+</div>
+
+<div class="org">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
+<caption class="t-above"><span class="table-number">Table 5:</span> Most used words with reparametrization</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">she</td>
+<td class="org-left">her</td>
+<td class="org-left">music</td>
+<td class="org-left">econom</td>
+<td class="org-left">law</td>
+<td class="org-left">scienc</td>
+<td class="org-left">mathemat</td>
+<td class="org-left">new</td>
+<td class="org-left">histori</td>
+<td class="org-left">research</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+
+
+<p>
+<b>1.3</b>
+</p>
+
+<div class="org">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
+<caption class="t-above"><span class="table-number">Table 6:</span> Dimensions after removing most common words</caption>
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Number of individuals</th>
+<th scope="col" class="org-right">Number of words</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">812</td>
+<td class="org-right">6653</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+
+
+
+<div class="org-src-container">
+
+<pre class="src src-R">words <span style="color: #8bc34a;">&lt;-</span> colnames(dtm.mat.raw)
+words.occurence <span style="color: #8bc34a;">&lt;-</span> colSums(dtm.mat.raw)
+top.ten <span style="color: #8bc34a;">&lt;-</span> t(words[order(words.occurence, decreasing=T)[1:10]])
+</pre>
+</div>
+
+<div class="org">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
+<caption class="t-above"><span class="table-number">Table 7:</span> Most used words after removing the most common</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">she</td>
+<td class="org-left">her</td>
+<td class="org-left">econom</td>
+<td class="org-left">polit</td>
+<td class="org-left">law</td>
+<td class="org-left">music</td>
+<td class="org-left">mathemat</td>
+<td class="org-left">theori</td>
+<td class="org-left">physic</td>
+<td class="org-left">play</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+
+
+<p>
+<b>1.4</b>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-R">ben.id <span style="color: #8bc34a;">&lt;-</span> which(dat$name == <span style="color: #9ccc65;">"Ben Bernanke"</span>)
+dat[ben.id,]
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Ben Bernanke</td>
+<td class="org-left">ben shalom bernanke brnki brnangkee born december 13 1953 is an american economist at the brookings institution who served two terms as chairman of the federal reserve the central bank of the united states from 2006 to 2014 during his tenure as chairman bernanke oversaw the federal reserves response to the late2000s financial crisisbefore becoming federal reserve chairman bernanke was a tenured professor at princeton university and chaired the department of economics there from 1996 to september 2002 when he went on public service leavefrom 2002 until 2005 he was a member of the board of governors of the federal reserve system proposed the bernanke doctrine and first discussed the great moderation the theory that traditional business cycles have declined in volatility in recent decades through structural changes that have occurred in the international economy particularly increases in the economic stability of developing nations diminishing the influence of macroeconomic monetary and fiscal policybernanke then served as chairman of president george w bushs council of economic advisers before president bush nominated him to succeed alan greenspan as chairman of the united states federal reserve his first term began february 1 2006 bernanke was confirmed for a second term as chairman on january 28 2010 after being renominated by president barack obama his second term ended february 1 2014 when he was succeeded by janet yellen</td>
+</tr>
+</tbody>
+</table>
+
+
+<div class="org-src-container">
+
+<pre class="src src-R">ben.id <span style="color: #8bc34a;">&lt;-</span> which(dat$name == <span style="color: #9ccc65;">"Ben Bernanke"</span>)
+<span style="color: #84ffff;">top.ten</span> <span style="color: #8bc34a;">&lt;-</span> <span style="color: #fff59d;">function</span>(row) order(row, decreasing=T)[1:10]
+list(1:10,
+colnames(dtm.mat)[top.ten(dtm.mat[ben.id,])],
+colnames(dtm.mat.raw)[top.ten(dtm.mat.raw[ben.id,])])
+</pre>
+</div>
+
+<div class="org">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
+<caption class="t-above"><span class="table-number">Table 8:</span> Most common word</caption>
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">rank</th>
+<th scope="col" class="org-left">dtm.mat</th>
+<th scope="col" class="org-left">dtm.mat.raw</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">1</td>
+<td class="org-left">bernank</td>
+<td class="org-left">chairman</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-left">reserv</td>
+<td class="org-left">bernank</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-left">chairman</td>
+<td class="org-left">feder</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-left">feder</td>
+<td class="org-left">reserv</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-left">term</td>
+<td class="org-left">term</td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-left">bush</td>
+<td class="org-left">econom</td>
+</tr>
+
+<tr>
+<td class="org-right">7</td>
+<td class="org-left">succeed</td>
+<td class="org-left">bush</td>
+</tr>
+
+<tr>
+<td class="org-right">8</td>
+<td class="org-left">econom</td>
+<td class="org-left">februari</td>
+</tr>
+
+<tr>
+<td class="org-right">9</td>
+<td class="org-left">janet</td>
+<td class="org-left">second</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-left">volatil</td>
+<td class="org-left">tenur</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+
+<p>
+<b>1.5</b>
+</p>
+
+
+<div class="org-src-container">
+
+<pre class="src src-R"><span style="color: #b0bec5;"># </span><span style="color: #b0bec5;">Renormalize</span>
+dtm.mat.norm <span style="color: #8bc34a;">&lt;-</span> t(quick.norm(t(dtm.mat), mod=1))
+
+<span style="color: #b0bec5;"># </span><span style="color: #b0bec5;">K-means algorithm</span>
+<span style="color: #8bc34a;">library</span>(akmeans)
+set.seed(10)
+res <span style="color: #8bc34a;">&lt;-</span> norm.sim.ksc(dtm.mat.norm, k=8)
+list(1:8, res$size)
+</pre>
+</div>
+
+<div class="org">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
+<caption class="t-above"><span class="table-number">Table 9:</span> Clusters size</caption>
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">cluser</th>
+<th scope="col" class="org-right">size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">64</td>
+</tr>
+
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">71</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">55</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-right">205</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-right">117</td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-right">52</td>
+</tr>
+
+<tr>
+<td class="org-right">7</td>
+<td class="org-right">109</td>
+</tr>
+
+<tr>
+<td class="org-right">8</td>
+<td class="org-right">139</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+
+
+<div class="org-src-container">
+
+<pre class="src src-R"><span style="color: #84ffff;">top.words.in.cluster</span> <span style="color: #8bc34a;">&lt;-</span> <span style="color: #fff59d;">function</span>(i){
+    individuals <span style="color: #8bc34a;">&lt;-</span> which(res$cluster == i)
+    words <span style="color: #8bc34a;">&lt;-</span> colnames(dtm.mat.raw)
+    count <span style="color: #8bc34a;">&lt;-</span> colSums(dtm.mat.raw[individuals, ])
+    top.25 <span style="color: #8bc34a;">&lt;-</span> t(words[order(count, decreasing=T)[1:25]])
+
+    c(i,top.25)
+}
+
+sapply(1:8, top.words.in.cluster)
+</pre>
+</div>
+
+<div class="org">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
+<caption class="t-above"><span class="table-number">Table 10:</span> Top 25 words in each cluster</caption>
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">1</td>
+<td class="org-left">2</td>
+<td class="org-left">3</td>
+<td class="org-left">4</td>
+<td class="org-left">5</td>
+<td class="org-left">6</td>
+<td class="org-left">7</td>
+<td class="org-left">8</td>
+</tr>
+
+<tr>
+<td class="org-left">she</td>
+<td class="org-left">physic</td>
+<td class="org-left">she</td>
+<td class="org-left">she</td>
+<td class="org-left">music</td>
+<td class="org-left">polit</td>
+<td class="org-left">she</td>
+<td class="org-left">she</td>
+</tr>
+
+<tr>
+<td class="org-left">econom</td>
+<td class="org-left">theori</td>
+<td class="org-left">her</td>
+<td class="org-left">polit</td>
+<td class="org-left">she</td>
+<td class="org-left">her</td>
+<td class="org-left">her</td>
+<td class="org-left">her</td>
+</tr>
+
+<tr>
+<td class="org-left">her</td>
+<td class="org-left">mathemat</td>
+<td class="org-left">team</td>
+<td class="org-left">econom</td>
+<td class="org-left">her</td>
+<td class="org-left">she</td>
+<td class="org-left">econom</td>
+<td class="org-left">law</td>
+</tr>
+
+<tr>
+<td class="org-left">theori</td>
+<td class="org-left">she</td>
+<td class="org-left">coach</td>
+<td class="org-left">law</td>
+<td class="org-left">play</td>
+<td class="org-left">modern</td>
+<td class="org-left">literatur</td>
+<td class="org-left">then</td>
+</tr>
+
+<tr>
+<td class="org-left">develop</td>
+<td class="org-left">her</td>
+<td class="org-left">play</td>
+<td class="org-left">her</td>
+<td class="org-left">polit</td>
+<td class="org-left">jewish</td>
+<td class="org-left">mathemat</td>
+<td class="org-left">board</td>
+</tr>
+
+<tr>
+<td class="org-left">physic</td>
+<td class="org-left">field</td>
+<td class="org-left">band</td>
+<td class="org-left">program</td>
+<td class="org-left">perform</td>
+<td class="org-left">philosophi</td>
+<td class="org-left">review</td>
+<td class="org-left">play</td>
+</tr>
+
+<tr>
+<td class="org-left">comput</td>
+<td class="org-left">prize</td>
+<td class="org-left">season</td>
+<td class="org-left">board</td>
+<td class="org-left">team</td>
+<td class="org-left">war</td>
+<td class="org-left">journal</td>
+<td class="org-left">develop</td>
+</tr>
+
+<tr>
+<td class="org-left">mathemat</td>
+<td class="org-left">theoret</td>
+<td class="org-left">their</td>
+<td class="org-left">polici</td>
+<td class="org-left">orchestra</td>
+<td class="org-left">econom</td>
+<td class="org-left">editor</td>
+<td class="org-left">human</td>
+</tr>
+
+<tr>
+<td class="org-left">law</td>
+<td class="org-left">quantum</td>
+<td class="org-left">music</td>
+<td class="org-left">affair</td>
+<td class="org-left">festiv</td>
+<td class="org-left">visit</td>
+<td class="org-left">english</td>
+<td class="org-left">career</td>
+</tr>
+
+<tr>
+<td class="org-left">advanc</td>
+<td class="org-left">music</td>
+<td class="org-left">assist</td>
+<td class="org-left">educ</td>
+<td class="org-left">record</td>
+<td class="org-left">california</td>
+<td class="org-left">law</td>
+<td class="org-left">washington</td>
+</tr>
+
+<tr>
+<td class="org-left">california</td>
+<td class="org-left">develop</td>
+<td class="org-left">record</td>
+<td class="org-left">former</td>
+<td class="org-left">econom</td>
+<td class="org-left">european</td>
+<td class="org-left">theolog</td>
+<td class="org-left">name</td>
+</tr>
+
+<tr>
+<td class="org-left">engin</td>
+<td class="org-left">string</td>
+<td class="org-left">head</td>
+<td class="org-left">committe</td>
+<td class="org-left">mathemat</td>
+<td class="org-left">german</td>
+<td class="org-left">critic</td>
+<td class="org-left">team</td>
+</tr>
+
+<tr>
+<td class="org-left">geolog</td>
+<td class="org-left">known</td>
+<td class="org-left">high</td>
+<td class="org-left">social</td>
+<td class="org-left">theori</td>
+<td class="org-left">yale</td>
+<td class="org-left">languag</td>
+<td class="org-left">use</td>
+</tr>
+
+<tr>
+<td class="org-left">polit</td>
+<td class="org-left">comput</td>
+<td class="org-left">jersey</td>
+<td class="org-left">offic</td>
+<td class="org-left">compos</td>
+<td class="org-left">their</td>
+<td class="org-left">teach</td>
+<td class="org-left">foundat</td>
+</tr>
+
+<tr>
+<td class="org-left">press</td>
+<td class="org-left">philosophi</td>
+<td class="org-left">album</td>
+<td class="org-left">develop</td>
+<td class="org-left">symphoni</td>
+<td class="org-left">advanc</td>
+<td class="org-left">write</td>
+<td class="org-left">into</td>
+</tr>
+
+<tr>
+<td class="org-left">then</td>
+<td class="org-left">then</td>
+<td class="org-left">citi</td>
+<td class="org-left">journal</td>
+<td class="org-left">prize</td>
+<td class="org-left">press</td>
+<td class="org-left">taught</td>
+<td class="org-left">mani</td>
+</tr>
+
+<tr>
+<td class="org-left">area</td>
+<td class="org-left">use</td>
+<td class="org-left">theolog</td>
+<td class="org-left">appoint</td>
+<td class="org-left">london</td>
+<td class="org-left">histor</td>
+<td class="org-left">cultur</td>
+<td class="org-left">were</td>
+</tr>
+
+<tr>
+<td class="org-left">had</td>
+<td class="org-left">california</td>
+<td class="org-left">career</td>
+<td class="org-left">secur</td>
+<td class="org-left">visit</td>
+<td class="org-left">germani</td>
+<td class="org-left">theori</td>
+<td class="org-left">won</td>
+</tr>
+
+<tr>
+<td class="org-left">join</td>
+<td class="org-left">engin</td>
+<td class="org-left">design</td>
+<td class="org-left">washington</td>
+<td class="org-left">ensembl</td>
+<td class="org-left">historian</td>
+<td class="org-left">press</td>
+<td class="org-left">citi</td>
+</tr>
+
+<tr>
+<td class="org-left">use</td>
+<td class="org-left">mani</td>
+<td class="org-left">game</td>
+<td class="org-left">foundat</td>
+<td class="org-left">physic</td>
+<td class="org-left">physic</td>
+<td class="org-left">former</td>
+<td class="org-left">had</td>
+</tr>
+
+<tr>
+<td class="org-left">astronomi</td>
+<td class="org-left">under</td>
+<td class="org-left">had</td>
+<td class="org-left">join</td>
+<td class="org-left">law</td>
+<td class="org-left">recent</td>
+<td class="org-left">human</td>
+<td class="org-left">but</td>
+</tr>
+
+<tr>
+<td class="org-left">career</td>
+<td class="org-left">general</td>
+<td class="org-left">hockey</td>
+<td class="org-left">elect</td>
+<td class="org-left">press</td>
+<td class="org-left">under</td>
+<td class="org-left">music</td>
+<td class="org-left">journal</td>
+</tr>
+
+<tr>
+<td class="org-left">church</td>
+<td class="org-left">medal</td>
+<td class="org-left">began</td>
+<td class="org-left">assist</td>
+<td class="org-left">program</td>
+<td class="org-left">comput</td>
+<td class="org-left">prize</td>
+<td class="org-left">sever</td>
+</tr>
+
+<tr>
+<td class="org-left">best</td>
+<td class="org-left">high</td>
+<td class="org-left">more</td>
+<td class="org-left">dure</td>
+<td class="org-left">comput</td>
+<td class="org-left">later</td>
+<td class="org-left">scholar</td>
+<td class="org-left">jersey</td>
+</tr>
+
+<tr>
+<td class="org-left">dure</td>
+<td class="org-left">law</td>
+<td class="org-left">name</td>
+<td class="org-left">senat</td>
+<td class="org-left">women</td>
+<td class="org-left">law</td>
+<td class="org-left">articl</td>
+<td class="org-left">prize</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+
+
+
+
+
+<div class="org-src-container">
+
+<pre class="src src-R">p <span style="color: #8bc34a;">&lt;-</span> c(1, 25, 50, 75, 99)
+<span style="color: #84ffff;">quantile.words.in.cluster</span> <span style="color: #8bc34a;">&lt;-</span> <span style="color: #fff59d;">function</span>(i){
+        individuals <span style="color: #8bc34a;">&lt;-</span> which(res$cluster == i)
+        words <span style="color: #8bc34a;">&lt;-</span> colnames(dtm.mat.raw)
+        count <span style="color: #8bc34a;">&lt;-</span> colSums(dtm.mat.raw[individuals, ])
+        count <span style="color: #8bc34a;">&lt;-</span> count[count &gt; 0]
+        q <span style="color: #8bc34a;">&lt;-</span> quantile(count,  probs=p/100)
+        c(i, round(q))
+    }
+
+    cbind(c(<span style="color: #9ccc65;">"Cluster"</span>, paste(p, <span style="color: #9ccc65;">"%"</span>, sep=<span style="color: #9ccc65;">""</span>)), sapply(1:8, quantile.words.in.cluster))
+</pre>
+</div>
+
+<div class="org">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
+<caption class="t-above"><span class="table-number">Table 11:</span> Quantiles in each cluster</caption>
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">Cluster</td>
+<td class="org-right">1</td>
+<td class="org-right">2</td>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+<td class="org-right">5</td>
+<td class="org-right">6</td>
+<td class="org-right">7</td>
+<td class="org-right">8</td>
+</tr>
+
+<tr>
+<td class="org-right">1%</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-right">25%</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+</tr>
+
+<tr>
+<td class="org-right">50%</td>
+<td class="org-right">2</td>
+<td class="org-right">2</td>
+<td class="org-right">2</td>
+<td class="org-right">2</td>
+<td class="org-right">2</td>
+<td class="org-right">2</td>
+<td class="org-right">2</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-right">75%</td>
+<td class="org-right">4</td>
+<td class="org-right">4</td>
+<td class="org-right">4</td>
+<td class="org-right">6</td>
+<td class="org-right">4</td>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+<td class="org-right">5</td>
+</tr>
+
+<tr>
+<td class="org-right">99%</td>
+<td class="org-right">20</td>
+<td class="org-right">21</td>
+<td class="org-right">21</td>
+<td class="org-right">56</td>
+<td class="org-right">35</td>
+<td class="org-right">20</td>
+<td class="org-right">32</td>
+<td class="org-right">38</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4"><span class="section-number-2">2</span> Q2</h2>
+<div class="outline-text-2" id="text-2">
+\begin{align*}
+\log P(X, \psi)
+&= \sum_i P(X_i; \psi)
+\\&= \sum_i \sum_{j} P(X_i, Z_i = j; \psi)
+\\&= \sum_i \sum_{j} \gamma_{ij}^{(t)} \frac{\log P(X_i, Z_i = j; \psi)}{\gamma_{ij}^{(t)}}
+&(\gamma_{ij}^{(t)} = P(Z_i = j | X_i ; \psi^{(t)}))
+\\&\ge \sum_{i, j}  \gamma_{ij}^{(t)} \frac{\log P(X_i, Z_i = j; \psi)}{\gamma_{ij}^{(t)}}
+\\&= \sum_{i,j}  \gamma_{ij}^{(t)} \log P(X_i, Z_i = j; \psi) + cte
+\\&= \sum_{i,j}  \gamma_{ij}^{(t)} \log \eta_j e^{- \frac{||X_i - \theta_j||_2^2}{2\sigma_j^2}} + cte
+\\&= \sum_{j}  (\sum_i \gamma_{ij}^{(t)}) \log \eta_j - \sum_{ij} \gamma_{ij}^{(t)} \frac{||X_i - \theta_j||_2^2}{2\sigma_j^2} + cte
+\end{align*}
+
+
+<p>
+With
+\[\gamma_{ij}^{(t)} = \frac{\eta_j^{(t)} p_{\theta^{(t)}_j}(X_i)}{\sum_k \eta_k^{(t)} p_{\theta^{(t)}_k}(X_i)} = \frac{\eta_j^{(t)} e^{- \frac{||X_i - \theta_j||_2^2}{2\sigma_j^2}}}{\sum_k \eta_k^{(t)} e^{- \frac{||X_i - \theta_k||_2^2}{2\sigma_k^2}}}
+\underset{\sigma_{ij} 0}{\longrightarrow} \left\{\begin{array}{cc}
+1 & \text{if $\theta_j$ is the closest center to $X_i$}\\
+0 & \text{o.w.}
+\end{array}
+\right. := I(\theta_j, X_i)
+\]
+</p>
+</div>
+
+
+
+<div id="outline-container-orgheadline2" class="outline-4">
+<h4 id="orgheadline2"><span class="section-number-4">2.0.1</span> Finding \(\eta\)</h4>
+<div class="outline-text-4" id="text-2-0-1">
+<p>
+\(\max_\eta \rightarrow \sum_{j}  (\sum_i \gamma_{ij}^{(t)}) \log \eta_j\) under the constraint \(\sum_j \eta_j = 1\)
+Lagragian: \(L(\eta, \lambda) = \sum_{j}  (\sum_i \gamma_{ij}^{(t)}) \log \eta_j + \lambda(1- \sum_j \eta_j)\)
+&#x2013; \(\partial_{\eta_j} L = 0 \implies \sum_i \gamma_{ij}^{(t)} = \lambda \eta_j\)
+&#x2013; \(\sum_j \eta_j = 1 \implies \lambda = \sum_{ij}\gamma_{ij}^{(t)} = n\) 
+&#x2013;
+</p>
+\begin{align*}
+\eta_j^{(t+1)} = \frac{\sum_i \gamma_{ij}^{(t)}}n \rightarrow \frac{\#\{\text{number of $x_i$ close to $\theta_j$}\}}{n}
+\end{align*}
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-4">
+<h4 id="orgheadline3"><span class="section-number-4">2.0.2</span> Finding \(\theta, \sigma\)</h4>
+<div class="outline-text-4" id="text-2-0-2">
+<p>
+\(L(\theta, \sigma) = - \sum_{ij} \gamma_{ij}^{(t)} \frac{||X_i - \theta_j||_2^2}{2\sigma_j^2}\)
+&#x2013; \(\partial_{\theta_j} L = 0 \implies \sum_i \gamma_{ij}^{(t)} \frac{X_i - \theta_j}{\sigma_j^2} = 0\),
+&#x2013; \[\theta_j = \frac{\sum_i \gamma_{ij}^{(t)} X_i}{\sum_i \gamma_{ij}^{(t)}} \rightarrow \frac{\sum_i I(\theta_j^{(t)}, X_i) X_i}{\sum_i I(\theta_j^{(t)}, X_i)} \]
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Bachir El khadir</p>
+<p class="date">Created: 2016-04-08 Fri 21:42</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

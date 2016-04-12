@@ -29,3 +29,8 @@ Internship/*
 ltxpng
 *.pygstyle
 *.pygstyle
+*.r
+*pngdata/*
+*.pygtex
+/ORF525/hw1/.Rhistory
+*.Rhistory
