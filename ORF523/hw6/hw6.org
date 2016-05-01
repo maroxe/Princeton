@@ -1,0 +1,376 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+#+HTML_HEAD: <link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet"></link>
+#+HTML_HEAD: <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+#+HTML_HEAD: <script src="http://127.0.0.1:60000/autoreload.js"></script>
+#+OPTIONS: toc:nil  
+
+#+LATEX_HEADER: \usepackage[margin=0.75in]{geometry}
+
+#+LATEX_HEADER: \newcommand{\norm}[1]{\Vert #1 \Vert}
+#+LATEX_HEADER: \newcommand{\opnorm}[1]{\Vert #1 \Vert_{op}}
+#+LATEX_HEADER: \newcommand{\fnorm}[1]{\Vert #1 \Vert_F}
+#+LATEX_HEADER: \newcommand{\nucnorm}[1]{\Vert #1 \Vert_*}
+#+LATEX_HEADER: \newcommand{\tr}{\operatorname{Tr}}
+#+LATEX_HEADER: \newtheorem{theorem}{Theorem}[section]
+#+LATEX_HEADER: \newtheorem{lemma}[theorem]{Lemma}
+#+LATEX_HEADER: \newtheorem{proposition}[theorem]{Proposition}
+#+LATEX_HEADER: \newtheorem{corollary}[theorem]{Corollary}
+#+LATEX_HEADER: \newtheorem{proof}[theorem]{Proof}
+
+ 
+#+TITLE: Problem set 6, ORF523, FINAL VERSION
+#+AUTHOR: Bachir El Khadir
+
+#+BEGIN_SRC matlab :session *MATLAB* :noexport :cache yes :exports none
+addpath(genpath('../yalmip'))
+sdpsettings('solver','mosek')
+addpath(genpath('~/mosek/mosek'))
+ #+END_SRC
+
+ #+RESULTS[04be94e5db558968260cdc480b80b0d691c579cb]:
+
+
+
+#+BEGIN_SRC emacs-lisp :exports none
+(defun add-caption-header-and-center (caption header )
+  (concat (format "org\n#+attr_html: :class center\n#+ATTR_LATEX: :float nil\n#+caption: %s\n%s\n|-|" caption header)))
+(defun add-caption-and-center (caption)
+  (concat (format "org\n#+attr_html: :class center\n#+caption: %s\n#+ATTR_LATEX:  :width 0.35\\textwidth :float nil" caption)))
+
+#+END_SRC
+
+#+RESULTS:
+: add-caption-and-center
+
+*Please discard the other version submitted earlier.*
+
+* Problem 1
+
+
+  - The following decision problem (*):
+    Given a matrix $A$, is $U(A) = \{ x \in \mathbb R^n, -x \le 0, x^TAx \le -1 \}$ unbounded?
+  - Notice that $A \text{ copositive } \iff U(A) \neq \emptyset \iff U \text{ unbounded}$. So $(*)$ is NP-hard.
+  - We have just reduced (*) to testing boundedness of a set defined by quadradic constraints
+  - This new problem is thus NP-Hard.
+    
+* Problem 2
+
+  1. Note the variables $x_1, \ldots, x_n$, call the formula $S(x_1, \ldots, x_n)$.
+     Algorithm:
+     + Call the blackbox to see if $S(x_1=1, x_2\ldots, x_n)$ is satisfiable. If yes, set $x_1$ to 1, if not set $x_1$ to 0. With this value being fixed, we know that there exist an assignmenet of the remaining variables that makes the formula true.
+     + With $x_1$ fixed, do the same to $x_2, \ldots, x_n$ iteratively.
+       This algorithm makes a linear number of calls to the blackbox. Which ends the proof.
+
+  2. Note the nodes $v_1, \ldots, v_n$ of the graph $G$
+     + Remark :: We call the blackbox with $k=1, \ldots, n$. The highest $k$ for which the blackbox answers true is the stability number of the graph $G$. In a linear time in the number of nodes, we can use the blackbox to calculate the stability number of any graph. Consider the following Algorithm:
+     + Step 1 :: Calculate $\alpha(G)$ using the precedent algorithm
+     + Step 2 :: Remove $v_1$ from the graph (and the associated edges) and call $G_1$ the resulting graph, calculate the stability number  $\alpha(G_1)$.
+       + If $\alpha(G_1) < \alpha(G)$, it means that $v_1$ is part of a stable set $V$ of maximal size in $G$. Note $G_1'$ the subgraph of $G$ that contains only the nodes not connected to $v_1$. $V \setminus \{v_1\}$ is a stable set in $G_1'$ of size $\alpha(G) - 1$, so any stable set in that graph would have size at least $\alpha(G) - 1$, and adding $v_1$ to that stable set would give us a stable set in $G$  (because $v_1$ is not connected to any of its nodes) of size $\alpha(G)$. 
+       + If $\alpha(G_1) = \alpha(G)$, we know that there exist a stable set of maximal size in $G_1$. Note $G_1' = G_1$
+       + Call Recursively this algorithm with the graph $G_1'$.
+       In both cases we have reduced the size of the input graph $G_1'$ by doing a constant time operation. 
+          
+
+  Running time: Call $T(n)$ the running time of this algorithm when called with a graph of size $n$. Note that $T(1) = 1$.
+       - Step 1 :: takes $An$, for some $A > 0$
+       - Step 2 ::
+         - $O(n)$ to calculate $\alpha(G_1)$
+         - Recursive call with input $G_1'$: $T(n-1)$
+         - Constant time $b$ to either  add $v_1$ (case 1); or do nothing case(2).
+           
+  In conlusion
+       $T(n) \le T(n-1) + An +b$
+       
+       \begin{align*}
+       T(n) \le T(n-1) + An +b
+       & \implies T(n) - T(n-1) \le An +b
+       \\& \implies T(n) - T(0) \le A\sum_{k=1}^n k +bn
+       \\&\implies T(n) = T(0) + A\frac{n(n+1)}2 + bn = O(n^2)
+       \end{align*}
+* Problem 3
+
+
+  #+BEGIN_LEMMA 
+  If there exist $V$ a lyapounouv function verifying:
+  - $V(AX) < V(X)$
+  - $V(BX) < V(X)$
+    
+    Then $\{A, B\}$ is stable.
+  #+END_LEMMA
+  #+BEGIN_PROOF
+  Let $\Sigma$ be a product of terms of the form $A$ or $B$.
+  By induction on the number of terms, we prove that $\rho(\Sigma) < 1$
+
+  If $\Sigma = A$ or $\Sigma = B$, then (theorem in the notes), $\rho(\Sigma) < 1$
+
+  Now suppose the property is true for $\Sigma$ and consider $\Sigma' = \Sigma A$ for example, then $V(\Sigma'X) = V(\Sigma (AX)) < V(\Sigma X) < V(X)$. The same is true for $\Sigma' = \Sigma B$. Which concludes the proof.
+  #+END_PROOF
+
+  The following program proves that for $\alpha_0 = 0.255$, there exist a polynomial $P$ such that:
+  - $P(0) = 0$
+  - $P(X) \ge |X|_2^6$
+  - $P(A_{1, \alpha_0} X) \le |X|_2^6 + P(X) < P(X)$ for $X \ne 0$
+  - $P(A_{2, \alpha_0} X) \le |X|_2^6 + P(X) < P(X)$ for $X \ne 0$
+
+#+name: polytable    
+  #+BEGIN_SRC matlab :session *MATLAB* :exports both :cache yes
+  d = 6;
+
+  alpha = 0.255;
+  A1 = [-1 -1; -4 0];
+  A2 = [3 3;-2 1];
+
+  A = alpha*A1;
+  B = alpha*A2;
+
+  x = sdpvar(2, 1);
+  q = (x(1)^2+x(2)^2)^(d/2);
+
+  [p, c, v] = polynomial(x, d);
+  p0 = replace(p, x, 0)
+  pA = replace(p, x, A*x)
+  pB = replace(p, x, B*x)
+
+  F = [ sos(p-q), sos(p-pA-q),  sos(p-pB-q), c,  p0 == 0];
+  sol = solvesos(F);
+  if sol.problem == 0
+      ans = 'Sum-of-squares decomposition possible!';
+      %[a b] = coefficients(replace(p, c, value(c)))
+      %ans=round(a, 2)'
+  else
+      ans = 'Sum-of-squares decomposition impossible!'
+  end
+  #+END_SRC
+
+  #+RESULTS[42b8801ed1fc786349491b0330eaac0c548be459]: polytable
+  : Sum-of-squares decomposition possible!
+
+
+
+
+
+
+
+  Now for $\alpha \le \alpha_0$, consider $\Sigma$ to be a product of $k$ terms of the form $A_{1, \alpha}$, $A_{2, \alpha}$, then $(\frac{\alpha_0}{\alpha})^k \Sigma$ is a product of $k$ terms of the form  $A_{1, \alpha_0}$, $A_{2, \alpha_0}$, then
+  $\rho(\Sigma) = (\frac{\alpha_0}{\alpha})^{-k} \rho((\frac{\alpha_0}{\alpha})^k\Sigma) < (\frac{\alpha_0}{\alpha})^{-k} \le 1$
+
+  We have just proven that $\gamma \le \alpha_0$
+  
+  
+     Now for $\alpha = \gamma_{max} + 10^{-3}$, $\rho(A_{2,\alpha}A_{1, \alpha}) > 1$:
+
+       #+BEGIN_SRC matlab :session *MATLAB* :cache yes :exports both
+         alpha = 0.256;
+         A = alpha * A1;
+         B = alpha * A2;
+         ans = max(abs(eig(B*A)));
+       #+END_SRC
+
+       #+RESULTS[71aec7b99ad60612466ebadabfa1da84a5733d33]:
+       : 1.0057
+
+
+
+       #+BEGIN_SRC matlab :session *MATLAB* :exports none :cache yes
+         M = 10
+         C = []
+
+         C(:,:,1) = eye(2)
+         C(:,:,2) = A
+         C(:,:,3) = B
+
+         for r=1:(3^M)
+             P = eye(2);
+             for i=dec2base(r, 3, 10)
+                 P = P * C(:,:,i-47);
+             end
+             if max(abs(eig(P))) > 1
+                 eig(P)
+                 dec2base(r, 3, 10)
+                 break
+             end
+         end
+       #+END_SRC
+
+       #+RESULTS[8eadfc8bf02382ed1c47b505a8df81c65c764b0c]:
+       : org_babel_eoe
+
+
+       As a concluson $\gamma_{\max} \approx 0.255$
+       
+* Problem 4
+  
+  In the following $p$ is a *quartic form*, and $k$ *integer*.
+  The following problems are equivalent
+  - Given $p, k$, decide if the minimum of $p$ over the unit sphere is less that $k$.
+  - Given $p, k$, decide if $\forall x \ne 0 \; p(\frac{x}{|x|_2}) - k > 0$. 
+  - Given $p, k$, decide if $p(x) -k|x|^4 > 0 \; \forall x \ne 0$. (Multiply by $|x|^4$ and use homegeneity)
+  - Given $p, k$, decide if $0$ is a strict global min of $p(x) -k|x|^4$. 
+  - Given $p$, decide if $0$ is a strict global min. (NP-HARD) ($p \leftrightarrow p - k|x|^4$)
+
+  *1.*
+  The feasible set $F := \{x, x_1^2 + x_2^2 = 1\}$ is not convexe because $e_1, -e_1 \in F$ but $0 \not \in F$.
+  
+  The objective $p(x) = x_1^4 - 2x_1^2x_2^2 + 4x_1x_2^3 - 7x_1^3x_2 - 2x_2^4$ is not convex because $\Delta q(1, 1) \not \succeq 0$. The following program proves that:
+  #+BEGIN_SRC matlab :session *MATLAB* :exports both :cache yes
+  syms x y
+  q = x^4 - 2*x^2*y^2 + 4*x*y^3 - 7*x^3*y - 2*y^4;
+  H = hessian(q, [x y])
+  ans = eigs(double(subs(H, [x y], [1 1])))
+  #+END_SRC
+
+  #+RESULTS[88b46bccdf1c79ec71bcac2afc26df1abeb3581c]:
+  |  3.6716 |
+  | -41.672 |
+
+
+  *2.* 
+  Let $\gamma$ such that $p(x) - \gamma |x|^4$ is SOS, in particular it is non-negative, therefore, since $p$ is homegenious: $p(\frac{x}{|x|}) - \gamma \ge 0 \forall x \ne 0$, and as a result $p(x) \ge \gamma \forall x \in S^1$, and $\gamma$ is a lower bound for (1).
+  
+
+ 
+#+BEGIN_SRC matlab :session *MATLAB*  :exports both :cache yes
+sdpvar x y gamma
+p = x^4 - 2*x^2*y^2 + 4*x*y^3 - 7*x^3*y - 2*y^4 - gamma*(x^2+y^2)^2;
+F = [sos(p)];
+optimize(F,-gamma)
+ans = value(gamma)
+#+END_SRC
+
+#+RESULTS[92bd1a12cbea24c9f340ee1f056375d3e7fdd089]:
+: -2.6807
+
+
+
+
+Notation:
+
+Note $2d$ the degree of $P$, and $u(X)$ the vector of monomials of degree $\le d$. For $d =2$, $u(X) = \begin{pmatrix}X_1^2\\X_1X_2\\X_2^2\\X_1\\X_2\\1\end{pmatrix}$.
+
+In SDP form, we can consider the following problem:
+
+
+\begin{equation*}
+\begin{aligned}
+& \underset{Q \succeq 0, \gamma \in \mathbb R}{\text{max}}
+& & \gamma \\
+& \text{subject to}
+& & \operatorname{coeffs}(p(X) - \gamma |X|^4) = \operatorname{coeffs}(U(X)^TQU(X))
+\end{aligned}
+\end{equation*}
+
+#+BEGIN_SRC matlab :session *MATLAB* :exports both :cache yes
+  syms x y gamma;
+  U = [x^2 x*y y^2 x y 1]';
+  n = length(U);
+
+  cvx_begin sdp
+  variable gamma;
+  variable Q(n, n) symmetric
+  maximize(gamma)
+  Q >= 0
+  [ Q(1,1);...
+    Q(1,2) + Q(2,1);...
+    Q(1,4) + Q(4,1);...
+    Q(1,3) + Q(2,2) + Q(3,1);...
+    Q(1,5) + Q(2,4) + Q(4,2) + Q(5,1);...
+    Q(1,6) + Q(4,4) + Q(6,1);...
+    Q(2,3) + Q(3,2);...
+    Q(2,5) + Q(3,4) + Q(4,3) + Q(5,2);...
+    Q(2,6) + Q(4,5) + Q(5,4) + Q(6,2);...
+    Q(4,6) + Q(6,4);...
+    Q(3,3);...
+    Q(3,5) + Q(5,3);...
+    Q(3,6) + Q(5,5) + Q(6,3);...
+    Q(5,6) + Q(6,5);...
+    Q(6,6)]  ==  [ 1-gamma; -7; 0; -2-2*gamma; 0; 0; 4; 0; 0; 0; -2-gamma; 0; 0; 0; 0]
+  cvx_end
+  ans=cvx_optval
+#+END_SRC
+
+#+RESULTS[46559550ca61ab2e4c2eb9a0f10024ca4279018b]:
+: -2.6807
+
+
+$z = \begin{pmatrix}-2.7\\9.3\end{pmatrix}, x = \frac{z}{|z|} \in S^1$
+$p(x) > \gamma$ 
+Indeed the following program proves that:
+
+#+BEGIN_SRC matlab :session *MATLAB* :exports both :cache yes
+  z = [-2.7    9.3];
+  z = z / norm(z)
+  sdpvar x y;
+  q = x^4 - 2*x^2*y^2 + 4*x*y^3 - 7*x^3*y - 2*y^4;
+  ans=replace(q, [x y], z)
+#+END_SRC
+
+#+RESULTS[f3bb76de5685aa85762fd16293f8b1669f869545]:
+: -2.6806
+
+
+*General Case:*
+
+Call $\gamma_{SOS}$ the SOS bound. $\gamma_{SOS}$ is a lower bound.
+
+Using the fact that when $d=1$, every psd polynomial is SOS, note that $$p(x, y) - \gamma (x^2 + y^2)^{d} \ge 0 \iff p(x, 1) - \gamma (x^2 + 1)^{d} \ge 0 \iff  p(x, 1) - \gamma (x^2 + 1)^{d} \text{ SOS } \iff p(x, y) - \gamma (x^2 + y^2)^{d} \text{ SOS}$$
+
+If $\gamma_{SOS}$ is not tight, then there exist $\gamma_{SOS} < \gamma < (1)$. But then $p(x, y) - \gamma (x^2 + y^2)^{d}$ is not non-negative, so there exist $X = (x_1, x_2)$ such that:$p(x_1, x_2) < \gamma |X|^{d/2}$.
+
+Note that $X \ne 0$ (otherwise $0 = p(0) < \gamma 0$), so $p(\frac{X}{|X|}) < \gamma < (1)$. Absurd.
+
+* Problem 5
+  Call $H_{\gamma}(x, y, z)$ the hessian of $q_{\gamma} := p + \gamma |X|^6$.
+  
+  $q_{\gamma}$ is convex $\iff$ $H_\gamma(x,y,z) \succeq 0 \forall x,y,z$ $\iff$ $QH(\gamma): (x, y, z, u) \rightarrow u^T H_{\gamma}(x,y,z) u$ is non-negative.
+
+  The following program gives a lower bound:
+  $\gamma_{SOS} := \min_{QH(\gamma) \text{ SOS}} \gamma$
+
+  
+  #+BEGIN_SRC matlab :session *MATLAB* :cache yes  :exports both
+    sdpvar x y z u(3, 1) gamma
+    p = (x^2 + 9/4*y^2 + z^2 - 1)^3 - x^2*z^3 - 9/80 * y^2 * z^2;
+    p1 = (x^2+y^2+z^2)^3;
+    H = hessian(p + gamma*p1, [x y z]);
+    QH = u'*H*u;
+    F = sos(QH);
+    optimize(F,gamma)
+    gammasos = value(gamma)
+
+    ans=gammasos
+  #+END_SRC
+
+  #+RESULTS[b1ec676eb15feeccea79939cbf54b65245003868]:
+  : 9.1125
+
+
+
+
+  Let's prove that this bound is tight. Take $\gamma = \gamma_{SOS} - 10^{-3}$, and prove that $q_{\gamma}$ is no longer convex:
+  
+  #+BEGIN_SRC matlab :session *MATLAB* :cache yes  :exports both
+    sdpvar x y z u(3, 1) 
+    p = (x^2 + 9/4*y^2 + z^2 - 1)^3 - x^2*z^3 - 9/80 * y^2 * z^2;
+    p1 = (x^2+y^2+z^2)^3;
+    gamma = gammasos - 1e3
+    H = hessian(p + gamma*p1, [x y z]);
+    XX = [    0 0.3849 0]
+    ans=min(eigs(replace(H, [x y z], XX))) 
+  #+END_SRC
+
+  #+RESULTS[2c36b3ac446298c1ebfb7e399f9c94b23b8cbc4a]:
+  : -658.43
+
+
+
+
+
+
+
+
+
+
+
+
+
+

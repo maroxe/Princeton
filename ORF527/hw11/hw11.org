@@ -1,0 +1,167 @@
+
+# -*- mode: org; org-confirm-babel-evaluate: nil; org-speed-commands-user: nil; org-use-speed-commands: t; -*-
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+#+HTML_HEAD: <link href="http://thomasf.github.io/solarized-css/solarized-dark.min.cs" rel="stylesheet"></link>
+#+HTML_HEAD: <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+#+HTML_HEAD: <script src="http://127.0.0.1:60000/autoreload.js"></script>
+
+
+#+OPTIONS: toc:nil h:1
+
+
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+
+#+LATEX_HEADER:  \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{amsfonts}
+
+#+LATEX_HEADER: \newcommand{\Problem}[1]{\subsection*{Problem #1}}
+#+LATEX_HEADER: \newcommand{\Q}[1]{\subsubsection*{Q.#1}}
+#+LATEX_HEADER: \newcommand{\union}[1]{\underset{#1}{\cup} }
+#+LATEX_HEADER: \newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+#+LATEX_HEADER: \newcommand{\inter}[1]{\underset{#1}{\cap} }
+#+LATEX_HEADER: \newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+#+LATEX_HEADER: \newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+#+LATEX_HEADER: \newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+#+LATEX_HEADER: \DeclareMathOperator{\cov}{cov}
+#+LATEX_HEADER: \DeclareMathOperator{\var}{var}
+
+#+TITLE: Problem set 11, ORF527
+#+AUTHOR: Bachir El khadir
+
+* Q1
+** Exercise 13.2
+
+   Correction: $X_t^{(a,b)} = \frac{\sqrt{b-a}} (B_{a+t(b-a)} - B_a)$
+   (a) $A_k \in \sigma(B_t - B_{\frac1{2^{k-1}}}, t \in [\frac1{2^{k-1}}, \frac1{2^k} ])$. Since the brownian motion has independent increments, then $A_k$ are independent.
+   
+   For all $k$, $(X_t^{(a_k, b_k)})_t$ has the same distribution as $(B_t)_{t \in [0, 1]}$, and $P(A_k) = E[F(X_t^{(a_k, b_k)})_t]$ with $F(X) = 1_{\sup_{[0, 1]} |X - g| \le \varepsilon}$ measurable and indepdendent of $k$. so $P(A_k) = P(A_1)$.
+   
+   The $A_i$ are all independent, and $\sum_{i=1}^{\infty} P(A_i) = \infty P(A_1)$. 
+   If $P(A_1) > 0$, then by Borel Cantelli, infinitely many $A_i$ are realised almost surely.
+
+   (b)
+   $B_t = (X_t, Y_t)$
+
+   \begin{align*}
+   P(\sup_{[0, 1]} |B_t| \le \varepsilon)
+   &= P(\sup_{[0, 1]} X_t^2 + Y_t^2 \le \varepsilon^2)
+   \\&= 1 - P(\sup_{[0, 1]} X_t^2 + Y_t^2 \ge \varepsilon^2)
+   \\&\ge 1 - P(\sup_{[0, 1]} X_t^2 \ge \frac{\varepsilon^2}2) -  P(\sup_{[0, 1]} Y_t^2 \ge \frac{\varepsilon^2}2)
+   \\&\ge 1 - 2 P(\sup_{[0, 1]} X_t^2 \ge \frac{\varepsilon^2}2)
+   \end{align*}
+   
+   \begin{align*}
+   P(\sup_{[0, 1]} X_t^2 \ge \frac{\varepsilon^2}2)
+   &= P(\sup_{[0, 1]} e^{\lambda X_t^2} \ge e^{\lambda\frac{\varepsilon^2}2}) &\text{(For $\lambda$ small enough)}
+   \\&\le \frac{2}{\varepsilon^2}E[e^{\lambda X_1^2}] &\text{(Doobs)}
+   \\&\le \frac{2}{\varepsilon^2} \int e^{\lambda x^2} e^{-\frac{x^2}2} \frac{dx}{\sqrt{2\pi}}
+   \\&= \frac{2}{\varepsilon^2} \frac1{\sqrt{1-2\lambda}}
+   \end{align*}
+
+   
+   $P(\sup_{[0, 1]} |B_t| \le \varepsilon) \ge 1-\frac4{\varepsilon^2\sqrt{1-2\lambda}}$
+For $\lambda$ close enough to $\frac12$, $\frac4{\varepsilon^2\sqrt{1-2\lambda}} < 1$, so $P(\sup_{[0, 1]} |B_t| \le \varepsilon) > 0$
+ 
+(c)
+WLOS we can assume that $g \in C^1$. Indeed, if that's not the case, let $f \in C_1$ approximating $g$ uniformly on the compact set $[0, 1]$, ie $|g-f|_{\infty} < \varepsilon$, and note that $\sup_{[0,1]} |B_t - g(t)| \le \sup_{[0,1]} |B_t - f(t)| + \varepsilon$
+
+Now let $W_t = B_t - g(t)$, ie $dW_t = dB_t - g'(t) dt$. By Girsanov theorem, there exist a measure $Q$ equivalent to $P$ where $W_t$ is a Brownian motion. Under $Q$:
+$$Q(\sup|W_t| \le \varepsilon) > 0$$
+So
+$$Q(\sup|B_t - g(t)| \le \varepsilon) > 0$$
+so
+$$P(\sup|B_t - g(t)| \le \varepsilon) > 0$$
+Which conludes the proof.
+
+** Exercice 13.3
+   Let $\mu = 1 - \varepsilon$
+   $X_t = B_t + \mu t$
+   $\tau_L = \inf\{t, X_t = -a \}$
+
+   $E^P[W] = E^Q[W / M_T]$ , $M_T = \exp(-\mu B_t - \frac12 \mu^2 T)$
+   \begin{align*}
+   E\exp\left((1-\frac{\varepsilon}2) \tau_L\wedge T\right)
+   &=E^{Q_T} \exp\left((1-\frac{\varepsilon}2) (\tau_L\wedge T) + \mu B_T + \frac{\mu^2}2T \right)
+   &=E^{Q_T} \exp\left((1-\frac{\varepsilon}2) (\tau_L\wedge T) + \mu B_T + \frac{\mu^2}2(\tau_L\wedge T) \right)
+   \end{align*}
+
+
+   \begin{align*}
+   E^P\exp\left((1-\frac{\varepsilon}2) \tau_L\wedge T\right)
+   &=E^{Q_T} \exp\left((1-\frac{\varepsilon}2) (\tau_L\wedge T) + \mu X_T - \frac{\mu^2}2T \right)
+   \\&=E^{Q_T} \exp\left((\mu+\frac{\varepsilon}2) (\tau_L\wedge T) + \mu X_{\tau_L \wedge T} - \frac{\mu^2}2(\tau_L \wedge T) \right)
+   \\&=E^{Q_T} \exp\left( \mu X_{\tau_L \wedge T} + (\mu+\frac{\varepsilon}2 - \frac{\mu^2}2)(\tau_L \wedge T) \right)
+   \\&=E \exp\left( (1-\varepsilon) W_{\sigma_{-a} \wedge T} + \frac{1+\varepsilon-\varepsilon^2}2 (\sigma_{-a} \wedge T) \right)
+   \end{align*}
+
+
+* Q2
+  (a)
+
+  
+  $$M_t = \exp(-\int_0^t \nabla h(X_s)^T dW_s - \frac12 \int_0^t ||\nabla h(X_s)||^2 ds)$$
+  
+  $\frac{dQ}{dP} = M_t$
+  Under $Q$, $X_t-x$ is standard BM.
+  
+  \begin{align*}
+  E[f(X_t)]
+  &= E^Q[\frac1{M_t} f(X_t)]
+  \\&= E^P[f(x  + W_t )\exp(\int_0^t \nabla h(x + W_s)^T dW_s + \frac12 \int_0^t ||\nabla h(x + W_s)||^2 ds)]
+  \\&= e^{-h(x)} E^P[f(x  + W_t )e^{\int_0^t V(x + W_s)  ds} e^{\int_0^t \nabla h(x + W_s)^T dW_s - \int_0^t \frac12 |\nabla h(x+W_s)|^2 ds + h(x))}]
+  \end{align*}
+
+\[ h(x) + \int_0^t \nabla h(x + W_s)^T dW_s  = \int_0^t \frac12 |\nabla h(x+W_s)|^2 ds \]
+
+* Q3
+  (a)
+  - $$E^{P^0}[e^{\int_0^T (aX_s)^2 ds}]  \le e^{a^2 \int_0^T  E[X_s]^2 ds} \le  e^{a^2 T^3} < \infty$$
+  - Define $Q^a$ by $$\frac{dQ^a}{dP^0} = \exp(-\int_0^t aX_s dXs - \frac12 \int_0^t (aX_s)^2 ds)$$
+  - By Girsanov, $W_t^a$ is a standard brownian motion under $Q^a$, so $Q^a$ and $P^a$ agree on $\mathcal F_T^{W^a}$. Since $X_t$ is the strong solution the OU SDE, $\mathcal F_T^{X} \subseteq F_T^{W^a}$.
+  - We have just proven that $$P^a|_{\mathcal F_T^X} \sim Q^a|_{\mathcal F_T^X} = P^0|_{\mathcal F_T^X}$$, and $\frac{dQ^a}{dP^0} |_{\mathcal F_T^X} = \exp(-a \int_0^T X_s dXs - \frac12 a^2 \int_0^T X_s^2 ds)$.
+  - $$\hat a_T = \arg\max \exp(-a \int_0^T X_s dX_s - \frac12 a^2 \int_0^T X_s^2 ds) = \arg\min a \int_0^T X_s dX_s + \frac12 a^2 \int_0^T X_s^2 ds = -\frac{\int_0^T X_s dX_s}{\int_0^T X_s^2 ds}$$
+
+  (b)
+
+  $$\hat a_T = -\frac{\int_0^T X_s dX_s}{\int_0^T X_s^2 ds} = \frac{\int_0^T a X_s^2 ds - \int_0^T X_sdW_s }{\int_0^T X_s^2 ds} = a -  \frac{\int_0^T X_sdW_s }{\int_0^T X_s^2 ds}$$
+
+  $X_t = X_0e^{-at} + \int_0^t e^{-a(t-s)}dW_s$
+  
+  Let's prove that $\int_0^{\infty} X_t^2 dt = \infty$.
+  - Since $\int_0^{\infty} X_t^2 dt = \infty \iff \forall M > 0 \; \int_M^{\infty} X_t^2 dt = \infty$, $\{\int_0^{\infty} X_t^2 dt = \infty \} \in$
+
+
+
+  
+  - $a < 0$,  
+  - $a = 0$, $X_t = W_t^a$, $\int_1^{\infty} (W_t^a)^2 dt = \int_0^1 (W_{\frac1u}^a)^2 \frac{du}{u^2}$
+    Let
+    + $\sigma_{0} = 0$, and for $i \in \mathbb N^+$:
+    + $\tau_i = \inf\{t \ge \sigma_{i-1}, W_t = 1 \}$
+    + $\sigma_i = \inf\{t \ge \tau_i, W_t = 2 \}$
+
+
+  We have that:
+  + $\tau_i < \sigma_i < \tau_{i+1}$
+  + $\tau_i < \infty$ because the BM is reccurent
+  + $\tau_i \uparrow \infty$ because the BM is continuous.
+  + $\int_0^{\infty} W_t^2 dt \ge \sum_{i=1}^{\infty} \int_{\tau_i}^{\sigma_i} W_t^2 \ge \sum_{i=0}^\infty (\tau_i - \sigma_i)^2$
+
+  By the strong markov property, for $i \ge 1$,  $W_{t+\tau_i} | W_{\tau_i}$ has the same distribution as $W_t | W_0=1$ and is independent from $(W_t)_{t \le \tau_i}$,  $(\tau_i-\sigma_i)_{i \ge 1}$ are all iid. Moreover $E[\tau_i - \sigma_i] = E[\tau_1 | W_0 = 1] = \infty$, which implies that $E[(\tau_i - \sigma_i)^2] = \infty$.
+
+  By the strong law of large number,  $\sum_{i=0}^\infty (\tau_i - \sigma_i)^2 = \lim_{N\infty} N \frac1N \sum_{i=0}^N  (\tau_i - \sigma_i)^2 \sim N E[(\tau_1 - \sigma_1)^2] = \infty$ $P^0$ almost surely.
+  
+  (c)
+  If $P^a|_{\mathcal F_{\infty}^X} \sim P^{a'}|_{\mathcal F_{\infty}^X}$, then with probability 1 under both measures:
+  - $\hat a_T \rightarrow a'$
+  - $\hat a_T \rightarrow a$
+
+
+  Which proves that $a = a'$
+    
+
+
+
+
+
+

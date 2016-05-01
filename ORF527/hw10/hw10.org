@@ -1,0 +1,111 @@
+# -*- mode: org; org-confirm-babel-evaluate: nil; org-speed-commands-user: nil; org-use-speed-commands: t; -*-
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+#+HTML_HEAD: <link href="http://thomasf.github.io/solarized-css/solarized-dark.min.cs" rel="stylesheet"></link>
+#+HTML_HEAD: <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+#+HTML_HEAD: <script src="http://127.0.0.1:60000/autoreload.js"></script>
+
+
+#+OPTIONS: toc:nil h:1
+
+
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+
+#+LATEX_HEADER:  \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{amsfonts}
+
+#+LATEX_HEADER: \newcommand{\Problem}[1]{\subsection*{Problem #1}}
+#+LATEX_HEADER: \newcommand{\Q}[1]{\subsubsection*{Q.#1}}
+#+LATEX_HEADER: \newcommand{\union}[1]{\underset{#1}{\cup} }
+#+LATEX_HEADER: \newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+#+LATEX_HEADER: \newcommand{\inter}[1]{\underset{#1}{\cap} }
+#+LATEX_HEADER: \newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+#+LATEX_HEADER: \newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+#+LATEX_HEADER: \newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+#+LATEX_HEADER: \DeclareMathOperator{\cov}{cov}
+#+LATEX_HEADER: \DeclareMathOperator{\var}{var}
+
+#+BEGIN_SRC emacs-lisp :exports none
+(defun add-caption-header-and-center (caption header )
+  (concat (format "org\n#+attr_html: :class center\n#+caption: %s\n%s\n#+ATTR_LATEX: :float nil" caption header)))
+(defun add-caption-and-center (caption)
+  (concat (format "org\n#+attr_html: :class center\n#+caption: %s\n#+ATTR_LATEX:  :width 0.35\\textwidth :float nil" caption)))
+
+#+END_SRC
+
+#+RESULTS:
+: add-caption-and-center
+
+
+#+TITLE: Problem set 10, ORF527
+#+AUTHOR: Bachir El khadir
+
+* Q1
+
+  - $W \sim V$ so there exists a random variable $M_T > 0$, $\mathcal F_T$ measurable, such that $\frac{dV}{dW} = M_T$.
+  - This leads to $1 = E^{W}[M_T]$, therefore $M_t := E^W[M_T | \mathcal F^W_t]$ is a martingale.
+  - By the martingale representation theorem, there exists $Y_t \in \mathcal H_{loc}^2[0, T]$ such that $M_t = \int_0^t Y_s dW_s$, and by Ito:  $d \log M_t = \frac{Y_t}{M_t}dW_t - \frac1{2M_t^2} Y_t^2 dt = \frac{Y_s}{M_t} dW_t - \frac12 (\frac{Y_t}{M_t})^2 dt$.
+
+    Let $X_t = \frac{Y_t}{M_t} \in \mathcal H_{loc}^2[0, T]$, We have just proved that:
+    $$\frac{dV}{dW} = M_T = \exp(\int_0^T X_t dW_t - \frac12 \int_0^T X_t^2 dt)$$
+
+  
+  
+* Q2
+
+  - $v(T, W_T) = f(W_T)$
+  - Suppose $v(T, .) \ne f(.)$, and let $x_0$ a point where they differ, WLOS $v(T, x_0) - f(x_0) > 0$.
+  - By continuity, there exist an open interval $I$ contaning $x_0$ where $v(T, .) - f(.) > 0$.
+  - Since the distribution of $W_T \sim \mathcal N(0, T)$, this contradict the fact that: $E[\underbrace{v(T, W_T) - f(W_T)}_{>0} 1_{W_T \in I}] = 0$
+  
+  
+  
+\begin{align*}
+v(t, x) &= E[f(W_T - W_t + W_t) | F_t]_{W_t = x}
+\\&= \left(\frac1{\sqrt{2\pi}} \int f(W_t + y) e^{-y^2/2}dy\right)_{W_t = x}
+\\&= \frac1{\sqrt{2\pi(T-t)}} \int f(x + y) e^{-y^2/2(T-t)} dy
+\\&= \frac1{\sqrt{2\pi(T-t)}} \int f(u) e^{-(u-x)^2/2(T-t)} du
+\end{align*}
+
+For $(t, x) \in [t_1, t_2] \times [-a, a] \subseteq ]0, T] \times \mathbb R$, the swapping of $\int$ and $\partial$ is justified because each time what's inside the integral is bounded by $|f|_{\infty} P_{a, t_1, t_2}(u) e^{-\frac12 \frac{u^2}{T}}$, where $P_{a, t_1, t_2}$ is a polynomial in $u$.
+
+\begin{align*}
+\frac{\partial v}{\partial x^2}
+&= \frac1{\sqrt{2\pi(T-t)}} \int f(u) \frac{\partial}{\partial x^2} e^{-(u-x)^2/2(T-t)} du
+\\&= \frac1{\sqrt{2\pi(T-t)}} \int f(u) e^{-(u-x)^2/2(T-t)}\left[ \left(\frac{x-u}{T-t}\right)^2 - \frac1{T-t} \right] du
+\end{align*}
+
+
+
+\begin{align*}
+\frac{\partial v}{\partial t}
+&= \frac{\partial (2\pi(T-t))^{-\frac12}}{\partial t} \int f(u) e^{-\frac{(u-x)^2}{2(T-t)}} du
++ \frac1{\sqrt{2\pi(T-t)}} \int f(u) \frac{\partial}{\partial t} e^{-\frac{(u-x)^2}{2(T-t)}} du
+\\&=  \frac1{2(T-t)} \frac1{\sqrt{2\pi(T-t)}} \int f(u)  e^{-\frac{(u-x)^2}{2(T-t)}} du
+- \frac1{\sqrt{2\pi(T-t)}} \int f(u) \frac{(x-u)^2}{(T-t)^2} e^{-\frac{(u-x)^2}{2(T-t)}} du
+\\&= -\frac12 \frac{\partial v}{\partial x^2} 
+\end{align*}
+
+Which proves that $\partial_t v = - \frac12 \partial_x^2 v$
+
+
+* Q3
+  $\varepsilon \le \sigma$ so the two function $f: t \rightarrow \int_0^t \sigma^2(X_s)ds$, $g: t \rightarrow \int_0^t \frac1{\sigma^2(B_s)}ds$ are continuous and increasing, so they are both invertible. Notice that:
+
+  - $f, g$ are $C^1$ as primitives of continuous functions
+  - $\tau_t = \inf \{ u \ge 0 : \int_0^u \sigma(X_s)^2 ds \ge t \} = f^{-1}(t)$
+  - Similarly $\sigma_t = g^{-1}(t)$
+  - So $\tau_{\sigma_t} = f^{-1}(g^{-1}(t))$
+    
+  Notice also that:
+    
+  $${f^{-1}}'(t) = \frac1{f'\circ f^{-1}}(t) =  \frac1{\sigma^2\circ X \circ f^{-1}} (t) =  \frac1{\sigma^2\circ X_{\tau_t}} = \frac1{\sigma^2(B_t)}$$
+  $${g^{-1}}'(t) = \frac1{g' \circ g^{-1}}(t) = \sigma^2\circ X \circ g^{-1}(t) = \sigma^2( B_{\sigma_t})$$
+  $$(f^{-1} \circ g^{-1})'(t) = {g^{-1}}'(t)  {f^{-1}}' \circ g^{-1}(t) =  \sigma^2(B_{\sigma_t})  \frac1{\sigma^2(B_{\sigma_t})} = 1$$
+
+  Since $f^{-1}\circ g^{-1}(t) = 0$, this proves that $\tau_{\sigma_t} = t$, and that $B_{\sigma_t} = X_{\tau_{\sigma_t}} = X_t$, which concludes the proof.
+
+
+
+
+
+

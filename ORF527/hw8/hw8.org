@@ -126,7 +126,7 @@ $$dV_t = (-ab + c^2)V_t dt - cV_t dW_t, V_0 = U_0$$
 
 so that:
 
-\[V_t= U_0 \exp\left((\frac12 c^2 - ab) t - c W_t\right) \]
+\[V_t= \frac1{X_0} \exp\left((\frac12 c^2 - ab) t - c W_t\right) \]
 
 by part a):
 $U_t = V_t\left[1 + a \int_0^t \frac{ds}{V_s}\right]$
@@ -135,18 +135,18 @@ $U_t = V_t\left[1 + a \int_0^t \frac{ds}{V_s}\right]$
 \[X_t = \frac1{U_t} = \frac1{V_t\left[ 1 + a \int_0^t \frac{ds}{V_s}\right]}\]
 When $a > 0$, since $V_t > 0$, this solution is well definied, and we can check easily that it verifies the SDE.
 
-If $a < 0, c \ne 0$, we prove that with positive probability, $\exists t > 0, \int_0^t \frac{ds}{V_s} \ge -\frac1a$, and as a result $X_t$ is not well defined.
+If $a < 0$ and $c = -1$ and $b$ is such that $c^2 = 2ab$, we prove that with positive probability, $\exists t > 0, \int_0^t \frac{ds}{V_s} \ge -\frac1a$, and as a result $X_t$ is not well defined.
 
 Define the stopping times:
-- $\tau_1 = \inf\{ t > 0, W_t = 1-\frac1a \}$
-- $\tau_2 = \inf\{ t \ge \tau_1, W_t = 2-\frac1a \}$
-- $\tau_3 = \inf\{ t \ge \tau_2, W_t = 1-\frac1a \}$
+- $\tau_1 = \inf\{ t > 0, W_t = 1 + \log(-\frac{X_0}a) \}$
+- $\tau_2 = \inf\{ t \ge \tau_1, W_t = 2+ \log(-\frac{X_0}a)\}$
+- $\tau_3 = \inf\{ t \ge \tau_2, W_t = 1+ \log(-\frac{X_0}a) \}$
 
 All the $\tau_i$ are finite a.s.
 
 Furthermore, if $\tau_3 \ge \tau_2 +1$, $\int_0^t \frac{ds}{V_s} \ge \int_{\tau_2}^{\tau_3} \frac{ds}{V_s} \ge -\frac1a$
 
-Now, by strong markov property: $\mathbb P(\tau_3 \ge \tau_2 + 1) = \mathbb P(\tau_1 \ge 1 | W_0 = 2 - \frac1a)$. This probability is positive because $E[\tau_1] = \infty$
+Now, by strong markov property: $\mathbb P(\tau_3 \ge \tau_2 + 1) = \mathbb P(\tau_1 \ge 1 | W_0 = 2 + \log(- \frac{X_0}a))$. This probability is positive because $E[\tau_1] = \infty$
 
 *Q.3*
 
@@ -237,6 +237,26 @@ So
 \[\sup_{[0, T]} |Z_t- Z^n_t| = \sup_{[0, T]}|f^{-1}\circ f(Z_t) - f^{-1}\circ f(Z^n_t)| \le ||{f^{-1}}'||_{\infty} \sup_{t \in [0, T]} |f(Z_t^n) - f(Z_t)| \rightarrow_n 0\]
 
 Which proves the existence of $Z_t$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
