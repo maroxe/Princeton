@@ -34,3 +34,8 @@ ltxpng
 *.pygtex
 /ORF525/hw1/.Rhistory
 *.Rhistory
+
+ORF527/*
+ORF525/*
+ORF523/*
+
