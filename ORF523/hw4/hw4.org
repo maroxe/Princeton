@@ -528,3 +528,12 @@ By lyapounouv theorem, $\Sigma$ is then stable, or equivalenty $\{A_1, A_2\}$ is
 
 
 
+
+
+
+
+
+
+
+
+

@@ -1,4 +1,3 @@
-
 # -*- mode: org; org-confirm-babel-evaluate: nil; org-speed-commands-user: nil; org-use-speed-commands: t; -*-
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
 #+HTML_HEAD: <link href="http://thomasf.github.io/solarized-css/solarized-dark.min.cs" rel="stylesheet"></link>
@@ -74,27 +73,40 @@ $$P(\sup|B_t - g(t)| \le \varepsilon) > 0$$
 Which conludes the proof.
 
 ** Exercice 13.3
+(a)
+   \begin{align*}
+   E[\exp(\sqrt{1-2\epsilon}B_{\tau_L} + (\frac12-\epsilon) \tau_L)] = 1
+   \end{align*}
+
+   
    Let $\mu = 1 - \varepsilon$
    $X_t = B_t + \mu t$
    $\tau_L = \inf\{t, X_t = -a \}$
 
-   $E^P[W] = E^Q[W / M_T]$ , $M_T = \exp(-\mu B_t - \frac12 \mu^2 T)$
-   \begin{align*}
-   E\exp\left((1-\frac{\varepsilon}2) \tau_L\wedge T\right)
-   &=E^{Q_T} \exp\left((1-\frac{\varepsilon}2) (\tau_L\wedge T) + \mu B_T + \frac{\mu^2}2T \right)
-   &=E^{Q_T} \exp\left((1-\frac{\varepsilon}2) (\tau_L\wedge T) + \mu B_T + \frac{\mu^2}2(\tau_L\wedge T) \right)
-   \end{align*}
+   $E^P[W] = E^Q[W / M_T]$ , $M_T = \exp(\mu B_t - \frac12 \mu^2 T)$
 
 
    \begin{align*}
    E^P\exp\left((1-\frac{\varepsilon}2) \tau_L\wedge T\right)
-   &=E^{Q_T} \exp\left((1-\frac{\varepsilon}2) (\tau_L\wedge T) + \mu X_T - \frac{\mu^2}2T \right)
-   \\&=E^{Q_T} \exp\left((\mu+\frac{\varepsilon}2) (\tau_L\wedge T) + \mu X_{\tau_L \wedge T} - \frac{\mu^2}2(\tau_L \wedge T) \right)
-   \\&=E^{Q_T} \exp\left( \mu X_{\tau_L \wedge T} + (\mu+\frac{\varepsilon}2 - \frac{\mu^2}2)(\tau_L \wedge T) \right)
-   \\&=E \exp\left( (1-\varepsilon) W_{\sigma_{-a} \wedge T} + \frac{1+\varepsilon-\varepsilon^2}2 (\sigma_{-a} \wedge T) \right)
+   &= E^Q\exp\left((1-\frac{\varepsilon}2) \tau_{-a} \wedge T\right)
+   \\&= E^P[\exp\left((1-\frac{\varepsilon}2) \tau_{-a} \wedge T\right) M_{\tau_{-a}\wedge T}]
+   \\&\rightarrow E^P\exp\left((1-\frac{\varepsilon}2) \tau_{-a} \right) M_{\tau_{-a}}
+   \\&= E^P\exp\left((1-\frac{\varepsilon}2) \tau_{-a} - \mu a -\frac12 \mu^2 \tau_{-a}\right)
+   \\&= e^{-(1-\varepsilon)a} E^P\exp\left((1-\frac{\varepsilon - (1-\varepsilon)^2}2) \tau_{-a}\right)
    \end{align*}
 
 
+   (b)
+   - $\int_0^{\infty} \mu^2 ds = \int_0^{\tau_L}  ds = \tau_L$
+   - $\int_0^{\infty} \mu dB_ss = \int_0^{\tau_L} dB_s = B_{\tau_L} = -a + (1-\varepsilon) \tau_L$
+   - $M_{\infty} = M_{\tau_L} = \exp(-a  + (1-\varepsilon) \tau_L)$, so $E[M_{\infty}] = E[M_{\tau_L}] = e^{-a}E\exp((1-\frac{\varepsilon}2) \tau_L) = e^{-2a\varepsilon} < 1$
+
+     
+   (c)
+   Define $\sigma_L = \inf\{t, X_t = -a + (1-\varepsilon) z(t) \} \overset{d}{=}  \inf\{t, B_{z(t)} = -a + (1-\varepsilon) z(t) \} = \inf\{z^{-1}(u), B_u = -a + (1-\varepsilon) u \} = z^{-1}(\tau_L)$
+   $\mu(s) = 1_{z(s) \le \sigma_L}$
+
+   $E[\exp(\frac12 - \epsilon) \int_0^1 \mu^2(s) ds] = E[\exp(\frac12 - \epsilon) z(\sigma_L)]$
 * Q2
   (a)
 

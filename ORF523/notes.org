@@ -118,3 +118,6 @@ $x_{k+1} = Ax_k$ is GA $\iff \exists P > 0, P > A^TPAS$
 
 
 
+
+
+

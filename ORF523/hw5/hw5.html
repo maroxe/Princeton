@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2016-04-11 Mon 01:54 -->
+<!-- 2016-04-14 Thu 21:40 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Problem set 5, ORF523</title>
@@ -170,7 +170,26 @@ for the JavaScript code in this tag.
 <body>
 <div id="content">
 <h1 class="title">Problem set 5, ORF523</h1>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+</tr>
+</tbody>
+</table>
 
 <div id="outline-container-orgheadline1" class="outline-2">
 <h2 id="orgheadline1"><span class="section-number-2">1</span> Problem 1</h2>
@@ -198,7 +217,7 @@ has  for dual:
 & \underset{\alpha, \lambda_{ij} \in \mathbb R}{\text{max}}
 & & \alpha \\
 & \text{subject to}
-& & \alpha I + \sum_{(i,j) \in E} \lambda_{ij} E_{ij} \le -J
+& & \alpha I + \sum_{(i,j) \in E, i < j} \lambda_{ij} E_{ij} \le -J
 \end{align*}
 <p>
 Or:
@@ -230,35 +249,35 @@ Which proves that the dual and primal are equal. Taking  \(\beta = -\alpha\), we
 & \underset{\alpha, \lambda_{ij} \in \mathbb R}{\text{min}}
 & & \beta \\
 & \text{subject to}
-& & -\beta I + \sum_{(i,j) \in E} \lambda_{ij} E_{ij} \le -J
+& & -\beta I + \sum_{(i,j) \in E, i < j} \lambda_{ij} E_{ij} \le -J
 \end{align*}
 <p>
 Note that the \((1, 1)\) entry of \(-\beta I + \sum_{(i,j) \in E} \lambda_{ij} E_{ij} + J\): \(1-\beta\) shoud be negative, so we can ammend to the constraints that \(\beta \ge 1\)
 </p>
 
 \begin{align*}
--\beta I + \sum_{(i,j) \in E} \lambda_{ij} E_{ij} \le -J
-&\iff \beta(I - \sum_{(i,j) \in E} \frac{\lambda_{ij}}{\beta} E_{ij}) \ge J
-\\&\iff I - \sum_{(i,j) \in E} \frac{\lambda_{ij}}{\beta} E_{ij}) \ge \frac1\beta 11^T
-\\&\iff \begin{pmatrix}I - \sum_{(i,j) \in E} \frac{\lambda_{ij}}{\beta} E_{ij} & \begin{matrix}1\\\vdots\\1\end{matrix}\\
- \begin{matrix}1&\ldots&1\end{matrix}&\beta\end{pmatrix} \ge 0 &\text{(By Schur Lemma bc $\beta > 0$)}
+-\beta I + \sum_{(i,j) \in E, i < j} \lambda_{ij} E_{ij} \le -J
+&\iff \beta(I - \sum_{(i,j) \in E}, i < j \frac{\lambda_{ij}}{\beta} E_{ij}) \succeq J
+\\&\iff I - \sum_{(i,j) \in E, i < j} \frac{\lambda_{ij}}{\beta} E_{ij}  \succeq \frac1\beta 11^T
+\\&\iff \begin{pmatrix}I - \sum_{(i,j) \in E, i < j} \frac{\lambda_{ij}}{\beta} E_{ij} & \begin{matrix}1\\\vdots\\1\end{matrix}\\
+ \begin{matrix}1&\ldots&1\end{matrix}&\beta\end{pmatrix}  \succeq 0 &\text{(By Schur Lemma bc $\beta > 0$)}
 \end{align*}
 
 
 <p>
-Let's note this big matrix \(Z\). It is clear that a matrix \(Z \in S^{(n+1) \otimes (n+1)}\) is of this form iff it verifies the constraints of the following optimization problem:
+Let's note this big matrix \(Z\). It is clear that a matrix \(Z \in S^{(n+1)}\) is of this form iff it verifies the constraints of the following optimization problem:
 </p>
 \begin{align*}
-& \underset{\alpha, \lambda_{ij} \in \mathbb R}{\text{min}}
+& \min
 & & Z_{n+1, n+1} \\
 & \text{subject to}
-& & Z \ge 0
-\\&&& Z_{i,n+1} = Z_{ii} = 0
+& & Z  \succeq 0
+\\&&& Z_{i,n+1} = Z_{ii} = 1
 \\&&& Z_{i,j} = 0 \forall \{i, j\} \in \bar E
 \end{align*}
 
 <p>
-Which is then equal to \(\vartheta(G)\)
+And this quantity is then equal to \(\vartheta(G)\)
 </p>
 
 <p>
@@ -335,24 +354,176 @@ No inequality can thus be tight.
 <div class="outline-text-2" id="text-2">
 <p>
 <b>1</b>
---------&#x2013;&#x2014;Duality----------&#x2013;&#x2014;
+</p>
+
+
+<p>
+Consider 
+</p>
+\begin{align*}
+\tag{P(G)}
+& \min
+& & Z_{n+1, n+1} \\
+& \text{subject to}
+& & Z \succeq 0
+\\&&& Z_{i,n+1} = Z_{ii} = 1
+\\&&& Z_{i,j} = 0 \forall \{i, j\} \in \bar E
+\end{align*}
+
+
+<p>
+Write the lagrangian:
+</p>
+
+
+\begin{align*}
+\mathcal L(Z, Y)
+&= Z_{n+1, n+1} + \sum_{i=1}^n 2 Y_{i, n+1} (Z_{i, n+1} - 1) + Y_{ii} (Z_{ii} - 1) + \sum_{ij \in \bar E, i < j} Y_{ij}Z_{ij}
+\\&= - \sum_{i} Y_{ii} + 2Y_{i, n+1} + \langle \underbrace{E_{n+1, n+1} + Y_{i, n+1} E_{i, n+1} + Y_{ii} E_{ii} + \sum_{ij \in \bar E, i < j}Y_{ij}E_{ij}}_{Y}, Z \rangle
+\end{align*}
+
+<p>
+Dual:
+</p>
+
+
+\begin{align*}
+\tag{$D_1(G)$}
+& \max
+& & \sum_{i \le n} - Y_{ii} - 2 Y_{i, n+1}\\
+& \text{subject to}
+& & Y \succeq 0
+\\&&& Y_{n+1, n+1} = 1
+\\&&& Y_{i,j} = 0 \forall \{i, j\} \in  E
+\end{align*}
+
+<p>
+\(P(G)\) and \(D(G)\) are both strictly feasible (Consider \(I_{n+1}\) and \(E_{n+1, n+1}\) respectively). So theire optimal values are <b>attained and are equal</b>.
 </p>
 
 <p>
-Let \(x \in [0, 1]^n\) such that \(C_1, \ldots C_k\)
-</p>
-
-<p>
-Consider
+Let \(Y\) be a feasible solution, write:
 \[Y = \begin{pmatrix}
-x_1 & \hfill & \hfill & \hfill & x_1 \\
-\hfill & x_2 & \hfill & 0 & x_2 \\
-\hfill & \hfill & \ddots &\hfill & \vdots \\
-\hfill & 0 & \hfill & x_n & x_n \\
-x_1 & x_2 & \ldots & x_n & 1 \\
-\end{pmatrix}\]
+&&&\\
+&Y'&&y\\
+&&&\\
+&y^T&&1\end{pmatrix}\]
 </p>
 
+<p>
+Note that by Schur's lemma:
+</p>
+
+<p>
+\[Y \succeq 0 \iff Y' \succeq yy^T \iff Y' \succeq (-y)(-y)^T\]
+</p>
+
+<p>
+So we can replace \(Y_{i, n+1}\) by \(-Y_{i, n+1}\) without affecting the optimal value:
+</p>
+
+\begin{align*}
+\tag{$D_2(G)$}
+& \max
+& & \sum_{i \le n} - Y_{ii} + 2 Y_{i, n+1}\\
+& \text{subject to}
+& & Y \succeq 0
+\\&&& Y_{n+1, n+1} = 1
+\\&&& Y_{i,j} = 0 \forall \{i, j\} \in  E
+\end{align*}
+
+
+<p>
+Let's now prove that this is equivalent to the following problem:
+</p>
+
+
+\begin{align*}
+\tag{$D_3(G)$}
+& \max
+& & \sum_{i \le n}  Y_{ii} \\
+& \text{subject to}
+& & Y \succeq 0
+\\& & &Y_{n+1, i} = Y_{ii} 
+\\&&& Y_{n+1, n+1} = 1
+\\&&& Y_{i,j} = 0 \forall \{i, j\} \in  E
+\end{align*}
+
+<ul class="org-ul">
+<li>If \(Y\) is feasible to \(D_3(G)\), then it is also feasible to \(D_2(G)\). Moreover in that case, \(\sum_{i} -Y_{ii} + 2Y_{i,n+1} =\sum_{i} Y_{ii}\), so \(D_2(G) \ge D_3(G)\)</li>
+<li>Let \(Y\) be an optimal solution to \(D_2(G)\) (we proved that it exists). Argue by contradiction that assume that \(Y_{n+1, j} - Y_{jj} \ne 0\).
+&#x2013; Note \(a = \sum_i Y_{ii} - 2Y_{i, n+1}\).
+&#x2013; Note that by looking at a \(2 \times 2\) leading minor, \(Y_{jj} \ge Y_{n+1, j}^2 > 0\).
+&#x2013; Note by \(Y'\) the matrix obtained from \(Y\) by multiplying the \(j^{th}\) row/column of \(Y\) by \(s := 1 - \frac{Y_{jj} - Y_{n+1, j}}{Y_{jj}}\). 
+&#x2013; \(Y' = diag(1, \ldots, \underbrace{s}_j, \ldots, 1) Y  diag(1, \ldots, \underbrace{s}_j, \ldots, 1) \succeq 0\), and we can see that \(Y'\) is feasible in \(D_2(G)\)
+&#x2013; The objective value of \(Y'\) in \(D_2(G)\) is:
+\[\sum_{i \le n} - Y_{ii} + 2Y_{i, n+1} + (1-s)(-Y_{jj} + 2Y_{j, n+1}) = \sum_{i \le n} - Y_{ii} + 2Y_{i, n+1} + \underbrace{Y_{jj}s^2}_{>0}\]
+Absurd.
+We have that showed that \(Y\) verifies the satisfiability conditions of \(D_3(G)\), and therefore \(D_3(G) = \sum_{i} -Y_{ii} + 2Y_{i,n+1} =\sum_{i} Y_{ii} \le D_2(G)\)
+Which completes the proof of the hint.</li>
+</ul>
+
+
+<p>
+Let \(Y \in S^{n+1 \times n+1}\) be a feasible solution to this problem. Let \(x := (Y_{ii})_{i \le n}\). 
+</p>
+
+<p>
+By consider the \(1 \times 1\) and \(2 \times 2\) minors:
+</p>
+
+\begin{align*}
+Y \succeq 0 
+&\implies \begin{vmatrix}Y_{ii}&Y_{ii}\\Y_{ii}&1\end{vmatrix} \ge 0, Y_{ii} \ge 0
+\\&\implies Y_{ii} - Y_{ii}^2 \ge 0, Y_{ii} \ge 0
+\\&\implies 0 \le Y_{ii}  \le 1
+\end{align*}
+
+<p>
+We have just proved that \(0 \le x \le 1\)
+</p>
+
+<p>
+Let \(\{i_1, \ldots, i_k\}\) a clique in the graph. Let \(I = \{i_1, \ldots, i_k, n+1\}\), and consider the principal minor:
+\[\det Y_{I, I} = \det \begin{vmatrix}
+Y_{i_1i_1} &    \ldots    &    0        & Y_{i_1i_1}\\
+    0       & \ddots &   \vdots         & \vdots\\
+    \vdots       &        & Y_{i_ki_k} & Y_{i_ki_k}\\
+  Y_{i_1i_1}  &   \ldots     &  Y_{i_ki_k} & 1
+\end{vmatrix} =
+\det \begin{vmatrix}
+x_{i_1} &    \ldots    &    0        & x_{i_1}\\
+    0       & \ddots &   \vdots         & \vdots\\
+    \vdots       &        & x_{i_k} & x_{i_k}\\
+  x_{i_1}  &   \ldots     &  x_{i_k} & 1
+\end{vmatrix}
+\ge 0\]
+</p>
+
+<p>
+To calculate this determinant, substract the sum of the first \(n\) rows from the last one to get a triangular matrix:
+\[\det Y_{I, I} = \det \begin{vmatrix}
+x_{i_1} &    \ldots    &    0        & x_{i_1}\\
+    0       & \ddots &   \vdots         & \vdots\\
+    \vdots       &        & x_{i_k} & x_{i_k}\\
+  0  &   \ldots     &  0 & 1 - x_{i_1} - \ldots x_{i_k}
+\end{vmatrix} = x_{i_1} \ldots x_{i_k} (1 - x_{i_1} - \ldots -x_{i_k}) \]
+</p>
+
+<p>
+Which means that \(x_{i_1} + \ldots + x_{i_k} \le 1\), eg \(x\) respects all the clique inequalities.
+</p>
+
+
+<p>
+As a result:
+\[\sum_{i=1}^n Y_{ii} = \sum_{i=1}^n x_i \le \eta^{(k)}_{LP}\]
+</p>
+
+<p>
+Taking the sup over feasible \(Y\):
+\(\vartheta(G) \le \eta_{LP}^{(k)}\)
+</p>
 
 
 
@@ -404,14 +575,6 @@ cvx_end
 </pre>
 
 
-
-
-
-
-
-
-
-
 <div class="org">
 
 <div class="figure">
@@ -421,6 +584,7 @@ cvx_end
 </div>
 
 </div>
+
 
 
 
@@ -468,8 +632,9 @@ stableset = find(abs(v) <span style="color: #84ffff;">&gt;</span> 0.01)
 </pre>
 </div>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
+<div class="org">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
+<caption class="t-above"><span class="table-number">Table 1:</span> Subgraph of the nodes in the stableset</caption>
 
 <colgroup>
 <col  class="org-right" />
@@ -525,12 +690,15 @@ stableset = find(abs(v) <span style="color: #84ffff;">&gt;</span> 0.01)
 </tbody>
 </table>
 
+</div>
+
+
 <p>
-Let's assume that there exist another stable set of size 5 \(V_y\).
+Let's assume that there exist another stable set of size 5.
 </p>
 
 <p>
-This would mean that there exist \(v \in V_x\) such that imposing \(X_{jj} = 0\) would not change \(\alpha\). Let's check:
+This would mean that there exist \(v \in V_x\) such that imposing \(x_j = 0\) (eg \(X_{jj} =  0\)) would not change \(\alpha\). Let's check:
 </p>
 
 <div class="org-src-container">
@@ -564,7 +732,7 @@ This would mean that there exist \(v \in V_x\) such that imposing \(X_{jj} = 0\)
 
 <div class="org">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" class="center">
-<caption class="t-above"><span class="table-number">Table 1:</span> Lovazs</caption>
+<caption class="t-above"><span class="table-number">Table 2:</span> Lovazs</caption>
 
 <colgroup>
 <col  class="org-right" />
@@ -634,7 +802,7 @@ maximize(sum(x))
 <span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">i</span>=<span style="color: #8bc34a;">2:n</span>
     <span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">j</span>=<span style="color: #8bc34a;">1:(i-1)</span>
         <span style="color: #fff59d;">if</span> G(<span style="color: #8bc34a;">i</span>, <span style="color: #8bc34a;">j</span>) <span style="color: #84ffff;">==</span> 1
-            x(<span style="color: #8bc34a;">i</span>) <span style="color: #84ffff;">+</span> x(<span style="color: #8bc34a;">j</span>) <span style="color: #84ffff;">&lt;=</span> 1
+            x(<span style="color: #8bc34a;">i</span>) <span style="color: #84ffff;">+</span> x(<span style="color: #8bc34a;">j</span>) <span style="color: #84ffff;">\</span>langle = 1
         <span style="color: #fff59d;">end</span>
     <span style="color: #fff59d;">end</span>
 <span style="color: #fff59d;">end</span>
@@ -646,7 +814,7 @@ cvx_end
 </div>
 
 <pre class="example">
-25
+50
 </pre>
 
 
@@ -721,12 +889,13 @@ cvx_begin
 <pre class="example">
 12.5
 </pre>
+
+<p>
+&rang;
+</p>
 </div>
 </div>
 </div>
-
-
-
 
 <div id="outline-container-orgheadline5" class="outline-2">
 <h2 id="orgheadline5"><span class="section-number-2">3</span> Problem 3</h2>
@@ -746,7 +915,8 @@ This can be summerised as \((A_{au} + \delta_{au})(A_{bv} + \delta_{bv}) - \delt
 </p>
 
 <p>
-So the adjacency matrix of \(G_A \otimes G_B\) is \((A+I_{n}) \otimes (B+I_m) - I_{nm}\).
+So the adjacency matrix of \(G_A \otimes G_B\) is
+\((A+I_{n}) \otimes (B+I_m) - I_{nm}\).
 </p>
 
 <p>
@@ -756,9 +926,13 @@ Where \(\otimes\) denote the Kronecker product: \((A\otimes B)_{p(r-1)+v, q(s-1)
 <p>
 <b>2.</b>
 </p>
-</div>
-</div>
 
+<p>
+\[5 = \alpha(G) \le \Theta(G) \le \vartheta(G) = 5\]
+so \(\Theta(G) = 5\)
+</p>
+</div>
+</div>
 
 
 
@@ -805,8 +979,8 @@ So: \[(1) \iff \left\{\begin{array}{cc}
 </p>
 
 <p>
-Note \(z = \begin{pmatrix}x \\ y\end{pmatrix}, u = \begin{pmatrix}1 \\ 0\end{pmatrix}, v = \begin{pmatrix}0 \\ 1\end{pmatrix}\), 
-\(M = zz^T = \begin{pmatrix}xx^T&xy^T\\yx^T&yy^T\end{pmatrix}\)
+Note \(z = \begin{pmatrix}x \\ y\\1\end{pmatrix}, u = \begin{pmatrix}1 \\ 0\end{pmatrix}, v = \begin{pmatrix}0 \\ 1\end{pmatrix}\), 
+\[M = zz^T = \begin{pmatrix}xx^T&xy^T&x\\yx^T&yy^T&y\\x^T&y^T&1\end{pmatrix}\]
 </p>
 
 <p>
@@ -815,54 +989,135 @@ Note that
 <ul class="org-ul">
 <li>\(M \succeq 0\)</li>
 <li>\(rank(M) = 1\)</li>
-<li>\(u^TMu = 1^Txx^T1 = (1^Tx)^2 = 1\), similarly \(v^TMv = 1\)</li>
-<li>\(M_{(i+m), j} = x_iy_j \ge 0\)</li>
+<li>\(M_{n+m:n+m+1, 1:n} = x \in \Delta_n\)</li>
+<li>\(M_{n+m:n+m+1, n+1:n+m} = y \in \Delta_m\)</li>
+<li>\(M_{n+m+1, n+m+1} = 1\)</li>
 </ul>
 
 <p>
-Now let \(M \in S^{n+m}\), verifying all the previous conditions. Then by cholesky, there existe a vector \(z \in \mathbb R^{n+m}\), such that: \(M = zz^T\)
+Now to express the fact that \((x, y)\) is a Nash equilibrium (*):
+</p>
+<ul class="org-ul">
+<li>\(tr(M_{n+1:n+m, 1:n} A) = tr(yx^T A) = tr(x^TAy) \ge tr(e_i^TAy) \ge tr(e_i^TAM_{n+m:n+m+1, n+1:n+m})\)</li>
+<li>\(tr(M_{n+1:n+m, 1:n} B)  \ge tr(M_{n+m:n+m+1, 1:n}Ae_i)\)</li>
+</ul>
+
+<p>
+Now let \(M \in S^{n+m}\), verifying all the previous conditions. Then by cholesky, there existe a vector \(z \in \mathbb R^{n+m+1}\), such that: \(M = zz^T\)
 </p>
 
 <ul class="org-ul">
-<li>Let's decompose \(z := \begin{pmatrix}x \\ y\end{pmatrix}\)</li>
-<li>\(1 = u^TMu \implies \sum_i x_i = \pm 1\), similarly, \(\sum y_j = \pm 1\)</li>
-<li>\(M_{(i+m), j} = x_iy_j \ge 0 \implies x_i, y_j\) all share the same sign.</li>
-<li>We can always change \(x\) and/or \(y\) to \(-x, -y\) to make \(x, y \ge 0\) and therefore \(\sum_i x_i = \sum_j y_j = 1\), e.g \(x \in \Delta_m, y \in \Delta_n\)</li>
-<li>\(Mu = \begin{pmatrix}xx^T 1\\yx^T1\end{pmatrix} = \begin{pmatrix}(x^T 1) x\\(x^T1)y\end{pmatrix} = \begin{pmatrix}x\\y\end{pmatrix}\)</li>
-<li>\(x = \underbrace{\begin{pmatrix}I_n&0\\0&0\end{pmatrix}}_{J_1}Mu\)</li>
-<li>\(y = \underbrace{\begin{pmatrix}0&0\\0&I_m\end{pmatrix}}_{J_2}Mu\)</li>
-<li>\(yx^T = M_{n:n+m, 1:n}\)</li>
+<li>Let's decompose \(z := \begin{pmatrix}x \\ y\\\alpha\end{pmatrix} \in \mathbb R^{n+m+1}\), so that \(M = zz^T = \begin{pmatrix}xx^T&xy^T&\alpha x\\yx^T&yy^T&\alpha y\\\alpha x^T&\alpha y^T&\alpha^2\end{pmatrix}\)</li>
+<li>\(1 = M_{n+m+1, n+m+1} = \alpha^2 \implies \alpha=\pm 1\)</li>
+<li>\(M_{n+m:n+m+1, 1:n} = \alpha x \in \Delta_n\)</li>
+<li>Similarly: \(\alpha y \in \Delta_m\)</li>
+<li>If \(\alpha = -1\), we can always change \(z\) to \(-z\) without loss of generality to make \(x, y \ge 0\) and therefore \(x \in \Delta_m, y \in \Delta_n\)</li>
+<li>\((x, y)\) naturally represent a Nash equilibrium due to (*).</li>
 </ul>
 
 <p>
-The constraint of \((2)\) can be formulated as follow:
-</p>
-
-<ul class="org-ul">
-<li>\[x^TAy = tr(yx^TA) = tr(M_{n:n+m, 1:n} A)\]</li>
-<li>\(e_i^TAy = e_i^TAJ_2Mu = tr(ue_i^T AJ_2 M)\)</li>
-<li>\(x^TBy = tr(M_{n:n+m, 1:n} B)\)</li>
-<li>\(x^TBe_i = (J_1Mu)^TBe_i = u^TMJ_1Be_i = tr(M J_1Be_iu^T)\)</li>
-</ul>
-
-<p>
-In conclusion:
+PSD relaxation:
 </p>
 <ul class="org-ul">
 <li>\(M \succeq 0\)</li>
-<li>\(rank(M) = 1\)</li>
-<li>\(M_{i+m, j} \ge 0\)</li>
-<li>\(tr(M uu^T) = 1\)</li>
-<li>\(tr(M_{n:n+m, 1:n} A) \ge tr(M ue_i^TAJ_2)\)</li>
-<li>\(tr(M_{n:n+m, 1:n} B) \ge tr(M J_1Be_iu^T)\)</li>
+<li>\(M_{n+m:n+m+1, 1:n} \in \Delta_n\)</li>
+<li>\(M_{n+m:n+m+1, n+1:n+m} \in \Delta_m\)</li>
+<li>\(M_{n+m+1, n+m+1} = 1\)</li>
 </ul>
+
+<p>
+Moreover, we can add the following constraints:
+</p>
+
+<ul class="org-ul">
+<li>The sum of the columns of \(M_{1:n, 1:n} = xx^T = (x_ix_j)_{ij}\) is equal to \(x\). (This is true because \(x \in \Delta_n\))</li>
+<li>Similarly the sum of the columns of \(M_{n+1:n+m, n+1:n+m}\) is equal to \(y\).</li>
+<li>The sum of the columns of \(M_{n+1:2n, 1:n} = yx^T\) is equal to \(y\), and the sum of the rows is equal to \(x\).</li>
+<li>\(M \ge 0\)</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-matlab">A = [345 78 97 355 264 528;
+     310 52 483 385 541 276;
+     236 248 445 243 7 80;
+     64 23 290 226 157 426;
+     292 129 300 116 628 580;
+     477 317 342 58 152 106]
+
+B = [404 183 215 531 232 31;
+     79 624 442 145 277 182;
+     421 619 1 271 477 456;
+     561 364 423 539 96 147;
+     632 546 528 580 388 229;
+     279 112 198 97 172 94]
+
+n = length(A)
+In = eye(n, n);
+
+cvx_begin sdp
+variable M(2<span style="color: #84ffff;">*</span>n<span style="color: #84ffff;">+</span>1, 2<span style="color: #84ffff;">*</span>n<span style="color: #84ffff;">+</span>1) symmetric;
+variables x(n) y(n);
+variables yx(n, n) xx(n, n) yy(n, n);
+
+maximize(trace(yx <span style="color: #84ffff;">*</span> A))
+
+M <span style="color: #84ffff;">&gt;=</span> 0
+M(2<span style="color: #84ffff;">*</span>n<span style="color: #84ffff;">+</span>1, 2<span style="color: #84ffff;">*</span>n<span style="color: #84ffff;">+</span>1) <span style="color: #84ffff;">==</span> 1
+<span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">i</span>=<span style="color: #8bc34a;">1:(2*n+1)  </span>
+    <span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">j</span>=<span style="color: #8bc34a;">1:(2*n+1)</span>
+        M(<span style="color: #8bc34a;">i</span>, <span style="color: #8bc34a;">j</span>) <span style="color: #84ffff;">&gt;=</span> 0
+    <span style="color: #fff59d;">end</span>  
+<span style="color: #fff59d;">end</span>
+
+<span style="color: #b0bec5;">% sub-blocks of M</span>
+x <span style="color: #84ffff;">==</span> M(1<span style="color: #84ffff;">:</span>n, 2<span style="color: #84ffff;">*</span>n<span style="color: #84ffff;">+</span>1)
+y <span style="color: #84ffff;">==</span> M(n <span style="color: #84ffff;">+</span> (1<span style="color: #84ffff;">:</span>n), 2<span style="color: #84ffff;">*</span>n<span style="color: #84ffff;">+</span>1)
+xx <span style="color: #84ffff;">==</span> M(1<span style="color: #84ffff;">:</span>n, 1<span style="color: #84ffff;">:</span>n)
+yy <span style="color: #84ffff;">==</span> M(n <span style="color: #84ffff;">+</span> (1<span style="color: #84ffff;">:</span>n), n <span style="color: #84ffff;">+</span> (1<span style="color: #84ffff;">:</span>n))
+yx <span style="color: #84ffff;">==</span> M(n <span style="color: #84ffff;">+</span> (1<span style="color: #84ffff;">:</span>n), 1<span style="color: #84ffff;">:</span>n)
+
+<span style="color: #b0bec5;">% x and y in the simplex</span>
+sum(x) <span style="color: #84ffff;">==</span> 1
+sum(y) <span style="color: #84ffff;">==</span> 1
+
+<span style="color: #b0bec5;">% Additional constraints</span>
+x <span style="color: #84ffff;">==</span> sum(xx)'
+y <span style="color: #84ffff;">==</span> sum(yy)'
+x <span style="color: #84ffff;">==</span> sum(yx')'
+y <span style="color: #84ffff;">==</span> sum(yx)'
+
+<span style="color: #b0bec5;">% Nash equilibrium constraint</span>
+<span style="color: #fff59d;">for</span> <span style="color: #ffcc80;">i</span>=<span style="color: #8bc34a;">1:n</span>
+    ei = In(1<span style="color: #84ffff;">:</span>n, <span style="color: #8bc34a;">i</span>);
+    trace(yx <span style="color: #84ffff;">*</span> A) <span style="color: #84ffff;">&gt;=</span> trace(ei' <span style="color: #84ffff;">*</span> A <span style="color: #84ffff;">*</span> y)
+    trace(yx <span style="color: #84ffff;">*</span> B) <span style="color: #84ffff;">&gt;=</span> trace(x' <span style="color: #84ffff;">*</span> B <span style="color: #84ffff;">*</span> ei)
+<span style="color: #fff59d;">end</span>
+
+cvx_end
+
+<span style="color: #8bc34a;">ans</span>=cvx_optval;
+</pre>
+</div>
+
+<pre class="example">
+443.13
+</pre>
+
+
+
+
+
+<p>
+Which proves that the score of the first player cannot exceed \(434\)
+</p>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: <span class="timestamp-wrapper"><span class="timestamp">&lt;2016-04-02 Sat&gt;</span></span></p>
 <p class="author">Author: Bachir El khadir</p>
-<p class="date">Created: 2016-04-11 Mon 01:54</p>
+<p class="date">Created: 2016-04-14 Thu 21:40</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
