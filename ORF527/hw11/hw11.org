@@ -8,7 +8,7 @@
 #+OPTIONS: toc:nil h:1
 
 
-#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
 
 #+LATEX_HEADER:  \usepackage{amsmath}
 #+LATEX_HEADER: \usepackage{amsfonts}
@@ -30,139 +30,224 @@
 * Q1
 ** Exercise 13.2
 
-   Correction: $X_t^{(a,b)} = \frac{\sqrt{b-a}} (B_{a+t(b-a)} - B_a)$
-   (a) $A_k \in \sigma(B_t - B_{\frac1{2^{k-1}}}, t \in [\frac1{2^{k-1}}, \frac1{2^k} ])$. Since the brownian motion has independent increments, then $A_k$ are independent.
+   Correction: $X_t^{(a,b)} = \frac1{\sqrt{b-a}} (B_{a+t(b-a)} - B_a)$
+
+   *a.*
+   $A_k \in \sigma(B_t - B_{\frac1{2^{k-1}}}, t \in [\frac1{2^{k-1}}, \frac1{2^k} ])$. Since the brownian motion has independent increments, then $A_k$ are independent.
    
    For all $k$, $(X_t^{(a_k, b_k)})_t$ has the same distribution as $(B_t)_{t \in [0, 1]}$, and $P(A_k) = E[F(X_t^{(a_k, b_k)})_t]$ with $F(X) = 1_{\sup_{[0, 1]} |X - g| \le \varepsilon}$ measurable and indepdendent of $k$. so $P(A_k) = P(A_1)$.
    
    The $A_i$ are all independent, and $\sum_{i=1}^{\infty} P(A_i) = \infty P(A_1)$. 
    If $P(A_1) > 0$, then by Borel Cantelli, infinitely many $A_i$ are realised almost surely.
 
-   (b)
+   *b.*
+   
    $B_t = (X_t, Y_t)$
 
    \begin{align*}
    P(\sup_{[0, 1]} |B_t| \le \varepsilon)
    &= P(\sup_{[0, 1]} X_t^2 + Y_t^2 \le \varepsilon^2)
-   \\&= 1 - P(\sup_{[0, 1]} X_t^2 + Y_t^2 \ge \varepsilon^2)
-   \\&\ge 1 - P(\sup_{[0, 1]} X_t^2 \ge \frac{\varepsilon^2}2) -  P(\sup_{[0, 1]} Y_t^2 \ge \frac{\varepsilon^2}2)
-   \\&\ge 1 - 2 P(\sup_{[0, 1]} X_t^2 \ge \frac{\varepsilon^2}2)
-   \end{align*}
-   
-   \begin{align*}
-   P(\sup_{[0, 1]} X_t^2 \ge \frac{\varepsilon^2}2)
-   &= P(\sup_{[0, 1]} e^{\lambda X_t^2} \ge e^{\lambda\frac{\varepsilon^2}2}) &\text{(For $\lambda$ small enough)}
-   \\&\le \frac{2}{\varepsilon^2}E[e^{\lambda X_1^2}] &\text{(Doobs)}
-   \\&\le \frac{2}{\varepsilon^2} \int e^{\lambda x^2} e^{-\frac{x^2}2} \frac{dx}{\sqrt{2\pi}}
-   \\&= \frac{2}{\varepsilon^2} \frac1{\sqrt{1-2\lambda}}
+   \\&\ge P(\sup_{[0, 1]} X_t^2 \le \frac{\varepsilon^2}{2}, Y_t^2 \ge \frac{\varepsilon^2}{2})
+   \\&\ge P(\sup_{[0, 1]} X_t^2 \le \frac{\varepsilon^2}{2})^2 
    \end{align*}
 
+   Let $\tau = \inf\{t, X_t^2 = \frac{\varepsilon^2}2 \}$.
    
-   $P(\sup_{[0, 1]} |B_t| \le \varepsilon) \ge 1-\frac4{\varepsilon^2\sqrt{1-2\lambda}}$
-For $\lambda$ close enough to $\frac12$, $\frac4{\varepsilon^2\sqrt{1-2\lambda}} < 1$, so $P(\sup_{[0, 1]} |B_t| \le \varepsilon) > 0$
- 
-(c)
-WLOS we can assume that $g \in C^1$. Indeed, if that's not the case, let $f \in C_1$ approximating $g$ uniformly on the compact set $[0, 1]$, ie $|g-f|_{\infty} < \varepsilon$, and note that $\sup_{[0,1]} |B_t - g(t)| \le \sup_{[0,1]} |B_t - f(t)| + \varepsilon$
+   Assume $\tau < 1$ a.s, then $M_{t \wedge \tau} = e^{i \alpha X_{t \wedge \tau} + \frac12 \alpha^2 (t\wedge\tau) }$ is a bounded martingale. By Dominated convergence theorem:
+   $$1 = E[M_{\tau}] = \frac12(e^{i\alpha \frac{\varepsilon}{\sqrt 2}}+ e^{-i\alpha \frac{\varepsilon}{\sqrt 2}}) E[e^{\alpha^2 \frac{\tau}2}]$$
 
-Now let $W_t = B_t - g(t)$, ie $dW_t = dB_t - g'(t) dt$. By Girsanov theorem, there exist a measure $Q$ equivalent to $P$ where $W_t$ is a Brownian motion. Under $Q$:
-$$Q(\sup|W_t| \le \varepsilon) > 0$$
-So
-$$Q(\sup|B_t - g(t)| \le \varepsilon) > 0$$
-so
-$$P(\sup|B_t - g(t)| \le \varepsilon) > 0$$
-Which conludes the proof.
+   ie
+   $$e^{\frac12 \alpha^2} \ge E[e^{\alpha^2 \frac{\tau}2}] = \frac1{\cos(\frac{\alpha \varepsilon}{\sqrt 2})}$$
+   Which is absurd because $\frac{1}\cos$ is not bounded.
+   
+   *c.*
+   WLOS we can assume that $g \in C^1$. Indeed, if that's not the case, let $f \in C_1$ approximating $g$ uniformly on the compact set $[0, 1]$, ie $|g-f|_{\infty} < \varepsilon$, and note that $\sup_{[0,1]} |B_t - g(t)| \le \sup_{[0,1]} |B_t - f(t)| + \varepsilon$
+
+   Now let $W_t = B_t - g(t)$, ie $dW_t = dB_t - g'(t) dt$. By Girsanov theorem, there exist a measure $Q$ equivalent to $P$ where $W_t$ is a Brownian motion. Under $Q$:
+   $$Q(\sup|W_t| \le \varepsilon) > 0$$
+   So
+   $$Q(\sup|B_t - g(t)| \le \varepsilon) > 0$$
+   so
+   $$P(\sup|B_t - g(t)| \le \varepsilon) > 0$$
+   Which conludes the proof.
 
 ** Exercice 13.3
-(a)
-   \begin{align*}
-   E[\exp(\sqrt{1-2\epsilon}B_{\tau_L} + (\frac12-\epsilon) \tau_L)] = 1
-   \end{align*}
 
-   
-   Let $\mu = 1 - \varepsilon$
-   $X_t = B_t + \mu t$
-   $\tau_L = \inf\{t, X_t = -a \}$
-
-   $E^P[W] = E^Q[W / M_T]$ , $M_T = \exp(\mu B_t - \frac12 \mu^2 T)$
-
+   *(a)*
+   - $\tau_L = \inf\{t, X_t = -a \}$
+   - $\tau_{-a} = \inf\{t, B_t = -a\}$
+   - Change of measure: $E^P[W] = E^Q[W  M_T]$ , $M_T = \exp(-(1-\varepsilon) X_t - \frac12 (1-\varepsilon)^2 T)$
+   - under $Q$, $(X, \tau_L)$ has the same distribution as $(B, \tau_{-a})$ under $P$
 
    \begin{align*}
-   E^P\exp\left((1-\frac{\varepsilon}2) \tau_L\wedge T\right)
-   &= E^Q\exp\left((1-\frac{\varepsilon}2) \tau_{-a} \wedge T\right)
-   \\&= E^P[\exp\left((1-\frac{\varepsilon}2) \tau_{-a} \wedge T\right) M_{\tau_{-a}\wedge T}]
-   \\&\rightarrow E^P\exp\left((1-\frac{\varepsilon}2) \tau_{-a} \right) M_{\tau_{-a}}
-   \\&= E^P\exp\left((1-\frac{\varepsilon}2) \tau_{-a} - \mu a -\frac12 \mu^2 \tau_{-a}\right)
-   \\&= e^{-(1-\varepsilon)a} E^P\exp\left((1-\frac{\varepsilon - (1-\varepsilon)^2}2) \tau_{-a}\right)
+   E^P\left[1_{|X_{T\wedge \tau_L}| \le a} \exp\left((\frac12-\varepsilon) \tau_L\wedge T\right)\right]
+   &=E^Q\left[1_{|X_{T\wedge \tau_L}| \le a} M_{T\wedge \tau_L}\exp\left( \tau_L\wedge T\right)\right]
+   \\&=E^Q\left[1_{|X_{T\wedge \tau_L}| \le a} \exp\left(-(1-\varepsilon)X_{t\wedge\tau_L} +  ((\frac12-\varepsilon)-\frac12 (1-\varepsilon)^2) \tau_L\wedge T\right)\right]
+   \\&=E^P\left[1_{|B_{T\wedge \tau_{-a}}| \le a} \exp\left(-(1-\varepsilon)B_{t\wedge\tau_L} -  \varepsilon^2  \tau_{-a}\wedge T\right)\right]
    \end{align*}
 
+   We now let $T \rightarrow \infty$ on both sides of the last equation . This is justified because:
+   - $0 \le 1_{|X_{T\wedge \tau_L}| \le a} \exp\left((\frac12-\varepsilon) \tau_L\wedge T\right) \uparrow \exp\left((\frac12-\varepsilon) \tau_L\right)$
+   - $0 \le 1_{|B_{T\wedge \tau_{-a}}| \le a} \exp\left(-(1-\varepsilon)B_{t\wedge\tau_L} -  \varepsilon^2  \tau_{-a}\wedge T\right) \le \exp((1-\varepsilon) a)$
 
-   (b)
+     
+   And we get that:
+     $$E^P\left[\exp\left((\frac12-\varepsilon) \tau_L\right)\right] = E^P\left[\exp\left(-(1-\varepsilon)B_{\tau_{-a}} -  \varepsilon^2  \tau_{-a}\right)\right] = e^{a(1-\varepsilon)} E^P\left[\exp\left( - \varepsilon^2  \tau_{-a}\right)\right] = e^{a(1-2\varepsilon)}$$
+     
+   *(b)*
    - $\int_0^{\infty} \mu^2 ds = \int_0^{\tau_L}  ds = \tau_L$
-   - $\int_0^{\infty} \mu dB_ss = \int_0^{\tau_L} dB_s = B_{\tau_L} = -a + (1-\varepsilon) \tau_L$
+   - $\int_0^{\infty} \mu dB_s = \int_0^{\tau_L} dB_s = B_{\tau_L} = -a + (1-\varepsilon) \tau_L$
    - $M_{\infty} = M_{\tau_L} = \exp(-a  + (1-\varepsilon) \tau_L)$, so $E[M_{\infty}] = E[M_{\tau_L}] = e^{-a}E\exp((1-\frac{\varepsilon}2) \tau_L) = e^{-2a\varepsilon} < 1$
 
      
-   (c)
-   Define $\sigma_L = \inf\{t, X_t = -a + (1-\varepsilon) z(t) \} \overset{d}{=}  \inf\{t, B_{z(t)} = -a + (1-\varepsilon) z(t) \} = \inf\{z^{-1}(u), B_u = -a + (1-\varepsilon) u \} = z^{-1}(\tau_L)$
-   $\mu(s) = 1_{z(s) \le \sigma_L}$
+     *(c)*
+   $\sigma_L = \inf\{ t, X_t = -a + (1-\varepsilon) z(t)\} \overset{d}{=}  \inf\{ t, B_{z(t)} = -a + (1-\varepsilon) z(t)\} = z^{-1}(\tau_L)$
+   
+   \begin{align*}
+   \tau_L &= \int_0^{\infty} 1_{s \le \tau_L} ds
+   \\&= \int_0^{\infty} 1_{z^{-1}(s) \le z^{-1}(\tau_L)} ds
+   \\&= \int_0^1 1_{u \le z^{-1}(\tau_L)} z'(u) du & (u = z^{-1}(s))
+   \\&= \int_0^1 \frac{1_{u \le z^{-1}(\tau_L)}}{(1-u)^2} du 
+   \end{align*}
 
-   $E[\exp(\frac12 - \epsilon) \int_0^1 \mu^2(s) ds] = E[\exp(\frac12 - \epsilon) z(\sigma_L)]$
+
+   Let $\nu(u, \omega) = \frac{1_{u \le \sigma_L}}{1-u}$
+
+   Doing the opposite change of variable as before we get that:
+   \[\int_0^1 \nu^2 = \int_0^1 \frac1{(1-u)^2}1_{u \le \sigma_L} du = z(\sigma_L) \overset{d}{=} \tau_L\]
+
+
+   
+   We have that:
+
+   - $E[\exp(\frac12 - \epsilon) \int_0^1 \nu^2(s) ds] = E[\exp(\frac12 - \epsilon) \tau_l] < \infty$
+   - $M_1(\nu) = \exp(\int_0^1 \nu dB_s - \frac12 \int_0^1 \nu^2 ds) =  \exp(\int_0^1 \nu dB_s - \frac12 z(\sigma_L))$
+   - $dX_t = \frac1{1-t}dB_t$
+   - $\int_0^1 \nu dB_s = \int_0^1 1_{u \le \sigma_L} \frac{dB_u}{1-u}   = \int_0^1 1_{u \le \sigma_L} dX_u   = X_{\sigma_L}   = -a + (1-\varepsilon) z(\sigma_L)$
+   - $E[M_1(\nu)] = E[\exp(-a + (\frac12 -\varepsilon)z(\sigma_L))] = E[\exp(-a + (\frac12 -\varepsilon)\tau_L] = e^{-2\varepsilon a} < 1$
+     
 * Q2
-  (a)
+  *(a)*
+  Ito formula
+  $$h(x + w_t) = h(x) + \int_0^t \nabla h(x+W_s)dW_s + \frac12 \sum \int_0^t \frac{\partial^2}{\partial x_i^2}h(x+W_s) ds$$
 
-  
+  On the one hand:
+  \[e^{-h(x)} E[e^{h(x+W_t)} f(x + W_t) e^{-\int_0^t V(x+W_s)ds}]
+  = E[f(x+W_t) e^{\int_0^t \nabla h(x+W_s) dW_s - \frac12 \int_0^t ||\nabla h(x+W_s)||^2 ds}]\]
+
+  On the other hand, Define,
   $$M_t = \exp(-\int_0^t \nabla h(X_s)^T dW_s - \frac12 \int_0^t ||\nabla h(X_s)||^2 ds)$$
-  
+
+  And let $Q$ be a probability measure such that:
   $\frac{dQ}{dP} = M_t$
+
   Under $Q$, $X_t-x$ is standard BM.
   
   \begin{align*}
   E[f(X_t)]
   &= E^Q[\frac1{M_t} f(X_t)]
-  \\&= E^P[f(x  + W_t )\exp(\int_0^t \nabla h(x + W_s)^T dW_s + \frac12 \int_0^t ||\nabla h(x + W_s)||^2 ds)]
-  \\&= e^{-h(x)} E^P[f(x  + W_t )e^{\int_0^t V(x + W_s)  ds} e^{\int_0^t \nabla h(x + W_s)^T dW_s - \int_0^t \frac12 |\nabla h(x+W_s)|^2 ds + h(x))}]
+  \\&= E^Q[f(X_t)\exp(\int_0^t \nabla h(X_s)^T dW_s + \frac12 \int_0^t ||\nabla h(X_s)||^2 ds)]
+  \\&= E[f(x + W_t)\exp(\int_0^t \nabla h(x + W_s)^T dW_s + \frac12 \int_0^t ||\nabla h(x + W_s)||^2 ds)]
   \end{align*}
+  Which concludes the proof.
 
-\[ h(x) + \int_0^t \nabla h(x + W_s)^T dW_s  = \int_0^t \frac12 |\nabla h(x+W_s)|^2 ds \]
+  *(b)*
+ 
 
+  - Feynman-Kac:
+    - $u(t, x) = E[e^{h(x+W_t)} f(x+W_t) e^{-\int_0^t V(x+W_s)ds}]$
+    - $u_t(t, x) = \frac12 \Delta u(t, x) - V(x)u(t, x)$
+  
+  - Kolomogorov backward equation
+    - $v(T, x) = g(x)$
+    - $v_t(t, x) + \mathcal L_t v(t, x) = 0$
+    - $\mathcal L_t = \nabla h \nabla + \frac12 \Delta$
+
+
+  Define $v(t, x) = e^{h(x)} u(t,x)$, by a simple calculation we prove that
+  $$u \text{ is solution to KBE} \iff v \text{ is a solution to Feynman-Kac}$$
+
+
+
+  
 * Q3
-  (a)
-  - $$E^{P^0}[e^{\int_0^T (aX_s)^2 ds}]  \le e^{a^2 \int_0^T  E[X_s]^2 ds} \le  e^{a^2 T^3} < \infty$$
+  
+  *(a)*
+  
+  - Novikov:
+    + Let $\delta > 0$, $t \in [0, T]$
+    + $E[e^{\delta X_t^2}] = E[e^{\delta e^{-2at} (\int_0^t e^{as} dB_s)^2}]$
+    + $\int_0^t e^{as} dB_s \sim \mathcal N(0, \int_0^t e^{2as}ds) = \frac{e^{2at} - a}{2a}$
+    + $E[e^{\delta X_t^2}] = E[e^{\delta e^{-2at}  \frac{e^{2at} - a}{2a}  \mathcal N(0, 1)^2} ] \le  E[e^{\delta \frac{e^{2aT} - a}{2a} \mathcal N(0, 1)^2} ]$
+    + Take $\delta$ to be small enough so that $E[e^{\delta \frac{e^{2aT} - a}{2a} \mathcal N(0, 1)^2} ] < \infty$
+
+    Now we can apply Girsanov.
   - Define $Q^a$ by $$\frac{dQ^a}{dP^0} = \exp(-\int_0^t aX_s dXs - \frac12 \int_0^t (aX_s)^2 ds)$$
   - By Girsanov, $W_t^a$ is a standard brownian motion under $Q^a$, so $Q^a$ and $P^a$ agree on $\mathcal F_T^{W^a}$. Since $X_t$ is the strong solution the OU SDE, $\mathcal F_T^{X} \subseteq F_T^{W^a}$.
   - We have just proven that $$P^a|_{\mathcal F_T^X} \sim Q^a|_{\mathcal F_T^X} = P^0|_{\mathcal F_T^X}$$, and $\frac{dQ^a}{dP^0} |_{\mathcal F_T^X} = \exp(-a \int_0^T X_s dXs - \frac12 a^2 \int_0^T X_s^2 ds)$.
   - $$\hat a_T = \arg\max \exp(-a \int_0^T X_s dX_s - \frac12 a^2 \int_0^T X_s^2 ds) = \arg\min a \int_0^T X_s dX_s + \frac12 a^2 \int_0^T X_s^2 ds = -\frac{\int_0^T X_s dX_s}{\int_0^T X_s^2 ds}$$
 
-  (b)
+  *(b)*
 
   $$\hat a_T = -\frac{\int_0^T X_s dX_s}{\int_0^T X_s^2 ds} = \frac{\int_0^T a X_s^2 ds - \int_0^T X_sdW_s }{\int_0^T X_s^2 ds} = a -  \frac{\int_0^T X_sdW_s }{\int_0^T X_s^2 ds}$$
 
-  $X_t = X_0e^{-at} + \int_0^t e^{-a(t-s)}dW_s$
   
-  Let's prove that $\int_0^{\infty} X_t^2 dt = \infty$.
-  - Since $\int_0^{\infty} X_t^2 dt = \infty \iff \forall M > 0 \; \int_M^{\infty} X_t^2 dt = \infty$, $\{\int_0^{\infty} X_t^2 dt = \infty \} \in$
-
-
+  $$X_t =  \int_0^t e^{-a(t-s)}dW_s$$
 
   
-  - $a < 0$,  
-  - $a = 0$, $X_t = W_t^a$, $\int_1^{\infty} (W_t^a)^2 dt = \int_0^1 (W_{\frac1u}^a)^2 \frac{du}{u^2}$
-    Let
-    + $\sigma_{0} = 0$, and for $i \in \mathbb N^+$:
-    + $\tau_i = \inf\{t \ge \sigma_{i-1}, W_t = 1 \}$
-    + $\sigma_i = \inf\{t \ge \tau_i, W_t = 2 \}$
+  If $\int_0^{\infty} X_t^2 dt = \infty$, then $ \frac{\int_0^T X_sdW_s }{\int_0^T X_s^2 ds} \overset{d}{=} \frac{B_{\tau_t}}{\tau_t} \rightarrow 0$. Let's now prove that $\int_0^{\infty} X_t^2 dt = \infty$
 
-
-  We have that:
-  + $\tau_i < \sigma_i < \tau_{i+1}$
-  + $\tau_i < \infty$ because the BM is reccurent
-  + $\tau_i \uparrow \infty$ because the BM is continuous.
-  + $\int_0^{\infty} W_t^2 dt \ge \sum_{i=1}^{\infty} \int_{\tau_i}^{\sigma_i} W_t^2 \ge \sum_{i=0}^\infty (\tau_i - \sigma_i)^2$
-
-  By the strong markov property, for $i \ge 1$,  $W_{t+\tau_i} | W_{\tau_i}$ has the same distribution as $W_t | W_0=1$ and is independent from $(W_t)_{t \le \tau_i}$,  $(\tau_i-\sigma_i)_{i \ge 1}$ are all iid. Moreover $E[\tau_i - \sigma_i] = E[\tau_1 | W_0 = 1] = \infty$, which implies that $E[(\tau_i - \sigma_i)^2] = \infty$.
-
-  By the strong law of large number,  $\sum_{i=0}^\infty (\tau_i - \sigma_i)^2 = \lim_{N\infty} N \frac1N \sum_{i=0}^N  (\tau_i - \sigma_i)^2 \sim N E[(\tau_1 - \sigma_1)^2] = \infty$ $P^0$ almost surely.
   
+  - $a < 0$,  $\int_0^\infty X_t ^2 dt = \int_0^\infty e^{-2at} (\underbrace{\int_0^t e^{as}dW_s}_{Y_t})^2 ds$
+    + Let $Y_t = \int_0^t e^{as} dW_s$. Observe that $\int_0^{\infty} e^{2as} ds = -\frac1{2a}$
+    + Let $$u(s) = \inf\{ t, \int_0^t e^{2as} ds = s\} = \frac{\log(2as + 1)}{2a}$$
+    + $(Y_{u(s)})_{0 \le s \le -\frac1{2a}}$ is a brownian motion.
+    + Do the change of variable:
+       $t = u(s), s = u^{-1}(t), dt = u'(s)ds = \frac{ds}{2as+1}$
+      
+      \begin{align*}
+      \int_0^\infty X_t^2 dt &= \int_0^\infty e^{-2at} Y_t^2 dt
+      \\&=\int_0^{-\frac1{2a}}  \frac{Y_{u(s)}^2}{(1+2as)^2} ds & (t = u(s))
+      \\&\overset{d}{=} \int_0^{-\frac1{2a}}  \frac{B_s^2}{(1+2as)^2} ds
+      \\&= \frac1{4a^2} \int_0^{-\frac1{2a}}  \frac{B_s^2}{(s+\frac1{2a})^2} ds 
+      \end{align*}      
+      With probability 1, $B_{-\frac1{2a}}^2 > 0$, and by continuity: $$\frac{B_s^2}{(s+\frac1{2a})^2} \underset{-\frac1{2a}}{\sim} \frac{B_{-\frac1{2a}}^2}{(s+\frac1{2a})^2}$$
+      Since $\frac1{x^2}$ is not integrable near 0, $\int_0^\infty X_t^2 dt = \infty$
+      
+
+        - $a > 0$,
+          + Let $Y_t = \int_0^t e^{as} dW_s$. Observe that $\int_0^{\infty} e^{2as} ds = \infty$
+          + Let $$u(s) = \inf\{ t, \int_0^t e^{2as} ds = s\} =  \inf\{ t,  \frac{e^{2at}-1}{2a} = s\} = \frac{\log(2as + 1)}{2a}$$
+          + $Y_{u(s)}$ is a brownian motion.
+          + Do the change of variable:
+            $t = u(s), s = u^{-1}(t), dt = u'(s)ds = \frac{ds}{2as+1}$
+
+            \begin{align*}
+            \int_0^\infty X_t^2 dt &= \int_0^{\infty} e^{-2at} Y_t^2 dt
+            \\&=\int_0^{\infty}  \frac{Y_{u(s)}^2}{(1+2as)^2} ds & (t = u(s))
+            \\&\overset{d}{=} \int_0^{\infty}  \frac{B_s^2}{(1+2as)^2} ds
+            \end{align*}      
+
+            $(\frac{B_s}{1+2as})^2$ is a continuous function, which equivalent to  $\frac{B_s^2}{(1+s)^2}$ at infinity. It suffices to to show that $\int_0^{\infty} \frac{B_s^2}{(1+s)^2} = \infty$.
+
+The following shows that integral is indeed infinite: 
+
+        \begin{align*}
+        \int_0^{\infty} \frac{B_s^2}{(1+s)^2} ds
+        &= \int_0^1 (1-u)^2 B_{\frac{u}{1-u}}^2 \frac{du}{(1-u)^2} & (s = \frac{u}{1-u} =: z(u))
+        \\&= \int_0^1  B_{z(u)}^2 du
+        \\&= \int_0^1  (1-u) B_{z(u)}^2  \frac{du}{1-u}
+        \\&\overset{d}=  \int_0^1  B_u^2 \frac{du}{1-u} &( (B_u) \overset{d}= (\frac1{\sqrt{z(u)}}B_{z(u)}) )
+        \\&=\infty &(\text{because } \frac{B_u^2}{1-u} \sim_1 \frac{B_1^2}{1-u} \text{ and } \int_0^1 \frac{dx}x =\infty)
+        \end{align*}
+
+
+  - $a = 0$, $X_t = W_t^a$
+
+  $$\int_0^{\infty} W_t^2 dt \ge \int_0^{\infty} \frac{W_t^2}{(1+t)^2} dt = \infty$$
+
+
+
   (c)
   If $P^a|_{\mathcal F_{\infty}^X} \sim P^{a'}|_{\mathcal F_{\infty}^X}$, then with probability 1 under both measures:
   - $\hat a_T \rightarrow a'$
@@ -170,7 +255,49 @@ Which conludes the proof.
 
 
   Which proves that $a = a'$
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
