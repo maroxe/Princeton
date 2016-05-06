@@ -68,8 +68,8 @@ print "Model initailized"
 
 # draw
 plt.figure(figsize=(12,8))
-plt.xlim(-1, 0)
-plt.ylim(-0.1, 1)
+plt.xlim(-1, -0.99)
+plt.ylim(-0.1, 0.2)
 for i, w in enumerate(np.unique(sentence)):
     if w in model:
         plt.annotate(
