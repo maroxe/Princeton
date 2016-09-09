@@ -1,0 +1,158 @@
+\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+
+\geometry{hmargin=1cm,vmargin=1cm}
+
+
+% custom commands
+\newcommand{\Q}[1]{\subsubsection*{Question #1}}
+\newcommand{\salgebra}{$\sigma$-algebra }
+
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+
+% parameters
+\title{ORF526 - Problem Set 3}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+
+\maketitle
+
+\Q{1}
+
+\begin{itemize}
+\item [a)] $\cap_{n \in \mathbb{N}} A_n^c$
+\item [b)] $\omega$ is in the event means it is in infinitely many $A_n$, which quivalent to saying if we take finitely many $A_m$, $\omega$ is still a subset of the union of the rest of the $A_n$: $\cap_{m \in \mathbb{N}} \cup_{m \leq n} A_n$
+\item [c)] That's the opposite of $b)$, $\left(\cap_{m \in \mathbb{N}} \cup_{m \leq n} A_n \right)^c = \cup_{m \in \mathbb{N}} \cap_{m \leq n} A_n^c $
+\item [d)] $\omega$ in the event means that it has to be in exactly two of the $A_i$, ie $\cap_{ i,j \in \mathbb{N}, i \neq j} \left(A_i \cap A_j \cap (\cup_{n \neq i, n \neq j} A_n^c) \right)$
+\item [e)] This event can be expressed as "$\Phi$ never occurs at even times", ie $\cap_{n \in \mathbb{N}} A_{2 n}^c$
+\end{itemize}
+
+\Q{2}
+\begin{itemize}
+\item $\varepsilon \subseteq \sigma(\varepsilon)$, so $\{ f^{-1}(A) : A \in \varepsilon \} \subseteq \{ f^{-1}(A) : A \in \sigma(\varepsilon) \}$. since the RHS is already a $\sigma$-algebra (showed in class), $\sigma \{ f^{-1}(A) : A \in \varepsilon \} \subseteq \{ f^{-1}(A) : A \in \sigma(\varepsilon) \}$
+\item Let's note $B := \sigma \{ f^{-1}(A) : A \in \varepsilon \}$, and $C := \{ A: f^{-1}(A) \in B \}$.
+\begin{itemize}
+\item $C$ is a \salgebra containing $\varepsilon$, so $\sigma(\varepsilon) \subseteq C$
+\item As a consequence, for every $A \in \sigma(\varepsilon)$, $A \in C$, ie $f^{-1}(A) \in B$.
+\end{itemize}
+We have just proved that $\{ f^{-1}(A) : A \in \sigma(\varepsilon) \}  \subseteq B$
+\end{itemize}
+
+
+\Q{3} 
+\begin{itemize}
+\item $X = \lim_n X_n = \lim_n \text{sup}_{k \geq n} X_k$
+\item For $x \in  \mathbb{R} \cup \{ \infty \}$, $X \leq x$ is quivalent to $\exists n \, \forall k \, \geq n \, X_k \leq x$
+\item $\{X \leq x\} = \cup_{n \in \mathbb{N}} \cap_{k \geq n} \{X_k \leq x \}$ is then measuable.
+\end{itemize}
+
+\Q{4}
+
+\begin{itemize}
+
+\item
+Let's call $Q = P(\{1,..,n\})$. For $i = 1 .. n$:
+$$A_i = \bigunion{I \subseteq Q, i \in I} (\inter{k \in I} A_k) \inter{} (\inter{k \in I^c} A_k^c) $$
+
+This is true because every $\omega \in A_i$ is in some of the other $A_k$ ($k \in I$), and in the complement of the others ($k \not \in I$).
+
+
+Note that this is a union of disjoint sets (because in the intersection of two of those sets there will be a $A_k$ and its complement).
+
+
+Let's call $I_i := \{ I \in Q: \sum_{i \in I} a_i = x_i\}$, ie the different possible combinations for the $A_i$ where $\omega \in \Omega$ can be so that its image by $f$ equals $x_i$. Note that $\omega$ can not be  in any other set $A_i$, for $i \not \in I_i$ because $a_i > 0$.
+
+
+Written differently, $\{ f = x_i \} = \bigunion{I \in I_i} \inter{k \in I_i} A_k \inter{} \inter{k \in I_i^c} A_k^c$. And as a result of the sets being disjoint: 
+$$ \mu(f = x_i) = \sum_{I \in I_i} \mu(\inter{k \in I_i} A_k \inter{} \inter{k \in I_i^c} A_k^c)$$
+
+
+Note that any sum index by some $I \in Q$ in finite because $|I| \leq n$, and this we can rearrange the sums in any order.
+
+\begin{align*}
+\sum_{i=1}^m x_i \mu(f = x_i) 
+&= \sum_{i=1}^m x_i \sum_{I \in I_i} \mu(\inter{k \in I} A_k \inter{} \inter{k \in I^c} A_k^c) \\
+&= \sum_{i=1}^m  \left(\sum_{I \in I_i} (\sum_{k \in I} a_k) \mu(\inter{k \in I} A_k \inter{} \inter{k \in I^c} A_k^c)\right) \\
+&= \sum_{I \in Q} (\sum_{k \in I} a_k) \mu(\inter{k \in I} A_k \inter{} \inter{k \in I^c} A_k^c) 
+& \text{because $Q = \union{k=1..m} I_i$} \\
+&= \sum_{i=1..n} \sum_{I \in Q, i \in I} a_i \mu(\inter{k \in I} A_k \inter{} \inter{k \in I^c} A_k^c) 
+& \text{By rearranging the sum}\\
+&= \sum_{i=1..n} a_i \sum_{I \in Q, i \in I}  \mu(\inter{k \in I} A_k \inter{} \inter{k \in I^c} A_k^c) \\
+&= \sum_{i=1..n} a_i \mu(A_i)
+\end{align*}
+
+\item
+Let's first prove that if a set $A$ has measure 1, for all measurable sets $B$, $\mu(A \inter{} B) = \mu(B)$. This holds because 
+
+$$\mu(B) \geq \mu(A \inter{} B) = 1 - \mu(A^c \union{} B^c) \geq 1 - \mu(B^c) = \mu(B)$$
+
+
+Let $x \in \Omega$ 
+
+$\mu(\{g = x\}) \geq \mu(\{g = x\} \inter{} \{f=x\}) = \mu(\{f = x\} \inter{} \{f=g\}) = \mu(\{f = x\})$ 
+Symmetrically, we prove that $\mu(\{f = x\}) \geq \mu(\{g = x\})$, and thus this two quantities are equal.
+
+This proves that $\sum_{x \in f(\Omega)} x \mu(f = x) = \sum_{x \in g(\Omega)} x \mu(g = x)$ by noting that $\mu(f = x) = 0$ for $x \not \in f(\Omega)$.
+
+And by the last question:
+
+$$\sum_{i=1..n} a_i \mu(A_i) = \sum_{i=1..k} b_i \mu(B_i)$$
+
+\end{itemize}
+
+\newpage
+
+\Q{5} 
+
+If $h = gof$, for $A \in B(\mathbb{R})$, $h^{-1}(A) = f^{-1} (g^{-1}(A)) \in \sigma(f)$ because $g^{-1}(A) \in F$
+
+For the other direction:
+\begin{itemize}
+
+\item
+Let's first suppose that $h := \sum_{i=1..n} a_i 1_{A_i}$ for $a_i > 0$ and $A_i \in \sigma(f)$. Let $h(\Omega_1) = \{x_1, ..., x_m\}$.
+
+
+We can write $h = \sum_{j=1..m} x_j 1_{\{h=x_j\}}$
+$$\{ h = x_j \} = f^{-1}(A_j)$$
+
+$A_j$ are disjoint because for $i \neq j$, $f^{-1}(A_i) \inter{} f^{-1}(A_j) = f^{-1}(A_i \inter{} A_j) \subseteq \{h = x_i\} \inter{} \{h = x_j\} = \emptyset$
+
+
+We define $g(x) = x_i$ on $A_i$, and any other value outside. 
+
+Let $\omega \in \Omega_1$, and $x_i = h(\omega)$, then $\omega \in f^{-1}(A_i)$, so $f(\omega) \in A_i$ and $gof(\omega) = x_i = h(\omega)$. So $h = gof$.
+
+\item
+Let $h$ be now just non negative.
+
+
+We can approximate $h$ point wise by a sequence of non negative simple functions $h_n$ measurable w.r.t the $\sigma$-algebra generated by $f$. We know now that $h_n$ can be written as $g_n o f$.
+
+.By convergence of $h_n$, the sequence $g_n$ converges point wise in a set $C$ containing the image of $f$. With $C := \{ x | \lim_n g_n(x) \text{ exists} \} = \{x | \text{limsup}_n g_n(x) \leq \text{liminf}_n g_n(x) \}$ is measurable.
+
+Let call $g$ the limit, and set $g$ to 0 outside $C$, then $h = gof$. and $g = (\text{limsup}_n \, g_n) 1_C$ is measurable as the product of two measurable functions.
+
+\item
+Let $h$ be just measurable, $h = h^+ - h^- = g^+of - g^-of = (g^+ - g^-) o f$ with $g^+, g^-$ the corresponding $g$ for $h^+, h^-$
+
+If we consider the trivial $\sigma$-algebra $\{\mathbb{R}, \emptyset \}$ instead of Borel, and $f$ constant equal to $0$, then any $h$ is measurable w.r.t the $\sigma$ algebra generated by $f$. If now $h$ is not constant, it cannot be written as $gof = g(0)$
+\end{itemize}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+

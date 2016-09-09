@@ -1,0 +1,248 @@
+\documentclass[12pt]{article}
+
+% packages
+
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[]{mcode}
+
+
+
+% custom commands
+\newcommand{\Q}[1]{\subsubsection*{Problem #1}}
+
+% parameters
+\geometry{hmargin=1cm,vmargin=1cm}
+\title{ORF524 - Problem Set 4}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+
+\maketitle
+
+\Q{1}
+The KKT conditions we will need:
+
+\begin{itemize}
+\item $\exists \lambda_j, \ge 0,  j= 1..n$ s.t $\nabla f(x^*) = - \sum_j \lambda_j \nabla g_j(x^*)$
+\item $\lambda_j g_j(x^*) = 0$ for $j = 1..n$
+\end{itemize}
+
+Let $x$ be a feasible solution to the second optimization problem. We have that
+
+\begin{align*}
+\nabla f(x^*)^T(x-x^*) &= - \sum_j \lambda_j \nabla g_j(x^*)^T(x-x^*)
+\\& \ge - \sum_j \lambda_j g_j(x^*) &\text{by feasibility of $x$}
+\\& \ge 0 &\text{By complementarity condition}
+\end{align*}
+
+As a result, $f(x^*) + f(x^*)^T(x^*-x^*) \le f(x^*) + f(x^*)^T(x-x^*)$, and since $x^*$ trivially verifies the feasibility conditions of the second problem, $x^*$ is a global optimal.
+
+
+\Q{2}
+
+
+\begin{enumerate}
+\item First order conditions:
+\[
+0 = \nabla f = \left( 
+\begin{array}{c} 
+4x + y - 6\\
+x + 2y + z - 7 \\
+y + 2z - 8
+\end{array}
+\right)
+\]
+
+Or 
+
+\[
+\left( 
+\begin{array}{ccc} 
+4&1&0\\
+1&2&1 \\
+0&1&2
+\end{array}
+\right)
+\left( 
+\begin{array}{c} 
+x\\y\\z
+\end{array}
+\right)
+=
+\left( 
+\begin{array}{c} 
+6\\7\\8
+\end{array}
+\right)
+\]
+
+
+Which can be resolved:
+\[
+X^* = 
+\left( 
+\begin{array}{c} 
+x\\y\\z
+\end{array}
+\right)
+=
+\frac15
+\left( 
+\begin{array}{c} 
+6\\6\\17
+\end{array}
+\right)
+\]
+
+
+\item 
+
+\[
+\nabla^2 f(x,y,z) = \left(
+\begin{array}{ccc}
+4 & 1 & 0 \\
+1 & 2 & 1 \\
+0 & 1 & 2
+\end{array}
+\right)
+\]
+is symetric.
+
+
+Let $X = (x, y, z)^T \in R^3$, 
+$X^T\nabla^2fX = 4x^2 + 2x^2 + 2z^2 + 2 xy + 2 yz = 2(  x^2 + \frac12 y^2 + (x+\frac12 y)^2 + (z+\frac12 y)^2 ) \ge 0$ 
+So $\nabla^2 f$ is positive semi-definite.
+
+\item 
+
+We proved that:
+\[
+\nabla^2 f(x,y,z) = \left(
+\begin{array}{ccc}
+4 & 1 & 0 \\
+1 & 2 & 1 \\
+0 & 1 & 2
+\end{array}
+\right) > 0
+\]
+
+So $f$ is convexe, and every local minimum is also a global minimum. Since $f$ admits only one local minimum $X^*$, it is the global minimum of $f$, and $\min f = f(\frac{6}{5}, \frac65, \frac{17}5) = -30.4$
+
+
+\iffalse
+\begin{align*}
+f(x,y,z) &=  x^2 + \frac12 y^2 + (x+\frac12 y)^2 + (z+\frac12 y)^2- 6x -7y - 8z - 9
+\\&= x^2 - 6x + \frac12 (y^2 - 6 y) + (x+\frac12 y)^2 + ( (z+\frac12 y)^2  - 8(z+\frac12y) )  - 9
+\\&= (x-3)^2 + \frac12 (y-3)^2 + (x+\frac12 y)^2 + (z+\frac12y - 4)^2 - 9 - 9 - \frac12 9 - 16
+\\&= (x-3)^2 + \frac12 (y-3)^2 + (x+\frac12 y)^2 + (z+\frac12y - 4)^2 - 38.5 \ge -38.5
+\end{align*}
+$f$ is a continous function bounded from below, and is coercive, it has a global minimum, which is also a local minimum. 
+\fi
+
+
+\item 
+
+\lstinputlisting[language=Matlab, frame=single, breaklines=true]{problem2.m}
+
+\end{enumerate}
+
+\Q{3}
+
+\begin{enumerate}
+
+\item
+Let's consider the problem (P):
+
+$$\max_{2\pi(x^2 + y) \le C, x \ge 0, y \ge 0} \pi xy$$
+
+The feasible set is bounded and closed. The objective function is continuous. So it has an optimal solution $(x^*, y^*)$. 
+$x^* y^* \ne 0$ because $x = \sqrt {\frac{C}{4\pi}}, y = \frac{C}{4\pi}$ is a better feasible solution.
+
+Let $h^* = \frac {x^*}{y^*}, r^* = x^*$. $(r^*, h^*)$ is optimal because:
+
+\begin{itemize}
+\item It is feasible: $2\pi({r^*}^2, + r^*h^*) = 2\pi({x^*}^2 + y^*) \le C$, $r > 0, h > 0$
+\item If $r, h$ another feasible solution, then $x = r, y = rh$ is feasible for the problem (P), and therefore: $\pi x y \le \pi x^* y^*$, ie $\pi r^2h \le {r^{*}}^2h^*$
+\end{itemize}
+
+\item 
+the objective function $(r,h) \rightarrow r^2 + rh$ is not convexe. Indeed its hessian \[\left(\begin{array}{cc}2h&2r\\2r&0\end{array} \right) \]
+has negative derterminant($-4r^2$), so one of the eigen values have different signs, and therefore the objective function is neither convexe nor concave.
+
+\item
+Let's look for local optimal solutions. 
+
+Let $(r, h)$ be an optimal solution. We know that $r \ne 0$ because $(\epsilon, h)$ is a better feasible solution for $\epsilon > 0$ small enough so that $2\pi(\epsilon^2 + \epsilon h) < C$
+
+The lagrangian is $\mathcal L(r, h, \lambda) = \pi r^2 h + \lambda (C - 2\pi r^2 - 2\pi r h)$
+
+KKT:
+
+\begin{itemize}
+\item $0 = \frac{\partial}{ \partial r}\mathcal L = 2\pi (rh - \lambda (2r + h)) \Rightarrow \lambda = \frac{rh}{2r + h}$
+\item $0 = \frac{\partial}{ \partial h}\mathcal L = \pi (r^2 - \lambda 2 r) \Rightarrow \lambda = \frac r 2 \ne 0$
+\item $\lambda = \frac r 2 = \frac{rh}{2r + h} \Rightarrow h = 2r $
+
+\item Complementary condition $\lambda \ne 0 \Rightarrow C = 2\pi (r^2 + rh) = 6\pi r^2 \Rightarrow r = \sqrt{\frac{C}{6\pi}}$
+\end{itemize}
+
+Conclusion: $r = \sqrt{\frac{C}{6\pi}}$, $h =  \sqrt{\frac{2C}{3\pi}}$, $\pi r^2 h = \frac{C^{\frac32}}{3\sqrt{6\pi}}$
+
+Since there is only one local optimum, and the problem admits an global optimum, then the local optimum is also global.
+
+
+\end{enumerate}
+
+
+\Q{4}
+
+\begin{enumerate}
+\item $f(x) = -x$, $g(x) = x^2$ are both convexe but $fog(x) = -x^2$ is not convexe.
+
+\item 
+Let $\lambda \in [0, 1]$, since $g$ is convexe:
+$g(\lambda x + (1-\lambda)y) \le \lambda g(x) + (1-\lambda)g(y)$
+
+Since $f$ is non-decreasing:
+$f(g(\lambda x + (1-\lambda)y)) \le f(\lambda g(x) + (1-\lambda)g(y))$
+
+Since $f$ is convexe:
+$f(\lambda g(x) + (1-\lambda)g(y)) \le \lambda fog(x) + (1-\lambda)fog(y)$
+
+
+as a conclusion 
+$$fog(\lambda x + (1-\lambda)y) \le \lambda fog(x) + (1-\lambda)fog(y)$$
+
+and $fog$ is convexe
+
+\item
+
+Take $f(x) = -e^x$, $g(x) = x$, but $fog(x) = -e^x$ is not convexe.
+
+
+
+\item
+
+Let's take $f = \frac 1 {1 + e^{-x}}$. 
+
+$f'(x) = \frac{e^x}{1+e^{-x}} > 0$
+
+$(xf)''(x) = \frac{e^x}{(1+e^{-x})^3} (2 + x - e^x(x-2)) \sim_{x +\infty} - x e^{2x} $
+
+
+$f$ is increasing and non negative. 
+$(xf)''$ goes to $-\infty$ as $x$ grow larger, so there is an $x > 0$ where it is negative, and as a result $xf$ is not convexe on $R^+$.
+ 
+
+
+
+\end{enumerate}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+

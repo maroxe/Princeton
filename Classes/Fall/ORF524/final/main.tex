@@ -1,0 +1,251 @@
+\emph{}\documentclass[12pt]{article}
+
+% packages
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{amsmath,amsthm,amssymb}
+
+\DeclareMathOperator{\err}{err}
+\DeclareMathOperator{\var}{var}
+
+\newcommand{\Q}[1]{\subsubsection*{Problem #1}}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+ 
+\begin{document}
+
+\Q{1}
+When the context is clear, we write $p(s,t)$ instead of $p_{\epsilon, \nu}(s,t)$.
+
+For $\theta \in \Theta, x \in \mathcal X$ :
+\begin{align*}
+  p(\theta, x) &= p(\theta, x, T(x))
+  \\&= p(x | T(x), \theta)p(\theta, T(x))
+  \\&= p(x | T(x))p(\theta, T(x))& \text{(because $T$ is sufficient)}
+  \\&= \frac{p(x, T(x))}{p(T(x))}p(\theta, T(x))
+  \\&= \frac{p(x)}{p(T(x))} p(\theta, T(x))
+  \\&= p(x) p(\theta | T(x))
+\end{align*}
+
+So that: 
+$$p(\theta | x)  = \frac{p(\theta, x)}{p(x)} = p(\theta | T(x))$$
+
+As a result:
+$$H(\theta | X) = \mathbb E \log \frac1 {p(\theta | X)}  = \mathbb E \log \frac1 {p(\theta | T)}  = H(\theta | T)$$
+
+ie:
+$$I(\theta, X) = H(\theta) - H(\theta | X) = H(\theta) - H(\theta | T(X)) = I(\theta, T(X))$$
+    
+\Q{2}
+\begin{enumerate}
+\item
+  $$\mathbb E \tilde \alpha_k = \mathbb E[Y f_k(X)] = \mathbb E[ E[Y |
+  X] f_k(X)] = <f, f_k> = \alpha_k$$
+  $$\hat f_N(x) = \sum_{k \le N} \mathbb E [\tilde \alpha_k]  f_k(x) = \sum_{k \le N} \alpha_k f_k(x)$$
+  
+  $$\mathbb E_X B^2(X) = \mathbb E |\sum_{k \ge N+1} \alpha_k f_k(X)|^2 =  ||\sum_{k \ge N+1} \alpha_k f_k||_X^2 = \sum_{k \ge N+1} \alpha_k^2 \le \Phi(N)$$
+  
+\item 
+  \begin{enumerate}
+  \item
+    $$E[A(x)] = \sum_{k \le N} \mathbb E Yf_k(X) f_k(x) = \sum_{k\le N} \alpha_k f_k(x)$$
+    By Cauchy-Shwarz, $\mathbb E[ |Yf_k(X) - \alpha_k| |Yf_l(X) - \alpha_l| ] \le \sigma_k \sigma_l < \infty$,
+    so $\beta_{k,l} := Cov(Y f_k(X), Yf_l(X)) = \mathbb E[ (Yf_k(X) - \alpha_k) (Yf_l(X) - \alpha_l) ]$ is finite, and smaller than $\sigma^2$ in absolute value.
+
+    \begin{align*}
+      \var(A(x))
+      &= E[ |\sum_{k \le N}  (Y f_k(X) f_k(x) - \alpha_k f_k(x))|^2]
+      \\ &= \sum_{k \le N} \mathbb E (Y f_k(X) f_k(x) - \alpha_k f_k(x))^2
+      \\&+ \sum_{k, l \le N, k \ne l} \mathbb E (Y f_k(X) f_k(x) - \alpha_k f_k(x))(Y f_l(X) f_l(x) - \alpha_k f_l(x))
+      \\ &= \sum_{k \le N} \sigma_k^2 f_k^2(x)  + \sum_{k, l \le N, k \ne l} \beta_{k,l} f_k(x)f_k(x)
+      \\ & \left(\le \sigma^2 (\sum_{k \le N} f_k(x))^2 \right)
+    \end{align*}
+  \item
+    $$\tilde f_N(x) = \frac1 n \sum_{i \le n} \sum_{k \le N} Y_if_k(X_i)f_k(x)$$
+    
+    \begin{align*}
+      V(x) &= \var(\tilde f_N(x))
+      \\&= \frac1 n \var\left( \sum_{k \le N} Y f_k(X)f_k(x)\right) & \text{(By independence of the $(X_i, Y_i)$} 
+      \\&= \frac1 n \var(A(x))
+      \\&\le \frac{\sigma^2} n (\sum_{k \le N} f_k(x))^2
+    \end{align*}        
+    So that $\mathbb E_X V(X)  \le \frac{\sigma^2}{n} ||\sum_{k \le N} f_k||^2 \le \frac N n \sigma^2$
+  \end{enumerate}
+\item
+  $$\mathbb E ||\hat f_N - f ||^2 = \mathbb E ||\hat f_N - \tilde f_N||^2 + \mathbb E ||\tilde f_N - f|| ^2 \le \frac Nn \sigma^2 + \Phi(N)$$
+  \begin{enumerate}
+  \item Setting $N$ to $n_0$ leads to $\Phi(N) = 0$ and therefore
+    $\mathbb E ||\hat f_N - f ||^2 \le \frac{n_0 \sigma^2} {n} = O(\frac 1 n)$
+  \item Setting $N$ to $(\frac{\alpha \lambda n}{\sigma^2})^{\frac 1{\alpha+1}}$ leads to
+    $\frac N n \sigma^2 + \Phi(N) =
+    \lambda^{\frac1 {1+\alpha}} n^{\frac{-\alpha} {1+\alpha}}
+    \left(\sigma^2 (\frac{\alpha}{\sigma^2})^{\frac1 {1+\alpha}} 
+      + (\frac{\alpha}{\sigma^2})^{\frac{-\alpha} {1+\alpha}}
+      \right)
+    = O(\lambda^{\frac1 {1+\alpha}} n^{-\frac \alpha {1+\alpha}}) $
+  \end{enumerate}
+  
+\end{enumerate}
+
+\Q{2}
+\begin{enumerate}
+\item
+  Let $r \le r_0$, then 
+  \begin{align*}
+    |f_r(x) - f(x)| &= |\int_{B(x, r)} f(y) \frac{dP}{P(B(x,r))} -  \int_{B(x, r)} f(x) \frac{dP}{P(B(x,r))}|
+    \\ & \le \int_{B(x, r)} |f(y) - f(x)| \frac{dP}{P(B(x,r))}
+    \\ & \le \int_{B(x, r)} ||y - x|| \frac{dP}{P(B(x,r))}
+    \\ & \le r
+  \end{align*}
+\item
+
+  By the last question, when $r < r_0$: $f_r(x) \le f(x) + r$. In addition, if  $r < f(x)$, then $f_r(x) \le 2 f(x)$
+
+  Furthermore:
+  $$Q_n(B(x,r)) = \frac1n \sum_i 1_{|X_i - x| \le r}$$
+  By independence, since $ Q(B(x,r)) =  E[1_{|X_1 - x| \le r}] = E[1_{|X_1 - x| \le r}^2]$:
+  $$\var Q_n(B(x,r)) = \frac1 n [ Q(B(x,r)) - Q(B(x,r))^2]$$
+
+  \begin{align*}
+    \var \hat f_r(x) &= \frac1 {P(B(x,r))^2} \var Q_n(B(x,r)) 
+    \\ &= \frac1 {n P(B(x,r))^2} [ Q(B(x,r)) - Q(B(x,r))^2]
+    \\ &= \frac1n [\frac{f_r(x)}{P(B(x,r))} - f_r(x)]
+    \\ &= \frac1n [\frac1 {P(B(x,r))} - 1)]f_r(x)
+    \\ &\le \frac1n \frac{2f_r(x)} {P(B(x,r))} &\text{(when $r \le \min(r_0, f(x))$)}
+    \\ &\le \frac1n \frac{2f_r(x)} {c_0 r^d} & \text{(when $r \le r_1)$}
+    \\ &\le C\frac{f(x)}{nr^d} & (C = \frac{2}{c_0}) 
+  \end{align*}
+  The last inequality is valid for all $r \le \min(f(x), r_0, r_1) := \alpha$.
+
+\item
+  $E \hat f_r(x) = \frac{E[Q_n(B(x,r))]}{P(B(x,r))} =  f_r(x)$, so
+  \begin{align*}
+    E_{X_Q}[|\hat f_r(x) - f(x)|^2] &= E_{X_Q}[|\hat f_r(x) - f_r(x)|^2] + |f_r(x) - f(x)|^2
+    \\&\le \frac{2f(x)}{c_0 n r^d} + r^2 &\text{(for $r < \alpha$)}
+    \\&\le \frac a{r^d} + r^2 &(a :=  \frac{2f(x)}{c_0 n})
+  \end{align*}
+  Let's define $g: r \rightarrow \frac a {r^d} + r^2$,
+  $g'(r) =  \frac{-ad}{r^{d+1}} + 2 r$,
+  $g''(r) = \frac{ad(d+1)}{r^{d+2}} + 2 > 0$,
+
+  $g$ is convexe, so it has a global minimum when $g'(r) = 0$, ie $r = \left(\frac{ad}2 \right)^{\frac1{d+2}}$
+  and in that case
+  \begin{align*}
+    g(r) &= a^{1-\frac{d}{d+2}} (\frac{d}{2})^{\frac{-d}{d+1}} +  (\frac{ad}2)^{\frac2{d+2}}
+    \\&= a^{\frac{2}{d+2}} \left( (\frac{d}{2})^{\frac{-d}{d+1}} + (\frac{d}2)^{\frac2{d+2}} \right)
+    \\&=  n^{-\frac2{d+2}} \underbrace{(\frac{2f(x)}{c_0})^{\frac2{d+2}}\left( (\frac{d}{2})^{\frac{-d}{d+1}} + (\frac{d}2)^{\frac2{d+2}} \right)}_C
+  \end{align*}
+
+  We define $r(n) = \left(\frac{f(x)d}{n c_0} \right)^{\frac1{d+2}}$.
+  This quantity is smaller than $\alpha$, when $ n > \frac{f(x)d}{c_0 \alpha^{d+2}}$, and then we have that:
+  $$E_{X_Q}[|\hat f_r(x) - f(x)|^2]  \le C n^{\frac{-2} {d+2}}$$
+\end{enumerate}
+
+\Q{4}
+
+\begin{enumerate}
+\item
+  The $X_i$ are iid and $E[\frac{1_{|X_i - x| \le r}}{P(B(x,r))}] = \frac{Q(B(x,r))}{P(B(x,r))}$, $\var \frac{1_{|X_i - x| \le r}}{P(B(x,r))} =  \frac{Q(B(x,r)) - Q^2(B(x,r))}{P(B(x,r))}$
+  CLT:
+  $$\sqrt{n} (\hat f_r(x) - f_r(x)) = \frac1{\sqrt n} \sum_{i\le n} \frac{1_{|X_i - x| \le r}}{P(B(x,r))} -  \frac{Q(B(x,r))}{P(B(x,r))} \overset{d}{\rightarrow} \mathcal N(0,  \frac{Q(B(x,r)) - Q^2(B(x,r))}{P(B(x,r))})$$
+
+  Since $\frac{Q_n(B(x,r)) - Q_n^2(B(x,r))}{P(B(x,r))} \overset{\text{a.s.}}\rightarrow \frac{Q(B(x,r)) - Q^2(B(x,r))}{P(B(x,r))}$, by slutsky:
+
+  $$\sqrt \frac{ nP(B(x,r))}{Q_n(B(x,r)) - Q_n^2(B(x,r))} (\hat f_r(x) - f_r(x))  \overset{d}{\rightarrow} \mathcal N(0, 1)$$
+
+  If $z_{\alpha}$ the $1-\frac \alpha 2$ quantile of the normal distribution, then:
+  $$\mathbb P \left(\sqrt\frac{nP(B(x,r))}{Q_n(B(x,r)) - Q_n^2(B(x,r))} |\hat f_r(x) - f_r(x)| \le z_{\alpha}\right) \rightarrow 1 - \alpha$$
+
+  Therefore $[\hat f_r(x) \pm z_\alpha \sqrt \frac{Q_n(B(x,r)) - Q_n^2(B(x,r))}{nP(B(x,r))}]$ is a $1-\alpha$ confidence interval for $f_r(x)$.
+
+
+\item Under the new assumption, $f_r(x) - r \le f(x) \le r + f_r(x)$, so
+  $$[\hat f_r(x) \pm \left(r + z_\alpha \sqrt \frac{Q_n(B(x,r)) - Q_n^2(B(x,r))}{nP(B(x,r))}\right)]$$ is a $1-\alpha$ confidence interval for $f(x)$.
+\end{enumerate}
+
+
+\Q{5}
+
+
+\begin{lemma}
+Let $X_n \rightarrow \mathcal N(0, \sigma_x^2)$, $Y_n \rightarrow \mathcal N(0, \sigma_y^2)$, $X_n$ and $Y_n$ are independent for all $n$.
+Then $(X_n, Y_n) \rightarrow \mathcal N(0, diag(\sigma_x^2,\sigma_y^2) )$
+And as a corrolary, using the continuous mapping theorem:
+$X_n + Y_n  = (1, 1)' (X_n, Y_n) \rightarrow \mathcal N(0, \sigma_x^2 + \sigma_y^2 )$
+\end{lemma}
+\begin{proof}
+Let $F_n$ (resp. $G_n$) be the c.d.f of $X_n$ (resp $Y_n$), and let $H_n$ be the joint c.d.f of $(X_n, Y_n)$.
+Let $F$ (resp. $G$) be the cdf of $N(0, \sigma_x^2)$ (resp $N(0, \sigma_y^2)$), and $H$ be the c.d.f of $N(0, diag(\sigma_x^2,\sigma_y^2) )$.
+
+By independence:
+$H_n(x, y) = F_n(x) G_n(y) \rightarrow_n F(x)G(y) = H(x, y)$.
+Which proves the lemma.
+\end{proof}
+
+
+\hfill \break
+Let's call $p := R(h), q := R(h')$. $H_0$ is equivalent to $p = q$, and $H_1$ is equivelent to $p \ne q$.
+\begin{itemize}
+\item We know that $1_{X = h(Y)}$ is binomial of parameter $p$. Same for $h'$.
+\item $E [\hat R(h) + \hat R'(h')] = p+1$. By independence of all the $X_i, X_i'$, 
+\item Law of large numbers: $\hat R(h) \overset{as}{ \rightarrow } p$, $\hat R(h') \overset{as}{ \rightarrow } q$
+\item CLT:
+  $$\sqrt{n} (\hat R(h) - p) \overset{d}{ \rightarrow } \mathcal N(0, p(1-p)) $$
+  $$\sqrt{n} (\hat R'(h) - q) \overset{d}{ \rightarrow } \mathcal N(0, q(1-q)) $$
+
+  By independence of $X_i$ and $X_i'$ for all $i$, using the lemma:
+  
+$$\sqrt{n} (\hat R(h') - \hat R'(h') - (p-q) ) \overset{d}{ \rightarrow } \mathcal N(0, p(1-p) + q(1-q)) $$
+\item By Slutsky:
+  $$\sqrt \frac n {\hat R(h)(1-\hat R(h))+\hat R(h')(1-\hat R(h')} (\hat R(h') -  \hat R'(h') - (p-q)) \overset{d}{ \rightarrow } \mathcal N(0, 1)$$
+\item $P(\sqrt \frac n {\hat R(h)(1-\hat R(h))+\hat R(h')(1-\hat R(h')} |\hat R(h') -\hat R'(h') - (p-q)| \le z_\alpha) \rightarrow 1 - \alpha$
+\end{itemize}
+So under $H_0$:
+$$P(\sqrt \frac n {\hat R(h)(1-\hat R(h))+\hat R(h')(1-\hat R(h')} |\hat R(h') -\hat R'(h')| \le z_\alpha) \rightarrow 1 - \alpha$$
+
+The test whose rejection region is the following 
+$$1\left\{ \left(\frac n {\hat R(h)(1-\hat R(h))+\hat R(h')(1-\hat R(h')}\right)^{\frac12} |\hat R(h') - \hat R'(h')| > z_\alpha\right\}$$
+is of level $1-\alpha$.
+
+\Q{6}
+Let $f_0$ (resp $f_1$) be the density of $Z_0$ (resp $Z_1$)
+\begin{align*}
+  P(h(X) \ne Y) &= E[1_{h(X) \ne Y}]
+  \\ &= E[1_{h(X) \ne Y} | Y = 0] P(Y = 0) + E[1_{h(X) \ne Y} | Y = 1] P(Y = 1)
+  \\ &= \frac12 (P(h(Z_0) \ne 0) + P(h(Z_1 \ne 1))
+  \\ &= \frac12 (\int_R f_0(z) 1_{h(z) \ne 0} + \int_R f_1(z) 1_{h(z) \ne 1})
+  \\ &\ge \frac12 (\int_R \min(f_0(z), f_1(z)) &\text{(since $h(z) \in \{0,1\}$)}
+  \\ &= \frac12 (\int_R f_0(z) 1_{f_0(z) < f_1(z)}+  f_1(z) 1_{f_0(z) \ge f_1(z)})
+  \\ &= \frac12 (\int_R f_0(z) 1_{g(z) \ne 0}+  f_1(z) 1_{g(z) \ne 1}) &(g(z) = 1_{f_0(z) < f_1(z)})
+  \\&= R(g) = \inf_h R(h)
+  \\&= \frac12 (P(Z_0 \in R_0) + P(Z_1 \in R_1))
+\end{align*}
+Where
+$$R_0 = g^{-1}(1) = \{z | \lambda_0 e^{-\lambda_0 z} \le \lambda_1 e^{-\lambda_1 z} \} = (-\infty, \frac1{\lambda_1 - \lambda_0} \log \frac{\lambda_1}{\lambda_0})$$
+$$R_1 = [\frac1{\lambda_1 - \lambda_0} \log \frac{\lambda_1}{\lambda_0} , \infty)$$
+
+
+\Q{7}
+
+Let $\hat f$ be fixed.
+
+While for each $P_{X,Y}$, the quantity $\mathbb E \bar R(h_{\hat f}) / a_n$ converges to 0, the convergence can occur at different speeds so that at any moment $n$, there might exist a $P_{X,Y}$ for which $\mathbb E \bar R(h_{\hat f}) / a_n$ is still larger than $c$. 
+
+If such situtation happens, $\sup_{P_{X,Y}} \mathbb E \bar R(h_{\hat f}) / a_n \ge c$, and taking the infimum over all $\hat f$ and taking the $\lim \inf$, we get that $a_n$ is the minimax rate for $P$.
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
