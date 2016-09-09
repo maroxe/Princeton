@@ -1,0 +1,52 @@
+* Exam
+** 
+  1:30 ----> 5 pm
+  FC006
+  1 A4 sheet
+** 6 questions:
+
+*** Q.6.[16 points] Random matrix + compressed Sensing
+- Concentration inequality $\implies$ Hoeffding inequality
+- $\epsilon$ -net argument and union bound
+- Geometry of compressed sensing + solution characterization (KKT or cone)
+
+*** Q.5.[11 points] EM algorithm: new model, derive EM algorith (E-step, M-step)  
+
+*** Q.4.[12 points] Classification + Generative Models
+- Bayes rule, _Bayes risk_
+
+*** Q.3[8 points] K-means
+f- Geometry of K-means
+
+*** Q.2 Short Asnwer
+- Q.2.5[4 points] Regression tree [Algorithm]
+- Q.2.4[6 points] RIP-condition: s-RIP with $\delta_s$
+- Q2.3[4 points] Naive Bayes. Identify the total number of parameters
+- Q2.2[6 points] High dimension regression: Lasso/Ridge ($L_2$ norm vs $L_2^2$ what happens)
+- Q2.1[6 points] K-means / EM Algorithm
+
+*** Q.1[27 points] Multiple choice
+- [3 poinst]Conditional independence ($X \perp Y | Z, X \perp Z | Y \implies X \perp Z$ ?)
+- [3 points]Logistic regression
+- [3 points]EM and K-means
+- [3] Bias-Variance Tradeoff, Random forest / Bagging
+- [3] Lasso question
+- [3] Lasso and compresssed sensing
+- [3] Naive Bayes
+- [3] Baisc concepts: bias, variance, _persistency, consistency_
+- [3] Basic concepts
+
+
+GLM
+Graphical Model
+
+
+
+
+
+
+
+
+
+
+

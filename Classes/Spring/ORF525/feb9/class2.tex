@@ -1,0 +1,136 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+%\usepackage[a4paper, total={7in, 10in}]{geometry}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem*{remark}{Remark}
+
+\title{ORF525 - Class Notes}
+\author{Bachir EL KHADIR }
+
+\begin{document}
+\maketitle
+
+\begin{document}
+
+``I pledge my honor that this lecture summary is my own work and adheres to the guidelines in the instructions.''
+
+\section{Fundamental Principles of Data Analysis}
+\subsection{Concentration Principle}
+\begin{align*}
+\text{Data} &= \text{Signal} &+ \text{Noise} \\
+(X_1, ... , X_n) &= \underbrace{\theta}_{\mathcal N(0, 1)} &+ \text{uncertainty from the nature}
+\end{align*}
+\textbf{Important concept:} concentration phenomenon, eg. Law of large number
+
+
+\textbf{Main Idea:} We need the data to have some stationary pattern to \textit{summon} noise / uncertainty.
+\subsection{Parsimonions Principle}
+\textbf{Intuition:}  If two explanations are equaly good, we prefer the simpler one. $\Rightarrow$ Regularization technique.
+\textbf{Key:} We always use the \textit{wrong} model to control variance.
+
+Basic concpets:
+\begin{enumerate}
+\item Sample space: All possible outs of a statistical experiment.
+\item Random Sample (Data): $X_1, \ldots, X_n \overset{\text{iid}}{\sim} p(x)$, $p(x)$ being the density of $X$.
+\item Realization (Observed value):$x_1, \ldots, x_n$ deterministic
+\item Notation: $\underbrace{X_1, \ldots X_n}_{X_{1:n}}, \underbrace{x_1, \ldots x_n}_{x_{1:n}}$
+\item Statistic: Any measurable function of $X_1, \ldots X_n$
+\item CDF: $F(x) := \mathbb P(X \le x)$
+\item PDF: $p(x) := \frac{\partial}{\partial x}F(x)$, could also be PMF for discrete variables.
+\item We use $p_{\theta}(x)$ to denote that the density is parametrized by $\theta$
+\item LLN (Estimation), CLT(Confidence Interval / p-value)
+\item Statistical Model: A set of probability distributions indexed by a parameter set $\Theta$.
+  $$\mathbb P := \{ p_{\theta}: \theta \in \Theta \}$$
+\item Parametric Model: If there exists a finite-dimensional $\Theta$ to index $\mathcal P$.
+\item Nonparametric Model: If there doesn't  exist a finite-dimensional $\Theta$ to index $\mathcal P$.
+  example: Sobolev space $P := \{ p(x) \text{ is continuous and } \int p'' < \infty \}$
+\item Point estimation: Let $X_1 \ldots X_n \overset{\text{iid}}{\sim} p_{\theta}(x)$ we want to make a \textit{single best guess} at $\theta$.
+  $\underbrace{X_1 \ldots X_n}_{\hat \theta_n := g(X_1, \ldots, X_n)} \sim \underbrace{p_{\theta}(x)}_{\theta}$
+  We hope that $\hat \theta_n \overset{P} \theta$ as $n \rightarrow \infty$
+\item
+  Consitent Estimation: $\hat \theta_n \overset{P}{\rightarrow} \theta$ as $n \rightarrow \infty$.
+  Unbiased Estimator: Define $\text{Bias}(\hat \theta_n)  = \mathbb E \hat \theta_n - \theta$
+  If $\text{Bias}(\hat \theta_n) = 0 \Rightarrow \hat \theta_n$ is called unbiased.
+  Question: Consistency $\iff$ Unbiassedness.
+  Answer: no.
+  Example: $X_1, \ldots, X_n \sim N(\mu, 1)$
+  \begin{itemize}
+  \item $\hat \theta_n = X_1 \Rightarrow $ unbiased, not consistent
+  \item $\hat \theta_n = \frac{1}{n+1}\sum X_i \Rightarrow $ biased, consistent
+  \end{itemize}
+\item The Likelihood function of $\theta$ related to a random sample $X_i$ is $\underbrace{L(X_i, \theta)}_{\text{Random quantity} := p_{\theta}(X_i)}$
+\item Joint likelihood, The joint likelihood of $\theta$ wrt the entire data set is defined as $L_n(\theta) := p_{\theta}(X_1, \ldots, X_n)$
+\item Joint log-likelihoodL $l_n(\theta) := \log[L_n(\theta)]$
+\item Maximum likelihood estimator (MLE):
+  $\hat \theta_n$ is MLE if $\hat \theta_n \in \arg\max_{\theta \in \Theta} L_n(\theta)$
+  Example: Gaussian model $\theta \in \Theta$
+  $X_1, \ldots, X_n \sim \mathcal N(\mu, \sigma^2)$
+  MLE:
+  \begin{itemize}
+  \item $\hat \mu = \bar X = \frac1n \sum_{i \le n} X_i$
+  \item $\hat sigma^2 = \frac1n \sum_i (X_i - \bar X)^2$
+  \end{itemize}
+  Question: Why MLE?
+  Answer: Simple + systematic + optimal
+  \begin{theorem}[MLE]
+    MLE is asymptotically normal and \textit{efficient}.
+    $$\sqrt n(\hat \theta_n - \theta) \overset{P}{\rightarrow} \mathcal N(0, I^{-1}(\theta))$$
+    Where the Fisher information $I(\theta) :=  - \int [\frac{\partial^2}{\partial \theta^2}\log p_{\theta}(x)] p_{\theta}(x) dx$
+    We can construct from this convergence result CI, p-values.
+    If $\tilde \theta_n$ is unbiased, then $var(\tilde \theta_n) \ge I^{-1}(\theta)$
+  \end{theorem}
+\end{enumerate}
+
+\section{Regression}
+\begin{definition}[Regression]
+  The art of summarizing relationship between two variables.
+  $$\underbrace{Y}_{\text{response}} \overset{??}{\leftrightarrow} \underbrace{X}_{\text{predictor / feature / covariate}}$$
+  In an other word, given data $(Y_1, X_1), \ldots (Y_n, X_n) \overset{iid}\sim P_{Y, X}$, we aim to find a mapping/function $f$, such that $f(X)$ is \textit{close} to $Y$.
+  \textbf{Loss:}
+  \begin{itemize}
+  \item $l(f(X), Y) = |f(X) - Y|$: $L_1$-loss.
+  \item $l(f(X), Y) = |f(X) - Y|^2$: $L_2$-loss.
+  \end{itemize}
+  Risk:
+  $$R(f) = \mathbb E l(f(X), y) = \mathbb E |f(X) - y|^2$$
+\end{definition}
+\begin{theorem}[$L_2$ loss]
+  Let $f^* := \arg \min_f \mathbb E |Y - f(X)|^2$ then $f^*(x) = E[Y | X = x]$
+\end{theorem}
+
+Question: minimize $R(f)$, the expectation is w.r.t $P_{Y, X}$ which is unknown.
+Stochastic optimization problem:
+$R(f) = E|Y - f(X)|^2 \overset{\text{Concentration}}\Rightarrow \hat R(f) = \frac1n \sum_i (Y_i - f(X_i))^2$
+$\hat f = \arg \min_f \hat R(f)$
+
+A trivial solution:
+\[
+  f(x) = \left\{
+    \begin{array}{cc}
+                  Y_i&\text{for }x = X_i \\
+                  \text{anything}&\text{otherwise}
+    \end{array}
+  \right.
+\]
+$\Rightarrow$ Overfitting.
+
+\begin{definition}[Overfitting]
+  A phenomenon when a statistical mode has too much flexibility (capacity) so that the models stats to fit the noise instead of just the signal.
+\end{definition}
+Solution to overfitting:
+
+\textbf{Reguliarization:} Introduce additional information onr constraints to reduce the flexibility(capacity) of the model.
+
+\end{document}
+
+
+
+
+

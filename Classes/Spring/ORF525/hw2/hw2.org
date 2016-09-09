@@ -1,0 +1,207 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+#+HTML_HEAD: <link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet"></link>
+#+HTML_HEAD: <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+#+HTML_HEAD: <script src="http://127.0.0.1:60000/autoreload.js"></script>
+#+LATEX_HEADER: \usepackage{pdfpages}
+
+#+OPTIONS: toc:nil  
+
+#+name: Watch changes
+#+BEGIN_HTML 
+@@html:<script>@@
+@@html:AutoReload.Watch('localhost:60000');@@
+@@html:</script>@@
+#+END_HTML
+
+
+
+
+* Discover Gravitational Wves in Your Room
+
+
+#+name: helper_function 
+#+begin_src R :exports none :session 
+setwd('~/Documents/Princeton/ORF525/hw2/')
+
+library(ggplot2)
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+#+end_src
+
+#+RESULTS: helper_function
+
+
+#+name: seed
+#+begin_src R :session :exports none :results none
+    set.seed(10)
+#+end_src
+
+*1.1)*
+
+Loading the Data
+   
+   #+name: load_data
+   #+begin_src R :session :cache yes
+  ts <- read.table('LIGO.Hanford.Data.txt')
+  ts.theory <- read.table('LIGO.Hanford.Theory.txt')
+  names(ts) <- c("t", "y")
+  names(ts.theory) <- c("t", "y")
+  N <- length(ts$y)
+   #+end_src
+      
+   #+RESULTS[89c5c8bb3ef6370c1efff00efd0251fcecc3b3bb]: load_data
+   : 3441
+
+
+
+
+  Calculate the matrix $C$
+   
+   #+name: matrix_C
+   #+begin_src R :session :cache yes
+  C <- matrix(sqrt(1 / N), N, N)
+  for(j in 2:N) 
+      for(k in 1:N)
+          C[j, k] = sqrt(2 / T) * cos(pi * (2*k-1) * (j - 1) / (2*N) )
+   #+end_src
+
+   #+RESULTS[19ed51fbd27982def9ea7ff162bebb1f8ba50aec]: matrix_C
+
+
+   Solve the lasso, and use 10-fold cross-validation to choose $\lambda$
+
+   #+name: lasso
+   #+begin_src R :session :cache yes
+  library(glmnet)
+  lasso.model <- cv.glmnet(C, ts$y, alpha=1, nfolds=10, intercept=F)
+  w.hat <- coef(lasso.model, s='lambda.1se')[-1]
+  w.inverse <- solve(C, ts$y)
+  lasso.model$lambda.1se
+   #+end_src
+
+   #+RESULTS[87d1191fa9c1ab99ec4e52c8acc4d8f8417b1d03]: lasso
+   : 0.0035151690881434
+
+
+
+
+#+begin_src python :exports results :var data=lasso
+return "lambda.1se =  %.4g" % data
+#+end_src
+
+#+RESULTS:
+: lambda.1se =  0.003515
+
+
+#+name: plotting
+#+begin_src R :session :file comparesignals.png :results graphics :exports results
+p1 <- ggplot(data=NULL, aes(x=ts$t, y=ts$y)) + geom_line() +  ggtitle("Raw signal") + labs(x="t",y="w")
+p2 <- ggplot(data=NULL, aes(x=ts$t, y=C %*% w.hat)) + geom_line() +  ggtitle("Lasso") + labs(x="t",y="y")
+multiplot(p1, p2)
+#+end_src
+
+#+RESULTS: plotting
+[[file:comparesignals.png]]
+
+
+#+name: plottingspectrum
+#+begin_src R :session :file comparesignalsspec.png :results graphics :exports results
+p1 <- ggplot(data=NULL, aes(x=w.inverse, y=w.hat)) + geom_point() +  ggtitle("w.inverse vs w.hat") + labs(x="Raw signal spectrum",y="Lasso estimated spectrum")
+p1
+#+end_src
+
+#+RESULTS: plottingspectrum
+[[file:comparesignalsspec.png]]
+
+The lasso behaves like a high-pass filter, it eliminates the lowest frequencies.
+
+*1.2)*
+
+   The denoised signal is $\tilde y + C \tilde w = \Psi \tilde \beta$
+   #+name: lasso2
+   #+begin_src R :session :cache yes
+     psi <- cbind(diag(N), C)
+     lasso.model2 <- cv.glmnet(psi, ts$y, alpha=1, nfolds=10, intercept=F)
+     beta.tilde <- coef(lasso.model2, s='lambda.1se')[-1]
+     y.tilde <- psi %*% beta.tilde
+     lasso.model2$lambda.1se
+   #+end_src
+   
+   #+RESULTS[0e209a41490c146b4aa421d3c0b5517eac22bd46]: lasso2
+   : 0.00443564030901467
+
+
+   #+begin_src python :exports results :var data=lasso2
+   return "lambda.1se =  %.4g" % data
+   #+end_src
+
+   #+RESULTS:
+   : lambda.1se =  0.004436
+
+
+   #+name: plotting2
+   #+begin_src R :session :file comparesignals2.png :results graphics :exports results
+     p1 <- ggplot(data=NULL, aes(x=ts.theory$t, y=ts.theory$y)) + geom_line() + ggtitle("Theoritical simulation") + labs(x="t",y="y")
+     p2 <- ggplot(data=NULL, aes(x=ts$t, y=ts$y)) + geom_line() + ggtitle("Raw signal")+ labs(x="t",y="y")
+     p3 <- ggplot(data=NULL, aes(x=ts$t, y=y.tilde)) + geom_line() + ggtitle("Signal obtained in q 1.2")+ labs(x="t",y="y")
+     p4 <- ggplot(data=NULL, aes(x=ts$t, y=(C %*% w.hat))) + geom_line() + ggtitle("Signal obtained in q 1.1")+ labs(x="t",y="y")
+     multiplot(p1, p2, p3, p4)
+   #+end_src
+
+   #+RESULTS: plotting2
+   [[file:comparesignals2.png]]
+
+   - The first method eliminates large spikes (low frequencies), but is sensitive to recurrent small variations. 
+   - The second method is more robust to small variations but is sensitive to large outliers.
+   
+   The second method is more meaningful because it looks for sparsity in time and frequency domain, and there is no reason for the noise to be added in one domain and not the other.
+
+   
+#+latex: \includepdf[pages=-]{q2.pdf} 
+
+
+
+
+
+
+
+
+
+
+
+
+

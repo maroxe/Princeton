@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2016-04-12 Tue 17:58 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Problem set 8, ORF527</title>
+<meta name="generator" content="Org-mode" />
+<meta name="author" content="Bachir El khadir" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+<link href="http://thomasf.github.io/solarized-css/solarized-dark.min.cs" rel="stylesheet"></link>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="http://127.0.0.1:60000/autoreload.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Problem set 8, ORF527</h1>
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1"><span class="section-number-2">1</span> 9.2 (Steele)</h2>
+<div class="outline-text-2" id="text-1">
+<ul class="org-ul">
+<li>\(\mu(t, x) = tx\)</li>
+<li><p>
+\(\sigma(t, x) = e^{\frac{t^2}2}\)
+</p>
+
+<p>
+For \(t \le T\), \(\mu, \sigma\), are trivially lipschiz in \(x\) uniformly in \(t\).
+</p>
+
+<p>
+Let \(X_t\) be the unique solution, and define \(U_t = X_te^{-\frac{t^2}2}\), then:
+\[dU_t = -tU_t dt + e^{-\frac{t^2}2} dX_t = -tU_tdt + tU_tdt + dB_t = dB_t\]
+</p>
+
+<p>
+so \(U_t = U_0 + B_t = 1 + B_t\), and therefore \(X_t = e^{\frac{t^2}2}(1+B_t)\)
+</p></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2"><span class="section-number-2">2</span> 9.4 (Steele)</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Let \(f\) be a smooth function:
+</p>
+
+\begin{align*}
+dY_t &= \frac12 \sigma^2(X_t) f''(X_t)dt + f'(X_t) dX_t
+\\&= (\frac12 \sigma^2 f'' + af')(X_t) dt + (\sigma f')(X_t) dB_t
+\end{align*}
+
+<p>
+Take
+</p>
+<ul class="org-ul">
+<li>\(f(x) = \int_0^x \frac1{\sigma(s)} ds\), note that \(f' = \frac1{\sigma} > 0\) , so \(f\) is increasing. Since \(f\) continuous it is invertible.</li>
+<li><p>
+Define \(b\) as \(b(f(x)) = (\frac12 \sigma^2f'' + f'a)(x)\), e.g \(b(y) = (- \frac12 \sigma' + \frac a{\sigma})(f^{-1}(x))\)
+</p>
+
+<p>
+Note that:
+</p></li>
+
+<li>\(\sigma(x) f'(x) = 1\)</li>
+<li>\(\frac12 \sigma^2(x) f''(x) + a(x) =  b(f(x))\)</li>
+</ul>
+
+<p>
+so that \(dY_t = b(f(X_t)) dt + dB_t\), and \(Y_t = Y_0 + \int_0^t b(Y_s) ds + B_t\)
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline5" class="outline-2">
+<h2 id="orgheadline5"><span class="section-number-2">3</span> Q.2</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<b>a</b>
+</p>
+
+<p>
+Let \(b, d = 0\)
+</p>
+
+<p>
+Consider:
+\[\left\{\begin{array}{c}dZ_t = aZ_tdt + cZ_t dW_t\\Z_0 = X_0\end{array}\right.\]
+</p>
+
+<p>
+\(Z_t = X_0^2e^{(a-\frac12 c^2) t + cW_t}\)
+We check easily that this is a solution to the SDE. It is also the unique solution because the coefficients are linear in \(x\) and don't depend on \(t\).
+</p>
+
+<p>
+Now consider the general equation:
+\[\left\{\begin{array}{c}dX_t = (aX_t+b)dt + (cX_t+d) dW_t\\X_0 = x_0\end{array}\right.\]
+</p>
+
+<p>
+\(Z_t > 0\) a.s
+</p>
+
+<p>
+\(f(x, z) = \frac xz\)
+</p>
+
+<p>
+Let \(U_t = \frac{X_t}{Z_t}\)
+</p>
+
+\begin{align*}
+dU_t &= \frac1{Z_t} dX_t - \frac{X_t}{Z_t^2}dZ_t + \frac12 [ -2\frac{(cX_t+d)cZ_t}{Z_t^2} + 2(cZ_t)^2\frac{X_t}{Z_t^3}]dt
+\\&= \frac1{Z_t} dX_t - \frac{X_t}{Z_t}\frac{dZ_t}{Z_t} + [ -\frac{(c^2X_t+cd)}{Z_t} + c^2\frac{X_t}{Z_t}]dt
+\\&= \frac1{Z_t} dX_t - \frac{X_t}{Z_t^2}dZ_t - \frac{cd}{Z_t} dt
+\\&= \frac1{Z_t} (dX_t - X_t \frac{dZ_t}{Z_t} - cd \, dt)
+\\&= \frac1{Z_t} ( X_t(a dt+c dW_t) + b dt + d dW_t - X_t (a dt+c dW_t)  - cd \, dt)
+\\&= \frac1{Z_t} ((b-cd) dt + d dW_t)
+\end{align*}
+<p>
+Since \(X_0 = Z_0\):
+</p>
+
+<p>
+\[X_t = U_tZ_t = Z_t\left[1 + (b+cd) \int_0^t \frac{ds}{Z_s} + d  \int_0^t \frac{dW_s}{Z_s}\right]\]
+</p>
+
+<p>
+<b>b</b>
+</p>
+
+<p>
+\(dX_t = aX_t(b-X_t)dt + cX_t dW_t = X_t( a(b-X_t)dt + cdW_t)\)
+</p>
+
+<p>
+Define \(U_t := \frac1{X_t}\)
+</p>
+
+<p>
+Ito:
+</p>
+\begin{align*}
+dU_t
+&=d\frac1{X_t}
+\\&= -\frac1{X_t^2}dX_t + \frac1{X_t^3}(cX_t)^2dt
+\\&= -\frac1{X_t} \frac{dX_t}{X_t} +  c^2\frac1{X_t} dt
+\\&= -U_t [ab dt - aX_t dt + c dW_t] +  c^2U_t dt
+\\&=  -abU_t dt + a dt - c U_tdW_t +  c^2U_t dt
+\\&=  \left[a + (-ab + c^2) U_t\right] dt  - c U_t dW_t 
+\end{align*}
+
+<p>
+Define \(V_t\) the solution to the homogenious SDE:
+\[dV_t = (-ab + c^2)V_t dt - cV_t dW_t, V_0 = U_0\]
+</p>
+
+<p>
+so that:
+</p>
+
+<p>
+\[V_t= U_0 \exp\left((\frac12 c^2 - ab) t - c W_t\right) \]
+</p>
+
+<p>
+by part a):
+\(U_t = V_t\left[1 + a \int_0^t \frac{ds}{V_s}\right]\)
+</p>
+
+
+<p>
+\[X_t = \frac1{U_t} = \frac1{V_t\left[ 1 + a \int_0^t \frac{ds}{V_s}\right]}\]
+When \(a > 0\), since \(V_t > 0\), this solution is well definied, and we can check easily that it verifies the SDE.
+</p>
+
+<p>
+If \(a < 0, c \ne 0\), we prove that with positive probability, \(\exists t > 0, \int_0^t \frac{ds}{V_s} \ge -\frac1a\), and as a result \(X_t\) is not well defined.
+</p>
+
+<p>
+Define the stopping times:
+</p>
+<ul class="org-ul">
+<li>\(\tau_1 = \inf\{ t > 0, W_t = 1-\frac1a \}\)</li>
+<li>\(\tau_2 = \inf\{ t \ge \tau_1, W_t = 2-\frac1a \}\)</li>
+<li>\(\tau_3 = \inf\{ t \ge \tau_2, W_t = 1-\frac1a \}\)</li>
+</ul>
+
+<p>
+All the \(\tau_i\) are finite a.s.
+</p>
+
+<p>
+Furthermore, if \(\tau_3 \ge \tau_2 +1\), \(\int_0^t \frac{ds}{V_s} \ge \int_{\tau_2}^{\tau_3} \frac{ds}{V_s} \ge -\frac1a\)
+</p>
+
+<p>
+Now, by strong markov property: \(\mathbb P(\tau_3 \ge \tau_2 + 1) = \mathbb P(\tau_1 \ge 1 | W_0 = 2 - \frac1a)\). This probability is positive because \(E[\tau_1] = \infty\)
+</p>
+
+<p>
+<b>Q.3</b>
+</p>
+
+<p>
+<b>a</b>
+</p>
+\begin{align*}
+.|X_t^n - X_t| &= |\int_0^t [b(X_s) - b(X^n_s)] ds + \rho (W^n_t - W_t)|
+\\&\le L \int_0^t |X_s - X^n_s| ds + |\rho| |W^n_t - W_t|
+\\&\le L \int_0^t \underbrace{|X_s - X^n_s|}_{f(s)} ds + \underbrace{|\rho| \sup_{s \le s} |W^n_s - W_s|}_{g(t)}
+\end{align*}
+
+
+<p>
+\(g\) is non-descreasing, Gronwall implies:
+\[|X_t^n - X_t| \le |\rho(W_t^n - W_t)| \exp(LT)\]
+</p>
+
+<p>
+so that:
+</p>
+
+<p>
+\[\sup_{[0, T]} |X_t^n - X_t| \le |\rho| \sup|W_t^n - W_t| \exp(LT) \rightarrow_n 0\]
+</p>
+
+<p>
+<b>b</b>
+</p>
+</div>
+
+<ol class="org-ol"><li><a id="orgheadline3"></a>SDE of \(Z_t\)<br  /><div class="outline-text-4" id="text-3-0-1">
+<p>
+First assume that \(Z_t\) exists. Write:
+</p>
+
+<p>
+\(Z_t = \mu(Z_t) dt + \alpha(Z_t)\)
+</p>
+
+<p>
+If we definie \(f, c\) as in 9.4,
+\(c(y) = (- \frac12 \alpha' + \frac \mu{\alpha})(f^{-1}(y))\)
+</p>
+
+<p>
+we have that:
+</p>
+
+<p>
+\[\begin{pmatrix}
+f(Z_t) &= f(Z_0) &+ \int_0^t c(f(Z_s)) ds &+ B_t\\
+\uparrow & \uparrow & \uparrow & \uparrow\\
+f(Z^n_t) & f(Z^n_0) & \int_0^t c(f(Z^n_s)) ds & B^n_t\\
+\end{pmatrix}\]
+</p>
+
+<p>
+Where the convergence holds a.s.
+</p>
+
+
+<p>
+To find a candidate for the SDE, let's assume:
+\(\forall n \; f(Z^n_t) = f(Z^n_0) + \int_0^t c(f(Z^n_s)) ds + B^n_t\)
+</p>
+
+
+
+<p>
+Note that:
+</p>
+<ul class="org-ul">
+<li>\(f' = \frac1{\alpha}\), \(f'' = -\frac{\alpha'}{\alpha^2}\)</li>
+<li>\({f^{-1}}'(y) = \frac1{f'(f^{-1}(y))} = \frac1{f'(z)} = \alpha(z)\)</li>
+<li>\({f^{-1}}''(y) = (\frac1{f'(f^{-1}(y))})' = -\frac{f''(f^{-1}(y))}{((f^{-1}(y))')^2} = \alpha'(z)\alpha(z)\)</li>
+</ul>
+
+
+<p>
+Note \(Y^n_t = f(Z_n^t)\)
+</p>
+\begin{align*}
+dZ^n_t &= df^{-1}( Y_n^t)
+\\&= {f^{-1}}'(Y_t^n) dY^n_t
+\\&= \alpha(Z^n_t) (c(Y_n^t) dt + dB^n_t) 
+\\&= \alpha(Z_n^t) c(Y_n^t) dt + \underbrace{\alpha}_{\sigma}(Z^n_t) dB^n_t
+\\&= \underbrace{(\mu - \frac12 \alpha \alpha')}_{b}(Z_t^n)dt + \underbrace{\alpha}_{\sigma}(Z^n_t) dB^n_t
+\end{align*}
+
+
+<p>
+By identification, \(\alpha = \sigma\), \(\mu = b + \frac12 \alpha \alpha'\)
+In conclusion, \(Z_t\) verifies:
+</p>
+
+<p>
+\(dZ_t = (b+\frac12\sigma\sigma')(Z_t) dt + \sigma(Z_t) dB_t\)
+</p>
+
+<p>
+In the next part we consider the solution to this SDE, and we prove that, indeed, \(Z_t^n\) converges to \(Z_t\) uniformly in t.
+</p>
+</div></li>
+
+<li><a id="orgheadline4"></a>Existence of \(Z_t\)<br  /><div class="outline-text-4" id="text-3-0-2">
+<p>
+Define \(Z_t\) as the solution of the SDE:
+</p>
+
+<p>
+\[dZ_t = \underbrace{b+\frac12\sigma\sigma'}_{\text{Lipschiz}}(Z_t) dt + \underbrace{\sigma}_{\text{Lipschiz}}(Z_t) dB_t\]
+</p>
+
+<p>
+Following the last part,
+\[ df(Z_t) = c\circ f(Z_t) dt + dB_t \]
+</p>
+
+<p>
+We also have that:
+</p>
+
+<p>
+\(df(Z_t^n) = f'(Z_t^n) dZ_t^n = \frac{b}{\sigma}(Z_t^n) dt + dB^n_t\)
+\(b/\sigma\) is Lipschiz, by part <b>a</b>:
+</p>
+
+<p>
+\(\sup_{t \in [0, T]} |f(Z_t^n) - f(Z_t)| \rightarrow_n 0\)
+</p>
+
+<p>
+We know also that \(f^{-1}\) is Lipschiz in \([0, T]\). Indeed, \({f^{-1}}'(y) = \sigma(f^{-1}(y))\) is bounded in that interval.
+</p>
+
+<p>
+So
+\[\sup_{[0, T]} |Z_t- Z^n_t| = \sup_{[0, T]}|f^{-1}\circ f(Z_t) - f^{-1}\circ f(Z^n_t)| \le ||{f^{-1}}'||_{\infty} \sup_{t \in [0, T]} |f(Z_t^n) - f(Z_t)| \rightarrow_n 0\]
+</p>
+
+<p>
+Which proves the existence of \(Z_t\).
+</p>
+</div></li></ol>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Bachir El khadir</p>
+<p class="date">Created: 2016-04-12 Tue 17:58</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

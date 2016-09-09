@@ -1,0 +1,141 @@
+% Created 2016-03-05 Sat 21:44
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\author{Bachir El Khadir}
+\date{\textit{<2016-02-23 Tue>}}
+\title{Tree-based Methode (regression)}
+\hypersetup{
+ pdfauthor={Bachir El Khadir},
+ pdftitle={Tree-based Methode (regression)},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Bachir El Khadir}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+
+
+
+\section{Tree}
+\label{sec:orgheadline3}
+
+\begin{definition}
+\(\mathcal{F} := \{ f(x) = \sum_{j=1}^M \beta_j 1_{x \in R_j} \}\)  Where \(R_1, \ldots, R_M\) for a \emph{tree partition}
+\label{orgspecialblock1}
+
+\end{definition}
+
+\begin{definition}
+A parititon of the input space \(X\) that can be formed by recursively applying the following 2 rules
+\begin{itemize}
+\item Choose a cell of the current partition
+\item Split the chosen cell into two daughters by binary splitting along one dimension (one variable)
+\end{itemize}
+\label{orgspecialblock2}
+
+\end{definition}
+
+\begin{definition}
+\(\hat R(f) = \frac1n \sum_{i=1}^M (Y_i - f(X_i))^2\)
+minimizing this quantity leads to overfitting, so we need to regularize.
+For example we can restrict the search space to \(\mathcal{F}_{K_{min}} =\{f(x) = \sum_{j=1}^M \beta_j 1_{x \in R_j} \}\) and \(R_j\) contains at least \(K_min\) data points (e.g \(K_{\min} = 5\))
+
+Computation: Conbinatoric! (NP-Hard)
+In practice we use a Greedy Algorithm.
+\label{orgspecialblock3}
+
+\end{definition}
+
+\begin{definition}
+Grow a tree recursively by repeating the following steps:
+for each terminal node of the tree, until the minimal node size \(K_{\min}\) is achieved
+\begin{enumerate}
+\item Pick a variable / split point which decreases \(\hat R(f)\) the most
+\item Split the node into two daughters
+\end{enumerate}
+\label{orgspecialblock4}
+
+\end{definition}
+
+Still overfits.
+
+\subsection{Prune The tree}
+\label{sec:orgheadline1}
+\begin{enumerate}
+\item Givena full grown tree \(T_0\), find an internal node which after collapsing the subtree into iteself, will increase \(\hat R(f)\) the least.
+\item Collapse the subtree into this internal node. We get a new tree \(T\), reoeat tihs process we get a sequence of new trees \(T_0, T_1, \ldots\).
+\item Pick one tree by minimizing \(\hat R(\hat f_T) + \lambda |T|\), where \(\lambda\) is obtained by CV tuning, \(|T|\) the number of nodes in \(T\).
+\end{enumerate}
+
+\subsection{Pros and Cons of Tree}
+\label{sec:orgheadline2}
+\begin{itemize}
+\item Pro: Simple a interpretable
+\item Cond: Fitten functions are non smooth: theoritically extremely challenging (no persistensy result)
+\end{itemize}
+
+
+\section{Bagging (Bootstrap Aggregation)}
+\label{sec:orgheadline5}
+
+\begin{algorithm}
+For \(b = 1, \ldots, B\)
+a. Draw a boostrap \({Z_{1:n}^*}^{(b)}\) of size \(n\) from \(Z_{1:n}\)
+b. Fit a regression tree on the bootstrapped data (with minimum node size \(K_{\min}\), no pruning)
+Output: \(\hat f^{\text{bagging}} = \frac1B \sum_{b=1}^B \hat f^b(x)\)
+\label{orgspecialblock5}
+
+\end{algorithm}
+\subsection{Bagging vs Tree}
+\label{sec:orgheadline4}
+\begin{enumerate}
+\item \(\hat f^{\text{bagging}}\) has the same bias as \(\hat f^b(x)\), but potentially smaller variance.
+\item The larger \(B\) is, the better (but diminishing return)
+\item Works well only if \(\hat f^1(X), \ldots, \hat f^B(x)\) are decorrelated.
+\end{enumerate}
+
+\section{Random Forest}
+\label{sec:orgheadline6}
+
+
+\begin{algorithm}
+For \(b = 1, \ldots, B\)
+\begin{enumerate}
+\item a. Draw a boostrap \({Z_{1:n}^*}^{(b)}\) of size \(n\) from \(Z_{1:n}\)
+\end{enumerate}
+b. Fit a regression tree on the bootstrapped data by recursively repeating the following steps for each termainl node of the tree until the minimum node of size \(K_min\) is achieved
+
+i) Select \(m\) variables at random
+ii) Picj the best variable / split point aming these \(m\) variables
+iii) Split the node into 2 daughters
+
+\begin{enumerate}
+\item Output: \$
+Output the ensemble of fitted tree functions \(\hat f^1, \ldots, \hat f^B\).
+
+\(\hat f^{\text{RT}} = \frac1B \sum_{b=1}^B \hat f^b(x)\)
+\end{enumerate}
+\label{orgspecialblock6}
+
+\end{algorithm}
+\end{document}

@@ -1,0 +1,82 @@
+* ORF525
+Hanlu - AI : Junnei Lu
+
+* Grading:
+- participating: 20 pct
+- Midterm (Paper based ) 10pct
+- Final (Take Home) 10pct
+- Homeworks (Theory / Programming) 50 pct
+- Project 10pct
+
+
+* Part 1: fundamental Theorey
+  - Concentration princeiple
+  - Parsimonious principle
+  - Likelihood principle
+* Part 2: regression (High D)
+  - OLS -> Lasso -> Ridge -> Elastic - Net (parametruc)
+  - Tree-based Method -> Random Forest (Non parametric)
+  - Compressed sensing (Geometric Intuition, RIP)
+  - Model Selection (Cross-Validation)
+* Theorey:
+  - Geometry of L1 
+  - Persistency of Lasso
+* Homework:
+** Theory
+  - Subdifferential Calculus of Nuclear norm
+  - Compressed sensing (L1-Geomery)
+** Programming
+   - House Pricing
+   - Moneyball
+* Part 3: Classification
+  - Logistic -> SVM -> LDA -> NB -> GLMs (Parametric)
+  - RKHS Theory (Kernel Modeling) + Bossting + CART?RT(Non Parametric)
+  - Model Assessement: ROC / AUC
+  - Theory: 
+    - VC theory of classification
+    - Theory of Boosting
+* Homework
+** Theory:
+   - Geometry of SVM, Classification Error of SVM on Sphere
+   - Prove the representation theorem
+** Practice:
+   - Sentiment Analysis + Health Analytics (Text analytics)
+* Part 4: Graphical Models / Markov Random Field     
+  - Gaussian graphical model - Ising Model (Parametrics)
+  - Non parametric graphical model, Forest graphical Model
+  - HW: --- Programming: GDP data analytics
+   
+* Part5: Clustering
+  - Finite Mixture Model: HHM EM Algorithm (Parametric)
+  - K-means Hierachical clustering (Non Parametric)
+  - Theory: 
+    - Generalization bound of K-means
+    - Convergence Rate Of EM
+  - Pratice:
+    - Wikipedia data
+      
+* Part 6: Dimension Reduction      
+  - Factor Model, PCA model / SVM (parametric)
+  - Matrix Factorization, Topic Model (Non Parametric)
+  - Theory: SDP Relaxation of Sparse PCA + Identifiability of Model
+  - Programming: Song recommendation
+    
+* Midterm (week 9)
+
+* Part 7: Retrieval
+  - Deep Learning / Neural Network, K-NN Ret nt (Non Parametric)
+  - Image Analytics
+  - HW: Wikipedia, Image Retireval (Deep Features)
+    
+* Parti 8: Advanced Topics    
+  - Bayesian Learning (Bayesian Probabilistic Programming)
+  - Neural Network Programming (Deep Learning)
+  - Reinforcement learning / Approximate dynamic programming
+  - Online Learnign
+
+
+
+
+
+
+

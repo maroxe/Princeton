@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2016-04-03 Sun 17:51 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Problem set 7, ORF527</title>
+<meta name="generator" content="Org-mode" />
+<meta name="author" content="Bachir El khadir" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+<link href="http://thomasf.github.io/solarized-css/solarized-dark.min.cs" rel="stylesheet"></link>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="http://127.0.0.1:60000/autoreload.js"></script>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Problem set 7, ORF527</h1>
+
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1"><span class="section-number-2">1</span> 8.3 (Steele)</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>(a)</b>
+</p>
+
+<p>
+\(u\) and \(v\) are \(C^{\infty}\)
+</p>
+
+<ul class="org-ul">
+<li>\(\partial_x \partial_x u = \partial_x \partial_y v = \partial_y \partial_x v\)</li>
+<li><p>
+\(\partial_y \partial_y u = -\partial_y \partial_x v\)
+Which proves that \(\Delta u = 0\)  
+</p>
+
+<p>
+We conclude the same for \(v\) by considering the function \(-if\)
+</p></li>
+</ul>
+
+<p>
+\(\exp(z)) = e^x\cos(y) + ie^x\sin(y)\)
+</p>
+
+<p>
+\(z\exp(z) = e^x(x+iy)(\cos(y)+i\sin(y)) = e^x(x\cos(y) - y\sin(y)) + ie^x(x\sin(y)+y\cos(y))\)
+</p>
+
+<p>
+We conclude that the following function of \((x,y)\) are harmonic:
+\(e^x\cos(y), e^x\sin(y), e^x(x\cos(y) - y\sin(y)), e^x(x\sin(y)+y\cos(y))\)
+</p>
+
+<p>
+<b>(b)</b>
+</p>
+
+<p>
+\(z^2 = (x^2 - y^2) + i 2xy\), which give that \(x^2 - y^2, xy\) are both harmonic functions.
+</p>
+
+<p>
+The process \(Z_t = (B^1_t)^2 - (B^2_t)^2\) is a local martingal.
+Since By doobs inequality applied to the martingale \(B_t\), \(\sup_{0 \le t \le T} ||B_t||_2^2\) is integrable, so by dominated convergence theorem, \(Z_t\) is also a martingale.
+</p>
+
+<p>
+Let \(\tau_{\alpha} = \inf\{t, B_t \in H(\alpha) \} = \inf\{t, Z_t = \alpha \}\)
+</p>
+
+<p>
+Let \(\tau = \tau_1 \wedge \tau_5\) so that \(Z_{t \wedge \tau}\) is bounded between \(1\) and \(5\).
+Let's now prove that \(\tau_5 < \infty\).
+Indeed \(Z_t\) is continuous. Furthermore:
+\(((B_n^1)^2, (B_n^2)^2) \sim n (N_1, N_2)\) where \(N_1, N_2 \sim \mathcal N(0, I_2)\)
+</p>
+
+<p>
+Let \(M = 5\)
+</p>
+
+<p>
+\(Z_{n+1}-Z_n = 2 B^1_n (B^1_{n+1} - B^1_n) - 2 B^2_n (B^2_{n+1} - B^2_n) + (B^1_{n+1} - B^1_n)^2 - (B^2_{n+1} - B^2_n)^2\)
+\(P(\forall n, 1 \le Z_n \le 5) \le P(\forall_n\; 1 \le Z_{n+1}-Z_n \le 5)\)
+</p>
+
+<p>
+Which means that \(\sum_{n} P(Z_n \ge M) = \infty\)
+By Boreal Cantelly,
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2"><span class="section-number-2">2</span> 8.4 (Steele)</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<b>(a)</b>
+\((*) \iff f_t = \frac12 f_{xx} \iff \phi'(t) \psi(x) = \frac12 \phi(t)\psi''(x)\)
+</p>
+
+
+<p>
+\(\phi = 0\) or \(\psi = 0\) lead to trivial solutions.
+</p>
+
+<p>
+Let's assume there exist \(t_0, x_0\) such that \(\phi(t_0) \ne 0, psi(x_0) \ne 0\)
+</p>
+
+<p>
+\[(*) \iff \phi'(t) = \frac{\psi''(x_0)}{2\psi(x_0)} \phi(t), \psi''(x) = 2 \frac{\phi'(t_0)}{\phi(t_0)} \psi(x)\]
+</p>
+
+<p>
+Which means \(\phi(t) = ae^{bt}\), \(\psi(x) = \alpha e^{wx} + \beta e^{-wx}\)
+By pluggin this function into the equation, we get \(b = \frac{w^2}2\)
+</p>
+
+<p>
+General solution:
+\[f(t, x) = a e^{\frac{w^2}2 t}( \alpha e^{wx} + \beta e^{-wx})\]
+</p>
+
+<p>
+<b>(b)</b>
+</p>
+
+\begin{align*}
+M_t
+\\&= \sum_k  \frac{(\alpha B_t - \frac{t}2 \alpha^2)^k}{k!}
+\\&= 1 + \alpha B_t - \frac{t}2 \alpha^2 + \frac12 (\alpha B_t - \frac{t}2 \alpha^2)^2 + \frac16 (\alpha B_t - \frac{t}2 \alpha^2)^3 + \alpha^4 P(\alpha) &\text{(Where $P$ some polynomial)}
+\\&= 1 + \alpha B_t + \alpha^2 (\frac{B_t^2}2- \frac{t}2) - \alpha^3 \frac{t}2 B_t + \alpha^4Q(\alpha)
+\end{align*}
+</div>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-2">
+<h2 id="orgheadline3"><span class="section-number-2">3</span> 8.5 (Steel)</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<b>a)</b>
+\(f(X) = (X^TX)^{-\frac12}\)
+\(\partial_x f = -\frac12 \frac{2x}{(x^2+y^2+z^2)^{\frac32}} = -x f(x)^3\)
+\(\partial_{xx}f = -f(x, y, z)^3 - 3 x \partial_x f(x, y, z) f(x, y, z)^2 = -f(x, y, z)^3 + 3 x^2 f(x, y, z)^5\)
+By symmetry of \(x, y\) and \(z\):
+</p>
+<ul class="org-ul">
+<li>\(\partial_{yy}f = -f^3 + 3y^2f^5\)</li>
+<li>\(\partial_{zz}f = -f^3 + 3z^2f^5\)</li>
+</ul>
+<p>
+So:
+\(\Delta f = -3 f^3 + 3 (x^2+y^2+z^2) f^5 = -3f^3 + 3f^{-2}f^5 = 0\)
+</p>
+
+
+<p>
+Let \(\tau_n = \inf\{ t \ge 1, |B_t|_2 \le \frac1n \}\)
+</p>
+
+<p>
+\(f_n(x, y, z) = f(x, y, z) \phi(\frac{x^2+y^2+z^2}{n^2})\), so that \(f_n \in C^{\infty}\) and equal to 0 in a neighbourhood of 0, and equal to \(f\) outside \(B(0, \frac1n)\)
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-R"><span style="color: #8bc34a;">library</span>(ggplot2)
+
+x <span style="color: #8bc34a;">&lt;-</span> seq(-20, 20, 0.1)
+eta <span style="color: #8bc34a;">&lt;-</span> x
+p1 <span style="color: #8bc34a;">&lt;-</span> ggplot(<span style="color: #84ffff;">NULL</span>, aes(x=x, y=eta)) +
+    geom_line() +
+    ggtitle(<span style="color: #9ccc65;">"With bias"</span>)
+p1
+</pre>
+</div>
+
+<div class="org">
+
+<div class="figure">
+<p><img src="phi.png" alt="phi.png" class="center" />
+</p>
+<p><span class="figure-number">Figure 1:</span> Phi</p>
+</div>
+
+</div>
+
+<p>
+Ito formula:
+</p>
+
+<p>
+\[f_n(B_t) = f_n(B_1) +  \int_1^t f_n'(B_s) dB_s + \int_1^t \frac12 \Delta f_n(B_s) dt\]
+</p>
+
+<p>
+If \(t < \tau_n\), \(f(t) = f_n(t)\).
+Let \(n > m\), so that \(f_n(B_{t\wedge \tau_m}) = f(B_{t\wedge \tau_m}), \nabla f_n(B_{t\wedge \tau_m}) = \nabla f(B_{t\wedge \tau_m}),  \Delta f_n(B_{t\wedge \tau_m}) = 0\)
+</p>
+
+<p>
+\(f^n(B_{t \wedge \tau_m}) = f_n(B_1) +  \int_1^{t\wedge \tau_m} \nabla f(B_s) dB_s\)
+</p>
+
+<p>
+so \(f_n(B_{t \wedge \tau_m})\) is a local martingale, and so is \(f_n(B_t)\)
+</p>
+
+<p>
+Let \(\sigma_m\) be a localizing sequence so that for \(1 \le s \le t\)  \(E[f_n(B_{t \wedge \sigma_m}) | F_s] = f_n(B_{s \wedge \sigma_m})\)
+</p>
+
+<p>
+We know that if \(|B_1| \ne 0\), \(|B_{t\wedge\sigma_m}| \ge \frac1m > 0\), and when \(n \ge \frac1{|B_{t\wedge\sigma_m}|}\), \(f_n(B_{t \wedge \sigma_m}) = f(B_{t \wedge \sigma_m})\)
+And \(P(|B_1| = 0) = P(N_1 = 0)^3 = 0\)
+So almost surely, when \(n\) large enough(\(n \ge  \frac1{|B_{t\wedge\sigma_m}|} \vee \frac1{|B_{s\wedge\sigma_m}|}\)), \(f_n(B_{t \wedge \sigma_m}) = f(B_{t \wedge \sigma_m})\)
+Which proves that \(E[f(B_{t \wedge \sigma_m}) | F_s] = f(B_{s \wedge \sigma_m})\), and that \(M_t = f(B_t)\) is a local martingale
+</p>
+
+
+<p>
+<b>b)</b>
+Since \(\frac1{\sqrt t} B_t \sim (N_1, N_2, N_3) \sim \mathcal N(0, I_3)\):
+</p>
+
+\begin{align*}
+E[M_t^2] &= E[\frac1{t (N_1^2 + N_2^2 + N_3^2)} ]
+\\&= \frac1t \frac1{\sqrt{(2\pi)^3}} \int \frac1{x^2+y^2+z^2} e^{-\frac12 x^2+y^2+z^2} dxdydz
+\\&= \frac1t \frac1{\sqrt{(2\pi)^3}} \int_{\theta\in [0, 2\pi], \phi \in [0, \pi]}\sin(\theta)d\theta d\phi  \int_0^\infty \frac1{r^2} e^{-\frac12 r^2} r^2dr
+\\&= \frac1t \frac1{\sqrt{(2\pi)^3}} \int_{\theta\in [0, \pi], \phi \in [0, 2\pi]}d(-\cos(\theta)) d\phi  \int_0^\infty e^{-\frac12 r^2} dr
+\\&= \frac1t \frac1{\sqrt{(2\pi)^3}} 4\pi  \sqrt{\frac{\pi}2}
+\\&= \frac1t
+\end{align*}
+
+<p>
+<b>c)</b>
+Assume \(M_t\) is martingale, by Jensen:
+\(\frac1t = E[M_t^2] \ge (E[M_t])^2 \ge (E[M_1])^2\)
+</p>
+
+<p>
+By taking \(t\) to infinity, this leads to \(E[M_1] = 0\), and since \(M_1\) is non negative, to \(M_1 = 0\) as. which contradicts the fact that \(E[M_1^2] = 1\)
+</p>
+</div>
+</div>
+<div id="outline-container-orgheadline4" class="outline-2">
+<h2 id="orgheadline4"><span class="section-number-2">4</span> Q2</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+<b>a</b>
+\[f'_{\varepsilon}(x) = \left\{  \begin{array}{cc}
+1 & \text{if } x > \varepsilon\\
+-1 & \text{if } -x < \varepsilon\\
+\frac{x}{\varepsilon} & \text{if } |x| < \varepsilon\\
+\end{array}\right.
+\]
+</p>
+
+<p>
+\[f''_{\varepsilon}(x) = \left\{  \begin{array}{cc}
+0 & \text{if } |x| > \varepsilon\\
+\frac{1}{\varepsilon} & \text{if } |x| < \varepsilon\\
+\end{array}\right. = \frac{1_{|x| < \varepsilon}}{\varepsilon}
+\]
+</p>
+
+<p>
+Let's pretend that Ito formula works:
+</p>
+
+\begin{align*}
+f_{\varepsilon}(W_t)
+&= f_{\varepsilon}(0) + \int_0^t f_{\varepsilon}'(W_s) dW_s + \frac12  \int_0^t f_{\varepsilon}''(W_s) ds
+\\&= f_{\varepsilon}(0) + \int_0^t f_{\varepsilon}'(W_s) dW_s + \frac1{2\varepsilon}  \int_0^t 1_{|W_s| < \varepsilon}  ds
+\\&= f_{\varepsilon}(0) +\int_0^t f_{\varepsilon}'(W_s) dW_s + \frac1{2\varepsilon}  \lambda\{s \in [0, t], |W_s| < \varepsilon\}
+\end{align*}
+
+<p>
+By Fubini-Tonelli: \(E[\lambda \{s \in [0, t], W_s = \pm \varepsilon\}] = \int_0^t \mathbb [P(W_s = \varepsilon) + P(W_s = \varepsilon)] ds = 0\)
+Therefore \(\lambda \{s \in [0, t], |W_s| < \varepsilon\} = \lambda \{s \in [0, t], |W_s| \le \varepsilon\}\) as.
+</p>
+
+<p>
+<b>Conclusion:</b> \(f(W_t) = \int_0^t f_{\varepsilon}'(W_s) dW_s + \frac1{2\varepsilon}  \lambda\{s \in [0, t], |W_s| \le \varepsilon\}\)
+</p>
+
+<p>
+<b>b</b>
+</p>
+
+\begin{align*}
+\mathbb E[(f_{\varepsilon}'(W_s)-sign(W_s)) dW_s)^2] 
+&= \int_0^t E[(f_{\varepsilon}'(W_s) - sign(W_s))^2] ds
+\\& \le \int_0^t E[1_{|W_s| \le \varepsilon} (1 + \frac{|W_s|}{\varepsilon})^2] ds
+\\& \le 4\int_0^t E[1_{|W_s| \le \varepsilon}] ds
+\end{align*}
+
+<p>
+By dominated convergence theorem, this quantity converges to 0.
+</p>
+
+
+
+
+
+<p>
+From Ito formula:
+</p>
+
+<p>
+\(\frac1{2\varepsilon}  \lambda\{s \in [0, t], |W_s| < \varepsilon\} = f_{\varepsilon}(W_t)- f_{\varepsilon}(0) -\int_0^t f_{\varepsilon}'(W_s) dW_s\) 
+</p>
+
+<p>
+We can easily notice that \(f_{\varepsilon}(x) \le |x|\).
+</p>
+
+<p>
+We have proven that:
+</p>
+<ul class="org-ul">
+<li>\(f_{\varepsilon}(W_t) - f_{\varepsilon}(0) \rightarrow_{\varepsilon \downarrow 0} |W_t|\) almost surely. Since \(|f_{\varepsilon}(W_t) - f_{\varepsilon}(0)| \le |W_t| + \varepsilon \in L_2\), by dominated convergence theorem, the convergence holds in \(L_2\)</li>
+<li>\(\int_0^t f_{\varepsilon}'(W_s) dW_s \rightarrow_{\varepsilon \downarrow 0} \int_0^t sign(W_s) dW_s\) in \(L_2\)</li>
+</ul>
+
+<p>
+This proves that \(\frac1{2\varepsilon}  \lambda\{s \in [0, t], |W_s| \le \varepsilon\}\) converges in \(L_2\) to \(L_t := |W_t| - \int_0^t sign(W_s)ds\)
+</p>
+
+<p>
+\(L_t\) is non-decreasing because if \(u < v\), \(L_{v} = \lim_{\varepsilon}\frac1{2\varepsilon}  (\lambda\{s \in [0, u], |W_s| \le \varepsilon\} + \lambda\{s \in [u, v], |W_s| \le \varepsilon\} \ge L_u\)
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: <span class="timestamp-wrapper"><span class="timestamp">&lt;2016-04-01 Fri&gt;</span></span></p>
+<p class="author">Author: Bachir El khadir</p>
+<p class="date">Created: 2016-04-03 Sun 17:51</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

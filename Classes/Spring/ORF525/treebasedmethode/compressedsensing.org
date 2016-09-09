@@ -1,0 +1,236 @@
+#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="../../css/org-style.css" />
+#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+#+latex_header: \usepackage{amsthm}
+#+latex_header: \newtheorem{theorem}{Theorem}
+#+latex_header: \newtheorem{definition}{Definition}
+#+latex_header: \newtheorem{algorithm}{Algorithm}
+
+
+#+OPTIONS: toc:nil  
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+
+#+TITLE: Compressed Sensing and Random Matrices
+#+AUTHOR: Bachir El Khadir
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Bachir El Khadir
+
+
+
+#+begin_quote
+I pledge my honor that I have not violated the honor code
+#+end_quote
+
+*** Setup
+
+  #+name: Problem Setup
+  #+begin_definition
+  Given an unkown true signal $\beta \in \mathbb R^d$, we observe $Y = X\beta$ where $X \in \mathbb R^{n \times d}$ is a sensing matrix.
+  We aim to recover $\beta$ using Y and $X$ (In general $n << d$, $\implies$ compressed)
+  #+end_definition
+
+  Key Questions:
+  1) Deterministic: Conditions of $X$ and $\beta$ to have a perfect recovery.
+  2) Random: How to construct $X$ (random matrix) that satisfies the above conditions.
+
+
+  Naive Recovery:
+  $Y = X\beta$,  Directly solve the linear equation systems: $\beta^* + null(X)$
+
+*** $L_2$ Recovery: Corresponding to Ridge Regression
+    
+    $\hat \beta = \arg \min \frac12 ||\beta||_2^2$, st $X\beta = Y$
+
+    #+name:     
+    #+begin_theorem
+    If $XX^T \in \mathbb R^{n \times n}$ is invertive, then we have 
+    $$\hat \beta = X^T (XX^T)^{-1} Y$$
+    Further, if $\beta^* \in row(X)$, then $\hat \beta = \beta^*$
+    #+end_theorem
+
+
+    #+begin_proof
+    - Primal Optimality $\beta = X^T \lambda$
+    - Primal Feasibility $X\beta = Y$
+    #+end_proof
+
+*** $L_1$ Recovery
+    $\hat \beta = \arg \min ||\beta||_1$, st $X\beta = Y$ (Basis Pursuit)
+    
+    #+begin_theorem
+    There exsists a solution $\hat \beta$ that has no more than $n$ non zero entries.
+    #+end_theorem
+
+    #+begin_proof
+    $S = supp(\alpha)$
+
+    $h \in null X_S, h_{S^c} = 0$
+
+    For $\varepsilon > 0$ small enough $sign(\alpha + \varepsilon h) = sign(\alpha)$
+
+    $||\alpha + \varepsilon h||_1 = ||\alpha||_1  + \varepsilon <h, sign(\alpha)> \le ||\alpha||_1$
+
+    Take $\varepsilon$ large enough so that $sign(\alpha + \varepsilon h) \ne sign(\alpha)$
+    #+end_proof
+
+    Remark: Similar sparsity property is also true for the Lasso in
+    the regression setting.
+
+*** A necessary and sufficient condition of $L_1$ Recovery
+    $\hat \beta = \arg \min |\beta|_1$ s.t $X \beta = Y$
+    
+$\hat \beta^* \leftarrow$ true signal, $s^* = supp(\beta^*)$
+
+#+begin_theorem
+$\hat \beta = \beta^* \iff \sum_{j \in s^*} sign(\beta_j^*) h_j \le \sum_{j \in {s^*}^c} |h_j| \; \forall h \in null(X)$
+#+end_theorem
+Remark: For perfect recovery the magnitudes of the true signal does not matter. Only the sign matters
+
+#+begin_proof
+$\beta^*$ is the solution to the $L_1$ program iff $|\beta^* + h|_1 \ge |\beta^*|_1 \; \forall h \in null(X)$
+
+- Sufficiency: Let $h \in null(X)$
+  $$|\hat \beta^* + h | _1 - | \hat \beta^* | = \sum_{j \in s^*} \underbrace{|\beta_j^* + h_j| - |\beta_j^*|}_{ \ge sign(\hat \beta^*_j) h_j} + \sum_{s^*} |h_j|$$
+- Necessary: Proof by contradiction
+  If there exist $Xh = 0$ such that $-\sum_{j \in s^*} sign(\beta_j^*) h_j > \sum_{j \in {s^*}^c} |h_j|$. (**)
+  the inequality also holds for $\varepsilon h \; (\forall \varepsilon > 0)$
+  $X(\beta^* + \varepsilon h) = Y$
+  $|\beta^* + \varepsilon h|_1 = \sum_{s^*} |\beta_j^* + \varepsilon h_j| + \sum_{s^{* c}} |\varepsilon h_j| < \sum_{s^*} |\beta_j^* + \varepsilon h_j| - \varepsilon sign(\beta_j^*) = |\beta^*|_1$ for $\varepsilon$ small enough.
+  
+#+end_proof
+
+Drawback: Depends on $\beta^*$.
+$\implies$ Need a stronger but more tractable condition (restricted isometry property: RIP)
+
+#+name: RIP
+#+begin_definition
+We say a $n \times d$ matrix $X$ is $s$-RIP if $\exists \gamma_s \in (0, 1)$ s.t
+$(1 - \gamma_s) |\beta|_2^2 \le |X\beta|_2^2 \le (1+\gamma_s)|\beta|_2^2$ for all $s$-sparese $\beta$ ($|supp(\beta)| \le s$) 
+#+end_definition
+
+#+name: $l_0$ recovery using RIP
+#+begin_theorem
+Let $S = supp(\beta^*), s = |S|$
+
+If $X \in \mathbb{R}^{n \times d}$ is $2s$ -RIP then the $L_0$ program $\min |\beta|_0$ s.t $X\beta = Y$ Can perfectly recover $\beta^*$
+#+end_theorem
+
+#+name: $l_1$ recovery using RIP
+#+begin_theorem
+Let $S = supp(\beta^*), s = |S|$
+
+If $X \in \mathbb{R}^{n \times d}$ is $3s$ -RIP and $\gamma_{3s} < \frac13$ then the $L_1$ program $\min |\beta|_1$ s.t $X\beta = Y$ Can perfectly recover $\beta^*$
+#+end_theorem
+
+#+begin_proof
+Set $h = \hat \beta - \beta^*$ $\implies Xh = 0, |\beta^* + h|_1 \le |\beta^*|_1$ 
+
+$(h.s)_i = 1_{j \in S} h_j$
+
+$S^* = supp(\beta^*)$
+
+Main Idea:
+1) $|h.s^{* c}|_1 \le |h.s^*|_1$ (Optimization)
+2) $|h.s^*|_1 \le \rho |h.s^{* c}|_1$ with $\rho < 1$ (RIP)
+
+For 1),
+\begin{align*}
+|\beta^*|_1 &\ge |\hat \beta^* + h|_1
+\\&= |\hat \beta^* + h.S^* + h.S^{* c}|_1
+\\&\ge |\hat \beta^* + h.S^{* c}|_1 - |h.S^*|_1
+\\&\ge |\hat \beta^*| + |h.S^{* c}|_1 - |h.S^{* c}|_1
+\end{align*}
+
+For 2),
+Dividing up $h.S^{* c}$ according to the /energy/.
+Fix $h \in null(X)$
+
+$S_0 = S^*$
+$S_1 = $ location of the 2s-largest terms in $h.S^{* c}$
+$S_2 = ...$
+
+\begin{align*}
+0 &= |Xh|_2
+\\&\ge |X(h.S_0 + h.S_1)|_2 - \sum_{j \ge 2} |Xh.S_j|_2
+\end{align*}
+Since $X$ is $3s$-RIP:
+$$\sqrt{1 - \gamma_{3s}} |h.S_0 + hS_1|_2 \le |X(h.S_0 + h.S_1)| \le \sum_{j \ge 2} |X(h.S_j)|_2 \le \sum_{j \ge 2} \sqrt{1 + \gamma_{2s}} |h.S_j|_2$$
+So:
+\begin{align*}
+|h.S_0 + hS_1|_2 \\ &\le \sqrt{\frac{1 + \gamma_{2S}}{1 - \gamma_{3s}}} \sum_{j \ge 2} |h.S_j|_2
+\\&\le \sqrt{\frac{1 + \gamma_{2S}}{1 - \gamma_{3s}}} \sum_{j \ge 2} \sqrt{2s} |h.S_j|_{\infty}
+\\&\text{(Shifting argument)} |h.S_j|_{\infty} \le \frac{1}{2s} |h.S_{j-1}|
+\\&\le \sqrt{\frac{1 + \gamma_{2S}}{1 - \gamma_{3s}}} \sum_{j \ge 1} \frac1{\sqrt{2s}} |h.S_j|_1
+\end{align*}
+
+On the other hand we have
+$$|h.S_0 + h.S_1|_2 \ge |h.S_0|_2 = |h.S^*|_2 \ge \frac{1}{\sqrt s} |hS^*|_1$$
+$\implies |hS^*|_1 \le \underbrace{\sqrt{\frac{ 1+ \gamma_{2s}}{2(1 - \gamma_{3s})}}}_{\rho} |h.S^{* c}|_1$ 
+
+#+end_proof
+
+
+Question: How shall we construct a $m \times d$ matrix $X$ which satisfies the RIP Conditions.
+
+#+begin_theorem
+$X = (X_{ij})$, $X_{ij} \overset{iid}{\sim} \mathcal N(0, \frac1n)$
+Let $\varepsilon > 0$, then
+$$n \ge \frac{8s\log(9d/\varepsilon)}{\delta^2} \implies \mathbb P(X \text{is 3s-RIP with coeff } \delta) \ge 1 - \varepsilon$$
+#+end_theorem
+
+#+begin_proof
+$$\mathbb P(| ||X\beta||_2 - 1| \ge \delta) = \mathbb P(|\frac{\chi_n^2}n - 1|>  \delta) \le 2 e^{-\frac{n\delta^2}{8}}$$
+$$\mathbb P(\sup_{\beta \in B_0(3s) \cap S^{d-1}} |  |X\beta|_2 -1| \ge \delta) \le {3s \choose d} \mathbb P(\sup_{\beta \in S^{3s-1}} |  |X\beta|_2 -1| \ge \delta)$$
+
+*Lemma:*
+$$\mathbb P(\sup_{\beta \in S^{3s-1}} |  |X\beta|_2 -1| \ge \delta) \le 9^{3s} \mathbb P( |\frac{\chi_n^2}n - 1| > 3\delta)$$
+#+end_proof
+
+#+name: epsilonnet
+#+begin_definition
+$(X, d)$ a metric space, $\varepsilon > 0$
+
+$N_{\varepsilon}$ is a $\varepsilon$ -net iff $(\forall x \in X)( \exists y \in N_{\varepsilon}) d(x, y) \le \varepsilon$
+#+end_definition
+
+#+begin_theorem
+-  Discretization: $\sup_{\beta \in S^{3s-1}} | |X\beta|^2 - 1| \le \frac{1}{1 - 2\varepsilon} \sup_{\beta \in N_{\varepsilon}} ||X\beta|_2^2 - 1$
+- Counting $N(S^{3s-1}), |.|_2, \varepsilon) \le (1 + \frac{2}{\varepsilon})^{3s}$
+#+end_theorem
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

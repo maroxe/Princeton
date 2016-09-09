@@ -1,0 +1,123 @@
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="../css/special-block.css" />
+#+HTML_HEAD: <link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet"></link>
+#+HTML_HEAD: <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+#+HTML_HEAD: <script src="http://127.0.0.1:60000/autoreload.js"></script>
+
+#+LATEX_HEADER: \usepackage{pdfpages}
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+
+#+OPTIONS: toc:nil  
+
+#+TITLE: Notes ORF523 - Optimization
+
+
+* Separating Hyperplane Theorems
+#+BEGIN_theorem
+$C$ and $D$ two disjoint convex sets in $\mathbb R^n$, then
+there exist $a \in \mathbb R^n, a \ne 0$ $b \in \mathbb R$ such that
+- $a^tx \le b \; \forall x \in C$
+- $a^tx \ge b \; \forall x \in D$
+#+END_theorem
+
+
+#+BEGIN_theorem
+$C$ and $D$ two disjoint closed convex sets in $\mathbb R^n$ with at least one of them bounded, then
+there exist $a \in \mathbb R^n, a \ne 0$ $b \in \mathbb R$ such that
+- $a^tx < b \; \forall x \in C$
+- $a^tx > b \; \forall x \in D$
+#+END_theorem
+
+
+* Farkas Lemma
+#+BEGIN_theorem
+$A \in \mathbb{R}^{m \times n}, b \in \mathbb R^m$. One of the following sets must be empty:
+
+ (i) $\{x | Ax = b, x \ge 0\}$
+ 
+ (ii) $\{y | A^ty \le 0, b^ty > 0\}$
+#+END_theorem
+
+
+* Duality
+#+BEGIN_theorem
+$$ \min c^Tx \text{ st } Ax = b, x \ge 0$$
+$$ \max b^Ty \text{ st } A^Ty \le c$$
+#+END_theorem
+
+
+
+* QCQP
+
+  QP
+  #+BEGIN_THEOREM 
+  $$min_{Ax=b} x^TQx + q^Tx + c$$
+  #+END_THEOREM
+  
+  QCQP
+  #+BEGIN_THEOREM 
+  $$min_{x^TQ_ix + q_i^Tx + c_i \le 0} x^TQx + q^Tx + c$$
+  #+END_THEOREM
+
+* SOCP
+  #+BEGIN_THEOREM 
+  $$\min_{||A_ix+b_i||_2 \le c_i^Tx + d_i} f^Tx$$
+  #+END_THEOREM
+
+  (convex)QCQP $\subseteq$ SOCP
+
+  Lasso:
+  #+BEGIN_THEOREM
+  $$\min_{\alpha, z, t_i, |A\alpha-y|_2 \le z, |\alpha_i|_2 \le t_i} z + \gamma \sum_i t_i$$
+  #+END_THEOREM
+  
+* PSD
+  #+BEGIN_DEFINITION 
+  Consider a symmetric block matrix $X = \begin{pmatrix}A&B\\B^T&C\end{pmatrix}$ with $A, C$ symmetric.
+  The Schur complement of $A$ in $X$ is $S := C - B^TA^{-1}B$
+  #+END_DEFINITION
+  
+
+#+BEGIN_LEMMA
+If $A > 0$, then $X \ge 0 \iff S \ge 0$
+$X > 0 \iff A > 0, S > 0$
+#+END_LEMMA
+Define:
+$f(u, v) = \begin{pmatrix}u\\v\end{pmatrix}\begin{pmatrix}A&B\\B^T&C\end{pmatrix}\begin{pmatrix}u\\v\end{pmatrix}$
+
+For any fixed $v$ define $f_v(u) = f(u, v)$. $A > 0$, so $f_v$ is strictly convex
+$\min_u f_v(u) = v^TSv$
+
+
+* Dual SDP
+
+$\min_{tr(A_iX) = b_i, X \ge 0} tr(CX)$
+$\max_{\sum_i y_i A_i \le C} b^Ty$
+
+Strong Duality: If (P) and (D) are both strictly feasible, then they are equal.
+
+* Stability
+
+#+BEGIN_THEOREM 
+$x_{k+1} = Ax_k$ is GA $\iff \exists P > 0, P > A^TPAS$
+#+END_THEOREM
+
+
+
+* S-lemma
+
+
+  #+BEGIN_THEOREM
+  Suppose $\exists x_0 \in \mathbb R^n$ st $q_a(x_0) > 0$, If
+  $$\forall x [q_a(x) \ge 0 \implies q_b(x) \ge 0]$$
+  then
+  $\exists \lambda \ge 0$ s.t. $q_b(s) \ge \lambda q_a(x) \forall x$
+  #+END_THEOREM
+
+
+
+
+
+
+
+
+

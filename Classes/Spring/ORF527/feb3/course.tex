@@ -1,0 +1,103 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+%\usepackage[a4paper, total={7in, 10in}]{geometry}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\begin{document}
+
+\begin{definition}[Brownian motion]
+  $X_t$ is a borwnian motion if:
+  \begin{itemize}
+  \item $X_0 = 0$
+  \item $X_t - X_s \sim \mathcal N(0, t-s)$
+  \item $X_t - X_s \perp \sigma \{ X_r, r \le s \}$
+  \item $t \rightarrow X_t$ continuous
+  \end{itemize}
+\end{definition}
+Question: Does the process exist? Yes (Wiener, 1923)
+Motivation $X_t^{(N)} = \frac{1}{\sqrt N} \sum_{k=1}^{\lfloor Nt \rfloor} \epsilon_k$, $\epsilon_k$ iid, with expectation 0 and variance 1.
+Formally: ``$X_t = \lim_N X_t^{(N)}$'' (Convergence only in distribuion)
+
+\subsection*{Innovations}
+\begin{enumerate}
+\item Design random walks where as $N$ increases, new pts are added \textbf{between} existing points. This makes the convergenece a.s.
+\item Interpolate linearly between grid points. (To make the descrete paths continuous)
+\item Work on a compact set: $t \in [0, 1]$, then extend for all $t \ge 0$ at the end.
+\end{enumerate}
+
+\begin{lemma}[Interpolation]
+  Take a grid: $0 \le t_0 < t_1 \ldots < t_n$
+  Suppose given r.v $X_{t_0} = 0, X_{t_1}, \ldots, X_{t_n}$ st
+  $X_{t_i} - X_{t_{i-1}} \sum \mathcal N(0, t_i - t_{i-1})$ and $\{X_{t_i} - X_{t_{i-1}} \}$ are independent.
+  Let
+  \begin{itemize}
+  \item    $\epsilon \sim \mathcal N(0, 1) \perp X_{t_0}, \ldots, X_{t_n}$,
+  \item    $s = \frac{t_i - t_{i-1}}{2}$
+  \item   $X_s := \frac{X_{t_i} - X_{t_{i-1}}}{2} + \frac12 \sqrt {t_i - t_{i-1}} \epsilon$
+  \end{itemize}
+  then $(X_{t_0}, \ldots, X_{t_n})$ satisfy the properties of the brownian motion.
+\end{lemma}
+
+\begin{theorem}[Taking the limit]
+
+\end{theorem}
+\begin{proof}
+  $X_t^{(N)} - X_t^{(N-1)} = \sum_{k = 1}^{2^{N-1}} \underbrace{\epsilon_{N,k}}_{\mathcal N(0, 1)} S_{N, k}(t)$, $S_{N, k}$ is the Schauder functions.
+  \begin{align*}
+    \sum_N \sup |X_t^{(N)} - X_t^{(N-1)}|
+  &= \sum_N \sup |\sum_{k = 1}^{2^{N-1}} \epsilon_{N,k} S_{N, k}(t)|
+    \\&\le \sum_N  \max \{ |\epsilon_{N,k}| 2^{-\frac{n+1}{2}}, k=1\ldots2^{n-1}-1 \}
+  \end{align*}
+
+  \begin{align*}
+    \mathbb{P}(\max_{k=1\ldots2^{n-1}-1} |\epsilon_k| > \frac{1}{n^2})
+    &\le 2^{n-1} \mathbb{P}(|\epsilon| > \frac{2^{\frac{n-1}2}}{n^2}
+    \\& \underbrace{\le}_{\text{markov}} \underbrace{O^*}_{\text{up to a polynomial}}(2^{-\frac n2})
+  \end{align*}
+  \textbf{Borel-Cantelli:} $\mathbb P( \sup |X^n - X^{n-1}| \le \frac1 {n^2} \text{eventually}) = 1$
+  
+  $\Rightarrow \sum \sup |X^n - X^{n-1}| < \infty$
+  
+    Using the lemma $X_t^{(N)}$ converges uniformly to a continuous process.
+  %$$X_t^{(N)} = \epsilon_{0,0} S_{0,0}(t) + \sum_{n=1}^N \sum_{k=1}^{2^{n-1}} \epsilon_{n,k} S_{n,k}(t)$$
+  
+  In addition, $X_t^{(N)}$ statisfies the properties of BM on the grod $\{ k. 2^{-N} \}$. Since $X_t^N$ is constant eventually on dyadic rationals $g^*$, this properties are verified on $g^*$.
+\end{proof}
+
+\begin{lemma}[Uniform convergence]
+  Let $f^{i}$ a sequence of continuous functions on $[0, 1]$.
+  Suppose that $$ \sum_{n \ge 1 } \sup |f^{n} - f^{n-1}| < \infty$$
+  Then $\lim_n f^{n}(t) =: f(t)$ exists and $f$ is continuous.
+\end{lemma}
+\begin{proof}
+  $f^{n} = f^{0} + \underbrace{\sum f^k - f^{k-1}}_{\text{absolute convergence}}$, so $f$ exists.
+  $$\sup |f - f^n| \le \sum_{k > n} \sup |f^k - f^{k-1}| \rightarrow 0$$.
+  We have uniform convergence of continuous functions, therefore $f$ is continuous.
+\end{proof}
+\end{document}
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

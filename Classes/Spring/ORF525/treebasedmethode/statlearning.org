@@ -1,0 +1,241 @@
+#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="./org-style.css" />
+#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="./special-block.css" />
+#+latex_header: \usepackage{amsthm}
+#+latex_header: \newtheorem{theorem}{Theorem}
+#+latex_header: \newtheorem{definition}{Definition}
+#+latex_header: \newtheorem{algorithm}{Algorithm}
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+#+TITLE: Stat Learning Theory
+
+* Concentration
+  
+    $$P(|f(X_1, \ldots, X_n) - E[f(X_1, \ldots, X_n)]| > t) \le C_1 e^{-nt^2}$$
+
+    Hoeffding's inequality
+  #+BEGIN_theorem
+$X_1, \ldots X_n$ iid, such that:
+- $E[X_i] = \mu$
+- $a_i \le X_i \le b_i$
+Then for all t > 0
+
+\begin{align}
+\mathbb{P} \left(\overline X - \mathrm{E}\left [\overline X \right] \geq t \right) &\leq \exp \left(-\frac{2n^2t^2}{\sum_{i=1}^n (b_i - a_i)^2} \right) \\
+\mathbb{P} \left(\left |\overline X - \mathrm{E}\left [\overline X \right] \right | \geq t \right) &\leq 2\exp \left(-\frac{2n^2t^2}{\sum_{i=1}^n(b_i - a_i)^2} \right)
+\end{align}
+  #+END_theorem
+
+
+  McDiarmid's Inequqality:
+
+  
+  #+BEGIN_theorem 
+  Let $X_1, \ldots, X_n$ be indepedent RVs.
+  Suppose
+  $$\sup_{x_1,x_2,\dots,x_n, \hat x_i} |f(x_1,x_2,\dots,x_n) - f(x_1,x_2,\dots,x_{i-1},\hat x_i, x_{i+1}, \dots, x_n)| \le c_i \qquad \text{for} \quad 1 \le i \le n$$
+
+  $$\Pr \left\{ |E[f(X_1, X_2, \dots, X_n)] - f(X_1, X_2, \dots, X_n)| \ge \varepsilon \right\} 
+\le 2 \exp \left( - \frac{2 \varepsilon^2}{\sum_{i=1}^n c_i^2} \right). \;$$
+  #+END_theorem
+
+
+Bernsten's Inequality
+#+BEGIN_theorem 
+$X_i$ independent, $|X_i| \le C$, $E[X_i] = \mu$, $\sigma^2 = \frac1n \sum_i Var(X_i)$
+Then:
+$$P(|\bar X_n - \mu| > t) \le 2 e^{-\frac{nt^2}{2\sigma^2  +\frac23 Ct}}$$
+#+END_theorem
+
+
+
+Bernsten's Inequality with moment condition
+#+BEGIN_theorem
+1.  Let $X_1 \ldots X_n$ be independent zero-mean random variables. Suppose that $|X_i| \le M$ almost surely, for all $i$. Then for all $t > 0$
+
+$$\mathbf{P} \left (\sum_{i=1}^n X_i > t \right ) \leq \exp \left ( -\frac{\tfrac{1}{2} t^2}{\sum \mathbf{E} \left[X_j^2 \right ]+\tfrac{1}{3} Mt} \right )$$
+
+2. Let $X_1 \ldots X_n$ be independent random variables. Suppose that for some positive real $L$ and every integer $k$
+
+$$ \mathbf{E} \left [|X_i^k|\right ] \leq \tfrac{1}{2} \mathbf{E} \left[X_i^2\right] L^{k-2} k!$$
+
+Then
+
+$$\mathbf{P} \left ( \sum_{i=1}^n X_i \geq 2 t \sqrt{\sum \mathbf{E} \left [ X_i^2 \right ]} \right ) < \exp (-t^2), \qquad \text{for } 0 < t \leq \tfrac{1}{2L}\sqrt{\sum \mathbf{E} \left[X_j^2\right ]}. $$
+
+3. Let $X_1 \ldots X_n$ be independent random variables. Suppose that
+
+$$ \mathbf{E} \left[|X_i^k|\right ] \leq \frac{k!}{4!} \left(\frac{L}{5}\right)^{k-4}$$
+
+for all integer $k$.  Denote
+
+$$ A_k = \sum \mathbf{E} \left [ X_i^k\right ]$$
+
+Then,
+
+$$\mathbf{P} \left( \left| \sum_{j=1}^n X_j - \frac{A_3 t^2}{3A_2} \right|\geq \sqrt{2A_2} \, t \left[ 1 + \frac{A_4 t^2}{6 A_2^2} \right] \right ) < 2 \exp (- t^2), \qquad \text{for } 0 < t \leq \frac{5 \sqrt{2A_2}}{4L}$$
+
+4. Bernstein also proved generalizations of the inequalities above to weakly dependent random variables. For example, inequality (2) can be extended as follows. Let $X_1 \ldots X_n$ be possibly non-independent random variables. Suppose that for all integer $i > 0$
+
+\begin{align}
+\mathbf{E} \left [ X_i | X_1, \dots, X_{i-1} \right ] &= 0, \\
+\mathbf{E} \left [ X_i^2 | X_1, \dots, X_{i-1} \right ] &\leq R_i \mathbf{E} \left [ X_i^2 \right ], \\
+\mathbf{E} \left [ X_i^k | X_1, \dots, X_{i-1} \right ] &\leq  \tfrac{1}{2} \mathbf{E} \left[ X_i^2 | X_1, \dots, X_{i-1} \right ] L^{k-2} k!
+\end{align}
+
+Then
+
+$$\mathbf{P} \left( \sum_{i=1}^n X_i \geq 2 t \sqrt{\sum_{i=1}^n R_i \mathbf{E}\left [ X_i^2 \right ]} \right) < \exp(-t^2), \qquad \text{for } 0 < t \leq \tfrac{1}{2L} \sqrt{\sum_{i=1}^n R_i \mathbf{E} \left [X_i^2 \right ]}$$
+--------------------------------
+$X_i$ independent, $|X_i| \le C$, $E[X_i] = \mu$, $E[|X_i|^m] \le v_i \frac{M}{m!}$ $\sigma^2 = \frac1n \sum_i v_i$
+
+Then
+$$P(|\bar X_n - \mu| > t) \le 2 e^{-\frac{nt^2}{2\sigma^2  +2 M t}}$$
+#+END_theorem
+
+
+** Uniform Law of Large numbers
+   
+#+BEGIN_DEFINITION 
+Empirical process
+$$G_n := \sqrt n (P_n - P)$$
+$$G_n f := \sqrt n (P_n - P)f$$
+
+$\sup_{f \in \mathcal F} |R(f) - \hat R(f)| := \frac1{\sqrt n} \sup_{f \in \mathcal F} |G_n(f)|$
+#+END_DEFINITION
+
+
+Glivenko Cantelli Class
+#+BEGIN_DEFINITION 
+$\mathcal F$ is a Glivenko-Canteli (GC) class for $P$ if:
+
+$\frac1{\sqrt n} \sup_{f \in \mathcal F} |G_nf| \overset{P}{\rightarrow} 0$
+
+If
+$\frac1{\sqrt n} \sup_{f \in \mathcal F} |G_nf| \overset{as}{\rightarrow} 0$
+$\mathcal F$ is strong GC
+#+END_DEFINITION
+
+Glivenko-Cantelly Theorem
+#+BEGIN_DEFINITION
+$$||F_n - F||_{\infty} = \sup_t |F_n(t) - F(t)| \overset{as}\rightarrow 0$$
+#+END_DEFINITION
+
+
+- Concentration
+- Symmetrization
+- Restriction (Today)
+
+Define the finite sample restriction on $X_1\ldots X_n$:
+$\mathcal F(X_{1:n}) := \{ (f(X_1), \ldots f(X_n))\}$
+
+
+$A = \mathcal F(X_{1:n}) = \{1_{X_{(1) \le t}, \ldots, 1_{X_{(n)} \le t}}, t \}$
+
+Finite class Lemma:
+#+BEGIN_LEMMA 
+$R^2 = \frac1n \max_{a \in A} |a|_2^2$
+$$E\sup_{a \in A} \frac1n |\sum_{i=1}^n \varepsilon_i a_i| = E\sup_{a \in A \cup -A} \frac1n \sum_{i=1}^n \varepsilon_i a_i \le \sqrt{\frac{2R^2\log(2|A|)}n}$$
+#+END_LEMMA
+
+
+
+#+BEGIN_DEFINITION 
+Growth function:
+$$\Pi_{\mathcal F}(n) = \max_{x_1\ldots x_n \in \chi} |\mathcal F(x_{1:n})|$$
+#+END_DEFINITION
+
+Finite class lemma
+#+BEGIN_LEMMA 
+For $f \in \mathcal F$ satisfying $\sup_{x \in chi} |f(x)| \le 1$
+$$E\sup_{f \in \mathcal F} |R_n(f)| \le E \sqrt{\frac{2\log | \mathcal F(X_{1:n}) \cup - \mathcal F(X_{1:n})|}n} \le \sqrt{\frac{2\log(2\Pi_{\mathcal F}(n))}n}$$
+
+#+END_LEMMA
+
+
+
+
+#+BEGIN_DEFINITION 
+VC-dim
+$$d_{vc}(\mathcal F) := \max \{k, \Pi_{\mathcal F}(k) = 2^k\}$$
+#+END_DEFINITION
+
+#+BEGIN_THEOREM 
+If $$n \ge d := d_{VC}(\mathcal F)$$
+$$\Pi_{\mathcal F}(n) \le \sum_{i=0}^d {n \choose i} \le (\frac{en}{d})^d$$
+#+END_THEOREM
+
+
+** Proof Sauer's Lemma
+- The VC-dimension never increases. (Consider a set that is shattered
+after shifting a column. If the set does not include the column, it was
+certainly shattered before shifting. If it does include the column, we
+need to show that the set was shattered before. Suppose that an entry
+was shifted down to a zero. The 1s that remain in the column are
+there because there was a row before shifting that is identical but for
+a 0 in that column. Those 0s suffice for the shattering, and the newly
+shifted 0 is not needed for the shattering. But those 0s were present
+before shifting, so the set was shattered before.)
+- So no row has more than d 1s
+
+
+
+* Neural network
+$L_1$ Regularized NN with bounded fan-in
+
+$\mathcal F_{d, s, r} = \{ x \rightarrow sign(\theta^Tsx - \theta_0), |\theta|_0 \le s \}$
+$\mathcal F_{d, s} = \{ x \rightarrow \sum_{i=1}^k \theta_i f_i(x), k \ge 1, |\theta|_1 \le r, f_i \in  F_{d, s, r}\}$
+
+By Sauer lemma:
+$$\Pi_{\mathcal F_{d,s}}(n) \le {d \choose s} (\frac{en}{s+1})^{s+1}$$
+
+
+* Metric entropy
+
+  #+BEGIN_DEFINITION 
+  Pseudo metric:
+  - $d(x, x) = 0$
+  - $d(x, y) = d(y, x)$
+  - $d(x, z) \le d(x, y) + d(y, z)$
+  #+END_DEFINITION
+
+  #+BEGIN_DEFINITION 
+  - Coverage number
+  $N(\varepsilon, T, d) = \min\{ |\hat T| : \hat T \subset T, \forall t \exists \hat t d(t, \hat t) < \varepsilon \}$
+  - Metric Entroy: $\varepsilon \rightarrow \log N(\varepsilon, T, d)$
+  #+END_DEFINITION
+
+
+* Chaining
+
+  #+BEGIN_DEFINITION 
+  Chaining Rule:
+  $$E \sup_{f \in \mathcal F}  |R_n(f)| \le C E \int_0^{\infty} \sqrt{\frac{\log \mathcal N(\alpha, \mathcal F, dn)}{n}} d\alpha$$
+  #+END_DEFINITION
+
+
+Proof
+
+\begin{align*}
+E \sup_{f \in \mathcal F}  |R_n(f)|
+&= E \sup_{f \in \mathcal F}  |\sum \epsilon_i f(X_i)|
+\\&= E \sup_{f \in \mathcal F}  |\langle \epsilon, \sum \hat f_i - \hat f_{i+1} + f - \hat f_N \rangle|
+\\&\le E \sup_{f \in \mathcal F}  |\langle \epsilon, \sum \hat f_i - \hat f_{i+1}\rangle|  +|\langle \epsilon, f - \hat f_N \rangle|
+\\&\le E    \sum \sup_{f_i \in \mathcal F_i, f_{i+1} \in \mathcal F_{i+1}} |\langle \epsilon, \hat f_i - \hat f_{i+1}\rangle|  + \alpha
+\\&\le E    \sum \alpha_i \sqrt{\frac{2 \log2|F_i||F_{i+1}| }{n}}  + \alpha
+\\&\le C E    \sum (\alpha_{i+1}-\alpha_i)\sqrt{\frac{2 \log \mathcal N(\alpha_j, \mathcal F, d_n }{n}}  + \alpha_N
+\\&\le C E    \int_{\alpha_{N+1}}^{\alpha_0} \sqrt{\frac{2 \log \mathcal N(\alpha, \mathcal F, d_n }{n}} d\alpha + \alpha_N
+\\&\le C E    \int_0^{\infty} \sqrt{\frac{2 \log \mathcal N(\alpha, \mathcal F, d_n }{n}} d\alpha
+\end{align*}
+
+
+
+- What is the problem? Business, science?
+- Why is it interesting?
+- What is the data (variable, samples size)
+- Type of method to apply to do the analysis
+- Type of software (not lot of details)
+- Talking to the CEO : profitable, cool, important
+- What I got ? Why is it intersting?
+  
+
+
+
