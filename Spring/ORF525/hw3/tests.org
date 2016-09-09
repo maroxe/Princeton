@@ -1,9 +1,0 @@
-#+name: loaddata
-#+BEGIN_SRC R  :session 
-cat("hello")
-#+END_SRC
-
-#+RESULTS: loaddata
-
-
-
