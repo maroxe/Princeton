@@ -1,0 +1,137 @@
+% resume.tex
+% 
+% (c) 2002 Matthew Boedicker <mboedick@mboedick.org> (original author) http://mboedick.org
+% (c) 2003-2007 David J. Grant <davidgrant-at-gmail.com> http://www.davidgrant.ca
+% 
+% This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/ or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+
+\documentclass[letterpaper,11pt]{article}
+
+% -----------------------------------------------------------
+% Margin setup
+
+\setlength{\voffset}{0.1in}
+\setlength{\paperwidth}{8.5in}
+\setlength{\paperheight}{11in}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{11in}
+\setlength{\textheight}{9.5in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\textwidth}{7in}
+\setlength{\topskip}{0in}
+\setlength{\oddsidemargin}{-0.25in}
+\setlength{\evensidemargin}{-0.25in}
+% -----------------------------------------------------------
+% \usepackage{fullpage}
+% \usepackage{shading}
+\usepackage{xcolor}
+\usepackage{mdframed}
+% \textheight=9.0in
+\pagestyle{empty}
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% -----------------------------------------------------------
+% Custom commands
+\newcommand{\resitem}[1]{\item #1 \vspace{-2pt}}
+% \newcommand{\resheading}[1]{{\large \parashade[.9]{sharpcorners}{\textbf{#1 \vphantom{p\^{E}}}}}}
+\newcommand{\resheading}[1]{\begin{mdframed}[backgroundcolor=blue!20] \bf{#1}  \end{mdframed}}
+\newcommand{\ressubheading}[4]{
+  \begin{tabular*}{6.5in}{l@{\extracolsep{\fill}}r}
+    \textbf{#1} & #2 \\
+    \textit{#3} & \textit{#4} \\
+  \end{tabular*}\vspace{-6pt}}
+% -----------------------------------------------------------
+
+
+\begin{document}
+
+\begin{tabular*}{7in}{l@{\extracolsep{\fill}}r}
+  \textbf{\Large Bachir El Khadir}  & 609-405-1273\\
+  Sherrerd Hall, 1 Charlton Street &  bkhadir@princeton.edu \\
+  Princeton University Princeton NJ 08544 & \\
+\end{tabular*}
+\\
+
+\vspace{0.1in}
+
+\resheading{Education}
+\begin{itemize}
+  \item
+  \ressubheading{Princeton University}{Princeton, NJ}{Ph.D., ORFE}{September 2015 - present}
+  \begin{itemize}
+    \resitem{Research interests: Polynomial optimization, applications of optimization to machine learning, relaxations of NP-hard problems}
+  \end{itemize}
+
+\item
+  \ressubheading{Ecole Polytechnique}{Paris}{M.A.Sc.}{September 2012 -  August 2015}
+  \begin{itemize}
+    \resitem{
+      Applied Mathematics and Computer Science and as key subjects studied. 
+      Relevant courses: Stochastic Models in Finance, Statistical Learning and Non parametric Estimation, Mathematical Aspects and Applications of Operations Research.}
+  \end{itemize}
+
+\item
+  \ressubheading{Moulay Youssef High School}{Rabat, Morocco}{Preparatory Classes}{2011-2012}
+  \begin{itemize}
+    \resitem{Studied for intensive preparation in Mathematics and Physics for the highly competitive entrance exams to the leading French engineering schools.}
+  \end{itemize}
+
+\end{itemize}
+
+\resheading{Work Experience}
+\begin{itemize}
+\item
+  \ressubheading{Susquehanna International Group}{PA}{Quant. Research  - Intern}{June 2016 - August 2016}
+  \begin{itemize}
+    \resitem{Worked on predicting short term change of stocks volatility.}
+  \end{itemize}
+
+\item 
+  \ressubheading{JPMorgan}{London}{Quant. Research}{May 2015 - Aug. 2016}
+  \begin{itemize}
+    \resitem{improve the performance of the pricing system by a factor of \bf{2.5}}.
+  \end{itemize}
+
+\item
+  \ressubheading{Infosys}{Hyderabad, India}{Software Engineer}{June 2014 - August 2014}
+  \begin{itemize}
+    \resitem{Developed a web security scanner that:
+      \begin{itemize}
+      \item Analyzes the content (DOM elements) of a web page and monitors HTTP traffic
+      \item Comes up with policies which can enhance the security of the application.
+      \end{itemize}
+    }
+  \end{itemize}
+\end{itemize}
+
+\resheading{Skills}
+\begin{itemize}
+  \item Finance Related Projects:
+  \begin{itemize}
+    \item Design of automated trading strategies using genetic algorithms
+    \item Study of optimal market making policies using Hawkes processes to simulate the limit order book.
+  \end{itemize}
+\end{itemize}
+
+\resheading{Skills}
+
+\begin{description}
+\item[Object oriented programming:] Python, C++, Matlab 
+\item[Statistics:] R
+\item[Database management:] MySQL 
+\end{description}
+
+\resheading{Interests}
+
+\begin{itemize}
+\item Head of IT staff of X-Projets (Junior enterprise of Ecole Polytechnique).  Worked closely with clients to analyze their requirements, their IT needs and their resources. Projects include: 
+\item Optimization of Odélice, a cooking App for iPhone: Content download is 250% faster.
+\item Implementation of the web interface of the crowd funding platform “Galile360”.
+\item Day trading on IG plateform (CFD, Forex)
+\item Attended London Model United Nations conference and acted as a delegate from Turkey: Collaborated with a working group to create a comprehensive paper on Middle East crisis.
+\end{itemize}
+
+\end{document}
