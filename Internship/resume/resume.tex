@@ -18,7 +18,7 @@
 \setlength{\textheight}{11in}
 \setlength{\textheight}{9.5in}
 \setlength{\topmargin}{-0.5in}
-\setlength{\textwidth}{7in}
+\setlength{\textwidth}{7.in}
 \setlength{\topskip}{0in}
 \setlength{\oddsidemargin}{-0.25in}
 \setlength{\evensidemargin}{-0.25in}
@@ -27,6 +27,7 @@
 % \usepackage{shading}
 \usepackage{xcolor}
 \usepackage{mdframed}
+\usepackage[inline]{enumitem}
 % \textheight=9.0in
 \pagestyle{empty}
 \raggedbottom
@@ -37,21 +38,24 @@
 % Custom commands
 \newcommand{\resitem}[1]{\item #1 \vspace{-2pt}}
 % \newcommand{\resheading}[1]{{\large \parashade[.9]{sharpcorners}{\textbf{#1 \vphantom{p\^{E}}}}}}
-\newcommand{\resheading}[1]{\begin{mdframed}[backgroundcolor=blue!20] \bf{#1}  \end{mdframed}}
+\newcommand{\resheading}[1]{\begin{mdframed}[backgroundcolor=gray!20] \bf{#1}  \end{mdframed}}
 \newcommand{\ressubheading}[4]{
   \begin{tabular*}{6.5in}{l@{\extracolsep{\fill}}r}
     \textbf{#1} & #2 \\
     \textit{#3} & \textit{#4} \\
   \end{tabular*}\vspace{-6pt}}
+\newcommand{\smallspacing}{\renewcommand{\baselinestretch}{0.5}}
+\newcommand{\normalspacing}{\renewcommand{\b2aselinestretch}{1.5}}
+
 % -----------------------------------------------------------
 
 
 \begin{document}
-
+\smallspacing
 \begin{tabular*}{7in}{l@{\extracolsep{\fill}}r}
-  \textbf{\Large Bachir El Khadir}  & 609-405-1273\\
+  \textbf{\Large Bachir El Khadir}  & +1-(609)-454-1273\\
   Sherrerd Hall, 1 Charlton Street &  bkhadir@princeton.edu \\
-  Princeton University Princeton NJ 08544 & \\
+  Princeton University, Princeton, NJ 08544 & \\
 \end{tabular*}
 \\
 
@@ -59,79 +63,70 @@
 
 \resheading{Education}
 \begin{itemize}
-  \item
-  \ressubheading{Princeton University}{Princeton, NJ}{Ph.D., ORFE}{September 2015 - present}
+\item
+  \ressubheading{Princeton University}{Princeton, NJ}{Ph.D., Operations Research and Financial Engineering (ORFE)}{September 2015 - Present}
   \begin{itemize}
-    \resitem{Research interests: Polynomial optimization, applications of optimization to machine learning, relaxations of NP-hard problems}
+    \resitem{Research interests: Polynomial Optimization, Applications of Optimization to Machine Learning, Relaxations of NP-hard Problems}
   \end{itemize}
 
 \item
-  \ressubheading{Ecole Polytechnique}{Paris}{M.A.Sc.}{September 2012 -  August 2015}
+  \ressubheading{Ecole Polytechnique}{Paris, France}{B.S and M.A.Sc. in Applied Mathematics and Computer Science}{September 2012 -  August 2015}
   \begin{itemize}
     \resitem{
-      Applied Mathematics and Computer Science and as key subjects studied. 
-      Relevant courses: Stochastic Models in Finance, Statistical Learning and Non parametric Estimation, Mathematical Aspects and Applications of Operations Research.}
+      Relevant courses: Stochastic Models in Finance, Statistical Learning and Non parametric Estimation, Mathematical Aspects and Applications of Operations Research}
   \end{itemize}
 
-\item
-  \ressubheading{Moulay Youssef High School}{Rabat, Morocco}{Preparatory Classes}{2011-2012}
-  \begin{itemize}
-    \resitem{Studied for intensive preparation in Mathematics and Physics for the highly competitive entrance exams to the leading French engineering schools.}
-  \end{itemize}
+  % \item
+  %   \ressubheading{Moulay Youssef High School}{Rabat, Morocco}{Preparatory Classes}{Septenber 2011- August 2012}
+  %   \begin{itemize}
+  %     \resitem{Studied for intensive preparation in Mathematics and Physics for the entrance exams to the leading French engineering schools.}
+  %   \end{itemize}
 
 \end{itemize}
 
 \resheading{Work Experience}
 \begin{itemize}
 \item
-  \ressubheading{Susquehanna International Group}{PA}{Quant. Research  - Intern}{June 2016 - August 2016}
+  \ressubheading{Susquehanna International Group}{Philadelphia, PA}{Quant. Research  - Intern}{June 2016 - August 2016}
   \begin{itemize}
-    \resitem{Worked on predicting short term change of stocks volatility.}
+    \resitem{Collaborated with the Options Team to automate corrections to short term volatility predictions}
   \end{itemize}
-
-\item 
-  \ressubheading{JPMorgan}{London}{Quant. Research}{May 2015 - Aug. 2016}
+\item
+  \ressubheading{JPMorgan}{London, UK}{Quant. Research - Intern}{Mars 2015 - August 2015}
   \begin{itemize}
-    \resitem{improve the performance of the pricing system by a factor of \bf{2.5}}.
+    \resitem{Improved the accuracy of the Exotic Rates pricing system}
+    \resitem{Reduced the risk analysis software process time by a factor of \textbf{2.5}}
   \end{itemize}
-
 \item
   \ressubheading{Infosys}{Hyderabad, India}{Software Engineer}{June 2014 - August 2014}
   \begin{itemize}
-    \resitem{Developed a web security scanner that:
-      \begin{itemize}
-      \item Analyzes the content (DOM elements) of a web page and monitors HTTP traffic
-      \item Comes up with policies which can enhance the security of the application.
-      \end{itemize}
-    }
+    \resitem{Developed a web security scanner that analyzes the content (DOM elements) of a web page and monitors HTTP traffic to enhance the security against XSS and CSRF attacks}
   \end{itemize}
+\end{itemize}
+
+\resheading{Finance Related Projects:}
+\begin{itemize}
+\item[-] Design of automated trading strategies using genetic algorithms\vspace{-5pt}
+\item[-] Study of optimal market making policies using Hawkes processes to simulate the limit order book
 \end{itemize}
 
 \resheading{Skills}
 \begin{itemize}
-  \item Finance Related Projects:
+\item[] \textbf{Programming:}  Python, C++, Matlab, R, SQL.
+  \vspace{-5pt}
+\item[] \textbf{Languages:} English (Highly proficient), French (Bilingual),  Arabic (Bilingual)
+\end{itemize}
+
+\resheading{Extracurricular Activities}
+
+\begin{itemize}
+\item Head of IT staff of X-Projets (Junior enterprise of Ecole Polytechnique):\vspace{-5pt}
   \begin{itemize}
-    \item Design of automated trading strategies using genetic algorithms
-    \item Study of optimal market making policies using Hawkes processes to simulate the limit order book.
+  \item Optimized ``Odelice'', a cooking App for iPhone: Use a cache system to make Content download \textbf{3 times} faster
+  \item Implemented of the web interface of the crowd funding platform ``Galile360''
   \end{itemize}
-\end{itemize}
-
-\resheading{Skills}
-
-\begin{description}
-\item[Object oriented programming:] Python, C++, Matlab 
-\item[Statistics:] R
-\item[Database management:] MySQL 
-\end{description}
-
-\resheading{Interests}
-
-\begin{itemize}
-\item Head of IT staff of X-Projets (Junior enterprise of Ecole Polytechnique).  Worked closely with clients to analyze their requirements, their IT needs and their resources. Projects include: 
-\item Optimization of Odélice, a cooking App for iPhone: Content download is 250% faster.
-\item Implementation of the web interface of the crowd funding platform “Galile360”.
 \item Day trading on IG plateform (CFD, Forex)
-\item Attended London Model United Nations conference and acted as a delegate from Turkey: Collaborated with a working group to create a comprehensive paper on Middle East crisis.
+\item Attended London Model United Nations conference and acted as a delegate from Turkey: Collaborated with a working group to create a comprehensive paper on Middle East crisis
 \end{itemize}
 
 \end{document}
