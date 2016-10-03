@@ -1,0 +1,229 @@
+# -*- mode: org; org-confirm-babel-evaluate: nil; -*-
+
+#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="../../css/org-style.css" />
+#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
+
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t broken-links:nil c:nil creator:nil
+#+OPTIONS: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+OPTIONS: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
+#+OPTIONS: timestamp:t title:t toc:t todo:t |:t
+
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 24.5.1 (Org mode )
+
+
+#+LATEX_HEADER:  \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{amsfonts}
+
+#+LATEX_HEADER: \newcommand{\Problem}[1]{\subsection*{Problem #1}}
+#+LATEX_HEADER: \newcommand{\Q}[1]{\subsubsection*{Q.#1}}
+#+LATEX_HEADER: \newcommand{\union}[1]{\underset{#1}{\cup} }
+#+LATEX_HEADER: \newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+#+LATEX_HEADER: \newcommand{\inter}[1]{\underset{#1}{\cap} }
+#+LATEX_HEADER: \newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+#+LATEX_HEADER: \newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+#+LATEX_HEADER: \newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+#+LATEX_HEADER: \DeclareMathOperator{\cov}{cov}
+#+LATEX_HEADER: \DeclareMathOperator{\var}{var}
+
+
+#+TITLE: Problem set 1, ORF550
+#+AUTHOR: Bachir El khadir
+
+
+* Prob 2.1
+
+  Let $f(X_1, \ldots X_n) =  ||X_1 + \ldots X_n||_B$
+  
+  By triangular inequality:
+  $$D_i f(X_1, \ldots, X_n) = \sup_{Z, Z'}   ||X_1+  \ldots Z \ldots + X_n|| - ||X_1+  \ldots Z' \ldots + X_n|| \le 2C$$
+  
+  \begin{align*}
+  \var(||\sum_i X_i ||_B)
+  &\le \frac14 E[\sum_j D_j (f(X))^2]
+  \\&\le nC^2
+  \end{align*}
+
+  We conclude by dividing both sides by $n^2$.
+  
+* Prob 2.2
+  
+** Notations:
+- For a vector $v \in \mathbb R^n$, let $v_{-i} = (v_1 ,\ldots, v_{i-1} ,\ldots, v_{i+1} ,\ldots, v_n)$
+- $$f(\varepsilon) = \sup_{t \in T} \langle \varepsilon, t \rangle$$
+- Let $(t^{(n)}(\varepsilon))_n$ be a sequence in $T$ that verifies $\langle t^{(n)}(\varepsilon), \varepsilon \rangle \rightarrow f(\varepsilon)$
+- Let $\varepsilon^- = \arg\min_{\varepsilon'_j = \varepsilon_j \forall j\ne i} f(\varepsilon')$ 
+
+
+We have that:
+  
+\begin{align*}
+D_i f(\varepsilon)
+&= f(\varepsilon) - \inf_{\varepsilon_i} \sup_{t \in T} \langle \varepsilon, t \rangle
+\\&= \sup_{t \in T} \langle \varepsilon, t \rangle -  \sup_{t \in T} \langle \varepsilon^{-}, t \rangle
+\\&= \lim_n \langle \varepsilon, t^{(n)} \rangle -  \sup_{t \in T} \langle \varepsilon^{-}, t \rangle
+\\&\le \lim_n \langle \varepsilon - \varepsilon^{-}, t^{(n)} \rangle 
+\\&\le \lim_n 2 |t^{(n)}_i (\varepsilon)|
+\end{align*}
+
+
+So:
+
+  \begin{align*}
+  \var(f(\varepsilon))
+  &\le  \sum_j E[(D_j f(\varepsilon))^2]
+  \\&\le 4 \lim_n \sum_j E[(t_i^{(n)}(\varepsilon_i))^2]
+  \\&\le 4 \sup_t \sum_j t_j^2
+  \end{align*}
+
+
+* Prob 2.4
+  
+  Let $f(X_1, \ldots, X_k) = X_{(k)}$
+
+  - If $X_i \le X_{(k+1)}$, then  $D_i^{-}f(X) = 0$
+  - If $X_i \ge X_{(k)}$, then $D_i^{-}f(X) \le X_{(k)} - X_{(k+1)}$
+
+    
+  $$Var(X_{(k)}) \le E[\sum_i (D_i^{-} f(X))^2] \le E[ \# \{i, X_i \ge X_{(k)} \} (X_{(k) - X_{(k+1)}})^2] \le kE[(X_{(k) - X_{(k+1)}})^2]$$
+  Notice that the result stays the same if we apply an affine transformation to the $X_i$.
+  
+  If $k > n/2$, we replace all $X_i$ by $-X_i$, so that their order is inversed, and we get the second result.
+  
+  
+* Prob 2.5
+
+  a.
+
+  $$g(y) - g(x) \ge g'(x)(y-x) \iff f(1) - f(0) \ge f'(0)$$ Where $f(t) = g(x + t(y-x))$ is also convex.
+  It is enough to prove the result for $x = 0, y = 1$
+  
+  Let $z \in (0, 1)$, then by convexity:
+  
+  $$f(z) = f(0(1-z) + 1z) \le (1-z)f(0) + zf(1)$$
+  So
+  $$\frac{f(z) - f(0)}{z} \le f(1) - f(0)$$
+  Take $z \rightarrow 0$ to get the result
+
+  b.
+  \begin{align*}
+  D_i f(x)
+  &\le \sup_{z, z'} f(x_1, \ldots, z, \ldots x_n) - f(x_1, \ldots, z', \ldots x_n)
+  \\&\le \sup_{z, z'} f(x_1, \ldots, z, \ldots x_n) - f(x_1, \ldots, z', \ldots x_n)
+  \end{align*}
+  
+
+  c.
+
+  For all $u \in \mathbb R^n$:
+  $$\langle \nabla f(x), u \rangle \le f(x+u) - f(x) \le L ||u||$$, which implies $||\nabla f(x)|| \le L$
+  We conclude by using the inequality in b.
+
+  
+
+* Prob 2.8
+
+  a.
+  Let's assume $f$ is differentiable, if not, we can approximate by a sequence of differentiable functions.
+  Let's prove that $||\nabla f(x)|| \le L$
+
+  $$f(x+u) - f(x) = \nabla f(x).u + o_{||u|| \rightarrow 0}(||u||)$$
+
+  $$||\nabla f(x).\frac{u}{||u||} + o(1)|| \le L$$
+
+  So
+  $$||\nabla f(x).\frac{u}{||u||}|| \le L$$
+
+  Which means that $$||\nabla f(x)|| \le L$$
+  
+  
+  We conclude by invoking Corollary 2.27 (Gaussian Poincare inequality).
+
+  
+  b.
+  
+  Let $f(x) = max_i x_i$, then $f$ is 1-lipschiz. Indeed:
+  - For $x, y \in \mathbb R^n$, let $i_0 = \arg \max_i x_i, j_0 = \arg \max_j y_j$.
+  - $f(x) - f(y) = max_i x_i - max_i y_i \le x_i^* - y_j^* \le x_{i_0} - y_{i_0} \le max_i x_i - y_i \le ||x - y||$.
+  - $g: y \rightarrow f(\Sigma^{-\frac12}y)$, is also $L-$ lipschitz, with $L = ||\Sigma^{-\frac12}||_{\infty} = \max \var X_i$, because: $|g(x) - g(y)| \le ||\Sigma^{-\frac12}(x-y)|| \le ||\Sigma^{-\frac12}|| \; ||(x-y)||$
+  Now write $X = \Sigma^{-\frac12}Y$ like the question suggests, then the result is immediate by applying a.
+
+  
+  c.
+  
+  Define $Y^{(k)} = (Y_j^{(k)})_j := (\frac1{\sqrt k} \sum_{i=1}^k \varepsilon_{ji})_j \in [-\sqrt k, \sqrt k]^n$, then
+
+  $D_j^{(-)} f(Y^{(k)}) = f(Y_1, \ldots, Y_n) - \inf$
+  
+  
+  
+* Prob 2.10
+  a.
+  - $Z_t$ is markov because the process that replaces the value of $Z^i_t$ depend only on the current value of $Z_t$ and not its history.
+  - $\mu$ is stationary by construction.
+  
+  b.
+  Let's calculate $P_tf = E[f(Z_t) | Z_0]$
+  
+  Since the process is Markov, $f(Z_t)$ depends only on the last jump of the Poisson processes and the value taking by $Z_t$ at those times..
+  Denote by $\tau(i)$ the time of the last jump of $N_t^{(i)}$, and by convention $\tau(i) = 0$ if there were no jumps. With probability one, all $\tau(i)$ that are non zero are different.
+
+  Denote by $\sigma(I)$ the set of permutation of the set $I$.
+  \begin{align*}
+  E[f(Z_t) | Z_0]
+  &= \sum_{I \subset [n]} \sum_{k=1}^{|I|} P( )
+  
+  \end{align*}
+  \begin{align*}
+  P_tf(z) &= E[f(Z_t) | Z_0 = z]
+  \\&= \sum_{I \subseteq [n]} \mathbb P\left(\tau(i) > 0 \iff i \in I\right) \sum_{\sigma \in \sigma(I)} \mathbb P(\tau_{\sigma(1)} < \ldots < \tau_{\sigma(|I|)})  \int f(z_1, \ldots z_n) \prod_{j=1}^{|I|} \mu_{\sigma(i)}(dz_{\sigma(i)} | z_{\sigma(1), \ldots \sigma(n)})
+  \\&= \sum_{I \subseteq [n]}  (1-e^{-t})^{|I|}e^{-t(n-|I|)} \frac1{|I|!} \sum_{\sigma \in \sigma(I)}   \int f(z_1, \ldots z_n) \prod_{j=1}^{|I|} \mu_{\sigma(i)}(dz_{\sigma(i)} | z_{\sigma(1), \ldots \sigma(n)})
+  \end{align*}
+
+    
+  Thus the generator has the same form as in the independent case, following the same calculations in the notes, we prove that $\mathcal E(f, g) = \sum \int \delta_i f \delta_i g d\mu$, in particular it is symmetric, and the process is reversible.
+
+  c.
+  \begin{align*}
+  \Delta_j \int f d\mu_i
+  &= \Delta_j \{f(x_i = 1) \mathbb P(X_i = 1) + f(x_i = -1) \mathbb P(X_i = -1)\}
+  \\& =  \max_x |f(x_i = 1, x_j = 1) - f(x_i=1, x_j = -1)| \mathbb P(X_i = 1) + \max_x|f(x_i = -1, x_j = 1) - f(x_i = -1, x_j = -1)| \mathbb P(X_i = -1)
+  \end{align*}
+
+  d.
+
+  Notice that:
+  - $\Delta_i \int f d\mu_i = 0$
+  - $\mathcal L f = \sum \int f(x) \mu_i(dx_i | x) - nf(x)$
+  - $\Delta_i \alpha f = |\alpha| \Delta_i f$
+  - By triangular inequality: $\Delta_j(f + g) \le \Delta_j f + \Delta_j g$
+
+
+  \begin{align*}
+  \Delta_j(f + \frac tm \mathcal L f)
+  &= \Delta_j\{ (1 - \frac{nt}m) f + \frac tm \sum_i \int f \mu_i\}
+  \\&\le |1 - \frac{nt}m| \Delta_j f + \frac tm \sum_i C_{ij} \Delta_i f
+  \\&\le (1 - \frac{nt}m) \Delta_j f + \frac tm \sum_i C_{ij} \Delta_i f
+  &\text{(For $m$ large enough)}
+  \end{align*}
+
+  e.
+
+  $$\Delta (I+\frac tm \mathcal L)^{m} f \le \Delta (I+\frac tm \mathcal L)
+  (I+\frac tm \mathcal L)^{m-1}f \le \Delta (I+\frac tm \mathcal L)^{m-1}f (I - t(I-C)/m) \le \Delta f (I - t(I-C)/m)^m$$
+
+  Taking $m$ to infinity:
+
+  $$\Delta e^{t \mathcal L } f  \le \Delta f e^{-t(I-C)}$$
+
+  e.g.
+  
+  $$\Delta P_t f  \le \Delta f e^{-t(I-C)}$$
+  
+  f.
+  $\mathcal E(P_t f, P_t f) = \sum \int (\delta_i f)^2 d\mu \le \sum (\Delta_i f)^2 \le ||\Delta f e^{-t(I-C)}||^2 \le ||e^{-t(I-C)}||^2 \underbrace{||\Delta f||^2}_{\kappa(f)}$
+
+  notice that $||e^{-t(I-C)}|| = \sup_{\lambda \in \operatorname{spec}[-t(I-C)]} e^{-t\lambda} = e^{-t/(\frac1{1-||C||})}$, which concludes the proof.
