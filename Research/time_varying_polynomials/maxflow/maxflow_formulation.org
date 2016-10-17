@@ -1,0 +1,50 @@
+- $s \approx 1$,  $t \approx N$.
+- $b_{i,j}(t)$ capacity of the edge $i \rightarrow j$ at time t.
+- $f_{i,j}(t)$ the flow from node $i$ to $j$ at time $t$.
+
+$f_{i,j}(t) \approx \begin{pmatrix}f_{i,j}(t_0)\\\vdots\\f_{i,j}(t_d)\end{pmatrix} := \begin{pmatrix}f_{i,j,0}\\\vdots\\f_{i,j,d}\end{pmatrix}$
+
+
+
+
+\begin{equation*}
+\begin{aligned}
+& \text{maximize}
+& & \sum_j \sum_{l=0}^d f_{1,j,l} w_l \\
+& \text{subject to}\\
+&&& \sum_{j=1}^N f_{i,j,l} - f_{j,i,l} &=& 0                                                          & \forall l, \forall i \ne s, t &: (c_{i,l})\\
+&&& f_{i,j,l}                          &=& \langle A^{(l)}, (1-t_l) X_{ij} + (1+t_l) X'_{ij} \rangle  &\forall i,j,l &: (x_{ijl})\\
+&&& b_{i,j,l} - f_{i,j,l}              &=& \langle A^{(l)}, (1-t_l) Z_{ij} + (1+t_l) Z'_{ij} \rangle\ &\forall i,j,l &: (z_{ijl})\\
+&&& X_{ij}, X'_{ij}, Z_{ij}, Z'_{ij} \succeq 0\\
+\end{aligned}
+\end{equation*}
+
+
+\begin{equation*}
+\begin{aligned}
+L(f, X, X', Z', x, y, z)&= \sum_{j, l=0}^d f_{1,j,l} w_l
+\\&+ \sum_{il} 1_{i \ne s,t} c_{i,l} (\sum_{j=1}^N f_{i,j,l} - f_{j,i,l})
+\\&+ \sum_{ijl} f_{ijl} (z_{ijl} -x_{ijl})
+\\&- \sum_{ijl} b_{ijl} z_{ijl}
+\\&+ \sum_{ij}  \sum_l <X^{(l)}, ...>
+\\&= \sum_{ijl} f_{i,j,l} (1_{i \ne s,t} c_{i,l}   -  1_{j \ne s,t} c_{j,l} + z_{ijl} -x_{ijl} + 1_{i=s}w_l)
+\end{aligned}
+\end{equation*}
+
+
+\begin{equation*}
+\begin{aligned}
+& \text{min}
+& & -\sum_{i,j,l}  b_{ijl} z_{ijl}
+\\& \text{subject to}
+\\&&& \sum_l (1-t_l) A^{(l)} x_{ijl} \succeq 0
+\\&&& \sum_l (1+t_l) A^{(l)} x_{ijl} \succeq 0
+\\&&& \sum_l (1-t_l) A^{(l)} z_{ijl} \succeq 0
+\\&&& \sum_l (1+t_l) A^{(l)} z_{ijl} \succeq 0
+\\&&& 1_{i \ne s,t} c_{i,l}   -  1_{j \ne s,t} c_{j,l} + z_{ijl} -x_{ijl} + 1_{i = s} w_l = 0 &: f_{ijl}
+\end{aligned}
+\end{equation*}
+
+# \\&&&  c_{i,l} - c_{j,l} + z_{ijl} -x_{ijl} + w_l = 0 \; i, j \ne 1, N
+# \\&&&  -c_{j,l} + z_{1jl} -x_{1jl} + w_l = 0 \; j \ne 1, N
+# \\&&&  c_{i,l}  + z_{i1l} -x_{i1l} + w_l = 0 \; i \ne 1, N

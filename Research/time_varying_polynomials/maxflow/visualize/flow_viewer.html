@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>Tutorial 1: Getting Started</title>
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src= "https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.js"></script>
+       
+        <script src='cytoscape.js'></script>
+        <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-cose-bilkent/1.0.5/cytoscape-cose-bilkent.js"></script>
+        <script src="lagrange.js"></script>        
+        <script src="maxflow-data-py.js"></script>
+
+    </head>
+    <style>
+     #cy {
+         width: 50%;
+         height: 600px;
+         float: right;
+         background-color: #fffff8;
+     }
+    </style>
+    <body>
+        <div id="cy"></div>
+        <h1>Capacity S -> B</h1>
+        Source <input id="source" type="text"> Target <input id="target" type="text"> <button type="button" id="plot-button">plot</button>
+        <div id="flot-placeholder" style="width:50%;height:600px"></div>
+        
+    <div id="slider"></div>
+
+    <p>
+        <label for="time">t = </label>
+        <input type="text" id="time" readonly value="-1.00" style="border:0; color:#f6931f; font-weight:bold;">
+    </p>
+
+    <p>
+        <label for="flow">flow = </label>
+        <input type="text" id="flow" readonly value="0" style="border:0; color:#f6931f; font-weight:bold;">
+    </p>
+    
+    <div style="width:500px;" id="slider-range-min"></div>
+
+
+    <script src="flow.js"></script>
+
+
+    </body>
+</html>
+
