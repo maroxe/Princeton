@@ -1,0 +1,189 @@
+#+LATEX_HEADER:  \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{amsfonts}
+#+LATEX_HEADER: \newcommand{\Problem}[1]{\subsection*{Problem #1}}
+#+LATEX_HEADER: \newcommand{\Q}[1]{\subsubsection*{Q.#1}}
+#+LATEX_HEADER: \newcommand{\union}[1]{\underset{#1}{\cup} }
+#+LATEX_HEADER: \newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+#+LATEX_HEADER: \newcommand{\inter}[1]{\underset{#1}{\cap} }
+#+LATEX_HEADER: \newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+#+LATEX_HEADER: \newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+#+LATEX_HEADER: \newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+#+LATEX_HEADER: \DeclareMathOperator{\cov}{cov}
+#+LATEX_HEADER: \DeclareMathOperator{\var}{var}
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+
+#+OPTIONS: toc:nil h:1
+
+#+TITLE: Problem set 2, ORF550
+#+AUTHOR: Bachir El Khadir
+
+
+* Problem 2.11
+  a.
+  By polarization identity
+  $$\mathcal E(P_t f, P_t g) = \frac14 [\mathcal E(P_t (f+g), P_t (f+g)) - E(P_t (f-g), P_t (f-g))]$$
+  Since 
+  $$var_\mu(P_t f) = 2 \int_0^{\infty} \mathcal E(P_t f, P_t f) dt$$
+  
+
+  Taking the integral on both sides:
+  $$\int_0^{\infty} \mathcal E(P_t f, P_t g) dt = \frac18 [var_\mu(f+g) -var_\mu(f-g)$$
+
+  e.g:
+
+  $$\int_0^{\infty} \mathcal E(P_t f, P_t g) dt = \frac12 cov_\mu(f, g)$$
+
+
+  b.
+  $cov_{\mu}(f, g) = \int_0^{\infty}$
+
+  c.
+  $dY_t = -Y_t dt + dB_t$
+
+  $Y_t$ is a reversible ergodic Markov process, with:
+  - Stationary measure $\mu = N(0, I)$
+  - Semi-group $P_t f (Y) = E[ f(e^{-t} Y + \sqrt{1-e^{-2t}} \epsilon)]$, $\epsilon \sim \mathcal N(0, I)$. $P_t f \ge 0$ when $f \ge 0$
+  - Generator $\mathcal E(f, g) = \mu <\nabla f, \nabla g>$
+    
+  Let  $f_x(Y) = f(\Sigma^{\frac 12} Y)$, so that :
+  - $\nabla f_x(Y) = \Sigma^{\frac12} \nabla f(X)$
+  - $\nabla P_t f_x(Y) = e^{-t} \Sigma^{\frac12} P_t \nabla f(X)$
+  - $f$ is coordinate-wise non-decreasing, so $\nabla f(X) \ge 0$, and therefore $P_t\nabla f(X)\ge 0$
+  - The same applies to $g$.
+  - $\Sigma \ge 0$, so $u'\Sigma u \ge 0$ whenever $u \ge 0$
+
+  \begin{align*}
+  cov(f(X), g(X))
+  &= cov(f_x(Y), g_x(Y))
+  \\&= \int_0^{\infty} \mathcal E(P_t  f_x, P_t  g_x) dt
+  \\&= \int_0^{\infty} E[\nabla P_t f_x(Y) .\nabla P_t g_x(Y) ] dt
+  \\&= \int_0^{\infty} e^{-2t} E[P_t \nabla f(X)' \Sigma P_t \nabla g(X)] dt
+  \\&\ge 0
+  \end{align*}
+  
+
+  
+
+* Problem 3.1
+  a. $X$ $\sigma^2$ sub-gaussian, so $\psi(\lambda) = \log E[e^{\lambda (X-E[X])}] \le \frac{\lambda^2\sigma^2}{2}$
+
+  Because $e^x \ge 1 + \frac12 x^2$ when $x \ge 0$, we have that:
+  $e^\frac{\lambda^2\sigma^2}{2} \ge E[e^{|\lambda (X-E[X])|}] \ge 1 + \frac12 E[(\lambda (X-E[X]))^2] \ge 1 + \frac{\lambda^2}2 var(X)$
+
+  
+  Which proves that $var(X) \le \frac{e^{\lambda^2/2 \sigma^2} - 1}{\lambda^2/2} \rightarrow_{\lambda} \sigma^2$
+  
+  b. $$\Phi(|X|) = \Phi(0) + \int_0^{|X|} \Phi'(t)  dt = \Phi(0) + \int_0^{\infty} \Phi'(t) 1_{t \le |X|} dt$$
+  We conclude by taking the expectation on both sides. The swapping of $E$ and $\int$ is justified by Fubini for non-negative functions.
+  
+  c.  $X$ $\sigma^2$ sub-gaussian, so:
+  $P(X \ge t) \wedge P(X \ge -t) \le e^{-t^2/2\sigma^2}$
+
+  $P(|X| \ge t) \le P(X \ge t) + P(X \ge -t) \le 2e^{-t^2/2\sigma^2}$
+
+  d.
+  \begin{align*}
+  E[e^{X^2/6\sigma^2}] &= 1 + \frac13 {\sigma^2} \int_0^\infty t e^{t^2/6\sigma^2} P(|X| \ge t) dt
+  \\&\le 1 + \frac23 {\sigma^2} \int_0^\infty t e^{t^2/6\sigma^2 - t^2/2\sigma^2 }  dt
+  \\&\le 1 + \int_0^\infty (2t) \frac13 {\sigma^2}  e^{- \frac{t^2}{3 \sigma^2 }}  dt
+  \\&\le 1 + \int_0^\infty \frac{d}{dt} -e^{- \frac{t^2}{3 \sigma^2}}  dt
+  \\&\le 2
+  \end{align*}
+
+  e.
+  Let's prove the two inequalities in the hint
+  \begin{equation} \label{eq:hint1}
+  e^u \le 1 + \frac12 u^2 e^{|u|}
+  \end{equation}
+  
+  - When $u \le 0$ , it is trivially verified.
+  - When $u \ge 0$, this is can be proven using the following:
+    
+  $e^u = 1 + u + \frac12 u^2 \sum_{k=0}^{\infty} u^k \underbrace{\frac2{(k+2)!}}_{\le \frac1{k!}} \le 1 + \frac{u^2}{2} e^u$
+
+
+
+  \begin{equation} \label{eq:hint2}
+  |\lambda x| \le \frac{a\lambda^2}2 + \frac{x^2}{2a}
+  \end{equation}
+
+  This follows from:
+  $$0 \le (\sqrt a\lambda + \frac1{\sqrt a} x)^2 =   \frac{a\lambda^2}2 + \frac{x^2}{2a} -   \lambda x$$
+  $$0 \le (\sqrt a\lambda - \frac1{\sqrt a} x)^2 =   \frac{a\lambda^2}2 + \frac{x^2}{2a} + \lambda x$$
+
+
+  We now show the $X$ is subgaussian:
+  \begin{align*}
+  E[e^{\lambda X}]
+  &\le 1 + \frac{\lambda^2}2 E[X^2e^{|\lambda X|}] & (\text{by} \ref{eq:hint1})
+  \\&\le 1 + \frac{\lambda^2}2 e^{a \frac{\lambda^2}2}  E[X^2e^{\frac{X^2}{2a}}]& (\text{by} \ref{eq:hint2})
+  \\&\le 1 + \frac{\lambda^2}{2b} e^{ \frac a2  \lambda^2}  E[e^{(\frac{1}{2a}+b) X^2}]& (\text{by} \ref{eq:hint3})
+  \\&\le 1 + \frac{\lambda^2}{1/a-1/(3\sigma^2)} e^{a \frac{\lambda^2}2}  & (\text{by} \ref{eq:hint2})
+  \\&\le 1 + \frac{\sigma^2 \lambda^2}{1/k-1/3} e^{k \sigma^2 \frac{\lambda^2}2}  & (a = k\sigma^2)
+  \\&\le 1 + 6 \sigma^2 \lambda^2 e^{ \sigma^2 \lambda^2}  & (k = 2)
+  \\&\le 1 + (e^{6 \sigma^2 \lambda^2}-1) e^{ \sigma^2 \lambda^2}
+  \\&\le 1 - e^{ \sigma^2 \lambda^2}  + e^{7 \sigma^2 \lambda^2}
+  \\&\le e^{ 7 \sigma^2 \lambda^2}
+  \end{align*}
+
+  f.
+  $$E[X^{2q}] = 2q \int_0^\infty t^{2q-1} P(|X| \ge t) dt \le 4q \int_0^\infty t^{2q - 1} e^{-t^2/2\sigma^2} dt = (4\sigma^2)^q q!$$
+  g.
+  
+  Fubini for non negative functions:
+  \begin{align*}
+  E[e^{X^2/8\sigma^2}]
+  &= \sum_q \frac{1}{((8\sigma^2)^q q!} E[X^{2q}]
+  \\&\le \sum_q \frac{1}{((8\sigma^2)^q q!} (4\sigma^2)^q q!
+  \\&\le \sum_q \frac{1}{2^q}
+  \\&= 2
+  \end{align*}
+
+* Problem 3.7
+
+  
+  $$f(\varepsilon_1, \ldots, \varepsilon_1) = \sup_{t \in T} \sum_k t_k \varepsilon_k$$
+  
+  McDiarmid's inequality gives the following variance proxy for the subguaussian property:
+  $$\sigma^2 = \frac14 \sum_k ||D_k f||^2_{\infty}$$
+  $$D_k f = \sup_{\varepsilon_k', \varepsilon_k} \sup_{t', t \in T} \sum_{i \ne k} \varepsilon_i (t_i - t_i') + \varepsilon_k t_k - \varepsilon_k' t_k' \ge \sup_{\varepsilon_k', \varepsilon_k} \sup_{t', t \in T} (\varepsilon_k - \varepsilon_k')t_k \ge 2 \sup t_k$$
+
+  So at best $||D_k f||_{\infty} = 4 \sup t_k^2$, and $$\sigma^2 = \sum_k \sup_{t \in T} t_k^2$$
+  
+  
+  Now, pick $T$ the set of vectors that have one component equal to 1, and the rest equal to 0, then
+  $$\sum_{k=1}^n \sup_T t_k^2 = n$$
+  
+  while
+  
+  $$\sup_T \sum_{k=1}^n  t_k^2 = 1$$
+  
+* Problem 3.8
+  $$f(X_1, \ldots, X_n) = \sup_{C \in \mathcal C} | \frac{\#\{ X_k \in C\}}n - \mu(C)| = \sup_{C \in \mathcal C} | \frac{\sum_i (1_{X_i \in C} - \mu(C))}n| = |\frac{\sum_{i \ne k} (1_{X_i \in C} - \mu(C))}n + \frac{1_{X_k \in C} - \mu(C)}n|$$
+
+  \begin{align*}
+  D_k f
+  &=  \sup_{X_k, X_k'} \left\{ \sup_C |\frac{\sum_{i \ne k} (1_{X_i \in C} - \mu(C))}n + \frac{1_{X_k \in C} - \mu(C)}n| - \sup_{C'} |\frac{\sum_{i \ne k} (1_{X_i \in C'} - \mu(C'))}n + \frac{1_{X_k' \in C'} - \mu(C')}n|\right\}
+  \\&\le  \sup_{X_k, X_k'}  \sup_C |\frac{\sum_{i \ne k} (1_{X_i \in C} - \mu(C))}n| + \sup_C |\frac{1_{X_k \in C} - \mu(C)}n| - \sup_{C'} |\frac{\sum_{i \ne k} (1_{X_i \in C'} - \mu(C'))}n| +  \sup_{C'} |\frac{1_{X_k' \in C'} - \mu(C')}n|
+  \\&\le \frac2n
+  \end{align*}
+  
+
+  $||D_k f||_{\infty} = 2 \frac{1n}$
+
+  as a result $Z_n$ is subgaussian with proxy variance $\sigma^2 \le \frac1n$, therefore ...
+  
+* Problem 3.10
+
+  
+* Problem 3.14 
+
+
+  \begin{align*}
+  D_i^- f
+  &= \sup_{\varepsilon_i'}f(\varepsilon_1, \ldots, \varepsilon_n) -  f(\varepsilon_1, \ldots, \varepsilon_n)
+  \\&= \sup_{\varepsilon_i'} \sup_{t \in T} \sum_{k\ne i} \varepsilon_k t_k + \varepsilon_i t_i - \sup_{t' \in T} \sum_{k\ne i} \varepsilon_k t_k' + \varepsilon_i' t_i'
+  \\&= \sup_{\varepsilon_i'} \sup_{t \in T} \sum_{k\ne i} \varepsilon_k t_k + \varepsilon_i t_i - \sup_{t' \in T} \sum_{k\ne i} \varepsilon_k t_k' + \varepsilon_i' t_i'
+  \end{align*}
+
+  
