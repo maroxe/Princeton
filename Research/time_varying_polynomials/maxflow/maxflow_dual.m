@@ -7,7 +7,7 @@ addpath(genpath('../yalmip'))
 sdpsettings('solver','mosek')
 addpath(genpath('~/mosek/mosek'))
 
-deg = 7;
+deg = 15;
 k = (deg-1) / 2;
 
 %%%%%%%
@@ -47,7 +47,7 @@ end
 
 
 cap = 10.*(t+1/2).*(t-.2).*(t+.3).*(t.^2-0.9)+5;
-cap2 = 3-t.^2;
+cap2 = 3-t.^2-t;
 cap3 = 3-t.^2+t;
 list_polynomials(1, :) = cap2;
 list_polynomials(2, :) = cap3;
@@ -129,7 +129,7 @@ ff = reshape(permute(cell2mat(f), [2 1 3]), [(number_nodes*number_nodes) (deg+1)
 %ezplot(c * t', [-1 1]);
 dlmwrite('visualize/flow-graph3', round(ff, 3));
 dlmwrite('visualize/cap-graph3', round(capacities', 3));
-
+dlmwrite('visualize/time-points', t');
 %f_s = cell2mat(squeeze( f(1, :, :)));
 %plot(t, f_s(2, :)');
  

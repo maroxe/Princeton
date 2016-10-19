@@ -1,5 +1,5 @@
 var color_edges = '#6FB1FC';
-var color_flow = 'green';
+var color_flow = 'red';
 
 graph = [
 [ 0, 5, 4, 4, 7, 0, 0, 0, 0],
@@ -13,16 +13,18 @@ graph = [
 [0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
+
 pos = [
-       [160.118, 204.622],
-       [349.777, 75.724],
-       [300.886, 290.007],
-       [194.432, 353.577],
-       [441.85, 190.343],
-       [498.42, 356.915],
-       [563.57, 478.236],
-       [536.43, 253.91], 
-       [711.86, 271.49]];
+    [160.11,204.62],
+    [372.50,47.94],
+    [300.88,290.00],
+    [169.18,393.97],
+    [431.74,156.67],
+    [431.92,379.64],
+    [513.06,501.80],
+    [497.71,243.80],
+    [795.18,247.92],
+];
 
 node_names = ['S', 'B', 'C', 'D', 'F', 'G', 'H', 'I', 'T'];
 n_nodes = node_names.length;
@@ -85,7 +87,7 @@ for(var i = 0, edge_counter = 0; i < n_nodes; i++) {
                     strength: 0,
                     color: color_flow,
                     opacity: 1.,
-                    label: '',
+                    label: ''
                 }
             });
 
@@ -97,8 +99,8 @@ for(var i = 0, edge_counter = 0; i < n_nodes; i++) {
                     target: 'n'+j,
                     strength: 0,
                     color: color_edges,
-                    opacity: 0.3,
-                    label: '',
+                    opacity: 0.5,
+                    label: ''
                 }
             });
         }
@@ -124,12 +126,12 @@ var update_graph = function (ui_value){
                 for(var j = 0; j < n_nodes; edge_counter++, j++) {
                     if(graph[i][j]){
 
-                        var cap = Math.round(graph_data[edge_counter][ui_value]);
-                        var flow = Math.round(flow_data[edge_counter][ui_value]);
+                        var cap = Math.round(graph_data[edge_counter][ui_value]*10)/10;
+                        var flow = Math.round(flow_data[edge_counter][ui_value]*10)/10;
                         var pct = Math.round(flow/cap*100) + '%';
                         pct = pct + '(' + flow + ','  + cap + ')';
-                        cy.$('#e'+edge_counter).data('strength', graph_data[edge_counter][ui_value]/2.);
-                        cy.$('#f'+edge_counter).data('strength', flow_data[edge_counter][ui_value]/2.);
+                        cy.$('#e'+edge_counter).data('strength', graph_data[edge_counter][ui_value]);
+                        cy.$('#f'+edge_counter).data('strength', flow_data[edge_counter][ui_value]);
                         p = 
                         cy.$('#f'+edge_counter).data('label', pct);
                         if(i == 0) flow += flow_data[edge_counter][ui_value];
@@ -137,26 +139,36 @@ var update_graph = function (ui_value){
                 }
 
         
-            var t = 2*(ui_value / graph_data[0].length)-1;
-            t = Math.round(t*100)/100;
-            $( "#time" ).val(t);
-            $( "#flow" ).val(flow);
+    t = time_points[ui_value];
+    $( "#time" ).val(t);
+    $( "#flow" ).val(flow);
 };
 
-update_graph(0);
 
-$( function() {
-    $( "#slider-range-min" ).slider({
-        range: "min",
-        value: 0,
-        min: 0,
-        max: graph_data[0].length-1,
-        slide: function( event, ui ) {
-            update_graph(ui.value);
-        }
-    });
 
-} );
+$( "#slider-range-min" ).slider({
+    range: "min",
+    value: 0,
+    min: 0,
+    max: graph_data[0].length-1,
+    slide: function( event, ui ) {
+        update_graph(ui.value);
+    }
+});
+
+// .each(function() {
+
+//     var opt = $(this).data().uiSlider.options;
+//     var vals = opt.max - opt.min;
+
+//     for (var i = 0; i <= vals; i++) {
+//         var el = $('<label>' + time_points[2*i] + '</label>').css('left', (2*i/vals*100) + '%');
+//         // Add the element inside #slider
+//         $("#slider-range-min").append(el);
+//     }
+// });
+
+
 
 // Plot
 function zip(arrays) {
@@ -165,22 +177,22 @@ function zip(arrays) {
     });
 }
 
-y = graph_data[1];
-x = Array.apply(null, y).map(function (_, i) {return 2*i/y.length-1;});
-zipxy = zip([x, y]);
 
-$('#plot-button').click(function() {
-    i = node_names.indexOf(($("#source").val()));
-    j = node_names.indexOf(($("#target").val()));
+plot_flow = function(S, T) {
+    i = node_names.indexOf(S);
+    j = node_names.indexOf(T);
     y = graph_data[i*n_nodes+j];
     y2 = flow_data[i*n_nodes+j];
-    x = Array.apply(null, y).map(function (_, i) {return 2*i/y.length-1;});
+    x = time_points;
+    
     zipxy = zip([x, y]);
     zipxy2 = zip([x, y2]);
     $.plot($("#flot-placeholder"), [ zipxy, zipxy2 ]);
-    //$.plot($("#flot-placeholder"), [ zipxy2 ]);
+};
+
+$('#plot-button').click(function() {
+    plot_flow($("#source").val(), $("#target").val());
 });
 
-$(document).ready(function () {
-    $.plot($("#flot-placeholder"), [ zipxy ]);
-});
+update_graph(0);
+plot_flow($("#source").val(), $("#target").val());
