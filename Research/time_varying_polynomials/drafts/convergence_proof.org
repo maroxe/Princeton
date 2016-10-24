@@ -1,0 +1,182 @@
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \newtheorem{theorem}{Theorem}[section]
+#+LATEX_HEADER: \newtheorem{definition}[theorem]{Definition}
+#+LATEX_HEADER: \newtheorem{lemma}[theorem]{Lemma}
+#+LATEX_HEADER: \newtheorem{proof}[theorem]{Proof}
+#+LATEX_HEADER: \newtheorem{hyp}[theorem]{Hypothesis}
+#+LATEX_HEADER: \newtheorem{idea}[theorem]{Idea}
+#+LATEX_HEADER: \newtheorem{remark}[theorem]{Remark}
+
+
+
+
+#+TITLE: Convergence of the optimal polynomial solution to the optimal
+#+AUTHOR: Bachir El Khadir
+#+EMAIL: bkhadir@princeton.edu
+
+* Notation
+
+  #+NAME: eqn:Pt
+  \begin{equation*}
+  \tag{$P_t$}
+  \begin{array}{ll@{}ll}
+  \text{maximize} & \langle c(t), x(t) \rangle & \\
+  \text{subject to}& A(t) x(t) = b(t)
+  \\& x(t) \ge 0
+  \end{array}
+  \end{equation*}
+
+
+  #+NAME: eqn:P
+  \begin{equation*}
+  \tag{$P$}
+  \begin{array}{ll@{}ll}
+  \text{maximize} & \int_0^1 \langle c(t), x(t) \rangle \mathrm dt & \\
+  \text{subject to}& A(t) x(t) = b(t)&&\forall t \in [0,1]
+  \\& x(t) \ge 0
+  \end{array}
+  \end{equation*}
+
+
+
+  $\mathcal P_t = \{x \in \mathbb R^n, \; A(t) x \le b\}$ the feasible region of ([[eqn:Pt]]).
+
+  #+BEGIN_hyp
+  The optimal value of $P_t$ is finite for all $t \in [0, 1]$.
+  #+end_hyp
+
+  $x(t)$ an optimal solution to ([[eqn:Pt]]).
+
+
+* Behavior of the solution
+
+  #+NAME: thm:form_solution  
+  #+BEGIN_theorem
+  There exist $N > 0$, and $0 = t_1 < \ldots < t_N = 1$ such that, for every $t \in (t_i, t_{i+1})$, there exist $B \in {[n] \choose r}$
+  - $A_B(t)$ is invertible
+  - $x(t) = A_B(t)^{-1}b(t)$
+  #+END_theorem
+
+  #+BEGIN_lemma
+  For all $B \in {[n] \choose r}$ $A_B(t)$ is either never invertible or always invertible except for finitely many $t \in [0, 1]$.
+  #+end_lemma
+
+
+  #+BEGIN_lemma
+  For all $B \in {[n] \choose r}$, if $A_B(t)$ is invertible for some $t$, then the point
+  #+NAME: eqn:vertex
+  \begin{equation*}
+  v_B(t) = A_B(t)^{-1}b(t)
+  \end{equation*}
+  changes feasibility finitely many times. When $v_B(t)$ is feasible, it is a vertex of the feasible region of [[eqn:Pt]]
+  #+end_lemma
+
+  Let $\mathcal B = \{B, \exists t \; A_B(t) \; \text{is invertible}\}$. 
+
+
+  #+BEGIN_lemma
+  We can always choose $x(t)$ to be of the form [[eqn:vertex]]. Call $B(t) := B$ the optimal basis.
+  #+end_lemma
+
+  To summarize, there is a (finite) partition of $[0, 1]$ into intervals $I_i$ such that in the interior of any $I_i$:
+  - For all $B \in \mathcal B$, $A_B(t)$ is invertible and $v_B(t)$ is either feasible or not. Let $\mathcal F_i = \{B \in \mathcal B, \; v_B(t) \text{ is feasible on } \mathring I\}$.
+  - $x(t) = A_B(t)^{-1}b(t)$
+
+  #+BEGIN_lemma
+  We can choose $B(t)$ so that it changes finitely many times inside each $I_i$.
+  #+end_lemma
+
+  #+BEGIN_proof
+  $B(t)$ change only if there exist $B, B' \in \mathcal F_i$ such that $\langle c(t), A_{B}^{-1}(t)b(t) \rangle = \langle c(t), A_{B'}^{-1}(t)b(t) \rangle$.
+  $t \rightarrow \langle c(t), (A_{B}^{-1}(t)- A_{B'}^{-1}(t))b(t)\rangle$ is a rational fraction. If it is no identically zero, then it hits zero finitely many times.
+  #+END_proof
+
+  #+BEGIN_remark
+  Replace linear objective by convex objective.
+  #+end_remark
+  
+  
+* Approximation of the solution by a continuous function
+
+  #+BEGIN_hyp
+  $P_t$ admits one feasible continuous solution $f_0$. e.g there exist a continuous function $f_0: [0, 1] \rightarrow \mathbb R^n$ such that $A(t)f_0(t) \le b(t)$, $\forall t \in [0, 1]$
+  #+END_hyp
+  
+  #+NAME: thm:approx_continuous
+  #+BEGIN_theorem
+  For every $\varepsilon > 0$, there exist a continuous function $f: [0, 1] \rightarrow \mathbb R^n$ such that:
+  - $f(t)$ is feasible of all $t$, e.g $A(t)f(t) \le b(t)$, $\forall t \in [0, 1]$
+  - $\int_0^1 \langle c(t), x(t)\rangle - \int_0^1 \langle c(t), f(t)\rangle \le \varepsilon$.
+  #+END_theorem
+
+
+  #+BEGIN_proof
+  Theorem [[thm:form_solution]] proves the existence of a partition $[0, 1] = \cup_1^n [t_i, t_{i+1})$ such that $x(t)$ is a continuous (in fact, a rational function).
+
+  Define $I_i^{\alpha} = (t_i+\alpha, t_i -\alpha)$ for some $\alpha > 0$ that we are going to fix later on.
+
+  Let $f^{\alpha}$ be the function that:
+  - is equal to $x(t)$ on every $I_i^{\alpha}$.
+  - is equal to $f_0$ on all the $t_i$.
+  - interpolates linearly between $x(t)$ and $f_0(t)$ on $[t_i-\alpha, t_i+\alpha]$
+
+  As $\alpha \rightarrow 0$, $f^{\alpha}(t) \rightarrow x(t)$ almost surely. Given that $|f^{\alpha}(t)| \le |x(t)| + |f_0(t)|$, the Dominated convergence theorem gives $f^{\alpha}(t) \rightarrow_{L_1} x(t)$
+  #+END_proof
+
+* Approximation of the solution by a polynomial solution
+
+  #+BEGIN_hyp
+  [[eqn:Pt]] admits one strictly feasible continuous solution $f_0$. e.g there exist $\beta > 0$ and a continuous function $f_0: [0, 1] \rightarrow \mathbb R^n$ feasible for the following program
+  #+END_hyp
+
+
+  #+NAME: eqn:Pbeta
+  \begin{equation*}
+  \tag{$P(\beta)$}
+  \begin{array}{ll@{}ll}
+  \text{maximize} & \int_0^1 \langle c(t), x(t) \rangle \mathrm dt & \\
+  \text{subject to}& A(t) x(t) \le b(t)-\beta&&\forall t \in [0,1] 
+  \end{array}
+  \end{equation*}
+
+  #+BEGIN_idea
+  We start with a continuous solution $f$ that is near optimal to [[eqn:Pbeta]], we approximate it uniformally by a polynomial $p(t)$, if $p(t)$ is close enough to $f$, then $p$ is feasible to [[eqn:P]] and near optimal.
+  #+END_idea
+
+  #+BEGIN_lemma
+  As $\beta \rightarrow 0$, the optimal value to [[eqn:Pbeta]] convergence to the optimal value of [[eqn:P]].
+  #+end_lemma
+
+
+* Finding the best polynomial solution
+
+  If we add the constraint that $x(t)$ is a polynomial of degree $d$ in [[eqn:P]], then the objective function $\int_0^1 \langle c(t), x(t) \rangle$ is a linear function in the coefficients of $x(t)$, and the constraint $A(t)x(t) \le b(t)$ is equivalent to the polynomial $b(t) - A(t)x(t)$ being sum of square.
+
+* From LP to SDP
+
+  #+NAME: eqn:SDP
+  \begin{equation*}
+  \tag{SDP}
+  \begin{array}{ll@{}ll}
+  \text{maximize} & \int_0^1 \langle c(t), x(t) \rangle \mathrm dt & \\
+  \text{subject to}& Q_0 + \sum x_i(t) Q_i(t) \succeq 0 &&\forall t \in [0,1]
+  \\& x(t) \ge 0
+  \end{array}
+  \end{equation*}
+
+  
+  #+NAME: eqn:LPl
+  \begin{equation*}
+  \tag{$\text{LP}_l$}
+  \begin{array}{ll@{}ll}
+  \text{maximize} & \int_0^1 \langle c(t), x(t) \rangle \mathrm dt & \\
+  \text{subject to}& Q_0 + \sum x_i(t) Q_i(t) = \sum_{j=1}^l \alpha_j(t) B_j &&\forall t \in [0,1]
+  \\& \begin{pmatrix}x(t)\\\alpha(t)\end{pmatrix} \ge 0
+  \end{array}
+  \end{equation*}
+
+ #+BEGIN_theorem
+ [[eqn:LPl]] $\rightarrow_l$ [[eqn:SDP]].
+  #+END_theorem
+
+  
