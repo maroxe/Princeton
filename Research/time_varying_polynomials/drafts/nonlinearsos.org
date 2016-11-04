@@ -1,0 +1,129 @@
+#+SETUPFILE: theme.setup
+#+OPTIONS: toc:nil  
+#+PROPERTY: header-args  :eval no-export
+#+PROPERTY: header-args:matlab  :session *MATLAB*
+#+OPTIONS: H:5 num:2
+
+* Computations
+\[I_n = \int_0^{2\pi} t^n e^{it} dt\]
+
+\begin{align*}
+I_n &= [t^n (-ie^{it})]_0^{2\pi} + i n I_{n-1}
+\\&= -i (2\pi)^n + i n I_{n-1}
+\end{align*}
+
+$$u_n = \frac{I_n}{i^nn!}$$
+
+\[u_n = u_{n-1} -  i^{-(n-1)} \frac{(2\pi)^n}{ n!}\]
+
+\[u_n = -\sum_{k=1}^n i^{-(k-1)} \frac{(2\pi)^k}{k!}\]
+
+
+\[I_n =  -n! i^n \sum_{k=1}^n i^{-(k-1)} \frac{(2\pi)^k}{k!}\]
+
+
+\[\int_0^{2 \pi} t^n cos(t) dt = Re(I_n)\]
+
+
+\[\int_0^{2 \pi} t^n sin(t) dt = Im(I_n)\]
+
+
+
+#+BEGIN_SRC matlab   :session *MATLAB* :noexport :exports none 
+addpath(genpath('yalmip'))
+sdpsettings('solver','mosek')
+addpath(genpath('~/mosek/mosek'))
+ans=0
+ #+END_SRC
+
+ #+RESULTS:
+ : 0
+
+ #+BEGIN_SRC emacs-lisp :exports none
+(defun add-caption-header-and-center (caption header )
+  (concat (format "org\n#+attr_html: :class center :width 300px\n#+ATTR_LATEX: :float nil\n#+caption: %s\n%s\n|-|" caption header)))
+(defun add-caption-and-center (caption)
+  (concat (format "org\n#+attr_html: :class center :width 300px\n#+caption: %s\n#+ATTR_LATEX:  :width 0.45\\textwidth :float nil" caption)))
+
+#+END_SRC
+
+#+RESULTS:
+: add-caption-and-center
+
+
+    
+#+BEGIN_SRC matlab :session *MATLAB* :exports both :results graphics :file spectrahedron.png :wrap (add-caption-and-center "Spectrahedron")
+  m = 30;
+  xmin = -2;
+  xmax = 2;
+  dt = 0.02;
+  deg = 5;
+
+  % generate lp parameters
+  A0 = eye(3);
+  A1 = [0 1 0; 1 0 0; 0 0 0];
+  A2 = [0 0 1; 0 0 0; 1 0 0];
+
+  % plot the region
+  figure(1)
+  sdvar x(2, 1);
+  F = [ [A0 + x(1)*A1+x(2)*A2 >= 0] ];
+  plot(F)
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_org
+#+attr_html: :class center :width 300px
+#+caption: Spectrahedron
+#+ATTR_LATEX:  :width 0.45\textwidth :float nil
+[[file:spectrahedron.png]]
+#+END_org
+
+
+* Solve LP using SOS to find a polynomial solution
+
+#+INCLUDE: sdpsos.m SRC matlab 
+
+
+* Compare previous solution to point-wise LP optimization
+  
+#+BEGIN_SRC matlab :session *MATLAB*
+  xpoly = nonlinearsos(A0, A1, A2, 5, dt);
+  t = 0:dt:(2*pi);
+  c = [cos(t); sin(t)];
+  sdpvar x(2, 1)
+  F = [ [A0 + x(1)*A1+x(2)*A2 >= 0] ];
+  animate(t, c, xpoly, F)
+  ans = 0;
+#+END_SRC
+
+#+RESULTS:
+: 0
+
+
+Save to gif:
+
+#+BEGIN_SRC matlab :session *MATLAB* 
+  filename = 'animationsdp.gif';
+  for n = 1:length(t)
+      frame = M(n);
+      im = frame2im(frame);
+      [Ai,map] = rgb2ind(im,256); 
+      if n == 1;
+          imwrite(Ai,map,filename,'gif','LoopCount',Inf,'DelayTime',1);
+      else
+          imwrite(Ai,map,filename,'gif','WriteMode','append','DelayTime',1);
+      end
+  end
+  ans=0
+#+END_SRC
+
+#+RESULTS:
+: 0
+
+
+[[./animationsdp.gif]]
+
+
+
+  

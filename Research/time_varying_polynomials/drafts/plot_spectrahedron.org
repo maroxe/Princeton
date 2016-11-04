@@ -1,0 +1,42 @@
+#+BEGIN_SRC matlab   :session *MATLAB* :noexport :exports none 
+addpath(genpath('yalmip'))
+sdpsettings('solver','mosek')
+addpath(genpath('~/mosek/mosek'))
+ans=0
+ #+END_SRC
+
+ #+RESULTS:
+ : 0
+
+
+#+BEGIN_SRC  matlab   :session *MATLAB* 
+  % generate lp parameters
+  alpha = 0.5;
+
+  rng(17,'twister');
+  %A=rand(m,3)*2-1;
+  A = 0.5 * [eye(3,3); -eye(3)];
+  m = length(A);
+  b=ones(m,1);
+
+  figure(3)
+  clf
+
+  x = sdpvar(3,1);
+  s = sdpvar(m,1);
+  S = diag(s);% + diag(repmat(alpha, m-1, 1), 1) + diag(repmat(alpha, m-1, 1), -1);
+
+  F = [A * x + s == b, s >= 0];
+  %plot(F, x)
+  for i=1:m
+      for j=(i+1):m
+          F = F + [[s(i) alpha; alpha s(j)] >= 0 ];
+      end
+  end
+  plot(F, x);
+  ans=0;
+#+END_SRC
+ 
+#+RESULTS:
+: 0
+

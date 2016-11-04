@@ -1,0 +1,50 @@
+#+OPTIONS: toc:nil
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \newtheorem{theorem}{Theorem}[section]
+#+LATEX_HEADER: \newtheorem{lemma}[theorem]{Lemma}
+#+LATEX_HEADER: \newtheorem{proof}[theorem]{Proof}
+
+
+#+TITLE: Existence of continuous solutions
+#+AUTHOR: Bachir El Khadir
+
+* Notation
+- $\mathcal P_t = \{x, A(t)x(t) \le b(t)\}$
+- $B(0, M) = \{x, ||x||_{\infty} \le M\}$
+- $x_t: \; [0, 1] \rightarrow \mathbb R^n$ is a feasible solution if $x_t \in \mathcal P_t \forall t \in [0, 1]$
+
+* A necessary and sufficient condition for the existence of a continuous feasible solution
+  
+#+BEGIN_theorem
+Suppose there $\mathcal P_t$ is feasible for all $t \in [0, 1]$.
+
+Define the two statments:
+1. There exist a continuous feasible function $x_t$, e.g. $x_t \in \mathcal P_t$ for all $t \in [0, 1]$.
+. There exist $M > 0$ such that $\forall t \in [0, 1]; \mathcal P_t \cap B(0, M) \ne \emptyset$
+
+Then
+- 1. $\implies$ 2
+- If A and b are polynomials, then 2. $\implies$ 1. 
+#+END_theorem
+
+#+BEGIN_proof
+1. $\implies$ 2.
+$x_t$ is continuous on the compact set, so it is bounded. Let $M = \sup ||x_t||_{\infty}$. Then $x_t \mathcal P_t \cap B(0, M)\; \forall t \in [0, 1]$
+
+1. $\implies$ 1. when $A(t)$ and $b(t)$ are polynomials.
+   Let $\mathcal P_t^M := \mathcal P_t \cap B(0, M) =: \{x, A^M(t)x \le b^M(t)\}$.
+   
+   We start at $t = 0$.
+   $\mathcal P_0^M$ is a polytope, let $v$ be one of its corners and let $B(0)$ be the basis associated to it.
+   Define $v_B(t) = A^M_B(t)^{-1}b^M(t)$ as long as $A_B^M(t)$ is invertible. Then $v_B(t)$ is a corner of $\mathcal P_t^M$ as long as:
+   - $A_B^M(t)$ is invertible.
+   - $v_B(t)$ is feasible.
+     
+Let's first prove that $v_B$ becomes infeasible before $A_B^M(t)$ becomes 
+
+     
+     
+     
+
+#+END_proof
+

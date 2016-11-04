@@ -1,0 +1,66 @@
+#+OPTIONS: toc:nil
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \newtheorem{theorem}{Theorem}[section]
+#+LATEX_HEADER: \newtheorem{definition}[theorem]{Definition}
+#+LATEX_HEADER: \newtheorem{lemma}[theorem]{Lemma}
+#+LATEX_HEADER: \newtheorem{proof}[theorem]{Proof}
+#+LATEX_HEADER: \newcommand{\onenorm}[1]{\left\lVert#1\right\rVert_1}
+#+LATEX_HEADER: \newcommand{\inftynorm}[1]{\left\lVert#1\right\rVert_{\infty, [0, 1]}}
+#+LATEX_HEADER: \newcommand{\lonenorm}[1]{\left\lVert#1\right\rVert_{L_1(0, 1)}}
+#+LATEX_HEADER: \newcommand{\partlonenorm}[2]{\left\lVert#1\right\rVert_{L_1(#2)}}
+
+#+TITLE: On the rate of convergence
+#+AUTHOR: Bachir El Khadir
+ #+BEGIN_SRC emacs-lisp :exports none
+(defun add-caption-header-and-center (caption header )
+  (concat (format "org\n#+attr_html: :class center :width 300px\n#+ATTR_LATEX: :float nil\n#+caption: %s\n%s\n|-|" caption header)))
+(defun add-caption-and-center (caption)
+  (concat (format "org\n#+attr_html: :class center :width 300px\n#+caption: %s\n#+ATTR_LATEX:  :width 0.45\\textwidth :float nil" caption)))
+
+#+END_SRC
+
+#+RESULTS:
+: add-caption-and-center
+
+
+* Rate of convergence of $x^{\alpha}(t)$ to $x(t)$
+
+  Let $B$ be the active basis.
+  
+  $x(t) = B^{-1}b$
+  $x^{\alpha}(t) = B^{-1}(b-\alpha \b{1}) = x(t) - \alpha B^{-1}\b{1}$
+  
+  $\onenorm{x(t) - x^{\alpha}(t)} = \alpha \onenorm{B^{-1}\b{1}}$
+
+  $\lonenorm{x - x^{\alpha}} = \alpha \onenorm{B^{-1}\b{1}}$
+
+  
+* Rate of convergence of Bernstein polynomials
+  \cite{Cheng1982}
+
+  $$|B_n(g, x) - g(x)| \le C W_g(\frac1{\sqrt n})$$
+
+  - $C = \frac{4306 + 837\sqrt 6}{5832}$
+  - $W_g$ is the modulus of continuity. Here $W_g(u) = \frac{\max \Delta x}{2\beta}$.
+
+  
+* Rate of convergence of the piece wise linear function $g$
+  $$\lonenorm{g - x^{\alpha}} \le \beta \sum_{t_0 \in J} \onenorm{\Delta x(t_0)}$$
+  In order of $g$ to stay feasible, we need $\alpha = \inftynorm{A} C W_g(\frac1{\sqrt n}) \propto \frac1{\beta\sqrt{n}}$
+
+
+* Conclusion
+
+  
+  \begin{align*}
+  \lonenorm{P - x}
+  &\le \lonenorm{P - g} + \lonenorm{g - x^{\alpha}} + \lonenorm{x^{\alpha} - x}
+  \\&\le  C W_g(\frac1{\sqrt n}) + \beta \sum_{t_0 \in J} \onenorm{\Delta x(t_0)} +  \alpha \onenorm{B^{-1}\b{1}}
+  \\&\le  C  \frac{\max \Delta x}{2\beta} \frac1{\sqrt n} + \beta \sum_{t_0 \in J} \onenorm{\Delta x(t_0)} +  \alpha \onenorm{B^{-1}\b{1}}
+  \\&= O(  \inftynorm{A} \max \Delta x (\frac1{\beta \sqrt n} + \beta))
+  \end{align*}
+
+  
+Choose $\beta \sim \frac1{n^{\frac14}}$ to get:
+$$\lonenorm{P - x} = O(\inftynorm{A} \max \Delta x \frac1{n^{\frac14}})$$
+  

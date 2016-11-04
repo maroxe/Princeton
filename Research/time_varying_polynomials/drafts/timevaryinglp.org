@@ -1,0 +1,179 @@
+#+OPTIONS: toc:nil  
+#+PROPERTY: header-args  :eval no-export
+#+PROPERTY: header-args:matlab  :session *MATLAB*
+#+OPTIONS: H:5 num:2
+
+#+TITLE: Time varying LP
+#+AUTHOR: Bachir El Khadir
+
+
+* Boilerplate
+#+BEGIN_SRC matlab   :session *MATLAB* :noexport :exports none 
+addpath(genpath('../ORF523/yalmip'))
+sdpsettings('solver','mosek')
+addpath(genpath('~/mosek/mosek'))
+ans=0
+ #+END_SRC
+
+ #+RESULTS:
+ : 0
+
+
+
+
+** 
+\begin{equation*}
+\begin{array}{ll@{}ll}
+\text{minimize} & \int_0^1 \langle c(t), x(t) \rangle \rm d t& \\
+\text{subject to}& A(t) x(t) \le b(t)&&\forall t \in [0,1] 
+\end{array}
+\end{equation*}
+
+
+** First problem
+   
+$c(t) = c_0 + c_1 t$
+$x(t) = x_0 + x_1 t + x_2 t^2$
+$A(t) = a_0 + a_1 t + a_2 t^2$
+$b(t) = 0$
+
+#+NAME:sol
+#+BEGIN_SRC matlab :session :cache yes
+  sdpvar t lambda;
+  c = randn(1, 3)*[1; t; t^2];
+  a = randn(1, 3)*[1; t; t^2];
+  [x,cx] = polynomial(t, 2);
+  alpha = int(x*c,t, 0, 1);
+  F = [lambda >= 0; sos(a*x - lambda*t*(1-t))];
+  solvesos(F, alpha, [], [cx; alpha])
+  ans=[value(cx) coefficients(a) coefficients(c)]
+#+END_SRC
+
+#+RESULTS[d8851a1c7065c64a20cf17ea5068e38c89cfd5a6]: sol
+| -0.11508 | -0.25117 | -0.86582 |
+|  0.57903 | -0.20457 |  0.18066 |
+|  -2.1323 |  -2.2015 |   1.2665 |
+
+
+
+#+BEGIN_SRC R :session :var data=sol  :exports results :file plot.png :results graphics  
+  library(ggplot2)
+  x <- data$V1
+  a <- data$V2
+  c <- data$V3
+
+  xfit <- seq(-0.1, 1.1, 0.01)
+  X <- cbind(0*xfit+1, xfit, xfit^2)
+  y1 <- (X %*% x)[,1]
+  y2 <- (X %*% a)[,1]
+  y3 <- (X %*% c)[,1]
+
+  q <- ggplot()
+  q <- q + geom_line(data=NULL, aes(x=xfit, y=y1, colour="x(t)"))
+  q <- q + geom_line(data=NULL, aes(x=xfit, y=y2, colour="a(t)"))
+  q <- q + geom_line(data=NULL, aes(x=xfit, y=y3, colour="c(t)"))
+  q
+#+END_SRC
+
+#+RESULTS:
+[[file:plot.png]]
+
+
+
+\[A(t)x(t) \le b(t) \iff \begin{pmatrix}-A(t)&b(t)\end{pmatrix}\begin{pmatrix}x(t)\\1\end{pmatrix} \ge 0\]
+
+
+\[T = (1, t, \ldots t^n) \]
+
+\[x(t) \equiv \begin{pmatrix}\langle x_1, T \rangle, \ldots, \langle x_n, T \rangle\end{pmatrix}^T \equiv X\]
+
+\[A(t) = \begin{pmatrix}\langle a_{11},T \rangle&\ldots &\langle a_{n1}, T \rangle
+\\&\vdots
+\\\langle a_{1n},T \rangle&\ldots &\langle a_{nn}, T \rangle\end{pmatrix} \]
+
+\begin{align*}
+\int_0^1 \langle c(t), x(t) \rangle \rm d t
+&= \sum_{i=1}^n \int_0^1 c_i(t) x_i(t) \rm dt
+\\&= \sum_{i=1}^n \int_0^1 (c_i \star x_i)(t) \rm dt
+\\&:= \langle C, X \rangle
+\end{align*}
+
+\begin{align*}
+A(t)x(t) \ge 0 \;(\forall t \in [0, 1])\iff A(t)x(t) = \sigma_0(t) + t(1-t) \sigma_1(t) 
+\end{align*}
+
+\[\sigma^{(i)}(t) \equiv \begin{pmatrix}\langle \sigma^{(i)}_1, T \rangle, \ldots, \langle \sigma^{(i)}_n, T \rangle\end{pmatrix}^T \equiv \Sigma^{(i)}\]
+
+
+
+\begin{equation*}
+\begin{array}{ll@{}ll}
+\text{minimize} & X_{11} \\
+\text{subject to}& A(t) x(t) \ge 0&&\forall t \in [0,1]
+\end{array}
+\end{equation*}
+
+
+$t \in T$, call $x(t)$ the solution to the following LP problem:
+
+\begin{equation*}
+\begin{array}{ll@{}ll}
+\text{minimize} & \langle c(t), x(t) \rangle & \\
+\text{subject to}& A(t) x(t) \le b(t)
+\end{array}
+\end{equation*}
+
+*Question:* Under which conditions $x(t)$ is continuous when $A, b, c$ are continuous?
+
+
+* Continuity
+
+
+  (P):
+  \begin{equation*}
+\begin{array}{ll@{}ll}
+\text{min} & cx& \\
+\text{subject to}& Ax = b(t)&&
+\\&x \ge 0
+\end{array}
+\end{equation*}
+
+(D):
+\begin{equation*}
+\begin{array}{ll@{}ll}
+\text{max} & by& \\
+\text{subject to}& A^Ty \le c&&
+\end{array}
+\end{equation*}
+
+
+- $LP(b, c)$ feasible *solutions* of P
+- $D(b, c)$ feasible *solutions* of D
+- $\Omega_P(b, c)$ optimal *solutions* of P
+- $\Omega_D(b, c)$ optimal *solutions* of D
+- $\omega_P(b, c)$ optimal *value* of P
+- $\omega_D(b, c)$ optimal *value* of D
+
+
+- $\mathcal B = cone(A)$
+- $\mathcal C = R_+^m + span(A^T)$
+
+$|\omega_P(b, c)| < \infty \iff (b,c) \in \mathcal B \times \mathcal C$
+
+
+#+BEGIN_theorem 
+$\omega_P: \mathcal B \times \mathcal C \rightarrow \mathcal R$ is continuous.
+#+END_theorem
+
+
+#+BEGIN_theorem 
+$\Omega_P: \mathcal B \times \mathcal C \rightarrow \mathcal R$ is upper semi-continuous:
+If $x_k \in LP(b_k, c_k)$, and $(b_k, c_k, x_k) \rightarrow_k (b^*, c^*, x^*)$, then $x^* \in \Omega_P(b^*, c^*)$
+#+END_theorem
+
+
+#+BEGIN_theorem 
+$\Omega_P: \mathcal B \times \mathcal C \rightarrow \mathcal R$ is lower semi-continuous at $(b^*, c^*)$ iff and only if $\Omega_P(b^*, c^*)$ is a singleton.
+l.s.c: 
+If $(b_k, c_k) \rightarrow (b^*, c^*), x^* \in \Omega_P(b^*, c^*)$, then there exist $x_k \in \Omega_P(b_k, c_k)$ such that $x_k \rightarrow x^*$.
+#+END_theorem

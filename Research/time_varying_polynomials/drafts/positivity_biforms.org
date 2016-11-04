@@ -1,0 +1,171 @@
+# Set the article class
+#+LaTeX_CLASS: article
+#+LaTeX_CLASS_OPTIONS: [12pt]
+
+# No need for a table of contents, unless your paper is quite long.
+#+OPTIONS: toc:nil
+
+
+# Fix the margins
+#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
+
+#+LATEX_HEADER: \usepackage{natbib}
+
+#+LATEX_HEADER: \newtheorem{theorem}{Theorem}[section]
+#+LATEX_HEADER: \newtheorem{definition}[theorem]{Definition}
+#+LATEX_HEADER: \newtheorem{lemma}[theorem]{Lemma}
+#+LATEX_HEADER: \newtheorem{proof}[theorem]{Proof}
+
+
+#+TITLE: Positivity of polynomial matrices on the real half line
+#+author: Bachir El Khadir
+
+  It has already been proven that a univariate polynomial matrix is psd everywhere if it can be written everywhere as a square.
+
+#+BEGIN_theorem 
+If $A(t) \succeq 0 \; \forall t \in \mathbb R$, then there exist $C(t) \in \mathbb R^{n \times m}[X]$ such that:
+$$A(t) = C(t)C(t)^T$$
+#+END_theorem
+
+We seek a similar characterization of matrices that are psd only on the half line:
+
+#+BEGIN_theorem 
+If $A(t) \succeq 0 \; \forall t \ge 0$, then there exist $B(t), C(t) \in \mathbb R^{n \times 2n}[X]$ such that:
+$$A(t) = B(t)B(t)^T + t C(t)C(t)^T$$
+Or equivalently, that there exist $\sigma_0(t; u), \sigma_1(t; u)$ two SOS polynomials such that:
+$$u^TA(t)u = |B(t)^Tu|^2 + t|B(t)^Tu|^2 = \sigma_0(t;u) + t\sigma_1(t;u)$$
+#+END_theorem
+
+
+We follow the same proof given in \cite{Choi1980}. The idea is the following:
+
+- It is more convenient to consider the form:  $f = u^TA(t)u = a_{11}(t)x_1^2 + 2x_1 (\sum_{j \ge 2} a_{1j}(t)u_j) + \bar f(t; u_2, \ldots u_n)$,
+- $\forall u \; f \ge 0$ is equivalent to $A(t)$ being psd.
+- We proceed by induction on the number $n$, $n=0$ is trivial.
+  - If $a_{11} = 0$, it suffices to prove the claim for $\bar f$, that depends on one less variable than $f$, it is actually a biform of bi-degree $(n-1, 2)$.
+  - Otherwise, $f \ge 0$ implies that the following discriminant:
+    $$D = a_{11}(t)\bar f - (\sum_{j \ge 2} a_{1j}(t)u_j)^2$$
+    is psd. Notice that $D$ is also a biform of bi-degree (n-1, 2).
+  - By induction hypotheses, we can write $D$  as $\sigma_0 + t\sigma_1$, where $\sigma_0$ and $\sigma_1$ are sum of squares.
+  - The same can be said for $a_11f$ because:
+    $$a_{11}f = \underbrace{(a_{11}u_1 + \sum{j \ge 2} a_{1j}(t)u_i)^2}_{\sigma_0'} + D = \sigma_0'+\sigma_0 + t\sigma_1$$
+  - If we can "get rid of" the extra factor $a_{11}$, then we are done. The following lemma proves that claim:
+
+    
+
+#+BEGIN_lemma 
+If $a(t) A(t) = B(t)B(t)^T + t C(t)C(t)^T$ with $a(t) \ge 0 \; \forall t \ge 0$, then there exist $B'(t), C'(t)$ such that:
+$A(t) = B'(t)B'(t)^T + t C'(t)C'(t)^T$
+#+END_lemma
+
+The strategy of the proof is to "peel off" the psd factors of $a$ one at a time. Thus we only need to treat the following cases:
+$a(t) = t$,  $a(t) = t+t_0$,  $a(t) = (t-t_0)^2$, $a(t) = (t+\alpha)^2 + \Delta^2$ with  $t_0 > 0$.
+
+By virtue of linear change of variables, we actually only need to check the cases:
+1. $a(t) = t$
+2. $a(t) = t+1$,
+3. $a(t) = (t-1)^2$
+4. $a(t) = t^2 + 1$
+
+In the following we check the cases one by one:
+
+- [X] Case 1: $a(t) = t$
+$$B(0)B(0)^T  \implies \sum_{ij} B_{ij}(0)^2 = 0 \implies \exists B', B(t) = tB'(t)$$
+
+$$tA(t) = t^2 B'B'^T + t CC^T \implies A(t) = t B'B'^T + CC^T$$
+
+- [X] Case 2: $a(t) = (1-t)^2$
+
+  $$B(1)B(1)^T = C(1)C(1)^T = 0 \implies 1-t | \sum_{ij}B_{ij}^2, \sum_{ij} C_{ij}^2 \implies 1-t | B, C$$
+  
+So there exists $B', C'$ such that:
+
+$$B = (1-t)B', C = (1-t)C'$$
+
+So:
+
+$$A(t) = B'B'^T + t C'C'^T$$
+
+- [X] Case 3: $a(t) = 1+t$
+
+By dividing $B$ and $C$ component-wise by $1+t$, we can write:
+$$B(t) = (1+t)B_1(t) + B_2$$
+$$C(t) = (1+t)C_1(t) + C_2$$
+
+Plugging in $t=-1$ yields to:
+
+\begin{align*}
+B(-1)B(-1)^T = C(-1)C(-1)^T
+&\implies B_2B_2^T = C_2C_2^T
+\\&\implies \exists U \in O_n(R) \; B_2 = C_2U 
+\end{align*}
+
+We can check that the following decomposition holds:
+$$(1+t)A (1+t) = (1+t)\left\{ t (B_1U^T-C_1)(B_1U^T-C_1)^T + (C_2+B_1U^T+tC_1)(C_2+C_2+B_1U^T+tC_1)^T \right\}$$
+
+- [ ] Case 4: $a(t) = 1+t^2$, e.g
+  
+  #+NAME: eqn1
+  #+begin_equation
+  (1+t^{2})A = BB^T + tCC^T
+  #+end_equation
+  
+  
+Like the previous case, by dividing $B$ and $C$ component-wise by $1+t^2$, then plugging in $t=i$, we can write:
+$$B(t) = (1+t^2)B_1(t) + t B_2 + B_3$$
+$$C(t) = (1+t^2)C_1(t) + t C_2 + C_3$$
+
+and we get the relation:
+$$B_2B_3^T + B_3B_2^T = C_2C_2^T - C_3C_3^T$$
+$$B_2B_2^T - B_3B_3^T = -(C_2C_3^T + C_3C_2^T)$$
+
+
+*This is the point where I am stuck*, I am not able to exploit this relationship between $B_2,B_3,C_2,C_3$.
+
+Notice that in the case where $C_2 = C_3 = 0$, [[cite:Choi1980]] proves that, if $J$ is the $2d\times 2d$ matrix with $n$ diagonal blocks of the form $\begin{pmatrix}0&1\\-1&0\end{pmatrix}$ there exist a matrix $T\in O_{2n}(\mathbb R)$ such that:
+$B_3 = B_2TJT^{-1}$. From here, we can replace $B_3$  in [[eqn1][(1)]], and after some linear algebra we can factor out $1+t^2$.
+
+
+I think the idea to solve the general case where $C_2, C_3 \ne 0$ should be similar. We are trying to find equivalences of the form:
+
+
+$g(B_1, \ldots B_r) = 0 \iff \exists \mathcal L \text{ some linear operator such that }\; B_1 = \mathcal L (B_2, \ldots B_r)$
+
+In some sense, a certificate for the equality $g(B_1, \ldots B_r) = 0$ to hold is the existence of the operator$\mathcal L$.
+
+
+As an example, the following equivalences have been used earlier in this proof:
+
+- $BB^T - CC^T = 0 \iff \exists U \in O_{2n}(\mathbb R) B = CU$
+- $BB^T - CC^T = BC^T + CB^T = 0 \iff \exists T \in O_{2n}(\mathbb R) B = C TJT^{-1}$
+
+
+
+#+BIBLIOGRAPHY: citations plain
+
+
+   #+BEGIN_SRC :exports none
+Let $M = B_1U^T + tC_1$ so that: $MM^T = B_1B_1^T + t^2 C_1C_1^T + tB_1U^TC_1^T  + tC_1B_1^TU$, and therefore we can check that
+\begin{align*}
+aA
+&= (1+t)^2 B_1B_1^T + B_2B_2^T   + (1+t) [B_1B_2^T + B_2B_1^T]
+\\&+  (1+t)^2 t C_1C_1^T + t C_2C_2^T + (1+t)t[C_1C_2^T + C_2C_1^T]
+\\&= (1+t)^2 B_1B_1^T + (1+t)B_2B_2^T   + (1+t) [B_1B_2^T + B_2B_1^T]
+\\&+  (1+t)^2 t C_1C_1^T  + (1+t)t[C_1C_2^T + C_2C_1^T]
+\\&= (1+t) \left\{ (1+t) B_1B_1^T + B_2B_2^T   + B_1B_2^T + B_2B_1^T
++  (1+t) t C_1C_1^T  + t[C_1C_2^T + C_2C_1^T]\right\}
+\\&= (1+t) \left\{ (1+t) B_1B_1^T + (1+t) t C_1C_1^T + B_2B_2^T   + B_1U^TC_2^T + C_2UB_1^T + t[C_1C_2^T + C_2C_1^T]\right\}
+\\&= (1+t) \left\{ (1+t) B_1B_1^T + (1+t) t C_1C_1^T + C_2C_2^T   + \underbrace{[B_1U^T + tC_1]}_M C_2^T + C_2[UB_1^T + t C_1^T]\right\}
+\\&= (1+t) \left\{ (1+t) B_1B_1^T + (1+t) t C_1C_1^T + C_2C_2^T   + M C_2^T + C_2M^T\right\}
+\\&= (1+t) \left\{ (1+t) B_1B_1^T + (1+t) t C_1C_1^T + (C_2+M)(C_2+M)^T  - MM^T \right\}
+\\&= (1+t) \left\{ t B_1B_1^T + t C_1C_1^T + (C_2+M)(C_2+M)^T  - t B_1U^TC_1^T - tC_1B_1^TU \right\}
+\\&= (1+t) \left\{ t (B_1U^T-C_1)(B_1U^T-C_1)^T + (C_2+M)(C_2+M)^T \right\}
+\end{align*}
+   
+   #+END_SRC
+
+
+
+
+
+

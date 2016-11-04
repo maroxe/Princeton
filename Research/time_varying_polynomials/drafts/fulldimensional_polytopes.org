@@ -1,0 +1,17 @@
+
+
+#+BEGIN_DEFINITION
+A polytope $\mathcal P = \{x |  Ax \le b\}$ is full dimensional if it has non empty enterior.
+#+END_DEFINITION
+
+#+BEGIN_Theorem
+$\mathcal P$ is full dimensional iff there exist $\varepsilon > 0, x \in \mathbb R^n$ such that $Ax \le (1-\varepsilon) b$
+#+END_Theorem
+
+#+BEGIN_DEFINITION
+A time varying polytope $(\mathcal P_t)_{t \in [-1, 1]} = \{x |  A(t)x \le b\}$ is full dimensional if it has $\mathcal P_t$ is full dimensional for all $t \in [-1, 1]$.
+#+END_DEFINITION
+
+#+BEGIN_Theorem
+$\mathcal P_t$ is full dimensional iff there exist $\varepsilon > 0, x \in \mathbb R^n$ such that $A(t)x(t) \le (1-\varepsilon) b$
+#+END_Theorem

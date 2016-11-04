@@ -1,0 +1,116 @@
+% Created 2016-11-03 Thu 19:53
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\newcommand{\Problem}[1]{\subsection*{Problem #1}}
+\newcommand{\Q}[1]{\subsubsection*{Q.#1}}
+\newcommand{\union}[1]{\underset{#1}{\cup} }
+\newcommand{\bigunion}[1]{\underset{#1}{\bigcup} \, }
+\newcommand{\inter}[1]{\underset{#1}{\cap} }
+\newcommand{\biginter}[1]{\underset{#1}{\bigcap} }
+\newcommand{\minimize}[3]{\optimize{#1}{#2}{#3}{min}}
+\newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\var}{var}
+\usepackage[margin=0.5in]{geometry}
+\author{Bachir El Khadir}
+\date{\today}
+\title{Problem set 3, ORF550}
+\hypersetup{
+ pdfauthor={Bachir El Khadir},
+ pdftitle={Problem set 3, ORF550},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 25.1.50.1 (Org mode )}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+\section{Problem 3.13a}
+\label{sec:orgheadline1}
+We want to show that:
+
+$$Ent(Z) = \inf_{t > 0} E[Z\log Z - Z\log t - Z + t]$$
+
+Which is the same as:
+$$- E[Z]\log E[Z] = \inf_{t > 0}  - E[Z]\log t  -E[Z] + t$$
+
+Or
+
+$$ \inf_{t > 0}   \frac{t}{E[Z]} - \log \frac{t}{E[Z]}   = 1$$
+
+Or
+
+$$\inf_{u > 0} u - \log u = 1$$
+
+Which is true, because \(f: u \rightarrow u - \log u\) is convex (\(f''(u) = \frac1{u^2}\)), and its first derivative (\(f'(u) = 1-\frac1u\)) is \(0\) at \(1\).
+
+\section{Problem 3.20}
+\label{sec:orgheadline2}
+a.
+\begin{align*}
+Ent_{\nu} X &= \inf_{t > 0} E_{\nu}[X\log X - X \log t - X + t]
+\\&= \inf_{t > 0} E_{\mu}[(X\log X - X \log t - X + t) \frac{d\nu}{d\mu}]
+\\&\le ? ||\frac{d\nu}{d\mu}||_{\infty} \inf_{t > 0} E_{\mu}[ X\log X - X \log t - X + t ] 
+\\&\le ||\frac{d\nu}{d\mu}||_{\infty} Ent_{\mu} X
+\end{align*}
+b.
+\begin{align*}
+\nu(\Gamma(\log f, f))
+&= \mu(\frac{\Gamma(\log f, f)}{d\nu/d\mu} )
+\\&\ge \frac1{\varepsilon}\mu(\Gamma(\log f, f) )
+\end{align*}
+c.
+
+\(\nu(dx) = \frac1{Z'} e^{-V(x)+x^2} \mu(dx)\), where \(\mu \sim N(0, \sqrt 2)\)
+
+$$\frac{d\nu}{d\mu} \in  [\frac1{Z'}e^{-b}, \frac1{Z'}e^{-a}]$$
+
+So:
+$$Ent_{\nu} f^2 \le \frac{c}{Z'}e^{b-a} \nu(\Gamma(\log f^2, f^2)) = \frac{c}{Z'}e^{b-a} \nu( (2f'/f). (2f f')) = \frac{4c}{Z'}e^{b-a} \nu( |f'|^2)$$
+
+d.
+\begin{align*}
+Var_{\nu}(f) &= \inf_{c \in \mathbb R} E_{\nu}[(f - c)^2]
+\\&= \inf_{c \in \mathbb R} E_{\mu}[(f - c)^2 \frac{d\nu}{d\mu}]
+\\&\le \inf_{c \in \mathbb R} E_{\mu}[(f - c)^2] ||\frac{d\nu}{d\mu}||_{\infty}
+\\&\le  Var_{\mu} f ||\frac{d\nu}{d\mu}||_{\infty}
+\\&\le c \delta \mu(\Gamma(f, f)) 
+\\&\le c \delta\nu(\frac{\Gamma(f, f)}{d\nu/d\mu}) 
+\\&\le \frac{c\delta}{\varepsilon} \nu(\Gamma(f, f)) 
+\end{align*}
+
+\section{Problem 4.2}
+\label{sec:orgheadline3}
+Suppose \(med(f)\) attained at \(x_0\).
+
+\(A = \{f \le med(f)\}\), \(x_0 \in A\)
+
+\(\mu(A) = \frac12\)
+
+\(|f - med(f)| = |f(x) - f(x_0)| \le d(x, x_0)\), so \(A_{t} \subseteq \{ f - med(f) \ge t\}\)
+
+\(= \{ x: d(x, A)\} \subset \{ x: f(x) - med(f) \ge t\}\) 
+\section{Problem 4.5}
+\label{sec:orgheadline4}
+\section{Problem 4.7}
+\label{sec:orgheadline5}
+\section{Problem 4.8}
+\label{sec:orgheadline6}
+\end{document}

@@ -1,0 +1,59 @@
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \newtheorem{theorem}{Theorem}[section]
+#+LATEX_HEADER: \newtheorem{lemma}[theorem]{Lemma}
+#+LATEX_HEADER: \newtheorem{proof}[theorem]{Proof}
+
+#+TITLE: Continuity solution LP
+#+AUTHOR: Bachir El Khadir
+
+* Continuity
+
+
+  (P):
+  \begin{equation*}
+\begin{array}{ll@{}ll}
+\text{min} & cx& \\
+\text{subject to}& Ax = b(t)&&
+\\&x \ge 0
+\end{array}
+\end{equation*}
+
+(D):
+\begin{equation*}
+\begin{array}{ll@{}ll}
+\text{max} & by& \\
+\text{subject to}& A^Ty \le c&&
+\end{array}
+\end{equation*}
+
+
+- $LP(b, c)$ feasible *solutions* of P
+- $D(b, c)$ feasible *solutions* of D
+- $\Omega_P(b, c)$ optimal *solutions* of P
+- $\Omega_D(b, c)$ optimal *solutions* of D
+- $\omega_P(b, c)$ optimal *value* of P
+- $\omega_D(b, c)$ optimal *value* of D
+
+
+- $\mathcal B = cone(A)$
+- $\mathcal C = R_+^m + span(A^T)$
+
+$|\omega_P(b, c)| < \infty \iff (b,c) \in \mathcal B \times \mathcal C$
+
+
+#+BEGIN_theorem 
+$\omega_P: \mathcal B \times \mathcal C \rightarrow \mathcal R$ is continuous.
+#+END_theorem
+
+
+#+BEGIN_theorem 
+$\Omega_P: \mathcal B \times \mathcal C \rightarrow \mathcal R$ is upper semi-continuous:
+If $x_k \in LP(b_k, c_k)$, and $(b_k, c_k, x_k) \rightarrow_k (b^*, c^*, x^*)$, then $x^* \in \Omega_P(b^*, c^*)$
+#+END_theorem
+
+
+#+BEGIN_theorem 
+$\Omega_P: \mathcal B \times \mathcal C \rightarrow \mathcal R$ is lower semi-continuous at $(b^*, c^*)$ iff and only if $\Omega_P(b^*, c^*)$ is a singleton.
+l.s.c: 
+If $(b_k, c_k) \rightarrow (b^*, c^*), x^* \in \Omega_P(b^*, c^*)$, then there exist $x_k \in \Omega_P(b_k, c_k)$ such that $x_k \rightarrow x^*$.
+#+END_theorem

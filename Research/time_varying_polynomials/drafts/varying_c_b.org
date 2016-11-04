@@ -1,0 +1,55 @@
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \newtheorem{theorem}{Theorem}[section]
+#+LATEX_HEADER: \newtheorem{definition}[theorem]{Definition}
+#+LATEX_HEADER: \newtheorem{lemma}[theorem]{Lemma}
+#+LATEX_HEADER: \newtheorem{proof}[theorem]{Proof}
+
+*Scope:*
+  
+-   $c(t), b(t)$ polynomials, $t \in [0, 1]$
+-  $A$ fixed
+- Feasible set $\mathcal P_t = \{x, Ax \le b(t)\}$
+- Without loss of generality, as long as $\mathcal P_t$ is full dimensional, we can assume there is $\varepsilon > 0$, such that $B(0, \varepsilon) \in P_t$.
+
+
+#+BEGIN_theorem
+The vertices of $\mathcal P_t$ move polynomially in $t$.
+#+END_theorem
+  
+#+BEGIN_proof 
+Any vertex of $P_t$ is completely determined by the choice of the basic basis $B$:
+
+$$v_t = A_B^{-1}b(t) =: v_B(t)$$.
+
+#+END_proof
+
+
+#+BEGIN_theorem 
+Let  $x_t: [0, 1] \rightarrow \mathbb R^n$ be a function that verifies the following properties:
+- It is equal at any time $t$ to one of the vertices $v_t$ of $P_t$.
+- The number of times $x_t$ switches from one vertex to other is finite.
+
+Any such function $x_t: [0, 1] \rightarrow \mathbb R^n$  can be approximated in $L_1$ by a polynomial $p(t)$ such that $p(t) \in \mathcal P_t \; (\forall t\in [0, 1])$
+#+END_theorem
+
+
+#+BEGIN_proof
+Notice that $x(t) = \sum_B \lambda_B(t)v_B(t)$ where $\lambda_B(t)$ are step functions equal to $1$ when $x_t$ is equal to the vertex associated with $B$.No more than two $\lambda_B$ are non zeros at any given time.
+
+Now all we need to do is approximate the $\lambda_B$ by positive polynomials that sum to less than 1.
+
+Indeed, if we do that, then $p(t)$ can be written as a convex combination of $0$ and the vertices of $\mathcal P_t$, so $p(t) \in \mathcal P_t$.
+
+The approximation can be done as follow:
+
+
+#+ATTR_LATEX:  :width 0.5\textwidth
+[[./approximate_weights.png]]
+
+#+END_proof
+
+*Conclusion:*
+
+The optimal solution to the time varying problem $\max c_t.x_t \; Ax_t \le b_t$ verify the conditions to the previous theorem. Indeed, $x_t$ is always equal to some vertex, and switches to a different vertex only if the reduced cost become positive, which happen only when a certain univariate polynomial equation becomes 0. 
+
+We have just proved the convergence of optimal polynomial solutions to the overall optimal solution.

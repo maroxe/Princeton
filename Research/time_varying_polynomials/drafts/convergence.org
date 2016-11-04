@@ -1,0 +1,234 @@
+#+OPTIONS: toc:nil
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{listing}
+#+LATEX_HEADER: \usepackage{algorithm}
+#+LATEX_HEADER: \usepackage[noend]{algpseudocode}
+#+LATEX_HEADER: \newtheorem{theorem}{Theorem}[section]
+#+LATEX_HEADER: \newtheorem{definition}[theorem]{Definition}
+#+LATEX_HEADER: \newtheorem{lemma}[theorem]{Lemma}
+#+LATEX_HEADER: \newtheorem{proof}[theorem]{Proof}
+#+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+
+
+
+
+#+TITLE: Convergence 
+#+AUTHOR: Bachir El Khadir
+#+EMAIL: bkhadir@princeton.edu
+
+* Notation 
+
+#+NAME: eqn:Pt
+\begin{equation*}
+\tag{$P_t$}
+\begin{array}{ll@{}ll}
+\text{maximize} & \langle c(t), x(t) \rangle & \\
+\text{subject to}& A(t) x(t) \le b(t)
+\end{array}
+\end{equation*}
+
+
+#+NAME: eqn:P
+\begin{equation*}
+\tag{$P$}
+\begin{array}{ll@{}ll}
+\text{maximize} & \int_0^1 \langle c(t), x(t) \rangle \mathrm dt & \\
+\text{subject to}& A(t) x(t) \le b(t)&&\forall t \in [0,1] 
+\end{array}
+\end{equation*}
+
+
+#+NAME: eqn:SDPt
+\begin{equation*}
+\tag{$SDP_t$}
+\begin{array}{ll@{}ll}
+\text{maximize} & \langle c(t), x(t) \rangle & \\
+\text{subject to}& A_0(t) + \sum_i A_i(t) x_i(t)  \succeq 0
+\end{array}
+\end{equation*}
+
+#+NAME: eqn:SDP
+\begin{equation*}
+\tag{$SDP$}
+\begin{array}{ll@{}ll}
+\text{maximize} & \int_0^1 \langle c(t), x(t) \rangle dt& \\
+\text{subject to}& A_0(t) + \sum_i A_i(t) x_i(t)  \succeq 0
+\end{array}
+\end{equation*}
+
+
+#+NAME: eqn:SDP_poly
+\begin{equation*}
+\tag{$SDP_{poly}$}
+\begin{array}{ll@{}ll}
+\text{maximize} & \int_0^1 \langle c(t), x(t) \rangle dt& \\
+\text{subject to}& A_0(t) + \sum_i A_i(t) x_i(t)  \succeq 0
+\end{array}
+\end{equation*}
+
+
+#+NAME: eqn:SDP_d
+\begin{equation*}
+\tag{$SDP_d$}
+\begin{array}{ll@{}ll}
+\text{maximize} & \int_0^1 \langle c(t), x(t) \rangle dt& \\
+\text{subject to}& A_0(t) + \sum_i A_i(t) x_i(t)  = SOS_d
+\end{array}
+\end{equation*}
+
+
+
+
+$\mathcal P_t = \{x \in \mathbb R^n, \; A(t) x \le b\}$ the feasible region of ([[eqn:Pt]]).
+
+Let $x(t)$ be an optimal solution to ([[eqn:Pt]]).
+
+#+BEGIN_latex
+\newpage
+#+END_latex
+
+* Behavior of the solution
+
+#+NAME: thm:form_solution  
+#+BEGIN_theorem
+There exist $N > 0$, and $0 = t_1 < \ldots < t_N = 1$ such that, for every $t \in (t_i, t_{i+1}]$, there exist $B \in {[n] \choose r}$
+- $A_B(t)$ is invertible
+- $x(t) = A_B(t)^{-1}b(t)$ is an optimal solution to [[eqn:Pt]]
+- $N$ is polynomial-sized.
+#+END_theorem
+
+To prove theorem [[thm:form_solution]], we are going to need the following lemmas:
+
+
+#+BEGIN_lemma
+For all $B \in {[n] \choose r}$ $A_B(t)$ is either never invertible or always invertible except for finally many $t \in [0, 1]$.
+#+end_lemma
+
+
+#+BEGIN_lemma
+For all $B \in {[n] \choose r}$, if $A_B(t)$ is invertible for some $t$, then the point
+#+NAME: eqn:vertex
+\begin{equation*}
+v_B(t) = A_B(t)^{-1}b(t)
+\end{equation*}
+changes feasibility finitely many times. When $v_B(t)$ is feasible, it is a vertex of the feasible region of [[eqn:Pt]]
+#+end_lemma
+
+Let $\mathcal B = \{B, \exists t \; A_B(t) \; \text{is invertible}\}$. 
+
+
+#+BEGIN_lemma
+We can always choose $x(t)$ to be of the form [[eqn:vertex]]. Call $B(t) := B$ the optimal basis at tune $t$.
+#+end_lemma
+
+To summarize, there is a (finite) partition of $[0, 1]$ into intervals $I_i$ such that in the interior of any $I_i$:
+- For all $B \in \mathcal B$, $A_B(t)$ is invertible and $v_B(t)$ is either feasible or not. Let $\mathcal F_i = \{B \in \mathcal B, \; v_B(t) \text{ is feasible on } \mathring I\}$.
+- $x(t) = A_B(t)^{-1}b(t)$
+  
+#+BEGIN_lemma
+We can choose $B(t)$ so that it changes finitely many times inside each $I_i$.
+#+end_lemma
+
+#+BEGIN_proof
+$B(t)$ change only if there exist $B, B' \in \mathcal F_i$ such that $\langle c(t), A_{B}^{-1}(t)b(t) \rangle = \langle c(t), A_{B'}^{-1}(t)b(t) \rangle$.
+$t \rightarrow \langle c(t), (A_{B}^{-1}(t)- A_{B'}^{-1}(t))b(t)\rangle$ is a rational fraction of degree $O(nd)$. If it is no identically zero, then it hits zero finitely many times.
+#+END_proof
+
+
+* Approximation of the solution by a continuous function
+  Hypothesis:
+- $P_t$ admits one strictly feasible continuous solution $f_0$. e.g there exist a continuous function $f_0: [0, 1] \rightarrow \mathbb R^n$ and $\beta > 0$ such that $A(t)f_0(t) \le b(t) - \beta$, $\forall t \in [0, 1]$
+
+  
+#+NAME: thm:approx_continuous
+#+BEGIN_theorem
+For every $\varepsilon > 0$, there exist a continuous function $f: [0, 1] \rightarrow \mathbb R^n$ such that:
+- $f(t)$ is feasible of all $t$, e.g $A(t)f(t) \le b(t)$, $\forall t \in [0, 1]$
+- $\int_0^1 \langle c(t), x(t)\rangle - \int_0^1 \langle c(t), f(t)\rangle \le \varepsilon$.
+#+END_theorem
+
+
+
+#+BEGIN_proof
+Theorem [[thm:form_solution]] proves the existence of a partition $[0, 1] = \cup_1^n [t_i, t_{i+1})$ such that $x(t)$ is a continuous (in fact, a rational function).
+
+Define $I_i^{\alpha} = (t_i+\alpha, t_i -\alpha)$ for some $\alpha > 0$ that we are going to fix later on.
+
+Let $f^{\alpha}$ be the function that:
+- is equal to $x(t)$ on every $I_i^{\alpha}$.
+- is equal to $f_0$ on all the $t_i$.
+- interpolates linearly between $x(t)$ and $f_0(t)$ on $[t_i-\alpha, t_i+\alpha]$
+
+As $\alpha \rightarrow 0$, $f^{\alpha}(t) \rightarrow x(t)$ almost surely. Given that $|f^{\alpha}(t)| \le |x(t)| + |f_0(t)|$, the Dominated convergence theorem gives $f^{\alpha}(t) \rightarrow_{L_1} x(t)$
+#+END_proof
+
+* From Continuous to polynomial
+  
+* Solving the initial problem directly
+
+  Based on [[thm:form_solution]], one can solve the problem [[eqn:P]] directly using the following algorithm:
+
+  #+begin_algorithm
+  \caption{My algorithm}\label{euclid}
+  \begin{algorithmic}[1]
+  \Procedure{Solve Pt}{}
+  \State $B[]$ array
+  \State $t[]$ array
+  \State $t[1] \gets 0$
+  \State $i \gets 0$
+  \Do
+    \State \text{Solve} $P(t[i])$, $B[i] \gets \textit{The optimal basis}$
+  \State $i \gets i+1$
+  \State $t[i] \gets \arg \max_{s \ge t}\{\det A_B(s) \ne 0, \; A(s)x(s) \le b(s), \;  \langle c(s), x(s) - A_B^{-1}(s)b(s) \rangle  \le 0 \; (\forall B \in \mathcal B)\}$
+  \doWhile{$t[i] \le 1$}
+  \EndProcedure
+  \end{algorithmic}
+  #+end_algorithm
+
+  The algorithm outputs the time $t_1, \ldots t_N$ at which the jumps occur described by [[thm:form_solution]], as well as the optimal basis at any one of the those times.
+
+  The number of jumps is polynomial.
+
+* SDPs
+** Replacing positivity by SOS
+   
+  #+begin_theorem
+  [[eqn:SDP_d]] $=$  [[eqn:SDP_poly]] for $d$ large enough. e.g:
+  
+  For $x(t)$ polynomial, the following two statements are equivalent:
+  - $A_0(t) + \sum_i A_i(t) x_i(t)  \succeq 0$
+  - $u^T(A_0(t) + \sum_i A_i(t) x_i(t))u = SOS(t, u)$
+  #+end_theorem
+  
+
+  
+
+** Convergence of the polynomial solution to the best solution
+   #+begin_theorem
+    [[eqn:LP_p]] $\rightarrow$ [[eqn:SDP]]. e.g:
+    
+   The following provides a hierarchy of LPs whose optimal solution converge to a solution of [[eqn:SDP]]:
+
+#+NAME: eqn:LP_p
+\begin{equation*}
+\tag{$LP_p$}
+\begin{array}{ll@{}ll}
+\text{maximize}_{x, \alpha} & \int_0^1 \langle c(t), x(t) \rangle dt& \\
+\text{subject to}& A_0(t) + \sum_i A_i(t) x_i(t)  = \sum_{j=1}^p \alpha_j(t) b_jb_j^T
+\end{array}
+\end{equation*}
+
+Where $b_j \in \mathbb R^m$ are sampled uniformly from the unit sphere.
+
+   #+end_theorem
+
+
+   #+begin_theorem
+   [[eqn:LP_p]] $\le$  [[eqn:SDP_poly]]
+   #+end_theorem
+   
+
+   #+begin_theorem
+   [[eqn:SDP_d]] $\rightarrow$  [[eqn:SDP]]
+   #+end_theorem
+   

@@ -1,0 +1,81 @@
+#+OPTIONS: toc:nil
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \newtheorem{theorem}{Theorem}[section]
+#+LATEX_HEADER: \newtheorem{lemma}[theorem]{Lemma}
+#+LATEX_HEADER: \newtheorem{proof}[theorem]{Proof}
+
+
+#+TITLE: Polynomial approximation for piece wise constant functions
+#+AUTHOR: Bachir El Khadir
+
+* Canonical basis
+$$0 = x_0 < x_1 < \ldots < x_n = 1$$
+
+$$u(x) = \sum_{i=0}^n c_i 1_{x+i \le x < x_{i+1}}$$
+
+$$P(x) = \sum_{k=0}^d a_k x^k$$
+
+\begin{align*}
+\int_0^1 |P(x) - u(x)|^2 dx
+&= \int_0^1 P(x)^2 + 2 \sum_{i=0}^n c_i \int_{x_i}^{x_{i+1}} P(x) + \int_0^1 u(x)^2
+\end{align*}
+
+We seek to minimize
+$$J(a) := \underbrace{\int_0^1 P(x)^2}_{H(a)} + \underbrace{2 \sum_{i=0}^n c_i \int^{x_i}_{x_{i+1}} P(x)}_{l(a)} + \underbrace{\sum_{i=0}^n c_i^2 (x_{i+1} - x_i)}_{cte}$$
+
+
+\begin{align*}
+l(a) &= 2 \sum_{i=0}^n c_i \int^{x_i}_{x_{i+1}} P(x)
+\\&= 2 \sum_{i \le n, k \le d} c_i a_k \frac{x_{i+1}^{k+1} - x_i^{k+1}}{k+1}
+\\&= 2 \sum_{k \le d}  a_k \frac1{k+1} \sum_{i \le n} c_i(x_{i+1}^{k+1} - x_i^{k+1})
+\\&=  l^Ta & (l_k = \frac2{k} \sum_{i \le n} c_i(x_{i+1}^k - x_i^k))
+\end{align*}
+
+\begin{align*}
+H(a) &= \int_0^1 P(x)^2 dx
+\\&= \sum_{i, j} a_i a_j  \int_0^1 x^{i+j} dx
+\\&= \sum_{i, j \in \{0 \ldots d\}} \frac1{i+j} a_i a_j
+\\&= a^T H a & (H_{ij} = \frac1{i+j-2}\text{ is a Hilbert matrix})
+\end{align*}
+
+
+
+$$J(a) = a^THa + l^Ta + cte$$
+
+
+\begin{align*}
+J'(a) = 0
+&\implies a = -\frac12H^{-1}l
+\end{align*}
+
+\begin{align*}
+\min J(a) &= -\frac14 l^T H^{-1} l + cte
+\\& \le - \frac1{4\sigma_{\max}} ||l||_2^2 + cte
+\\& \le - \frac1{2\sigma_{\max}} \sum_{k=1}^{d+1} \frac1{k^2} \left(\sum_{i \le n} c_i(x_{i+1}^k - x_i^k)\right)^2 + \sum_{i=0}^n c_i^2 (x_{i+1} - x_i)
+\\& \le - \frac1{2\pi} \sum_{k=1}^{d+1} \frac1{k^2} \left(\sum_{i \le n} c_i(x_{i+1}^k - x_i^k)\right)^2 + \sum_{i=0}^n c_i^2 (x_{i+1} - x_i)
+\end{align*}
+
+* Legendre
+
+  $P = \sum_{i=0}^d a_i P_i$
+
+  $$\int_0^1 P^2 = \sum \frac{a_i^2}{2i+1}$$
+
+  $$\int_{x_i}^{x_{i+1}} P_n(x) dx = (n+\frac12)\left( (P_{n+1}(x_{i+1}) - P_{n+1}(x_i)) - (P_{n-1}(x_{i+1}) - P_{n-1}(x_i)) \right)$$
+
+  $$\int_{x_i}^{x_{i+1}} P_n(x) dx = (n+\frac12)\left( (P_{n+1}(x_{i+1}) - P_{n+1}(x_i)) - (P_{n-1}(x_{i+1}) - P_{n-1}(x_i)) \right)$$
+
+
+
+
+
+
+
+  
+  $$\frac1{2n+1} P_n(\frac{x+1}2) = \frac{d}{dx}\left( P_{n+1}(\frac{x+1}2) -  P_{n-1}(\frac{x+1}2)\right)$$
+
+  $$\frac2{2n+1} P_n(\frac{x+1}2) = \left(P_{n+1}'(\frac{x+1}2) -  P_{n-1}'(\frac{x+1}2)\right)$$
+  $$ P_n = (n+\frac12) (P_{n+1}' -  P_{n-1}')$$
+
+
+  

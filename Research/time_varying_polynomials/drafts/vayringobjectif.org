@@ -1,0 +1,29 @@
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+
+* Fixed constrained, varying objective.
+  
+$\mathcal C$ full dimensional convex set.
+$\mathcal C_{\varepsilon} = (1-\varepsilon) C$ 
+
+
+\begin{equation*}
+\begin{aligned}
+& \underset{z_i(t)}{\text{max}}
+& & J(x)
+\\&\text{st} \; x \in \mathcal C
+\end{aligned}
+\end{equation*}
+
+
+\begin{equation*}
+\begin{aligned}
+f(\varepsilon) = & \underset{z_i(t)}{\text{max}}
+& & J(x)
+\\&\text{st} \; x \in \mathcal C
+\end{aligned}
+\end{equation*}
+
+$f(\varepsilon) \rightarrow f(0)$
+
+any $x_t$ in $\mathcal C_\varepsilon$ can be approximated in $L_1$ by $p(t) \in \mathcal C$ 
+

@@ -1,0 +1,22 @@
+#+OPTIONS: toc:nil     
+
+* Question
+If $P, Q \in S^n$ such that $tr(P) \ge 0$, $tr(Q) < 0$, there exist a polynomial time algorithm to find $e \in \mathbb R^n$ such that:
+$e^TQe < 0, e^TPe \ge 0$
+
+* Ideas
+- First of all, by working in the orthonormal basis of the eigen vectors $e_i$ of $Q$, we can consider without loss of generality that $Q$ is diagonal.
+- We saw in class that we can find a suitable $e$ in the family $\{ \sum \pm e_i\}$. 
+
+My idea is the following:
+- If the dimension of the space is of the form $2^n$, for some $n \in \mathbb N$, then there exist a subset of $$\{ \sum \pm e_i\}$$ that forms an orthogonal basis $\mathcal U$, of $\mathbb R^{2^n}$ (This is the only point I haven't proved yet, but I convinced  myself that it worked for $2^1, 2^4$ and $2^3$)
+- We can always work in a space that has a dimension of the form $2^n$ by embedding the original space in a bigger one by padding $Q$ and $P$ with 0.
+- we know that all $u \in \mathcal U$ make the quadradic form $x \rightarrow x^TQx$ negative. We can also convice ourselves that one of them has to make $x \rightarrow x^TPx$ non-negative, otherwise $tr(P) = \sum_{u \in \mathcal U} \frac1{|u|^2} u^TPu$ would be negative.
+
+  This way we can restirct the search for the vector $e$ to the family $\mathcal U$.
+  I don't know if there is a clever way to generate $\mathcal U$, but $\mathcal U$ is independent from $P$ and $Q$ and can thus be calculated offline.
+
+  
+  
+
+

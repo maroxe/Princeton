@@ -1,0 +1,385 @@
+#+OPTIONS: toc:nil
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \newtheorem{theorem}{Theorem}[section]
+#+LATEX_HEADER: \newtheorem{definition}[theorem]{Definition}
+#+LATEX_HEADER: \newtheorem{lemma}[theorem]{Lemma}
+#+LATEX_HEADER: \newtheorem{proof}[theorem]{Proof}
+#+LATEX_HEADER: \newcommand{\onenorm}[1]{\left\lVert#1\right\rVert_1}
+#+LATEX_HEADER: \newcommand{\inftynorm}[1]{\left\lVert#1\right\rVert_{\infty, [0, 1]}}
+#+LATEX_HEADER: \newcommand{\lonenorm}[1]{\left\lVert#1\right\rVert_{L_1(0, 1)}}
+#+LATEX_HEADER: \newcommand{\partlonenorm}[2]{\left\lVert#1\right\rVert_{L_1(#2)}}
+
+# \bibliographystyle{plain}
+#+TITLE: Convergence of the optimal polynomial solution
+#+AUTHOR: Bachir El Khadir
+ #+BEGIN_SRC emacs-lisp :exports none
+(defun add-caption-header-and-center (caption header )
+  (concat (format "org\n#+attr_html: :class center :width 300px\n#+ATTR_LATEX: :float nil\n#+caption: %s\n%s\n|-|" caption header)))
+(defun add-caption-and-center (caption)
+  (concat (format "org\n#+attr_html: :class center :width 300px\n#+caption: %s\n#+ATTR_LATEX:  :width 0.45\\textwidth :float nil" caption)))
+
+#+END_SRC
+
+#+RESULTS:
+: add-caption-and-center
+
+
+\begin{abstract}
+Given a continum of linear minization problems with time varying objective function $c(t)$ under linear constraint $A x(t) \le b$, SOS techniques allow us to find the best polynomial solution $P(t)$.
+
+In this draft, we prove that as the degree of this polynomial gets larger, we converge to the overall optimal solution $x(t)$ in the $L_1$ sense.
+
+
+- We first work on slightly smaller polyhedron $\mathcal P_{\alpha} = \{A x(t) \le b - \alpha\}$.
+- we approximate the solution by a piece wise linear function $g(t)$
+- then we find a polynomial that approximate uniformly $g(t)$ that stays in $\mathcal P_0$.
+- we conclude by continuity of the optimal solution by small perturbation of $b$.
+
+\end{abstract}
+
+* Notation
+
+** $L_1$ Norm for vectors and functions
+  For a vector $x \in \mathbb R^n$, $\onenorm{x} = \sum_{i=1}^n |x_i|$.
+  
+  For a function $f: [0, 1] \rightarrow \mathbb R^n$, $\lonenorm{f} = \int_0^1 \onenorm{f(t)} dt$
+  
+  $L_1([0, 1]) := L_1([0, 1], \mathbb R^d) = \{ f: \; [0, 1] \rightarrow \mathbb R^d,\; \lonenorm{f} < \infty\}$
+
+
+
+** Time varying minimization problem  
+Define the two optimization problems:
+  
+      \begin{equation}
+      \tag{Pb}
+\begin{array}{ll@{}ll}
+\text{minimize} & \langle c(t), x(t) \rangle & \\
+\text{subject to}& A x(t) \le b
+\end{array}
+\end{equation}
+
+
+  
+\begin{equation}
+\tag{$Pb_{\alpha}$}
+\begin{array}{ll@{}ll}
+\text{minimize} & \langle c(t), x(t) \rangle & \\
+\text{subject to}& A x(t) \le b - \alpha
+\end{array}
+\end{equation}
+
+
+\begin{equation}
+\tag{$Pb_n$}
+\begin{array}{ll@{}ll}
+\text{minimize} & \int_0^1 \langle c(t), P(t) \rangle dt & \\
+\text{subject to}& A P(t) \le b \\
+& P \in \mathbb R_n[t]
+\end{array}
+\end{equation}
+
+
+Call $x(t), x^{\alpha}(t)$ the solutions to $Pb$ and $Pb_{\alpha}$ respectively.
+
+* Density of polynomials
+  #+BEGIN_theorem 
+For every $\varepsilon > 0, f \in L_1([0, 1], \mathbb R^n)$, there exists $P \in \mathbb R[t]$ such that $\lonenorm{f - P} \le \varepsilon$
+  #+END_theorem
+
+  #+BEGIN_theorem 
+For every $\varepsilon > 0, f \in C_0([0, 1], \mathbb R^n)$, there exists $P \in \mathbb R[t]$ such that $\inftynorm{f - P} \le \varepsilon$
+  #+END_theorem
+
+  
+* Continuity of the solution with respect to a perturbation of the constraints
+
+    #+begin_definition
+  $\mathcal P = \{x \in \mathbb R^n, \; Ax \le b\}$ a non degenerate (bounded) polyhedron, such that $x \in \mathcal P \implies \inftynorm{x} \le \mathcal D$
+  
+  $\mathcal P_{\alpha} = \{x \in \mathbb R^n, Ax \le b - \alpha \}$
+
+  $A = \begin{pmatrix}A_1^T\\ \vdots \\A_d^T\end{pmatrix} \in \mathbb R^{d \times n}$,  $x = \begin{pmatrix}x_1\\ \vdots \\x_n\end{pmatrix}$,  $b = \begin{pmatrix}b_1\\ \vdots \\b_d\end{pmatrix}$.
+
+
+  Recall that f$x^{\alpha}$ is the solution to $\min_{\mathcal P_{\alpha}} \int_0^1 \langle c_t, x_t \rangle dt$,  and $x := x^{0}$
+  #+end_definition
+
+
+  Without loss of generality, by translating the space of $x$, *we assume that $\mathcal P$ contains a ball centered around 0*.
+
+  #+BEGIN_SRC python :session *PYTHON* :results file :exports results  :wrap (add-caption-and-center "Example polyhedron")
+import matplotlib.pyplot as plt
+plt.rcdefaults()
+
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.path as mpath
+import matplotlib.lines as mlines
+import matplotlib.patches as mpatches
+from matplotlib.collections import PatchCollection
+
+
+def label(xy, text):
+    y = xy[1]
+    plt.text(xy[0], y, text, ha="center", family='sans-serif', size=14)
+
+
+fig, ax = plt.subplots()
+
+patches = []
+
+
+# add a Polygon
+polygon = mpatches.RegularPolygon((0, 0), 5, 0.1, alpha=0.9, fill=True)
+ax.add_patch(polygon)
+label((0, 0), '$P_{\\alpha}$')
+
+polygon = mpatches.RegularPolygon((0, 0), 5, 0.12, alpha=.3, facecolor='red',
+fill=True)
+ax.add_patch(polygon)
+label((-0.01, 0.1), '$P_0$')
+
+
+arrow = mpatches.Arrow(0.085, 0, .018, -.005, width=.01)
+ax.add_patch(arrow)
+label((0.095, 0.005), '$\\alpha$')
+
+
+label((0.045, 0.01), '$0$')
+ax.plot(0.045, 0.005,'x',markersize=10, markeredgecolor=(0,0,0), markerfacecolor='w', markeredgewidth=2)
+
+plt.subplots_adjust(left=0, right=1, bottom=0, top=1)
+plt.axis('equal')
+plt.axis('off')
+
+filename='polyhedron.png'
+plt.savefig(filename)
+filename
+  #+END_SRC
+  
+  #+RESULTS:
+  #+BEGIN_org
+  #+attr_html: :class center :width 300px
+  #+caption: Example polyhedron
+  #+ATTR_LATEX:  :width 0.45\textwidth :float nil
+  [[file:polyhedron.png]]
+  #+END_org
+
+
+
+  #+BEGIN_lemma 
+  Whenever $x_t$ is unique,  $x^{\alpha}_t \rightarrow_{\alpha \rightarrow 0} x_t$ for all $t \in [0, 1]$
+  #+END_lemma
+
+  Proof.
+  See [[papers:Martin1975][Martin1975]]: On the continuity of the maximum in parametric linear programming.
+
+
+  #+BEGIN_theorem 
+  $x^{\alpha}_t \rightarrow x_t$ when $\alpha \rightarrow 0$ in $L_1(0, 1)$
+  #+END_theorem
+
+  #+BEGIN_lemma 
+  If $c_t$ is non constant polynomial, $x_t$ is unique.
+  #+END_lemma
+
+  
+* Density of continuous functions in the space of admissible functions
+
+  Let:
+  - $\mathcal F_{\alpha} = \{f: [0, 1] \rightarrow \mathbb R^n,  f(t) \in \mathcal P_{\alpha} \}$, e.g the space of admissible functions.
+  - $\mathcal C_{\alpha} = \mathcal F_{\alpha} \cap C_0$, e.g the space of admissible continuous functions.
+
+
+  *For a fixed solution of the problem (Pb) $x \in \mathcal F$ , let's prove that there exist $g \in \mathcal C_{0}$ as close as we want to it in the $L_1$ norm.*
+
+
+  We start by approximating the solution $x^{\alpha}$ rather than $x$ directly. We conclude later by continuity of $\alpha \rightarrow x^{\alpha}$.
+
+  
+  To do that, fix $\varepsilon > 0$.
+  
+  #+BEGIN_lemma
+  There exist $g \in \mathcal C_0$  such that $\lonenorm{g - x^{\alpha}} \le \varepsilon$.
+
+  
+  Furthermore, we can impose that $\inftynorm{g} \le \inftynorm{x}$ so that $\inftynorm{f} \le n \mathcal D$.
+  #+END_lemma
+  
+  Of course, there is no reason for the condition $Q \in \mathcal C$ to hold.
+
+  
+  The idea is to "fix" the function $Q$ on the intervals where the inequality doesn't hold:
+
+  - On $J = \{t, Q(t) \not \in \mathcal P\}$, we multiply the function by 0. Fortunately this set is not too big, because otherwise the condition $\lonenorm{Q - x^{\alpha}} < \varepsilon$ would be violated.
+  - On $I = \{t, Q(t) \in \mathcal P\}$, we are clear. In order to have a continuous function, we replace $Q$ by a convex combination of $Q$ and $0$ in the vicinity of $J$. We do that by multiplying $Q$ we some hand made functions $f_k$. (see next)
+
+  To prove all this facts, we start by a simple lemma:
+  #+BEGIN_lemma
+  For $u \in \mathbb R^n$, $\onenorm{u} \ge \frac{\onenorm{Au}}{d \inftynorm{A}}$
+
+  Proof:  $\onenorm{Au} = \sum_{i=1}^d | \sum{j=1}^n A_{ij} u_j| \le  \sum_{i=1}^d  \sum{j=1}^n |A_{ij}| |u_j| \le d \inftynorm{A} \onenorm{u}$
+  
+  #+END_lemma
+
+
+** $J$ is not too large
+
+  \begin{align*}
+  \varepsilon
+  &\ge \lonenorm{x^{\alpha} - Q}
+  \\&\ge \partlonenorm{x^{\alpha} - Q}{J}
+  \\&\ge \frac1{d||A||_{\infty}} \partlonenorm{Ax^{\alpha} - AQ}{J} &\text{(by previous lemma)}
+  \\&= \frac1{d||A||_{\infty}}\int_J |Ax^{\alpha}(t) - AQ(t)|_{1} dt
+  \\&\ge \frac1{d||A||_{\infty}} \alpha \int_J  dt
+  \\&\ge \frac1{d||A||_{\infty}} \alpha |J|
+  \end{align*}
+
+  proves that $|J| \le d ||A||_{\infty} \frac{\varepsilon}{\alpha}$
+  
+
+** Changing $Q$ locally to make it admissible
+  Another interesting property of $J$ is that it can be written as a union of disjoint intervals $J = \bigcup_{i=1}^k J_i$.
+  To see that, recall that $J$ is the union of the set where the polynomials $t \rightarrow A_i^TQ(t) - b_i$ are positive.
+
+  
+  Let:
+  - $J_i = (s_i, r_i)$, and $J = \cup J_i$.
+  - $\bar J_i = (s_i - \beta, r_i+\beta)$, for some $\beta$ small enough chosen later.
+  - $\bar J = \cup \bar J_i$, so that $\bar J \setminus J$ is the vicinity of $J$ where we make interpolate the function to make it continuous.
+  - notice that $|\bar J| \le |J| +2 k \beta$ , where $|J|$ is the length of the interval $J$.
+
+
+  Let $f_i$ be a piece wise linear function such that:
+  - $f_i(t) = 0$ on $J_i$.
+  - $f_i(t) = 1$ outside of $\bar J_i$.
+  - $\inftynorm{f_i} \le 1$
+
+
+#+BEGIN_SRC python :session *PYTHON* :results file :exports results  :wrap (add-caption-and-center "Example of such function $f_k$")
+  import matplotlib.pyplot as plt
+  plt.rcdefaults()
+
+  import numpy as np
+  import seaborn
+
+  fig, ax = plt.subplots(figsize=(5, 3))
+  x = [-2, -0.5, 0, 1, 1.5, 3]
+  y = 1.-np.array([0, 0, 1, 1, 0, 0])
+  plt.plot(x, y)
+
+  for t in x:
+      plt.axvline(t, 0.2, 1, ls='--')
+
+
+  arrow = mpatches.Arrow(0, 1.01, 1, 0, width=.1)
+  ax.add_patch(arrow)
+
+  arrow = mpatches.Arrow(-0.5, 1.16, 2, 0, width=.1)
+  ax.add_patch(arrow)
+
+
+  label((0, -0.15), "$s_k$")
+  label((-0.5, -0.15), "$s_k-\\beta$")
+  label((1, -0.15), "$r_k$")
+  label((1.5, -0.15), "$r_k+\\beta$")
+
+  label((0.5, 1.05), "$J_k$")
+  label((0.5, 1.2), "$\\bar {J_k}$")
+
+  plt.ylim(-0.5, 1.5)
+  plt.tight_layout()
+  frame1 = plt.gca()
+  frame1.axes.get_xaxis().set_visible(False)
+  
+
+  filename='functionf.png'
+  plt.savefig(filename)
+  filename
+  #+END_SRC
+  
+  #+RESULTS:
+  #+BEGIN_org
+  #+attr_html: :class center :width 300px
+  #+caption: Example of such function $f_k$
+  #+ATTR_LATEX:  :width 0.45\textwidth :float nil
+  [[file:functionf.png]]
+  #+END_org
+
+
+  Then $g := Q \prod_{i=1}^k f_i$ is a continuous function that satisfies the condition $g \in \mathcal C$, because:
+  - $g(t) = 0 \in \mathcal P$ on $J$.
+  - $|g(t)| \le |Q(t)|$ on $\bar J \setminus J$. In fact, $g(t)$ is a convex combination of $0$ and $Q(t)$, so $g(t) \in \mathcal P$.
+  - $g(t) = Q(t) \in \mathcal P$ outside of $\bar J$.
+
+
+  Furthermore, $g$ is not very far from $x^{\alpha}$
+  \begin{align*}\onenorm{g - x^{\alpha}}
+  &\le \lonenorm{Q - x^{\alpha}} + \lonenorm{g - Q}
+  \\&\le \lonenorm{Q - x^{\alpha}} + \partlonenorm{g - Q}{\bar J}
+  \\&\le \lonenorm{Q - x^{\alpha}}  + 2\partlonenorm{Q}{\bar J} 
+  \\&\le \lonenorm{Q - x^{\alpha}}  + 2|\bar J| \lonenorm{Q}
+  \\&\le \varepsilon  + 2 |\bar J| n \mathcal D &\text{(because $Q(t) \le \inftynorm{x} \le \mathcal D$ by construction)}
+  \\&\le \varepsilon  + 2 ( d \inftynorm{A} \frac{\varepsilon}{\alpha} + 2k\beta ) n \mathcal D
+  &\text{(Using the bound of length of $\bar J$)}
+  \end{align*}
+
+  Choose $\alpha = 2n\mathcal D d||A||_{\infty} \sqrt{\varepsilon}$, $\beta = \frac{ \sqrt \varepsilon}{4nk\mathcal D}$, so that $\lonenorm{g - x^{\alpha}} \le 3 \sqrt{\varepsilon}$.
+
+  We have just proved that for all $\varepsilon > 0$, there exist $\alpha \propto \sqrt{\varepsilon}$ and $g \in \mathcal C$ such that $\lonenorm{g - x^{\alpha}} \le 3\sqrt{\varepsilon}$.
+
+** Back to $x$, use continuity  
+  Now fix $\varepsilon' > 0$, and pick $\alpha$ (and therefore $\varepsilon$) small enough so that:
+  - $\lonenorm{x^{\alpha} - x} \le \varepsilon'$
+  - $3\sqrt{\varepsilon} \le \varepsilon'$
+
+
+  As a result, we have that
+  $$\lonenorm{g - x} \le \lonenorm{g - x^{\alpha}} + \lonenorm{x^{\alpha} - x} \le 2 \varepsilon'$$
+
+  Which concludes the proof.
+
+
+* Convergence of the solution when $n \rightarrow \infty$
+
+  In the previous section we approximated $x_t$ by a continuous function. In this section, we do the same, but with a polynomial.
+  
+#+BEGIN_lemma
+For every $\varepsilon > -$, there exist a polynomial $Q \in \mathbb R[t]$ such that:
+- $Q \in \mathcal C$
+- $\lonenorm{Q - x} \le \varepsilon$
+#+END_lemma
+
+#+BEGIN_proof
+- First approximate $x$ by a continuous function $g \in \mathcal C_{\alpha}$: $\lonenorm{x - g} \le \varepsilon$. 
+- Then let $Q$ be a polynomial close enough to $g$: $\inftynorm{g - Q} \le \frac{\alpha}{n\inftynorm{A}}$
+- The latter implies that for all $t \in [0, 1]$ $A_i^TQ(t) = \sum_{j=1}^n A_{ij} Q_j(t) \le \sum_{j=1}^n A_{ij} g_j(t) + \alpha \sum_{j=1}^n |A_{ij}| \le b_i$
+#+END_proof
+
+
+Let's now prove convergence.
+
+#+BEGIN_theorem
+Let $\varepsilon > 0$, if $P^{(n)}$ is the solution to $(Pbn)$, then $\int_0^1 \langle c, P^{(n)} \rangle \rightarrow_n \int_0^1 \int_0^1 \langle c, x \rangle$
+#+END_theorem
+
+#+BEGIN_proof
+Let $Q$ the polynomial approximating $x$ from the previous lemma, and note $n$ its degree
+Let $P^{(n)}$ the solution to $(Pbn)$, then:
+
+
+
+\begin{align*}
+\int_0^1 \langle c,  P^{(n)}\rangle - \int_0^1 \langle c, x\rangle
+&\le \int_0^1 \langle c,  Q\rangle - \int_0^1 \langle c, x\rangle  & \text{(because $P^{(n)}$ is optimal)}
+\\&\le \inftynorm{c} \int_0^1  \onenorm{x_t - Q(t)}dt 
+\\&\le \inftynorm{c} \varepsilon 
+\end{align*}
+
+Which proves that as $n \rightarrow \infty$, we converge to thdene correct optimal value.
+#+END_proof
+
+  
+  
+

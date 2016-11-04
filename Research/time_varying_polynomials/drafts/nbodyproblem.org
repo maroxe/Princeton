@@ -1,0 +1,63 @@
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+* Problem statement
+\begin{equation*}
+\begin{aligned}
+& \underset{z_i(t)}{\text{minimize}}
+& & \int_0^T  \underbrace{\frac12 \sum_i m_i ||z_i'(t)||^2}_{\text{kinetic energy}} + \underbrace{\sum_{i<j} \int_0^T \frac{C_{ij}}{||z_i(t) - z_j(t)||}}_{\text{potential energy}} dt\\\
+\end{aligned}
+\end{equation*}
+
+
+The first term $\int_0^T  \frac12 \sum_i m_i ||z_i'(t)||^2$ is convex, and in fact quadratic, so we only need to worry about the second term, wich is of the form $\int_0^T \frac{C_{ij}}{||z_i - z_j||} dt$
+
+* Ideas
+  
+Here is my idea on how to deal with terms of the form $\min_p \int_0^T \frac1{||p(t)||} dt$, where $p(t)$ is a (multi-valued) polynomial.
+
+Notice that that minimization problem is the same as:
+
+\begin{equation*}
+\begin{aligned}
+& \underset{x}{\text{minimize}}
+& & \int_0^T q(t) dt \\
+& \text{subject to}
+& & \frac1{||p(t)||} \le q(t) \; \forall t \in [0, T]
+\end{aligned}
+\end{equation*}
+
+
+The condition $\frac1{||p(t)||} \le q(t)$ is equivalent to $\begin{pmatrix}q(t)&1\\1&||p(t)||\end{pmatrix} \succeq 0$ which is "almost" convex, if it weren't for the norm. 
+
+* Getting rid of the norm
+  
+
+  The constraint  $\frac1{||p(t)||} \le q(t)$ is equivalent to:
+
+  $$[||p(t)|| \le r \implies 1 \le r  q(t)] \; (\forall t \in [0, T])\; (\forall r > 0)$$
+
+  
+  We can rewrite the constraint in matrix form:
+
+$$\left[ \begin{pmatrix}r I_3 & p(t) & 0\\p(t)^T & r & 0\\0&0&t(T-t)\end{pmatrix} \succeq 0  \implies \begin{pmatrix}q(t)&1\\1&r\end{pmatrix}\succeq 0\right] $$
+
+which is equivalent (?) to 
+
+
+$$\begin{pmatrix}q(t)&1\\1&r\end{pmatrix} = D(r,t)\begin{pmatrix}r I_3 & p(t) & 0\\p(t)^T & r & 0\\0&0&t(T-t)\end{pmatrix}D(r, t)^T + C(r,t)C(r,t)^T $$
+
+
+
+
+
+
+
+
+If $[A(t) \succeq 0 \implies B(t) \succeq 0]$ holds, then there exist two polynomial matrices $C(t), D(t)$ such that $$B(t) =D(t)A(t)D(t)^T +  C(t)C(t)^T$$.
+
+
+
+
+
+
+
+
