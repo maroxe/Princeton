@@ -1,0 +1,376 @@
+#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
+#+LATEX_HEADER: \usepackage{listing}
+#+LATEX_HEADER: \usepackage{algorithm}
+#+LATEX_HEADER: \usepackage[noend]{algpseudocode}
+#+LATEX_HEADER: \usepackage{amsmath} % assumes amsmath package installed
+#+LATEX_HEADER: \usepackage{amssymb}  % assumes amsmath package installed
+#+LATEX_HEADER: \usepackage{amsthm}
+
+
+#+LATEX_HEADER: \theoremstyle{plain}  % Bold name, italics font
+#+LATEX_HEADER: \newtheorem{theorem}{Theorem}[section]
+#+LATEX_HEADER: \newtheorem{lemma}[theorem]{Lemma}
+#+LATEX_HEADER: \newtheorem{proposition}[theorem]{Proposition}
+#+LATEX_HEADER: \newtheorem{corollary}[theorem]{Corollary}
+#+LATEX_HEADER: \newtheorem{definition}[theorem]{Definition}
+#+LATEX_HEADER: \newtheorem{hyp}[theorem]{Hypothesis}
+#+LATEX_HEADER: \newtheorem{idea}[theorem]{Idea}
+#+LATEX_HEADER: \newtheorem{remark}[theorem]{Remark}
+
+#+LATEX_HEADER: \theoremstyle{definition}
+#+LATEX_HEADER: \theoremstyle{remark} % italics name, roman font
+#+LATEX_HEADER: \newtheorem{examples}{Example}[section]
+
+#+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+
+#+TITLE: Time varying LP
+#+AUTHOR: Bachir El Khadir
+
+* Introduction and notation
+  In this paper we investigate time varying convex programs, i.e. programs for which the feasible set and the objective function depend on time. 
+
+  More specifically, we focus on time varying semi-definite programs:
+
+#+NAME: eqn:time_varying_sdp_t
+  \begin{equation*}
+  \tag{$SDP_t$}
+  \begin{array}{ll@{}ll}
+  \text{maximize} & \langle c(t), x(t) \rangle & \\
+  \text{subject to}& A_0(t) + \sum_{i=1}^r A_i(t) x_i(t) \succeq 0
+  \end{array}
+  \end{equation*}
+with $A_i(t) \in \mathbb R^{m \times m}, x(t), c(t) \in \mathbb R^n$ for all $t \in [-1, 1]$
+
+
+A natural question here is how to describe the data of the problem: $(A_0, \ldots A_r, c)$. We made the choice of considering /polynomial/ functions because the set of such function is general enough to approximate a large set of functions, and at the same time simple enough to description (in the monomial basis for example) and to solve for (see section [?]). 
+
+There are multiple way to evaluate how well a given solution is doing. We can focus on the $L_2$ norm, or the average optimal value:
+  #+NAME: eqn:time_varying_sdp_l2
+  \begin{equation*}
+  \tag{$SDP$}
+  \begin{array}{ll@{}ll}
+  \text{maximize} & \int_{-1}^1 \langle c(t), x(t) \rangle dt & \\
+  \text{subject to}& A_0(t) + \sum_{i=1}^r A_i(t) x_i(t) \succeq 0
+  \end{array}
+  \end{equation*}
+
+We also consider in the examples the worst-case value: 
+
+  #+NAME: eqn:time_varying_sdp_worst
+  \begin{equation*}
+  \tag{$SDP$}
+  \begin{array}{ll@{}ll}
+  \text{maximize} & \min_{t \in [-1, 1]} \langle c(t), x(t) \rangle dt & \\
+  \text{subject to}& A_0(t) + \sum_{i=1}^r A_i(t) x_i(t) \succeq 0
+  \end{array}
+  \end{equation*}
+
+
+
+
+In this paper, we give a particular emphasis to the particular case of linear programs:
+
+  #+NAME: eqn:time_varying_lp_t
+  \begin{equation*}
+  \tag{$LP_t$}
+  \begin{array}{ll@{}ll}
+  \text{maximize} & \langle c(t), x(t) \rangle & \\
+  \text{subject to}& A(t) x(t) \le b(t)
+  \end{array}
+  \end{equation*}
+with $A_i(t) \in \mathbb R^{m \times n}, x(t), c(t) \in \mathbb R^n$ for all $t \in [-1, 1]$
+
+In many applications, one looks for $x(t)$ that is smooth and optimal. In this paper discuss how to obtain the best polynomial solution $x(t) \in \mathbb R[t]^n$. It is important to notice that in general the optimal solution is not polynomial, and might not even be continuous.
+
+#+ATTR_LATEX: :width 0.25\textwidth
+[[file:frame1.png]]
+[[file:frame2.png]]
+[[file:frame3.png]]
+[[file:frame4.png]]
+#+ATTR_LATEX: :width 0.25\textwidth
+#+caption: c(t)
+file:arrow.png
+
+
+
+If $A$ a matrix of dimension $m \times n$, with $m \ge n$, and $B \subseteq \{1, \ldots n\}$, then $A_B$ is the submatrix $(A_{B_i,i})_{1 \le i \le m}$
+
+  Throughout the whole paper, we make the following assumption for all $t \in [-1, 1]$:
+  - $\mathcal P_t \ne \emptyset$, i.e. there exist at least one feasible solution. We provide
+  - $\mathcal P_t$ is bounded: In theorem [[thm:bound_equiv_uniform_bound]] we prove that this is in fact equivalent to $\mathcal P_t$ being bounded uniformly in $t$.
+
+    
+** Contribution of the paper
+   In this paper we propose an efficient method to find the best polynomial solution to a time-varying linear program or semi-definite program. The paper is organized as follow:
+   - In section 2 we describe the form of solution to ([[eqn:time_varying_sdp_t]]) that need not to be polynomial. We then discuss under which conditions polynomial solutions exist and are optimal.
+   - In section 3, we give a finite time algorithm to check for those conditions.
+   - Section 4 presents an SDP formulation for finding the best polynomial solution.
+
+   
+* Time varying LP
+
+** Preliminary
+
+   The following notion of limits of sets in time will be useful to as:
+
+   #+BEGIN_definition
+   $$\lim_{t_0} P_t = \{v |\; v(t_n) \in \mathcal P_{t_n}, t_n \rightarrow t_0, \lim v(t_n) = v \}$$
+   #+END_definition
+
+
+     We prove that as long as $\mathcal P_t$ is bounded, we can assume without loss of generality that $\mathcal P_t$ is uniformly bounded.
+
+     #+NAME: thm:bound_equiv_uniform_bound
+     #+BEGIN_theorem
+     Suppose that $\mathcal P_t$ is feasible for all $t \in [-1, 1]$.
+
+     Define the two statements:
+
+     1. $dist(0, P_t) < \infty$ for all $t$.
+     2. $\sup_t dist(0, \mathcal P_t) < \infty$
+
+     Then 1. $\implies$ 2
+     #+END_theorem
+
+   
+** Geometry of the feasible set
+   
+  We start be presenting the following theorem that describes the geometry of the feasible set $\mathcal P_t$. The theorem states that for except some finite number of times, the feasible set is a convex combination of points that move as piece-wise rational functions in time. More formally:
+  
+  #+NAME: thm:geometry_feasible_set_lp
+  #+BEGIN_theorem
+  There exist $N > 0$, and $-1 = t_1 < \ldots < t_N = 1$ such that, for all $i = 1 \ldots N$, there exist $B_1 \ldots B_r \in {[m] \choose n}$ such that:
+  - $A_{B_j}(t)$ is invertible for every $t \in (t_i, t_{i+1})$, 
+  - $\mathcal P_t = conv\{ A_{B_j}(t)^{-1}b(t), j=1 \ldots r \}$
+  - $\lim_{t_i} \mathcal P_t \subseteq \mathcal P_{t_i}$
+  - Call $\mathcal V_i = \{t \rightarrow A_{B_j}^{-1} (t) b(t)\}$, e.g the set of vertices of $\mathcal P_t$ at the interval $(t_i, t_{i+1})$
+  #+END_theorem
+  
+  Even though the previous theorem gives a description of the feasible set and ignores the objective function, it is not very hard to see that the optimal solution can also be chosen to be a piece-wise rational function in $t$. Indeed, there always exist an optimal solution of a linear program on a vertex, and if $c(t)$ is "nice" enough, e.g. a polynomial, optimality of any given vertex changes only finitely many time inside $[-1, 1]$.
+  
+  #+NAME: thm:form_optimal_solution_lp
+  #+BEGIN_theorem
+  There exist $N > 0$, and $0 = t_1 < \ldots < t_N = 1$ such that, for all $i = 1 \ldots N$, there exist $B \in {[m] \choose n}$ such that:
+  - $A_{B}(t)$ is invertible for every $t \in (t_i, t_{i+1})$, 
+  - $x^{opt}(t) = A_{B_j}(t)^{-1}b(t)$ is optimal.
+  #+END_theorem
+
+  We defined $x^{opt}$ everywhere except on the times $t_i$.
+  We could extend it at $t_i$ by taking the right limit for example (that exist, since x^{opt} is a bounded rational function on $(t_i, t_{i+1})$). Call that function $\bar x^{opt}$. Even though feasibility will be preserved, optimality may not as the following example shows:
+
+  #+BEGIN_examples
+  $\max x(t)$ s.t. $-t \le tx(t) \le t, -2 \le x(t) \le 2$
+  \[x^{opt}(t) = \left\{\begin{array}{cc}1&t \ne 0\\0&t = 0\end{array}\right.\]
+  #+END_examples
+
+  This is not a problem in our framework however, since we are mainly concerned by the average optimal value in time $\int_{-1}^1 \langle c(t), x(t) \rangle dt$, and changing $x(t)$ at the set of measure 0 will not change that value. In the case where we are interested in maximizing the worst case $\min_{t} \langle c(t), x(t) \rangle$, we can notice that $\langle c(t_i), \bar x^{opt}(t_i)\rangle \ge \min_{t} \langle c(t), x^{opt}(t) \rangle$, and therefore we don't lose by extending $x^{opt}$ in this way.
+
+** Existence of continuous solutions
+   We are interested in the existence of polynomial solutions, one natural question to ask is whether such solution always exist. The answer to that question is negative, and we prove that in fact even continuous solutions might not exist:
+
+  #+BEGIN_examples
+  Example where a continuous solution doesn't exist:
+  
+  $\mathcal P_t = \{ tx \ge 0, t(x-1) \ge 0\}$ doesn't have a continuous solution.
+  $\mathcal P_t = [1, \infty)$ when $t > 0$
+  $\mathcal P_t = (-\infty, 0]$ when $t < 0$
+  #+END_examples
+
+  The reason no continuous solution exist is that the $\mathcal P_t$ are "disconnected" at 0, e.g $\lim_{t < 0} P_t \cap \lim_{t > 0} = \emptyset$. 
+
+
+#+NAME: thm:existence_cont_solution
+  #+BEGIN_theorem
+  The following are equivalent:
+1. There exist a continuous solution.
+2. $dist(P_{t_i-\alpha}, P_{t_i+\alpha}) \rightarrow_{\alpha} 0$ for $i = 1 \ldots N$
+3. $conv \{ v(t_{i}), v \in \mathcal V_i\} \cap conv \{ v(t_{i}), v \in \mathcal V_{i+1}\} \ne \emptyset$
+4. $\min_{x \in \mathcal P_{t_i-\alpha}, x \in \mathcal P_{t_i+\alpha}} |x - y| \rightarrow 0$
+  #+END_theorem
+
+  When $A(t)$ doesn't depend on $t$ that can't happen:
+  
+  #+BEGIN_theorem
+   When $A(t)$ doesn't depend on $t$ there always exist a continuous solution.
+  #+END_theorem 
+
+  #+BEGIN_proof 
+  Assume  $conv \{ v(t_{i}), v \in \mathcal V_i\} \cap conv \{ v(t_{i}), v \in \mathcal V_{i+1}\} = \emptyset$, then there is a separating hyperplane with normal $u \in \mathbb R^n$ such that for some $\delta > 0$:
+
+- $\langle v(t_i) , u \rangle > \delta$ for $v \in \mathcal V_i$
+- $\langle v(t_i) , u \rangle < -\delta$ for $v \in \mathcal V_{i+1}$
+
+  
+  But that contradicts the fact that the following LP has a continuous solution when $\alpha \rightarrow 0$:
+  $$\min_{x \in P_{t+\alpha}} \langle x, u \rangle$$
+  
+  #+END_proof
+
+
+  Whenever there exist one feasible continuous solution, we can find near optimal continuous solution.
+  
+  #+NAME: thm:optimality_continuous_solution
+  #+BEGIN_theorem
+  Suppose [[eqn:time_varying_lp_t]] admits one feasible continuous solution $f_0$. i.e. there exist a continuous function $f_0: [-1, 1] \rightarrow \mathbb R^n$ such that $A(t)f_0(t) \le b(t)$, $\forall t \in [-1, 1]$
+  
+  For every $\varepsilon > 0$, there exist a continuous function $f: [-1, 1] \rightarrow \mathbb R^n$ such that:
+  - $f(t)$ is feasible of all $t \in [-1, 1]$.
+  - $\int_0^1 \langle c(t), x(t)\rangle - \int_0^1 \langle c(t), f(t)\rangle \le \varepsilon$.
+  #+END_theorem
+  
+      
+** From continuous to polynomial      
+   Now that we have established that the existence of continuous solution is a necessary condition that is not always verified, one might ask if such condition is also sufficient for existence and optimality of polynomial solution. Once again the answer to both questions is negative:
+  
+#+BEGIN_examples
+      Examples where a continuous solution exists but a polynomial solution doesn't exist:
+      $\mathcal P_t = \{ (1+t^2) x = 1\} = \{ \frac1{1+t^2} \}$ 
+#+END_examples
+
+      
+      What went wrong? $\mathcal P_t$ is not full dimensional, which motivates the following definition:
+
+#+BEGIN_definition
+$\mathcal P_t$ is full dimensional if there exist $x \in \mathcal P_t$ and $\varepsilon > 0$ such that $B(x, \varepsilon) \subset P_t$
+#+END_definition
+
+An equivalent characterization for full dimensionality for a polytope $\mathcal P_t$ is that the affine rank of the vertices is at least the dimension of the ambient space plus 1.
+
+#+NAME: thm:optimality_poly_solution
+#+BEGIN_theorem
+Under the following assumptions:
+- $\mathcal P_t$ is full dimensional for all $t \in [-1, 1]$
+-  [[eqn:time_varying_lp_t]] admits a feasible continuous solution.
+
+Then for every $\varepsilon > 0$, there exist a *polynomial*  function $p: [-1, 1] \rightarrow \mathbb R^n$ such that:
+  - $p(t)$ is feasible of all $t$, e.g $A(t)p(t) \le b(t)$, $\forall t \in [-1, 1]$
+  - $\int_{-1}^1 \langle c(t), x(t)\rangle - \int_{-1}^1 \langle c(t), p(t)\rangle \le \varepsilon$.
+  #+END_theorem
+
+
+*Discussion:* in the example given above, $\mathcal P_t$ was never full dimensional.
+
+
+* Decidability of the conditions
+  
+  Theorem  [[thm:form_optimal_solution_lp]] showed that the feasible set of a time varying LP can fully described by giving the time $t_1, \ldots t_N$ as well as the coefficients of the rational functions in the set $\mathcal V_i$ for all $i=1, \ldots N$. We propose an algorithm that does exactly that.
+  Notice that since the algorithm produces a vertex description of the moving polytope $\mathcal P_t$, getting an optimal solution for all $t \in [-1, 1]$ is straightforward.
+  
+  
+** Feasibility
+   
+    Based on [[thm:form_optimal_solution_lp]], one can solve the problem [[eqn:time_varying_lp_t]] directly using the following algorithm:
+
+    #+NAME: alg:checking_feasibility
+    #+begin_algorithm
+
+    Find the times $t_i$
+    
+    For all $B \in {[m]\choose n}$, consider the matrix polynomial $A_B(t)$.
+    
+    Define $\det_B(t) = \det(A_B(t))$, if it is not identically 0, 
+    
+    
+    
+   #+end_algorithm
+
+
+** Feasibility of continuous solutions
+   Using characterization [[thm:existence_cont_solution]], we can decide whether there exist a continuous solution that lives inside $\mathcal P_t$ for all $t \in [-1, 1]$. To do that, we look at times $t_{2}, \ldots t_{N-1}$ given by the previous algorithm, and for $2 \le i \le N-1$, we check that:
+   $$\conv(v(t_i), v \in \mathcal V_i) \cap \conv(v(t_i), v \in \mathcal V_{i+1})$$
+
+  And this can be done in polynomial time.
+   
+   
+** Full dimensionality
+   Full dimensionality can also be checked in the same fashion, 
+
+   
+** Optimality
+   Finding the optimal solution can be implemented in the same fashion, and the following algorithm is an adaptation of algorithm [[alg:checking_feasibility]].
+     #+begin_algorithm
+  \caption{My algorithm}\label{euclid}
+  \begin{algorithmic}[1]
+  \Procedure{Solve Pt}{}
+  \State $B[]$ array
+  \State $t[]$ array
+  \State $t[1] \gets 0$
+  \State $i \gets 0$
+  \Do
+    \State \text{Solve} $P(t[i])$, $B[i] \gets \textit{The optimal basis}$
+  \State $i \gets i+1$
+  \State $t[i] \gets \arg \max_{s \ge t}\{\det A_B(s) \ne 0, \; A(s)A_B^{-1}(s)b(s) \le b(s), \;  c_B(s)A_B^{-1}(s) \le 0 \; \}$
+  \doWhile{$t[i] \le 1$}
+  \EndProcedure
+  \end{algorithmic}
+  #+end_algorithm
+
+  The algorithm outputs the time $t_1, \ldots t_N$ at which the jumps occur described by [[thm:form_optimal_solution_lp]], as well as the optimal basis at any one of the those times.
+
+  *Conjecture*: The number of jumps is polynomial.
+
+    #+begin_theorem
+    The algorithm terminates after finitely many steps and gives the correct optimal solution.
+    #+end_theorem
+    
+    #+begin_proof
+    The number of steps of the loop is bounded by the number of roots of the following polynomials:
+     $\{\det A_B(s) \ne 0, \; A(s)A_B^{-1}(s)b(s) \le b(s), \;  c_B(s)A_B^{-1}(s) \le 0 \; | B \in [n]\}$
+
+     Corecteness is obtained because at any given time $t$, the point $x(s) = A(s)A_B^{-1}(s)$ is:
+     - feasibile, e.g. $A(s)A_B^{-1}(s)b(s) \le b(s)$
+     - optimal, because of dual feasibility, e.g $c_B(s)A(s)A_B^{-1}(s)b(s) \le 0$
+    #+end_proof
+
+* Time varying LP is an SDP
+
+  The algorithm in the previous section proves that one can solve exactly a time-varying LP, and get the optimal solution in finite time, even though the solution is not continuous. The algorithm takes at least exponential time as it checks all the vertices of the polytope.
+  
+  This section describes how one can find the best /polynomial/ solution of a given degree, and in fact describes an algorithm that is efficient (in fact polynomial). Indeed, we prove that we can turn a time-varying LP into an semi-definite. The idea behind such a reduction is that a univariate polynomial $p(t)$ is non-negative on some interval, say $[-1, 1]$ if and only if it can be written as a sum of square of two polynomials $q(t), s(t)$, potentially weightted by $(1-t)$ and/or $(1+t)$, and searching for $q(t)$ and $s(t)$ can be done efficiently.
+  
+  
+#+begin_theorem
+A polynomial $p$ of degree $n$ is nonnegative over $[-1,1]$ if and only if it can be written as a weighted sum of squared polynomials \cite{Lukacs-1918}, either in the form of
+\begin{equation}
+p(t)=(1+t)q(t)+(1-t)r(t), \quad q\in SOS_{k-1},\; s\in SOS_{k-1} \qquad \text{if }n=2k-1,\label{eq:wsos-odd}
+\end{equation}
+or in the form
+\begin{equation}
+p(t)=(1+t)(1-t)q(t)+s(t), \quad q\in SOS_{k-1},\; s\in SOS_k, \qquad \text{if }n=2k.\phantom{-1 }\label{eq:wsos-even}
+\end{equation}
+#+end_theorem
+
+  As a result of this theorem, we can now rewrite [[eqn:time_varying_lp_t]] as (non time-varying) SDP:
+  
+    #+begin_theorem
+The following SDP find the best polynomial solution of degree $\le 2d+1$:
+
+  #+NAME: eqn:Ppoly
+  \begin{equation*}
+  \begin{array}{ll@{}ll}
+  \text{maximize} & \int_{-1}^1 \langle c(t), x(t) \rangle dt & \\
+  \text{subject to}& b(t) - A(t) x(t) = (1-t) \sigma_-(t) + (1+t) \sigma_+(t)
+  \end{array}
+  \end{equation*}
+
+  $\sigma_-, \sigma_+ \in \text{SOS}_d$
+  #+end_theorem
+
+  
+* SDP case
+  
+  #+begin_theorem
+  (See Theorem 5.1 in Dette&Studden)
+  
+  For $x(t)$ polynomial, the following two statements are equivalent:
+  - $A_0(t) + \sum_i A_i(t) x_i(t)  \succeq 0 , \; t \in [-1, 1]$
+  - $u^T(A_0(t) + \sum_i A_i(t) x_i(t))u \in (1+t) SOS(t, u) + (1-t) SOS(t, u), \; t \in [-1, 1]$
+  #+end_theorem
+
+* Numerical results
+** Max flow
+** Time varying certificate of stability
+
+
+   
+* Conclusion and open questions   
