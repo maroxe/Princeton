@@ -1,6 +1,7 @@
 var color_edges = '#6FB1FC';
 var color_flow = 'red';
-
+var scale_x = 1;
+var scale_y = 1;
 graph = [
 [ 0, 5, 4, 4, 7, 0, 0, 0, 0],
 [0, 0, 0, 0, 4, 0, 0, 0, 2],
@@ -69,7 +70,7 @@ for(var i = 0; i < graph.length; i++) {
         { 
             group: "nodes", 
             data: { id: 'n' + i, name: node_names[i] },
-            position: {x: pos[i][0],  y: pos[i][1] }
+            position: {x: pos[i][0]*scale_x,  y: pos[i][1]*scale_y }
         }
     );
 }
@@ -121,7 +122,7 @@ $('#clickme').click(function() {
 
 var update_graph = function (ui_value){
             var edge_counter = 0;
-            var flow = 0;
+            var flow_S = 0;
             for(var i = 0; i < n_nodes; i++) 
                 for(var j = 0; j < n_nodes; edge_counter++, j++) {
                     if(graph[i][j]){
@@ -134,14 +135,14 @@ var update_graph = function (ui_value){
                         cy.$('#f'+edge_counter).data('strength', flow_data[edge_counter][ui_value]);
                         p = 
                         cy.$('#f'+edge_counter).data('label', pct);
-                        if(i == 0) flow += flow_data[edge_counter][ui_value];
+                        if(i == 0) flow_S += flow_data[edge_counter][ui_value];
                     }
                 }
 
         
     t = time_points[ui_value];
     $( "#time" ).val(t);
-    $( "#flow" ).val(flow);
+    $( "#flow" ).val(flow_S);
 };
 
 

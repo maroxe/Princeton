@@ -115,17 +115,17 @@
   We now show the $X$ is subgaussian:
   \begin{align*}
   E[e^{\lambda X}]
-  &\le 1 + \frac{\lambda^2}2 E[X^2e^{|\lambda X|}] & (\text{by} \ref{eq:hint1})
-  \\&\le 1 + \frac{\lambda^2}2 e^{a \frac{\lambda^2}2}  E[X^2e^{\frac{X^2}{2a}}]& (\text{by} \ref{eq:hint2})
-  \\&\le 1 + \frac{\lambda^2}{2b} e^{ \frac a2  \lambda^2}  E[e^{(\frac{1}{2a}+b) X^2}]& (\text{by} \ref{eq:hint3})
-  \\&\le 1 + \frac{\lambda^2}{1/a-1/(3\sigma^2)} e^{a \frac{\lambda^2}2}  & (\text{by} \ref{eq:hint2})
-  \\&\le 1 + \frac{\sigma^2 \lambda^2}{1/k-1/3} e^{k \sigma^2 \frac{\lambda^2}2}  & (a = k\sigma^2)
-  \\&\le 1 + 6 \sigma^2 \lambda^2 e^{ \sigma^2 \lambda^2}  & (k = 2)
-  \\&\le 1 + (e^{6 \sigma^2 \lambda^2}-1) e^{ \sigma^2 \lambda^2}
-  \\&\le 1 - e^{ \sigma^2 \lambda^2}  + e^{7 \sigma^2 \lambda^2}
-  \\&\le e^{ 7 \sigma^2 \lambda^2}
+  &\le 1 + \frac{\lambda^2}2 E[X^2e^{|\lambda X|}] & (\text{by}  (\ref{eq:hint1}))
+  \\&\le 1 + \frac{\lambda^2}2 e^{a \frac{\lambda^2}2}  E[X^2e^{\frac{X^2}{2a}}]& (\text{by} (\ref{eq:hint2}))
+  \\&\le 1 + \frac{\lambda^2}{2b} e^{ \frac a2  \lambda^2}  E[e^{(\frac{1}{2a}+b) X^2}]& (X^2 \le \frac1b e^{bX^2})
+  \\&\le 1 + \frac{2\lambda^2}{1/a-1/(3\sigma^2)} e^{a \frac{\lambda^2}2} & (\frac1{2a} + b = \frac16 \sigma^2) 
+  \\&\le 1 + 12 \sigma^2 \lambda^2 e^{ \sigma^2 \lambda^2} & (a = 2\sigma^2)
+  \\&\le 1 + (e^{12 \sigma^2 \lambda^2}-1) e^{ \sigma^2 \lambda^2}
+  \\&\le \underbrace{1 - e^{ \sigma^2 \lambda^2}}_{\le 0}  + e^{13 \sigma^2 \lambda^2}
+  \\&\le e^{ 13 \sigma^2 \lambda^2}
   \end{align*}
 
+  So $X$ is 26-subguaussian.
   f.
   $$E[X^{2q}] = 2q \int_0^\infty t^{2q-1} P(|X| \ge t) dt \le 4q \int_0^\infty t^{2q - 1} e^{-t^2/2\sigma^2} dt = (4\sigma^2)^q q!$$
   g.
@@ -169,21 +169,47 @@
   \end{align*}
   
 
-  $||D_k f||_{\infty} = 2 \frac{1n}$
+  $||D_k f||_{\infty} =  \frac 2n$
 
-  as a result $Z_n$ is subgaussian with proxy variance $\sigma^2 \le \frac1n$, therefore ...
+  as a result $Z_n$ is subgaussian with proxy variance $\sigma^2 \le \frac1n$, therefore the result.
   
 * Problem 3.10
 
-  
+  - Let $X_i$ be the set of nodes $j > i$ that are connected to $i$. Then $\chi$ is a function of the $X_i$. Let's write $\chi = f(X_1, \ldots, X_n)$.
+  - Notice that the $X_i$ are independent, because they each depend on a disjoint subset of edges.
+  - $\chi$ can vary by at most 1 when one of the $X_i$ changes its value, because at worst, we add a new color for the node $i$, or we delete the color of the node $i$.
+  - $|D_i f| \le 1$, so that $\sum_k ||D_kf||_{\infty}^2 \le n$.
+  - By McDiarmid inequality:
+    $$P[\chi - E\chi \ge \sqrt n t] \le e^{-2(\sqrt n)t^2/n} = e^{-2t^2}$$
+    and similarly
+    $$P[ E\chi -\chi \le - \sqrt n t] \le e^{-2t^2}$$
+  - By Union Bound:
+    $$P[|\chi - E\chi| \ge \sqrt n t] \le 2e^{-2t^2}$$
+
+    
 * Problem 3.14 
 
+*Notations:*
+- $$f(\varepsilon) = \sup_{t \in T} \langle \varepsilon, t \rangle$$
+- Let $(t^{(n)}(\varepsilon))_n$ be a sequence in $T$ that verifies $\langle t^{(n)}(\varepsilon), \varepsilon \rangle \rightarrow f(\varepsilon)$
+- Let $\varepsilon^- = \arg\min_{\varepsilon'_j = \varepsilon_j \forall j\ne i} f(\varepsilon')$ 
 
-  \begin{align*}
-  D_i^- f
-  &= \sup_{\varepsilon_i'}f(\varepsilon_1, \ldots, \varepsilon_n) -  f(\varepsilon_1, \ldots, \varepsilon_n)
-  \\&= \sup_{\varepsilon_i'} \sup_{t \in T} \sum_{k\ne i} \varepsilon_k t_k + \varepsilon_i t_i - \sup_{t' \in T} \sum_{k\ne i} \varepsilon_k t_k' + \varepsilon_i' t_i'
-  \\&= \sup_{\varepsilon_i'} \sup_{t \in T} \sum_{k\ne i} \varepsilon_k t_k + \varepsilon_i t_i - \sup_{t' \in T} \sum_{k\ne i} \varepsilon_k t_k' + \varepsilon_i' t_i'
-  \end{align*}
 
+We have that:
   
+\begin{align*}
+D_i^- f(\varepsilon)
+&= f(\varepsilon) - \inf_{\varepsilon_i} \sup_{t \in T} \langle \varepsilon, t \rangle
+\\&= \sup_{t \in T} \langle \varepsilon, t \rangle -  \sup_{t \in T} \langle \varepsilon^{-}, t \rangle
+\\&= \lim_n \langle \varepsilon, t^{(n)} \rangle -  \sup_{t \in T} \langle \varepsilon^{-}, t \rangle
+\\&\le \lim_n \langle \varepsilon - \varepsilon^{-}, t^{(n)} \rangle 
+\\&\le \lim_n 2 |t^{(n)}_i (\varepsilon)|
+\end{align*}
+
+So:
+
+$$||\sum_i D_i^- f(\varepsilon))^2||_{\infty} \le ||\sum_i  \lim_n 4 |t^{(n)}_i (\varepsilon)|^2||_{\infty} \le 4 \sup \sum_{k=1}^n t_k^2 := \sigma^2$$
+
+
+We conclude by Bounded difference inequality.
+

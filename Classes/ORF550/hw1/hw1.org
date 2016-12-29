@@ -1,23 +1,5 @@
-# -*- mode: org; org-confirm-babel-evaluate: nil; -*-
-
-#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="../../css/org-style.css" />
-#+HTML_HEAD:    <link rel="stylesheet" type="text/css" href="../../css/special-block.css" />
-
-#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
-#+OPTIONS: author:t broken-links:nil c:nil creator:nil
-#+OPTIONS: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
-#+OPTIONS: p:nil pri:nil prop:nil stat:t tags:t tasks:t tex:t
-#+OPTIONS: timestamp:t title:t toc:t todo:t |:t
-
-#+LANGUAGE: en
-#+SELECT_TAGS: export
-#+EXCLUDE_TAGS: noexport
-#+CREATOR: Emacs 24.5.1 (Org mode )
-
-
 #+LATEX_HEADER:  \usepackage{amsmath}
 #+LATEX_HEADER: \usepackage{amsfonts}
-
 #+LATEX_HEADER: \newcommand{\Problem}[1]{\subsection*{Problem #1}}
 #+LATEX_HEADER: \newcommand{\Q}[1]{\subsubsection*{Q.#1}}
 #+LATEX_HEADER: \newcommand{\union}[1]{\underset{#1}{\cup} }
@@ -28,7 +10,9 @@
 #+LATEX_HEADER: \newcommand{\maximize}[3]{\optimize{#1}{#2}{#3}{max}}
 #+LATEX_HEADER: \DeclareMathOperator{\cov}{cov}
 #+LATEX_HEADER: \DeclareMathOperator{\var}{var}
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
 
+#+OPTIONS: toc:nil h:1
 
 #+TITLE: Problem set 1, ORF550
 #+AUTHOR: Bachir El khadir
@@ -51,7 +35,7 @@
   
 * Prob 2.2
   
-** Notations:
+*Notations:*
 - For a vector $v \in \mathbb R^n$, let $v_{-i} = (v_1 ,\ldots, v_{i-1} ,\ldots, v_{i+1} ,\ldots, v_n)$
 - $$f(\varepsilon) = \sup_{t \in T} \langle \varepsilon, t \rangle$$
 - Let $(t^{(n)}(\varepsilon))_n$ be a sequence in $T$ that verifies $\langle t^{(n)}(\varepsilon), \varepsilon \rangle \rightarrow f(\varepsilon)$
@@ -110,16 +94,19 @@ So:
 
   b.
   \begin{align*}
-  D_i f(x)
-  &\le \sup_{z, z'} f(x_1, \ldots, z, \ldots x_n) - f(x_1, \ldots, z', \ldots x_n)
-  \\&\le \sup_{z, z'} f(x_1, \ldots, z, \ldots x_n) - f(x_1, \ldots, z', \ldots x_n)
+  D_i^{-} f(x)
+  &\le  \sup_{z_i} f(x) -  f(x_1, \ldots, z_i, \ldots x_n)
+  \\&\le \sup_{z_i} \nabla_i f(x) (z_i-x_i)
+  \\&\le |\nabla_i f(x)| (b-a)
   \end{align*}
-  
+
+  The inequality follows by corollary 2.4.
 
   c.
-
   For all $u \in \mathbb R^n$:
-  $$\langle \nabla f(x), u \rangle \le f(x+u) - f(x) \le L ||u||$$, which implies $||\nabla f(x)|| \le L$
+  
+  $\langle \nabla f(x), u \rangle \le f(x+u) - f(x) \le L ||u||$, which implies $||\nabla f(x)|| \le L$.
+  
   We conclude by using the inequality in b.
 
   
@@ -154,9 +141,26 @@ So:
   
   c.
   
-  Define $Y^{(k)} = (Y_j^{(k)})_j := (\frac1{\sqrt k} \sum_{i=1}^k \varepsilon_{ji})_j \in [-\sqrt k, \sqrt k]^n$, then
+  Define:
+  $g(\varepsilon) = f(\frac1{\sqrt k} \sum_{i=1}^k \varepsilon_{1i}, \ldots, \frac1{\sqrt k} \sum_{i=1}^k \varepsilon_{ni})$
 
-  $D_j^{(-)} f(Y^{(k)}) = f(Y_1, \ldots, Y_n) - \inf$
+Let $\varepsilon'$ be the matrix equal to $\varepsilon$ everywhere except on the $(i, j)$ coordinate where it is equal to $\varepsilon'$.
+  
+  \begin{align*}
+  D_{ij}^{(-)}g(\varepsilon) &= g(\varepsilon) - \inf_{\varepsilon_{ij}} g(\varepsilon')
+  \\&\le \nabla_j f(\frac1{\sqrt k} \sum_{i=1}^k \varepsilon_{1i}, \ldots, \frac1{\sqrt k} \sum_{i=1}^k \varepsilon_{ni}) \frac 1{\sqrt k} + o(\frac1{\sqrt k})
+  \end{align*}
+
+
+  so by the bounded difference inequality 
+  \begin{align*}
+  \var(f(\frac1{\sqrt k} \sum_{i=1}^k \varepsilon_{1i}, \ldots, \frac1{\sqrt k} \sum_{i=1}^k \varepsilon_{ni}))
+  &\le \sum_{ij} \{\frac1k E[||\nabla_j f(\varepsilon)||^2] + o(\frac1k)\}
+  \\&\le \sum_{j} E[||\nabla_j f(\varepsilon)||^2] + o(1)
+  \\&\le  E[||\nabla f(\varepsilon)||^2] + o(1)
+  \end{align*}
+  
+  Take $k \rightarrow \infty$ to get the result by the central limit theorem.
   
   
   
@@ -172,25 +176,29 @@ So:
   Denote by $\tau(i)$ the time of the last jump of $N_t^{(i)}$, and by convention $\tau(i) = 0$ if there were no jumps. With probability one, all $\tau(i)$ that are non zero are different.
 
   Denote by $\sigma(I)$ the set of permutation of the set $I$.
-  \begin{align*}
-  E[f(Z_t) | Z_0]
-  &= \sum_{I \subset [n]} \sum_{k=1}^{|I|} P( )
-  
-  \end{align*}
+
   \begin{align*}
   P_tf(z) &= E[f(Z_t) | Z_0 = z]
-  \\&= \sum_{I \subseteq [n]} \mathbb P\left(\tau(i) > 0 \iff i \in I\right) \sum_{\sigma \in \sigma(I)} \mathbb P(\tau_{\sigma(1)} < \ldots < \tau_{\sigma(|I|)})  \int f(z_1, \ldots z_n) \prod_{j=1}^{|I|} \mu_{\sigma(i)}(dz_{\sigma(i)} | z_{\sigma(1), \ldots \sigma(n)})
-  \\&= \sum_{I \subseteq [n]}  (1-e^{-t})^{|I|}e^{-t(n-|I|)} \frac1{|I|!} \sum_{\sigma \in \sigma(I)}   \int f(z_1, \ldots z_n) \prod_{j=1}^{|I|} \mu_{\sigma(i)}(dz_{\sigma(i)} | z_{\sigma(1), \ldots \sigma(n)})
+  \\&= \sum_{I \subseteq [n]} \mathbb P\left(\tau(i) > 0 \iff i \in I\right) \sum_{\sigma \in \sigma(I)} \mathbb P(\tau_{\sigma(1)} > \ldots > \tau_{\sigma(|I|)})  \int f(z_1, \ldots z_n) \prod_{j=1}^{|I|} \mu_{\sigma(i)}(dz_{\sigma(i)} | z_{\sigma(1), \ldots \sigma(i-1)})
+  \\&= \sum_{I \subseteq [n]}  (1-e^{-t})^{|I|}e^{-t(n-|I|)} \frac1{|I|!} \sum_{\sigma \in \sigma(I)}   \int f(z_1, \ldots z_n) \prod_{j=1}^{|I|} \mu_{\sigma(i)}(dz_{\sigma(i)} | z_{\sigma(1), \ldots \sigma(i-1)})
   \end{align*}
 
     
-  Thus the generator has the same form as in the independent case, following the same calculations in the notes, we prove that $\mathcal E(f, g) = \sum \int \delta_i f \delta_i g d\mu$, in particular it is symmetric, and the process is reversible.
+  This is similar as in the independent case: When taking the derivative at 0, the term for which $|I| \ne 1$ vanishes, and the term for which $|I|=1$ are the same as in the independent case.
+  Following the same calculations in the notes, we prove that $\mathcal Lf = -\sum_i \delta_i f$ and that  $\mathcal E(f, g) = \sum \int \delta_i f \delta_i g d\mu$, in particular it is symmetric, and the process is reversible.
 
   c.
+  *Notation:* $f(x_i=1)$ means evalulate the function $f$ at point $x$ where $x_i$ is set to 1.
+  
   \begin{align*}
-  \Delta_j \int f d\mu_i
-  &= \Delta_j \{f(x_i = 1) \mathbb P(X_i = 1) + f(x_i = -1) \mathbb P(X_i = -1)\}
-  \\& =  \max_x |f(x_i = 1, x_j = 1) - f(x_i=1, x_j = -1)| \mathbb P(X_i = 1) + \max_x|f(x_i = -1, x_j = 1) - f(x_i = -1, x_j = -1)| \mathbb P(X_i = -1)
+  \Delta_j \int f \mu_i(dx_i| X^{-i})
+  &= \max_x |\int f(x_j=1) \mu_i(dx_i| X_j=1, X^{-i,j}) - \int f(x_j=1) \mu_i(dx_i| X_j=-1, X^{-i,j})|
+  &= \max_x |\int (f(x_j=1) - f(x_j=-1)) \mu_i(dx_i| X_j=1, X^{-i,j}) - \int f(x_j=1) (\mu_i(dx_i| X_j=-1, X^{-i,j}) - \mu_i(dx_i| X_j=1, X^{-i,j}))|
+  \\&\le \max_x |f(x_j=1) - f(x_j=-1)| + \max_x |\int f(x_j=1) (\mu_i(dx_i| X_j=-1, X^{-i,j}) - \mu_i(dx_i| X_j=1, X^{-i,j}))|
+  \\&\le \Delta_j + \max_x | f(x_i = 1, x_j=1) (\mu_i(x_1=1| X_j=-1, X^{-i,j}) - \mu_i(x_i=1| X_j=-1, X^{-i,j}))
+  + f(x_i = -1, x_j=1) (\mu_i(x_i=-1| X_j=-1, X^{-i,j}) - \mu_i(x_i=-1| X_j=-1, X^{-i,j}))|
+  \\&\le \Delta_j + \max_x | (f(x_i = 1, x_j=1) - f(x_i = -1, x_j=1)) (\mu_i(x_1=1| X_j=-1, X^{-i,j}) - \mu_i(x_i=1| X_j=-1, X^{-i,j}))
+  \\&\le \Delta_j f + \Delta_i f C_{ij}
   \end{align*}
 
   d.
@@ -226,4 +234,4 @@ So:
   f.
   $\mathcal E(P_t f, P_t f) = \sum \int (\delta_i f)^2 d\mu \le \sum (\Delta_i f)^2 \le ||\Delta f e^{-t(I-C)}||^2 \le ||e^{-t(I-C)}||^2 \underbrace{||\Delta f||^2}_{\kappa(f)}$
 
-  notice that $||e^{-t(I-C)}|| = \sup_{\lambda \in \operatorname{spec}[-t(I-C)]} e^{-t\lambda} = e^{-t/(\frac1{1-||C||})}$, which concludes the proof.
+  notice that $||e^{-t(I-C)}|| =  e^{-t/(\frac1{1-||C||})}$, which concludes the proof.

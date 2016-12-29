@@ -7,8 +7,11 @@ addpath(genpath('../yalmip'))
 sdpsettings('solver','mosek')
 addpath(genpath('~/mosek/mosek'))
 
-deg = 15;
+deg = 17;
 k = (deg-1) / 2;
+
+rng('default');
+rng(1);
 
 %%%%%%%
 graph = [
@@ -24,6 +27,8 @@ graph = [
 0; 0; 0; 0; 0; 0; 0; 0; 7;%; I
 0; 0; 0; 0; 0; 0; 0; 0; 0;% T
     ];
+
+%graph = importdata('matlab-graph.txt', ',' ,0)';
 number_nodes = round(sqrt(size(graph, 1)));
 
 
@@ -47,15 +52,17 @@ end
 
 
 cap = 10.*(t+1/2).*(t-.2).*(t+.3).*(t.^2-0.9)+5;
-cap2 = 3-t.^2-t;
+cap2 = 3-t.^2-t+t.^5;
 cap3 = 3-t.^2+t;
+cap4 = (((t+0.5)*3).^3-4*((t+0.5)*3).^2+40)/10;
 list_polynomials(1, :) = cap2;
 list_polynomials(2, :) = cap3;
+list_polynomials(3, :) = cap4;
 cap0 = 0 * cap;
 
 
 %capacities = repmat(graph, [1 deg+1])' .* repmat(cap, [1 (number_nodes^2)]);
-capacities = repmat(graph, [1 deg+1])' .* list_polynomials(randi(2, 1, number_nodes^2), :)';
+capacities = repmat(graph, [1 deg+1])' .* list_polynomials(randi(3, 1, number_nodes^2), :)';
 
 
 b = reshape(capacities, [(deg+1), number_nodes, number_nodes ...
@@ -80,6 +87,7 @@ cvx_clear;
 cvx_begin
 variables z(dim_i, dim_j, dim_l);
 variables x(dim_i, dim_j, dim_l);
+variables y(dim_l);
 variables c(dim_i, dim_l);
 
 dual variables f{dim_i, dim_j, dim_l};
@@ -95,11 +103,13 @@ for i=1:dim_i
             i_diff_st = (i ~= 1)*(i ~= dim_i);
             j_diff_st = (j ~= 1)*(j ~= dim_j);
             i_is_s = (i == 1);
-            i_diff_st*c(i, l) - j_diff_st*c(j, l) - x(i, j, l) + z(i, j, l) + i_is_s * w(l) <= 0 : f{i, j, l};
+            i_diff_st*c(i, l) - j_diff_st*c(j, l) - x(i, j, l) + z(i, j, l) - i_is_s * y(l) <= 0 : f{i, j, l};
         end
     end
+    i
 end
 
+sum(y) == -1;
 
 % sdp
 n = size(A, 1);
@@ -109,16 +119,28 @@ for i=1:dim_i
         A2 = 0 * x(i, j, 1) * A(:, :, 1);
         A3 = 0 * x(i, j, 1) * A(:, :, 1);
         A4 = 0 * x(i, j, 1) * A(:, :, 1);
+        if (i == 1) && (j == 1)
+            A5 = 0 * x(i, j, 1) * A(:, :, 1);
+            A6 = 0 * x(i, j, 1) * A(:, :, 1);
+        end
         for l=1:dim_l
             A1 = A1 + (1-t(l))*x(i, j, l)*A(:, :, l);
             A2 = A2 + (1+t(l))*x(i, j, l)*A(:, :, l);
             A3 = A3 + (1-t(l))*z(i, j, l)*A(:, :, l);
             A4 = A4 + (1+t(l))*z(i, j, l)*A(:, :, l);
+            if (i == 1) && (j == 1)
+                A5 = A5 + (1+t(l))*y(l)* A(:, :, l);
+                A6 = A6 + (1-t(l))*y(l)* A(:, :, l);
+            end
         end
         A1 == -semidefinite(n);
         A2 == -semidefinite(n);
         A3 == -semidefinite(n);
         A4 == -semidefinite(n);
+        if (i == 1) && (j == 1)
+                A5 == -semidefinite(n); 
+                A6 == -semidefinite(n); 
+        end
     end
 end
 

@@ -1,7 +1,7 @@
-% Created 2016-11-03 Thu 19:53
+% Created 2016-11-09 Wed 12:26
 % Intended LaTeX compiler: pdflatex
 \documentclass[11pt]{article}
-\usepackage[utf8]{inputenc}
+\usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{grffile}
@@ -67,14 +67,17 @@ a.
 \begin{align*}
 Ent_{\nu} X &= \inf_{t > 0} E_{\nu}[X\log X - X \log t - X + t]
 \\&= \inf_{t > 0} E_{\mu}[(X\log X - X \log t - X + t) \frac{d\nu}{d\mu}]
-\\&\le ? ||\frac{d\nu}{d\mu}||_{\infty} \inf_{t > 0} E_{\mu}[ X\log X - X \log t - X + t ] 
+\\&\le ||\frac{d\nu}{d\mu}||_{\infty} \inf_{t > 0} E_{\mu}[ X\log X - X \log t - X + t ]
+& (X\log X - X \log t - X + t = X(t/X - \log(t/X) - 1 )\ge 0)
 \\&\le ||\frac{d\nu}{d\mu}||_{\infty} Ent_{\mu} X
 \end{align*}
 b.
 \begin{align*}
 \nu(\Gamma(\log f, f))
 &= \mu(\frac{\Gamma(\log f, f)}{d\nu/d\mu} )
-\\&\ge \frac1{\varepsilon}\mu(\Gamma(\log f, f) )
+\\&\ge \frac1{\delta}\mu(\Gamma(\log f, f) )
+\\&\ge \frac{1}{c\delta} Ent_{\mu}(f)
+\\&\ge \frac{c\varepsilon}{\delta} Ent_{\nu}(f)
 \end{align*}
 c.
 
@@ -83,7 +86,7 @@ c.
 $$\frac{d\nu}{d\mu} \in  [\frac1{Z'}e^{-b}, \frac1{Z'}e^{-a}]$$
 
 So:
-$$Ent_{\nu} f^2 \le \frac{c}{Z'}e^{b-a} \nu(\Gamma(\log f^2, f^2)) = \frac{c}{Z'}e^{b-a} \nu( (2f'/f). (2f f')) = \frac{4c}{Z'}e^{b-a} \nu( |f'|^2)$$
+$$Ent_{\nu} f^2 \le \frac1c e^{b-a} \nu(\Gamma(\log f^2, f^2)) = \frac1c e^{b-a} \nu( (2f'/f). (2f f')) = \frac1{4c}e^{b-a} \nu( |f'|^2)$$
 
 d.
 \begin{align*}
@@ -98,19 +101,234 @@ Var_{\nu}(f) &= \inf_{c \in \mathbb R} E_{\nu}[(f - c)^2]
 
 \section{Problem 4.2}
 \label{sec:orgheadline3}
-Suppose \(med(f)\) attained at \(x_0\).
+a. Suppose \(med(f)\) attained at \(x_0\).
 
 \(A = \{f \le med(f)\}\), \(x_0 \in A\)
 
-\(\mu(A) = \frac12\)
+\(\mu(A) = \frac12\) by definition
 
-\(|f - med(f)| = |f(x) - f(x_0)| \le d(x, x_0)\), so \(A_{t} \subseteq \{ f - med(f) \ge t\}\)
+Let \(x \in A^{t}\), then for all \(\varepsilon > 0\) , there exist \(y \in A\) such that \(d(x, y) \le t + \varepsilon\).
 
-\(= \{ x: d(x, A)\} \subset \{ x: f(x) - med(f) \ge t\}\) 
+Since \(f\) is Lip, this implies that \(|f(x) - f(y)| \le t + \varepsilon\). So that \(f(x) - med(f) \le f(x) - f(y) + f(y) - med(f) \le t + \varepsilon\). 
+In particular, letting \(\varepsilon \rightarrow 0\) gives that \(f(x) - med(f) \le t\).
+
+We have just proved that \(1 - Ce^{-t^2/2\sigma^2} \le \mu(A^t) \le \mathbb P(f(x) - med(f) \le t)\) .
+So \(Ce^{-t^2/2\sigma^2} \ge \mathbb P(f(x) - med(f) \ge t)\) .
+
+b. Let \(A\) be a set of measure \(\ge \frac12\), and consider \(f(x) = d(x, A)\). Then:
+\begin{itemize}
+\item \(f\) is Lipschiz
+\item \(med(f) = 0\)
+\end{itemize}
+
+
+In addition to that, \(A^{\varepsilon} = \{x, d(x, A) \ge \varepsilon \} = \{ f(x) \ge \varepsilon \}\).
+
+The result follow from the concentration inequality we assumed.
+
+c. 
+\begin{align*}
+E_{\mu}[(f - med(f))_+]
+&= \int_0^{\infty}  P_{\mu}[f - med(f) \ge t] dt
+\\&\le \int_0^{\infty} Ce^{-\frac{t^2}{2\sigma^2}}  dt
+\\&=   C \sqrt{\frac\pi 2} \sigma
+\end{align*}
+$$E_\mu[f] - med(f) \le E_\mu[(f - med(f))_+] \le \sqrt{\frac \pi 2} C \sigma$$
+We conclude by considering \(-f\), which is also lipschiz.
+
+The result follow by noting that \(t \rightarrow P(X \ge t)\) is non-decreasing.
+
+d. 
+For \(t_0 = 2\sigma \sqrt{\log 2C}\), \(Ce^{-t^2/2\sigma^2} = \frac12\), and \(P(f \ge E_\mu f + t_0) \le \frac12\).
+
+But \(P(f \ge med \; f) = \frac12\), so \(P(f \ge E_\mu f + t_0) \le P(f \ge med \; f)\).
+
+As a result:
+
+$$med \; f \le E_\mu f + t_0$$
+
+Consider \(-f\) to conclude.
+
+
+\(P(f - med(f) \ge t) \le P(f - E f \ge t - t_0) \le Ce^{-(t-t_0)^2/2\sigma^2} \le 2Ce^{-t^2/8\sigma^2}\) 
+
+e.
+Let \(f = d(x, B)\), \(\mu_A = \mu(. | A)\), \(\mu_B = \mu(. | B)\)
+
+Notice that \(f(x) = 0\) on \(B\), and \(f(x) \ge d(A, B)\) on \(A\). So:
+
+\(W_1(\mu_A, \mu_B) \ge \int f(x) d\mu_A \ge d(A, B) \mu_A(A) = d(A, B)\)
+
+But
+\(W_1(\mu_A, \mu_B) \le W_1(\mu_A, \mu) + W_1(\mu_B, \mu)\)
+and
+\begin{itemize}
+\item \(W_1(\mu_A, \mu)^2 \le 2\sigma^2 D(\mu_A || \mu) \le 2\sigma^2 \log \frac1{\mu(A)}\)
+\item \(W_1(\mu_B, \mu)^2 \le 2\sigma^2 \log \frac1{\mu(B)}\)
+\end{itemize}
+
+
+Which yields the result.
+
+
+f. In this case, \(d(A, B) = \varepsilon\)
+so \(\varepsilon \le \sqrt{2\sigma^2} (\sqrt{\log1/\mu(A)} + \sqrt{\log1/\mu(B)}) \le  \sqrt{2\sigma^2} (\sqrt{\log2} + \sqrt{\log1/\mu(B)})\)
+so \(\mu(A^{\varepsilon}) = 1- \mu(B) \ge 1 - 2e^{\frac{\varepsilon^2}{8\sigma^2}}\)
+
+
+
 \section{Problem 4.5}
 \label{sec:orgheadline4}
+a.
+Choose an \(\varepsilon\) optimal coupling \(M_1 \in \mathcal C(\rho_1, \rho_2)\) for \(\inf_{M \in \mathcal C(\rho_1, \rho_2)}P_{(X, Y) \sim M}(X \ne Y) = ||\rho_1 - \rho_2||\)
+Choose an \(\varepsilon\) optimal coupling \(M_2 \in \mathcal C(\rho_2, \rho_3)\) for \(\inf_{M \in \mathcal C(\rho_2, \rho_2)}P_{(Y, Z) \sim M}(Z \ne Y) = ||\rho_2 - \rho_3||\)
+
+
+define \(M \in \mathcal C(\rho_1, \rho_2, \rho_3)\) by:
+\begin{itemize}
+\item \(M(X) = \rho_1\)
+\item \(M(Y | X) = M_1(Y | Z)\)
+\item \(M(Z | X, Y) = M_2(Z | Y)\)
+\end{itemize}
+
+
+It is clear that \(M\) is \(\varepsilon\) -optimal.
+
+We assume that we can take \(\varepsilon\) to 0.
+
+b.
+We proceed by induction, and using part a. at each step.
+Assume we have the claim up to \(k < n\), then we construct \(Z_{k+1}\) by applying a. as with:
+$$\rho_1 = Q_{k+1}(X_k, .), \rho_2 = Q_{k+1}(Y_k, .), \rho_3 = \nu(Y_{k+1} \in . | Y_1, \ldots Y_k)$$
+
+To show the result, notice that:
+\(X_k = \tilde X_k, \tilde X_k = Y_k \implies X_k = Y_k\), so:
+\begin{align*}
+M[X_k \ne Y_k | Z_1, \ldots Z_{k-1}]
+&\le M[\tilde X_k \ne X_k | Z_1, \ldots Z_{k-1}] + M[\tilde X_k \ne Y_k | Z_1, \ldots Z_{k-1}]
+&\text{(Union Bound)}
+\\&=  ||Q_k(Y_{k-1}, .) - \nu(Y_k \in .| Y_1, \ldots Y_k)||_{TV} + ||Q_k(X_{k-1}, .) - Q_k(Y_{k-1}, .)||_{TV}
+\\&\le \sqrt{\frac12 D(\nu(Y_k \in .| Y_1, \ldots Y_{k-1}) || Q_k(Y_{k-1}, .))} + (1-\alpha)1_{X_{k-1}\ne Y_{k-1}}
+& \text{(Bobkov-Gotze)}
+\end{align*}
+
+c.
+
+\begin{align*}
+M[X_k \ne Y_k | Z_1, \ldots Z_{k-1}]
+\le \sqrt{\frac12 D(\nu(Y_k \in .| Y_1, \ldots Y_{k-1}) || Q_k(Y_{k-1}, .))} + (1-\alpha)1_{X_{k-1}\ne Y_{k-1}}
+\end{align*}
+
+Take the expectation with respect to \(Z_1, \ldots Z_{k-1}\) on both sides:
+
+$$\alpha M[X_k \ne Y_k] \le E[\sqrt{\frac12 D(\nu(Y_k \in .| Y_1, \ldots Y_{k-1}) || Q_k(Y_{k-1}, .))}]$$
+
+
+
+
 \section{Problem 4.7}
 \label{sec:orgheadline5}
+
+a. Let
+\[
+  Y_i = \left\{\begin{array}{cc}1 &\text{if bin $i$ is empty}\\ 0 & \text{otherwise}\end{array}\right.
+  \]
+
+The \(Y_i\) are iid, and their common distribution is  $$E[Y_i] = P(Y_i = 1) = P(\forall j \in [m] \text{ ball $j$ missed bin $i$}) = (1-\frac 1n)^m$$
+$$E[Z] = E[Y_1 + \ldots Y_n] = nE[Y_1] = n(1-\frac1n)^m$$
+
+b. \(Z = f(Y_1, \ldots Y_m)\), with \(f(Y) = \sum_i Y_i\) . It is clear that:
+\begin{itemize}
+\item The \(Y_i\) are independent
+\item \(||D_kf||_{\infty} = 1\)
+\item \(\sum ||D_k f||_{\infty} = m\)
+\end{itemize}
+
+
+By McDiarmid's inequality, \(Z\) is \(m/4\) -subgaussian.
+
+b.
+\(f_m(b) \le f_{2m}(b_1, b_1', \ldots b_m, b_m') = f_{2m}(b_1, \ldots b_m, b_1', \ldots  b_m')\) because the number of non-empty bins can only increases if we add new balls.
+
+Also:
+\(f_{2m}(b_1, \ldots b_m, b_1', \ldots  b_m') = f_m(b') + \sum_{i=1}^m 1_{b_i' \ne b_j' \text{ for } i<j \wedge b_i' \ne b_j \text{ for } i\le m} \le f_m(b') + \sum_{i=1}^m 1_{b_i' \ne b_j' \text{ for } j<i \wedge b_i' \ne b_i}\)
+Which proves the two inequalities.
+
+Now we have:
+\(f_m(b) - f_m(b') \le \sum_{i=1}^m \underbrace{1_{b_i' \ne b_j' \text{ for } j < i}}_{c_i(b')} 1_{ b_i' \ne b_i}\)
+Notice that 
+\(\sum_i c_i(b')^2 =  \sum_i c_i(b') = f_m(b') \le n\), which proves that \(Z\) is also \(n\) -subgaussian.
+
+
 \section{Problem 4.8}
 \label{sec:orgheadline6}
+a.
+Lower bound:
+\begin{itemize}
+\item \(L_n \ge \sum_i \min_{j \ne i} ||X_i - X_j||\), because at some point when we are \(X_i\), we are going to travel to some other city \(X_j\), and that quantity is bounded below by the minimum distance from \(X_i\).
+\item Let \(Z = \min_{j > 1} ||X_1 - X_j||]\). \(Z \ge r \iff \forall j > 1, \; ||X_j - X_i|| \ge r\)
+\item Conditioning on \(X_1\),  \(||X_j - X_1|| \le r\) happens with probability \(Surface(B(X_1, r) \cap [0, 1]^2) := a(X_1, r)\).
+\item \(a(X_1, r) \le \pi r^2 \wedge 1\)
+\item \(P(Z \ge r | X_1) = (1-a(X_1))^n\)
+\item \(E[Z] = E_{X_1}[\int_0^1 P(Z \ge r | X_1) dr] \ge  \int_0^1 (1-\pi r^2)_+^n dr = \frac{\Gamma(n+\frac12)}{\Gamma(n+\frac32)} \sim \frac1{\sqrt n}\)
+\item As a result, \(E[L_n] \ge n E[Z] \sim \sqrt{n}\)
+\end{itemize}
+
+Upper bound:
+\begin{itemize}
+\item \(L_n \le L_{n-1} + 2 \min_{k < n} ||X_k - X_n||\). This is true, because \(X_{\sigma(1)}, \ldots X_{\sigma(n-1)}\) is an optimal tour of the first \(n\) cities, \(k^* = \arg \min_{k < n} ||X_{\sigma(k)} - X_n||\), then, \(X_{\sigma(1)}, \ldots X_{\sigma(k^*)}, X_n, X_{\sigma(k^*)}, \ldots, X_{\sigma(n-1)}\), is a valid tour of the \(n\) cities of cost \(L_{n-1} + 2 \min_{k < n} ||X_k - X_n||\).
+
+This proves that \(L_n \le 2 \sum \min_{k \le n} ||X_k - X_n||\). Using a similar technique as in the last question by bounding \(a(X_1, r)\) from below by \(\pi r^2\), we get that \(\min_{k \le n} ||X_k - X_n|| \sim \frac1{\sqrt i}\).
+
+But \(\sum_i \frac1{\sqrt i} \sim \int_1^n \frac{dt}{\sqrt t} \sim \sqrt{n}\), which proves the result.
+\end{itemize}
+b.
+\(L_n = L_n(X_1, \ldots, X_n)\). \(|D_k L_n| \le 2\sqrt{2}\). Indeed:
+\begin{itemize}
+\item Let \(X_{\sigma(1)}, \ldots X_{\sigma(n)}\) is an optimal tour, and \(i = \sigma^{-1}(k)\)
+\item Starting with an optimal tour, changing \(X_k\) can only change the portion of the tour to and from \(X_k\), in both cases by at most \(\sqrt{2}\).
+\item We conclude by McDiarmid's inequality.
+\end{itemize}
+
+c.
+Let \(x = x_1 u + x_2 v\).
+\(x \in T \implies 0\le x_1 \le 1, 0 \le x_2 \le 1 \implies x_1^2 \le x_1, x_2^2 \le x_2\)
+
+\begin{align*}
+.||x - u||^2 + ||x - v||^2 \le ||u - v||^2
+&\iff 2||x||^2 - 2\langle x, u+v\rangle \le 0
+\\&\iff \langle x_1 u + x_2 v, (x_1-1) u + (x_2 - 1) v \rangle \le 0
+\\&\iff x_1(x_1 - 1) + x_2(x_2 - 1) \le 0
+\\&\iff x_1^2 + x_2^2 \le x_1 + x_2
+\end{align*}
+And the last inequality is true.
+
+d. We proceed by induction like the hint suggests.
+\begin{itemize}
+\item Suppose the the result true up to \(n-1\), consider \(n\) points \(x_1, \ldots x_n\) in \(T\)
+\item Divide \(T\) into two right triangles \(S_1\), \(S_2\) until both are not empty. Without loss of generality, because the length of the path can only get shorter, we can assume \(S_1 \cup S_2 \ne \emptyset\)
+\item Apply the induction hypothesis on \(S_1\) and \(S_2\) to get two paths, the first one \(v, y_1, \ldots, y_m, O\) of length at most \(a\), the other \(O, z_1,  \ldots z_r\) with \(m+r = n\) with length at most \(b\).
+\item Consider the path \(v, y_1 \ldots y_m, z_1, \ldots z_r, w\) that has length:
+$$||v, y_1||^2 +  \ldots ||y_{m-1} - y_m||^2 + ||y_m -  z_1||^2 +  \ldots ||z_r - w ||^2 \le ||v, y_1||^2 +  \ldots ||y_{m-1} - y_m||^2 + ||y_m - O||^2 + ||O-  z_1||^2 +  \ldots ||z_r - w ||^2 \le a^2 + b^2 = ||v - w||^2$$
+Where the first inequality comes from the fact that \(||y - z||^2 \le ||y - O||^2 + ||O - z||^2\) whenever \(\langle z, y \rangle \ge 0\), which is true on \(T\).
+\end{itemize}
+
+
+e. By d., consider a path \(v, x_{\sigma(1)}, \ldots x_{\sigma(n)}, w\) of length at most 2. Consider the path \(x_{\sigma(1)}, \ldots x_{\sigma(n)}, x_{\sigma(1)}\), which is, for the same reason as above, has shorter length than: \(x_{\sigma(1)}, \ldots x_{\sigma(n)}, x_{\sigma(n-1)}, \ldots x_{\sigma(1)}\), so smaller than 4.
+
+f. We follow the hint, we start following \(\tau\) until the first time we get to a point in \(x \cap y\), then we follow \(\sigma\) until right beforewe hit \(x\cup y\) again, then we follow the last portion of the path in reverse. It is clear that the length of this path has the following components:
+\begin{itemize}
+\item \(l_n(y, \tau)\), if we ignore the excursions we do when we meet some element from \(x\), because we start and end at the same point.
+\item \(2d_i(x, \sigma)\) whenever \(x_i \not \in y\), because we go to and then from \(x_i\) once.
+\end{itemize}
+
+
+g.
+\begin{itemize}
+\item If \(x \cup y \ne \emptyset\), we use f. by noting that \(\min_{\sigma} l_n(x, \sigma) \le l_{2n}(x \cup y, \rho)\)
+\item Otherwise, notice that \(l_n(x, \sigma) \le 2 \sum_i d(x_i, \sigma) =  2 \sum_i 1_{x_i \in y} d(x_i, \sigma)\)
+\end{itemize}
+
+
+h. Use Talagrand inequality with \(c_i = 2d(x_i, \sigma)\), so that \(||\sum c_i^2||_{\infty} \le 16\) by e.
 \end{document}

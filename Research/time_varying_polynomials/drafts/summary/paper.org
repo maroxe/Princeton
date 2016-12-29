@@ -67,7 +67,6 @@ We also consider in the examples the worst-case value:
 
 
 
-
 In this paper, we give a particular emphasis to the particular case of linear programs:
 
   #+NAME: eqn:time_varying_lp_t
@@ -80,7 +79,9 @@ In this paper, we give a particular emphasis to the particular case of linear pr
   \end{equation*}
 with $A_i(t) \in \mathbb R^{m \times n}, x(t), c(t) \in \mathbb R^n$ for all $t \in [-1, 1]$
 
-In many applications, one looks for $x(t)$ that is smooth and optimal. In this paper discuss how to obtain the best polynomial solution $x(t) \in \mathbb R[t]^n$. It is important to notice that in general the optimal solution is not polynomial, and might not even be continuous.
+[Discuss formulation, bounded in one forumulation might not be in an other]
+
+In many applications, one looks for $x(t)$ that is smooth and optimal. In this paper discuss when solutions of this form are optimal and how to obtain the best polynomial solution $x(t) \in \mathbb R[t]^n$. It is important to notice that in general the optimal solution is not polynomial, and might not even be continuous.
 
 #+ATTR_LATEX: :width 0.25\textwidth
 [[file:frame1.png]]
@@ -91,12 +92,12 @@ In many applications, one looks for $x(t)$ that is smooth and optimal. In this p
 #+caption: c(t)
 file:arrow.png
 
-
-
+** Notations
 If $A$ a matrix of dimension $m \times n$, with $m \ge n$, and $B \subseteq \{1, \ldots n\}$, then $A_B$ is the submatrix $(A_{B_i,i})_{1 \le i \le m}$
 
+** Assumptions
   Throughout the whole paper, we make the following assumption for all $t \in [-1, 1]$:
-  - $\mathcal P_t \ne \emptyset$, i.e. there exist at least one feasible solution. We provide
+  - $\mathcal P_t \ne \emptyset$, i.e. there exist at least one feasible solution. We provide an algorithm to check for that.
   - $\mathcal P_t$ is bounded: In theorem [[thm:bound_equiv_uniform_bound]] we prove that this is in fact equivalent to $\mathcal P_t$ being bounded uniformly in $t$.
 
     
@@ -132,7 +133,16 @@ If $A$ a matrix of dimension $m \times n$, with $m \ge n$, and $B \subseteq \{1,
      Then 1. $\implies$ 2
      #+END_theorem
 
+#+BEGIN_proof
+   Consider the program $f(t) = \max_{x \in \mathcal P_t} \sum_i |x_i|$. We have that $f(t)$ is finite for all $t$ and we want to prove that $f(t)$ can be uniformly bounded on $[-1, 1]$.
    
+   Notice that this is an LP for all $t$, and that by assumption we made earlier, the set of solution is bounded for all $t$. As a result, all conditions for [cite (see "On the Continuity of the Maximum in Parametric Linear Programming" by D. H. MARTIN)] are verified, and we conclude that  $f(t)$ is upper semi-continuous.
+   
+   Now, if $t_n$ is a convergent sequence such that $f(t_n) \rightarrow \sup_t f(t)$, and $t_0 = \lim t_n$, then: $\sup_t f(t) = \lim_n f(t_n) \le f(t_0) < \infty$
+#+END_proof
+
+     Without loss of generality, we assume for the rest of this paper that we can amend the constraints $-M \le x_i \le M, i=1\ldots n$.
+     
 ** Geometry of the feasible set
    
   We start be presenting the following theorem that describes the geometry of the feasible set $\mathcal P_t$. The theorem states that for except some finite number of times, the feasible set is a convex combination of points that move as piece-wise rational functions in time. More formally:
@@ -178,7 +188,6 @@ If $A$ a matrix of dimension $m \times n$, with $m \ge n$, and $B \subseteq \{1,
 
   The reason no continuous solution exist is that the $\mathcal P_t$ are "disconnected" at 0, e.g $\lim_{t < 0} P_t \cap \lim_{t > 0} = \emptyset$. 
 
-
 #+NAME: thm:existence_cont_solution
   #+BEGIN_theorem
   The following are equivalent:
@@ -187,6 +196,42 @@ If $A$ a matrix of dimension $m \times n$, with $m \ge n$, and $B \subseteq \{1,
 3. $conv \{ v(t_{i}), v \in \mathcal V_i\} \cap conv \{ v(t_{i}), v \in \mathcal V_{i+1}\} \ne \emptyset$
 4. $\min_{x \in \mathcal P_{t_i-\alpha}, x \in \mathcal P_{t_i+\alpha}} |x - y| \rightarrow 0$
   #+END_theorem
+
+#+BEGIN_proof
+We first start by noticing that 2., 3. and 4. are equivalent because
+\begin{align*}
+dist(P_{t_i-\alpha}, P_{t_i+\alpha}) &= dist(conv \{ v(t_{i}), v \in \mathcal V_i\}, conv \{ v(t_{i}), v \in \mathcal V_{i+1}\})
+\\&= \min_{x \in \mathcal P_{t_i-\alpha}, x \in \mathcal P_{t_i+\alpha}} |x - y|
+\end{align*}
+
+and the distance between two compact convex sets is empty if and only if the distance between them is strictly positive.
+
+It remains to show that $1 \iff 2$, which we prove in two steps:
+
+(1 $\implies$ 2)
+
+Let $x_t$ be a continuous solution, then $dist(P_{t_i-\alpha}, P_{t_i+\alpha}) \le dist(x_{t_i-\alpha}, x_{t_i+\alpha}) \rightarrow 0$
+
+(2 $\implies$ 1)
+
+We are going to construct a continuous solution $x_i(t)$ that is defined for $t \in (t_{i-1}, t_i)$.
+Let $x_0 \in conv \{ v(t_{i}), v \in \mathcal V_i\} \cap conv \{ v(t_{i}), v \in \mathcal V_{i+1}\}$, e.g.
+$u = \sum_{v \in V_i}  \lambda_{v} v(t_i) = \sum_{v \in V_{i+1}}  \mu_{v} v(t_i)$, and define:
+
+\[x_i(t) = \left\{\begin{array}{cc}
+ \sum_{v \in V_i} \lambda_v v(t) & t \le t_i\\
+ \sum_{v \in V_{i+1}} \mu_v v(t) & t > t_i
+\end{array}\right.
+\]
+
+It is clear that $x_i$ is feasible and continuous, e.g $x_i(t_i^-) = x_i(t_i^+) = u$.
+
+
+We get a continuous feasible solution on $[-1, 1]$ simply by "connecting" two solution $x_i, x_{i+1}$ by interpolating from one to the other, e.g
+
+$x_{i, i+1}(t) = \alpha(t) x_i(t) + (1-\alpha(t)) x_{i+1}(t)$, where $\alpha(t) = \frac{t - t_i}{t_{i+1} - t_i}$
+
+#+END_proof
 
   When $A(t)$ doesn't depend on $t$ that can't happen:
   
@@ -228,7 +273,7 @@ If $A$ a matrix of dimension $m \times n$, with $m \ge n$, and $B \subseteq \{1,
 #+END_examples
 
       
-      What went wrong? $\mathcal P_t$ is not full dimensional, which motivates the following definition:
+What went wrong? $\mathcal P_t$ is not full dimensional, which motivates the following definition:
 
 #+BEGIN_definition
 $\mathcal P_t$ is full dimensional if there exist $x \in \mathcal P_t$ and $\varepsilon > 0$ such that $B(x, \varepsilon) \subset P_t$
@@ -236,17 +281,34 @@ $\mathcal P_t$ is full dimensional if there exist $x \in \mathcal P_t$ and $\var
 
 An equivalent characterization for full dimensionality for a polytope $\mathcal P_t$ is that the affine rank of the vertices is at least the dimension of the ambient space plus 1.
 
+
+The idea is that we can approximate any function inside 
+
+Now we are able to give a conditions under which 
 #+NAME: thm:optimality_poly_solution
 #+BEGIN_theorem
 Under the following assumptions:
 - $\mathcal P_t$ is full dimensional for all $t \in [-1, 1]$
 -  [[eqn:time_varying_lp_t]] admits a feasible continuous solution.
 
-Then for every $\varepsilon > 0$, there exist a *polynomial*  function $p: [-1, 1] \rightarrow \mathbb R^n$ such that:
+Then for every $\varepsilon > 0$, there exist a *polynomial* function $p: [-1, 1] \rightarrow \mathbb R^n$ such that:
   - $p(t)$ is feasible of all $t$, e.g $A(t)p(t) \le b(t)$, $\forall t \in [-1, 1]$
   - $\int_{-1}^1 \langle c(t), x(t)\rangle - \int_{-1}^1 \langle c(t), p(t)\rangle \le \varepsilon$.
   #+END_theorem
 
+
+  #+BEGIN_proof
+  We start with a continuous solution $f$ that is near optimal to [[eqn:time_varying_lp_t]], whose existence is guaranteed by [cite theroem]. Let $p(t)$ be a polynomial $p(t)$ that approximates $f(t)$ uniformly, e.g, $\forall t \in [-1, 1] \; ||p(t) - f(t)||_2^2  \le \delta^2$, where $\delta$ is a constant we are going to fix latex.
+
+  For $\delta$ small enough, $p(t)$ is inside $\mathcal P_t$. Quantitatively,
+  $$b(t) - A(t)p(t) = \underbrace{b(t) - A(t)f(t)}_{\ge \beta} + A(t)(f(t) - p(t)) \ge \beta - ||A||_2 \delta \ge 0$$
+  As long as $\delta \le \frac{\beta}{||A||_2}$.
+
+  Let's now examine the objective value of $f$. Similarly:
+  $$\int_{-1}^1 \langle c(t), x(t)\rangle - \int_{-1}^1 \langle c(t), p(t)\rangle \le \int_{-1}^1 ||f(t) - p(t)||_2 ||c(t)||_2 dt = O(\delta)$$
+  Again, taking $\delta$ small enough give the result.
+  #+END_proof
+  
 
 *Discussion:* in the example given above, $\mathcal P_t$ was never full dimensional.
 
@@ -261,16 +323,27 @@ Then for every $\varepsilon > 0$, there exist a *polynomial*  function $p: [-1, 
    
     Based on [[thm:form_optimal_solution_lp]], one can solve the problem [[eqn:time_varying_lp_t]] directly using the following algorithm:
 
+    The roots of a univariate polynomial are computable.
     #+NAME: alg:checking_feasibility
     #+begin_algorithm
 
     Find the times $t_i$
     
-    For all $B \in {[m]\choose n}$, consider the matrix polynomial $A_B(t)$.
+    For all $B \in {[m]\choose n}$, consider the matrix polynomial in $t$: $A_B(t)$.
     
-    Define $\det_B(t) = \det(A_B(t))$, if it is not identically 0, 
+    Define $\det_B(t) = \det(A_B(t))$, if it is not identically 0, then it has finitely many zeros that we denote by $\mathcal U_B$, and for $t$ outside that set, definite $u_B(t) = A_B(t)^{-1}b(t)$.
+
+    Let $\mathcal U = \cup \mathcal U_B$.
     
+    All such $u_B(t)$ change change feasibility status (e.g become feasible or infeasible)finitely many times, because that correspond to a zero of one the polynomial componenents of $b(t) - A(t)u_B(t)$. Add all such times to the set $\mathcal U$.
+
     
+  \State $i \gets 0$
+  \Do
+    \State \text{Solve} $P(t[i])$, $B[i] \gets \textit{The optimal basis}$
+  \State $i \gets i+1$
+  \State $t[i] \gets \arg \max_{s \ge t}\{\det A_B(s) \ne 0, \; A(s)A_B^{-1}(s)b(s) \le b(s), \;  c_B(s)A_B^{-1}(s) \le 0 \; \}$
+  \doWhile{$t[i] \le 1$}
     
    #+end_algorithm
 
@@ -368,9 +441,58 @@ The following SDP find the best polynomial solution of degree $\le 2d+1$:
   #+end_theorem
 
 * Numerical results
+
+  We present two numerical examples to illustrate the techniques presented in this paper. The first one is time-varying max-flow problem, where the graph is fixed by the capacities are varying with time, and we seek a the best polynomial flow.
+  
 ** Max flow
-** Time varying certificate of stability
+   
+ - $s \approx 1$,  $t \approx N$.
+- $b_{i,j}(t)$ capacity of the edge $i \rightarrow j$ at time t.
+- $f_{i,j}(t)$ the flow from node $i$ to $j$ at time $t$.
+
+
+[Discussion about the choice of basis]
+
+$f_{i,j}(t) \approx \begin{pmatrix}f_{i,j}(t_0)\\\vdots\\f_{i,j}(t_d)\end{pmatrix} := \begin{pmatrix}f_{i,j,0}\\\vdots\\f_{i,j,d}\end{pmatrix}$
+
+
+
+\begin{equation*}
+\begin{aligned}
+& \text{maximize}
+& & \sum_j \sum_{l=0}^d f_{1,j,l} w_l \\
+& \text{subject to}\\
+&&& \sum_{j=1}^N f_{i,j,l} - f_{j,i,l} &=& 0                                                          & \forall l, \forall i \ne s, t &: (c_{i,l})\\
+&&& f_{i,j,l}                          &=& \langle A^{(l)}, (1-t_l) X_{ij} + (1+t_l) X'_{ij} \rangle  &\forall i,j,l &: (x_{ijl})\\
+&&& b_{i,j,l} - f_{i,j,l}              &=& \langle A^{(l)}, (1-t_l) Z_{ij} + (1+t_l) Z'_{ij} \rangle\ &\forall i,j,l &: (z_{ijl})\\
+&&& X_{ij}, X'_{ij}, Z_{ij}, Z'_{ij} \succeq 0\\
+\end{aligned}
+\end{equation*}
 
 
    
+   
+** Time varying certificate of stability
+
+   We want to certify that a the following system is stable:
+   
+   $$\dot x = A(t) x$$
+
+   Where $A(t)$ is varying with time.
+
+   We can prove that the system is stable if and only if the matrix $A(t)$ is Herwitz, and we can check for the later by solving the following SDP:
+   
+   $$\forall t \; \exists P \succeq I, P^TA(t) + A(t)^T P \succeq 0$$
+
+   $P$ is called a certificate of stability.
+
+   Following the framework presented in this paper, we can look efficiently for a certificate $P(t)$ that depend polynomially on $t$.
+
+   $$P(t) \succeq I, P(t)^TA(t) + A(t)^T P(t) \succeq 0$$
+
+   
+   
 * Conclusion and open questions   
+
+  - Number of jumps $N$, is it polynomial.
+  - Characterization for SDPs

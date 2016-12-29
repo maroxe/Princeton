@@ -10,19 +10,21 @@ $f_{i,j}(t) \approx \begin{pmatrix}f_{i,j}(t_0)\\\vdots\\f_{i,j}(t_d)\end{pmatri
 \begin{equation*}
 \begin{aligned}
 & \text{maximize}
-& & \sum_j \sum_{l=0}^d f_{1,j,l} w_l \\
+& & 0 \\
 & \text{subject to}\\
 &&& \sum_{j=1}^N f_{i,j,l} - f_{j,i,l} &=& 0                                                          & \forall l, \forall i \ne s, t &: (c_{i,l})\\
 &&& f_{i,j,l}                          &=& \langle A^{(l)}, (1-t_l) X_{ij} + (1+t_l) X'_{ij} \rangle  &\forall i,j,l &: (x_{ijl})\\
-&&& b_{i,j,l} - f_{i,j,l}              &=& \langle A^{(l)}, (1-t_l) Z_{ij} + (1+t_l) Z'_{ij} \rangle\ &\forall i,j,l &: (z_{ijl})\\
-&&& X_{ij}, X'_{ij}, Z_{ij}, Z'_{ij} \succeq 0\\
+&&& g_{l}                              &=& \langle A^{(l)}, (1-t_l) R + (1+t_l) R \rangle  &\forall i,j,l &: (r_{l})\\
+&&& g_l b_{i,j,l} - f_{i,j,l}              &=& \langle A^{(l)}, (1-t_l) Z_{ij} + (1+t_l) Z'_{ij} \rangle\ &\forall i,j,l &: (z_{ijl})\\
+&&& \sum_{j} f_{1,j,l} -  g_l \gamma        &=& \langle A^{(l)}, (1-t_l) Y_l      + (1+t_l) Y_l'  \rangle  &\forall l &: (y_l)\\
+&&& X_{ij}, X'_{ij}, Z_{ij}, Z'_{ij}, Y_l, Y_l' \succeq 0\\
 \end{aligned}
 \end{equation*}
 
 
 \begin{equation*}
 \begin{aligned}
-L(f, X, X', Z', x, y, z)&= \sum_{j, l=0}^d f_{1,j,l} w_l
+L(f, X, X', Z', x, y, z)&= \gamma
 \\&+ \sum_{il} 1_{i \ne s,t} c_{i,l} (\sum_{j=1}^N f_{i,j,l} - f_{j,i,l})
 \\&+ \sum_{ijl} f_{ijl} (z_{ijl} -x_{ijl})
 \\&- \sum_{ijl} b_{ijl} z_{ijl}
@@ -41,7 +43,12 @@ L(f, X, X', Z', x, y, z)&= \sum_{j, l=0}^d f_{1,j,l} w_l
 \\&&& \sum_l (1+t_l) A^{(l)} x_{ijl} \succeq 0
 \\&&& \sum_l (1-t_l) A^{(l)} z_{ijl} \succeq 0
 \\&&& \sum_l (1+t_l) A^{(l)} z_{ijl} \succeq 0
-\\&&& 1_{i \ne s,t} c_{i,l}   -  1_{j \ne s,t} c_{j,l} + z_{ijl} -x_{ijl} + 1_{i = s} w_l = 0 &: f_{ijl}
+\\&&& \sum_l (1+t_l) A^{(l)} y_{l} \succeq 0
+\\&&& \sum_l (1-t_l) A^{(l)} y_{l} \succeq 0
+\\&&& \sum_l (1-t_l) A^{(l)} r_{l} \succeq 0
+\\&&& \sum_l (1+t_l) A^{(l)} r_{l} \succeq 0
+\\&&& \sum_l y_l = 1
+\\&&& 1_{i \ne s,t} c_{i,l}   -  1_{j \ne s,t} c_{j,l} + z_{ijl} -x_{ijl} - 1_{i = s} y_l = 0 &: f_{ijl}
 \end{aligned}
 \end{equation*}
 

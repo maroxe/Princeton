@@ -7,7 +7,7 @@ addpath(genpath('../yalmip'))
 sdpsettings('solver','mosek')
 addpath(genpath('~/mosek/mosek'))
 
-deg = 9;
+deg = 11;
 k = (deg-1) / 2;
 
 
@@ -101,49 +101,6 @@ end
 cvx_clear;
 %cvx_precision high
 cvx_begin
-variables f(dim_i, dim_j, dim_l);
-variables X(4, dim_i, dim_j, k, k);
-
-% objective = int sum f_{1j}(t) dt = sum_l(sum_k f_{1, j, l})w_l
-obj = dot(squeeze(sum(f(1, :, :))), w);
-maximize(obj)
-
-for i=2:(dim_i-1)
-    for l=1:dim_l
-        sum(f(i, :, l))  - sum(f(:, i, l)) == 0;
-    end
-end
-
-for i=1:dim_i
-    for j=1:dim_j
-        for l=1:dim_l
-            f(i, j, l) == sum(dot(A(:, :, l), (1-t(l)) * squeeze(X(1, i, j, :, :)) + (1+t(l)) * squeeze(X(2, i, j, :, :))))
-            b(i, j, l) - f(i, j, l) == sum(dot(A(:, :, l), (1-t(l)) * ...
-                                          squeeze(X(3, i, j, :, :)) + (1+t(l)) * squeeze(X(4,i, j, :, :))))
-        end
-        for r=1:size(X, 1)
-            squeeze(X(r, i, j, :, :)) == semidefinite(k)
-        end
-    end
-end
-
-cvx_end
-
-ff = reshape(permute(f, [2 1 3]), [(number_nodes*number_nodes) (deg+1)]);
-%ezplot(c * t', [-1 1]);
-dlmwrite('visualize/flow-graph3', round(ff, 3));
-dlmwrite('visualize/cap-graph3', round(capacities', 3));
-dlmwrite('visualize/time-points', t');
-%f_s = cell2mat(squeeze( f(1, :, :)));
-%plot(t, f_s(2, :)');
- 
-
-%% Dual
-%%%%%%%%%%%%%
-
-cvx_clear;
-%cvx_precision high
-cvx_begin
 variables d(dim_i, dim_j, dim_l);
 variables p(dim_i, dim_l);
 variables X(4, dim_i, dim_j, k, k);
@@ -152,8 +109,8 @@ variables Z(2, dim_i, k, k);
 
 
 % objective = int sum f_{1j}(t) dt = sum_l(sum_k f_{1, j, l})w_l
-obj_dual = dot(squeeze(sum(dot(d, b))), w);
-minimize(obj_dual)
+obj = dot(squeeze(sum(dot(d, b))), w);
+minimize(obj)
 
 % p_1 - p_end >= 1
 for l=1:dim_l

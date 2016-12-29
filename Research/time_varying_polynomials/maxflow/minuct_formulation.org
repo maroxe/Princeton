@@ -1,0 +1,13 @@
+\begin{equation*}
+\begin{aligned}
+& \text{minimize}
+& & \sum_{i, j, l} b_{i,j} d_{i,j} w_l \\
+& \text{subject to}\\
+&&& d_{i,j,l}                          &=& \langle A^{(l)}, (1-t_l) X^1_{ij} + (1+t_l) X^2_{ij} \rangle  &\forall i,j,l\\
+&&& d_{i,j,l} - p_{i, l} + p_{j, l}     &=& \langle A^{(l)}, (1-t_l) X^3_{ij} + (1+t_l) X^4_{ij} \rangle  &\forall i,j,l\\
+&&& p_{i, l}                           &=& \langle A^{(l)}, (1-t_l) Z_i^1 + (1+t_l) Z_i^2 \rangle  \\
+&&& p_{s, l} - p_{t, l}-1                &=& \langle A^{(l)}, (1-t_l) Y^1 + (1+t_l) Y^2 \rangle  \\
+\end{aligned}
+\end{equation*}
+
+
