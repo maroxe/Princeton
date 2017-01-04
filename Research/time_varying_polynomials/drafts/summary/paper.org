@@ -1,8 +1,8 @@
-#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
+#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
 #+LATEX_HEADER: \usepackage{listing}
 #+LATEX_HEADER: \usepackage{algorithm}
 #+LATEX_HEADER:\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
-#+LATEX_HEADER: \usepackage[noend]{algpseudocode}
+#+LATEX_HEADER: %\usepackage[noend]{algpseudocode}
 #+LATEX_HEADER: \usepackage{amsmath} % assumes amsmath package installed
 #+LATEX_HEADER: \usepackage{amssymb}  % assumes amsmath package installed
 #+LATEX_HEADER: \usepackage{amsthm}
@@ -24,13 +24,17 @@
 
 #+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
 #+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+
+
+#+OPTIONS: toc:nil
+
 #+TITLE: Time varying LP
 #+AUTHOR: Bachir El Khadir
 
 * Introduction and notation
-  In this paper we investigate time varying convex programs, i.e. programs for which the feasible set and the objective function depend on time. 
+  In this paper we investigate time varying convex programs, i.e. programs for which the feasible set and the objective function depend on time $t$. 
 
-  More specifically, we focus on time varying semi-definite programs:
+  More specifically, we focus on time varying semi-definite programs and linear programs, that can be written in their most general form:
 
   #+NAME: eqn:time_varying_sdp_t
   \begin{equation*}
@@ -43,9 +47,25 @@
   with $A_i(t) \in \mathbb R^{m \times m}, x(t), c(t) \in \mathbb R^n$ for all $t \in [-1, 1]$
 
 
-  A natural question here is how to describe the data of the problem: $(A_0, \ldots A_r, c)$. We made the choice of considering /polynomial/ functions because the set of such function is general enough to approximate a large set of functions, and at the same time simple enough to description (in the monomial basis for example) and to solve for (see section [?]). 
+  A natural question here is how to describe the data of the problem: $(A_0, \ldots A_r, c)$. We made the choice of considering /polynomial/ functions because the set of such function is general enough to approximate a large set of functions, and at the same time simple enough to describe (in the monomial basis for instance) and to solve for (see section [?]). 
 
-  There are multiple way to evaluate how well a given solution is doing. We can focus on the $L_2$ norm, or the average optimal value:
+  In many applications, one looks for $x(t)$ that is smooth and optimal. In this paper we discuss when solutions of this form are optimal, and in that case we use sum of squares optimization to obtain the best polynomial solution of a given degree $x(t) \in \mathbb R[t]^n$.
+
+    It is important to notice that in general the optimal solution is not polynomial, and might not even be continuous.
+
+  #+ATTR_LATEX: :width 0.15\textwidth
+  [[file:frame1.png]]
+  [[file:frame2.png]]
+  [[file:frame3.png]]
+  [[file:frame4.png]]
+  #+ATTR_LATEX: :width 0.15\textwidth
+  #+caption: c(t)
+  file:arrow.png
+
+  Since we are looking specifically for continuous solutions, it is necessary to settle for a weaker notion of optimality, i.e. given two solutions that are not optimal for all $t$, it is not clear how to decide which one is "more" optimal.
+  
+  We made the choice of focusing on the $L_2$ norm, or the average optimal value:
+  
   #+NAME: eqn:time_varying_sdp_l2
   \begin{equation*}
   \tag{$SDP$}
@@ -55,7 +75,7 @@
   \end{array}
   \end{equation*}
 
-  We also consider in the examples the worst-case value: 
+  We also consider in the examples the worst-case value, which can be studied using the same techniques: 
 
   #+NAME: eqn:time_varying_sdp_worst
   \begin{equation*}
@@ -65,8 +85,6 @@
   \text{subject to}& A_0(t) + \sum_{i=1}^r A_i(t) x_i(t) \succeq 0
   \end{array}
   \end{equation*}
-
-
 
   In this paper, we give a particular emphasis to the particular case of linear programs:
 
@@ -80,31 +98,20 @@
   \end{equation*}
   with $A_i(t) \in \mathbb R^{m \times n}, x(t), c(t) \in \mathbb R^n$ for all $t \in [-1, 1]$
 
-  [Discuss formulation, bounded in one forumulation might not be in an other]
-
-  In many applications, one looks for $x(t)$ that is smooth and optimal. In this paper discuss when solutions of this form are optimal and how to obtain the best polynomial solution $x(t) \in \mathbb R[t]^n$. It is important to notice that in general the optimal solution is not polynomial, and might not even be continuous.
-
-  #+ATTR_LATEX: :width 0.25\textwidth
-  [[file:frame1.png]]
-  [[file:frame2.png]]
-  [[file:frame3.png]]
-  [[file:frame4.png]]
-  #+ATTR_LATEX: :width 0.25\textwidth
-  #+caption: c(t)
-  file:arrow.png
 
 ** Notations
-   - If $A$ a matrix of dimension $m \times n$, with $m \ge n$, and $B \subseteq \{1, \ldots n\}$, then $A_B$ is the submatrix $(A_{B_i,i})_{1 \le i \le m}$
-   - $SOS_d(y)$ denote the set of polynomials in the variable $y$ that can be written as sum of squares of some polynomials of degree at most $d$, e.g $SOS_d(y) = \sum \mathbb R_d[y]^2$ .
+   - If $A$ a matrix of dimension $m \times n$, with $m \ge n$, and $B \subseteq \{1, \ldots n\}$, then $A_B$ is the submatrix $(A_{B_i,i})_{1 \le i \le m}$.
+   - $SOS_d(y)$ denote the set of polynomials in the variable $y$ that can be written as sum of squares of some polynomials of degree at most $d$, e.g $SOS_d(y) = \sum \mathbb R_d[y]^2$ . $y$ need not be univariate.
+   - $\mathcal P_t$ is the feasible set of [[eqn:time_varying_lp_t]] at time $t$: $\mathcal P_t = \{x \in \mathbb R^n | A(t) x \le b(t) \}$.
    
 ** Assumptions
    Throughout the whole paper, we make the following assumption for all $t \in [-1, 1]$:
-   - $\mathcal P_t \ne \emptyset$, i.e. there exist at least one feasible solution. We provide an algorithm to check for that.
+   - $\mathcal P_t \ne \emptyset$, i.e. there exist at least one feasible solution. We provide an algorithm [[alg:checking_feasibility]] to check for that.
    - $\mathcal P_t$ is bounded: In theorem [[thm:bound_equiv_uniform_bound]] we prove that this is in fact equivalent to $\mathcal P_t$ being bounded uniformly in $t$.
 
 
 ** Contribution of the paper
-   In this paper we propose an efficient method to find the best polynomial solution to a time-varying linear program or semi-definite program. The paper is organized as follow:
+   In this paper we propose an efficient method to find the best polynomial solution to a time-varying linear program or semi-definite program, as well as a characterization for when polynomial solution are close to the overall optimal one. The paper is organized as follow:
    - In section 2 we describe the form of solution to ([[eqn:time_varying_sdp_t]]) that need not to be polynomial. We then discuss under which conditions polynomial solutions exist and are optimal.
    - In section 3, we give a finite time algorithm to check for those conditions.
    - Section 4 presents an SDP formulation for finding the best polynomial solution.
@@ -114,13 +121,26 @@
 
 ** Preliminary
 
+*** Limits of sets
+    
    The following notion of limits of sets in time will be useful to as:
 
    #+BEGIN_definition
    $$\lim_{t_0} P_t = \{v |\; v(t_n) \in \mathcal P_{t_n}, t_n \rightarrow t_0, \lim v(t_n) = v \}$$
    #+END_definition
+   
+*** On the continuity of the optimal value
+    
+   #+NAME: thm:continuity_perturbation
+   #+BEGIN_theorem
+   \cite{Martin1975}
+
+   - Optimal value continuous when $A$ constant
+   - Optimal value upper semi-continuous continuous 
+   #+END_theorem
 
 
+*** On the boundedness of the feasible set
    We prove that as long as $\mathcal P_t$ is bounded, we can assume without loss of generality that $\mathcal P_t$ is uniformly bounded.
 
    #+NAME: thm:bound_equiv_uniform_bound
@@ -138,13 +158,16 @@
    #+BEGIN_proof
    Consider the program $f(t) = \max_{x \in \mathcal P_t} \sum_i |x_i|$. We have that $f(t)$ is finite for all $t$ and we want to prove that $f(t)$ can be uniformly bounded on $[-1, 1]$.
    
-   Notice that this is an LP for all $t$, and that by assumption we made earlier, the set of solution is bounded for all $t$. As a result, all conditions for [cite (see "On the Continuity of the Maximum in Parametric Linear Programming" by D. H. MARTIN)] are verified, and we conclude that  $f(t)$ is upper semi-continuous.
+   Notice that this is an LP for all $t$, and that by assumption we made earlier, the set of solution is bounded for all $t$. As a result, all conditions for [[thm:continuity_perturbation]] are verified, and we conclude that  $f(t)$ is upper semi-continuous.
    
    Now, if $t_n$ is a convergent sequence such that $f(t_n) \rightarrow \sup_t f(t)$, and $t_0 = \lim t_n$, then: $\sup_t f(t) = \lim_n f(t_n) \le f(t_0) < \infty$
    #+END_proof
 
    Without loss of generality, we assume for the rest of this paper that we can amend the constraints $-M \le x_i \le M, i=1\ldots n$.
-     
+   This will allow us in particular to assume that $\mathcal P_t$ is in fact a polytope, i.e. it is equal to the convex hull of its vertices.
+
+    
+   
 ** Geometry of the feasible set
    
    We start be presenting the following theorem that describes the geometry of the feasible set $\mathcal P_t$. The theorem states that for except some finite number of times, the feasible set is a convex combination of points that move as piece-wise rational functions in time. More formally:
@@ -157,7 +180,19 @@
    - $\lim_{t_i} \mathcal P_t \subseteq \mathcal P_{t_i}$
    - Call $\mathcal V_i = \{t \rightarrow A_{B_j}^{-1} (t) b(t)\}$, e.g the set of vertices of $\mathcal P_t$ at the interval $(t_i, t_{i+1})$
    #+END_theorem
+
+   #+NAME: proof:geometry_feasible_set_lp
+#+BEGIN_proof 
+At any given time $t$, $\mathcal P_t$ is a bounded polyhedron, so it is equal to the convex hull of its vertices. All vertices can be written as: $A_B(t)^{-1}b(t)$ for some $B \in [n]$, e.g there exist a set of basis $\mathcal B(t)$ such that $\mathcal P_t = conv\{A_B(t)^{-1}b(t), B \in \mathcal B(t)\}$.
+
+It remains to show that $\mathcal B(t)$ changes at most finitely many times. That's indeed true because that set changes only if:
+- on the roots of some polynomial $t \rightarrow \det(A_B(t))$.
+- when one of the components of $t \rightarrow b(t) - A_B(t)^{-1}b(t)$ changes sign.
+
+Both things happen finitely many times.
   
+#+END_proof
+
    Even though the previous theorem gives a description of the feasible set and ignores the objective function, it is not very hard to see that the optimal solution can also be chosen to be a piece-wise rational function in $t$. Indeed, there always exist an optimal solution of a linear program on a vertex, and if $c(t)$ is "nice" enough, e.g. a polynomial, optimality of any given vertex changes only finitely many time inside $[-1, 1]$.
   
    #+NAME: thm:form_optimal_solution_lp
@@ -183,12 +218,11 @@
    #+BEGIN_examples
    Example where a continuous solution doesn't exist:
   
-   $\mathcal P_t = \{ tx \ge 0, t(x-1) \ge 0\}$ doesn't have a continuous solution.
-   $\mathcal P_t = [1, \infty)$ when $t > 0$
-   $\mathcal P_t = (-\infty, 0]$ when $t < 0$
+   $\mathcal P_t = \{ tx \ge 0, t(x-1) \ge 0\}$ doesn't have a continuous solution. One can see that by observing that
+   $\mathcal P_t = [1, \infty)$ when $t > 0$ and   $\mathcal P_t = (-\infty, 0]$ when $t < 0$.
    #+END_examples
 
-   The reason no continuous solution exist is that the $\mathcal P_t$ are "disconnected" at 0, e.g $\lim_{t < 0} P_t \cap \lim_{t > 0} = \emptyset$. 
+   The reason no continuous solution exist is that the $\mathcal P_t$ are "disconnected" at 0, e.g $\lim_{t < 0} \mathcal P_t \cap \lim_{t > 0} \mathcal P_t= \emptyset$, for a solution to exist, it has to "jump" at time 0. The following theorem formalizes this notion of continuity of sets and existence of continuous solutions.
 
    #+NAME: thm:existence_cont_solution
    #+BEGIN_theorem
@@ -235,7 +269,7 @@
 
    #+END_proof
 
-   When $A(t)$ doesn't depend on $t$ that can't happen:
+   A particular special case that is worth mentioning is when $A(t)$ doesn't depend on $t$. In that case, continuous solutions always exist:
   
    #+BEGIN_theorem
    When $A(t)$ doesn't depend on $t$ there always exist a continuous solution.
@@ -248,12 +282,14 @@
    - $\langle v(t_i) , u \rangle < -\delta$ for $v \in \mathcal V_{i+1}$
 
 
-   But that contradicts the fact that the following LP has a continuous solution when $\alpha \rightarrow 0$:
+   But that contradicts the fact that the following LP has a continuous solution (because of theorem [[thm:continuity_perturbation]] )when $\alpha \rightarrow 0$:
    $$\min_{x \in P_{t+\alpha}} \langle x, u \rangle$$
   
    #+END_proof
 
 
+
+   
    Whenever there exist one feasible continuous solution, we can find near optimal continuous solution.
   
    #+NAME: thm:optimality_continuous_solution
@@ -264,10 +300,29 @@
    - $f(t)$ is feasible of all $t \in [-1, 1]$.
    - $\int_0^1 \langle c(t), x(t)\rangle - \int_0^1 \langle c(t), f(t)\rangle \le \varepsilon$.
    #+END_theorem
+   
+    #+BEGIN_proof
+    Following the result of theorem [[thm:geometry_feasible_set_lp]], there exist a partition a partition $[-1, 1] = \cup_1^n [t_i, t_{i+1}]$ and an optimal solution $x^{opt}(t)$ that is a continuous on every $[t_i, t_{i+1}]$(in fact, a rational function).
+
+    We want to construct a function that is as close as possible to $x^{opt}$ (in the $L_1$ sense) while staying continuous, which would prove the claim of theorem.
+    
+    For this purpose, define $I_i^{\alpha} = (t_i+\alpha, t_i -\alpha)$ for some $\alpha > 0$.
+
+  Let $f^{\alpha}$ be the function that:
+  - is equal to $x(t)$ on every $I_i^{\alpha}$.
+  - is equal to $f_0$ on all the $t_i$.
+  - interpolates linearly between $x(t)$ and $f_0(t)$ on $[t_i-\alpha, t_i+\alpha]$
+
+    In a sense, $f^{\alpha}$ lives on the optimal vertex but "travels" to the continuous solution $f_0$ to get through the possibly problematic time $t_i$.
+    
+  As $\alpha \rightarrow 0$, $f^{\alpha}(t) \rightarrow x(t)$ almost surely. Given that $|f^{\alpha}(t)| \le |x(t)| + |f_0(t)|$, the Dominated convergence theorem gives $f^{\alpha}(t) \rightarrow_{L_1} x(t)$
+  #+END_proof
   
       
 ** From continuous to polynomial      
-   Now that we have established that the existence of continuous solution is a necessary condition that is not always verified, one might ask if such condition is also sufficient for existence and optimality of polynomial solution. Once again the answer to both questions is negative:
+   Now that we have established that the existence of continuous solution is a necessary condition that is not always verified, one might ask if such condition is also sufficient for existence and optimality of polynomial solution. We rely for that on the fact that polynomial can approximate uniformly continuous solutions, and the hope is that if the approximation is good enough, the polynomial solution will be feasible as well.
+
+   Once again, that is not always possible. We consider the following example:
   
    #+BEGIN_examples
    Examples where a continuous solution exists but a polynomial solution doesn't exist:
@@ -275,23 +330,117 @@
    #+END_examples
 
       
-   What went wrong? $\mathcal P_t$ is not full dimensional, which motivates the following definition:
+   What went wrong? $\mathcal P_t$ in this example is not full dimensional, and even though it contains a continuous solution so there is no "slackness" to approximate it with a polynomial. This motivates the following two definitions:
 
+   
+   
    #+BEGIN_definition
-   $\mathcal P_t$ is full dimensional if there exist $x \in \mathcal P_t$ and $\varepsilon > 0$ such that $B(x, \varepsilon) \subset P_t$
-   #+END_definition
+[[eqn:time_varying_lp_t]] is strictly feasible if there exist a function (not necessarily continuous):
+  
+$$[-1, 1] \rightarrow \mathbb R^n, t \rightarrow x^s(t)$$
 
-   An equivalent characterization for full dimensionality for a polytope $\mathcal P_t$ is that the affine rank of the vertices is at least the dimension of the ambient space plus 1.
+Such that:
+
+$A(t)x^s(t) \le b(t) - \varepsilon 1$
+
+In this case we say that $x^s(t)$ is strictly feasible for [[eqn:time_varying_lp_t]].
+#+END_definition
 
 
-   The idea is that we can approximate any function inside 
+#+BEGIN_definition
+[[eqn:time_varying_lp_t]] is full dimensional if there exist $\delta > 0$ and a *continuous* function:
+  
+$$[-1, 1] \rightarrow \mathbb R^n, t \rightarrow x^c(t)$$
 
-   Now we are able to give a conditions under which 
+Such that:
+
+$B(x^c(t), \delta) \subset \mathcal P_t$
+#+END_definition
+
+While the first definition provides slackness in the space of the constraints, the second definition provides slackness in the space of the variable $x^c(t)$, at the expense of $x^c(t)$ being continuous.
+
+
+One can easily see that strict feasibility of a continuous solution $x^c(t)$ implies full dimensionality when the rows of $A(t)$ never cancel.
+
+#+BEGIN_theorem
+If $A(t)$ rows never cancel, then
+[[eqn:time_varying_lp_t]] strictly feasible $\implies$ [[eqn:time_varying_lp_t]] full dimensional.
+#+END_theorem
+
+#+BEGIN_proof
+Define
+$$\varepsilon = \min_{i} \min_{t \in [-1, 1]} (b(t) - A(t)x^c(t))_i$$
+$\varepsilon > 0$, because otherwise, if $\varepsilon = 0$, then by continuity the minimum is attained at $t, i$ for which $b_i(t) - A_i(t)x^c(t) = 0$. By strict feasibility of $x^c(t)$, if $u \in \mathbb R^n$ has norm smaller than  $\delta$, then $b_i(t) - A_i(t)(x^c(t) + u) \ge 0$, which leads to $A_i(t)^Tu \ge 0$, and to $A_i(t) = 0$.
+
+We have just proved that $A(t) x^c(t) \le b(t) - \varepsilon 1$
+#+END_proof
+
+Perhaps the more surprising result is that the converse is also true (unconditionnaly):
+
+#+BEGIN_theorem
+Full dimensional $\implies$ Strictly feasibility.
+#+END_theorem
+
+#+BEGIN_proof
+We aim to construct a continuous function $x^{c}(t)$ that is strictly feasible.
+
+Recall the theorem that says that there exist $N > 0$, and $-1 = t_1 < \ldots < t_N = 1$ such that, for all $i = 1 \ldots N$, there exist $r$ rational functions $\mathcal V_i = \{u_1(t), \ldots, u_r(t)\}$ (the vertices) such that :
+   $$\mathcal P_t = conv\{ u_j(t), j=1 \ldots r \}$$
+
+
+We provide two ways to construct $x^c(t)$ depending on whether we are near the problematic points $t_i$ or far away from them, then we connect these patches by interpolating between them.
+
+*Near the problematic points $t_i$:*
+
+$\mathcal P_{t_i}^{\varepsilon} \ne \emptyset$, let $w$ be one of its extreme points. Then there exist a basis $B$ such that $w = A_B(t_i)^{-1}(b(t_i) - \varepsilon 1)$
+
+Now define $w^{near}(t) = A(t)^{-1}(b(t) - \varepsilon 1)$, then there exist a neighborhood of $t_i$, $[t_i-\alpha_i, t_i+\alpha_i]$:
+- $w^{near}(t)$ is well defined: $\det(A_B(t_i)) \ne 0$ implies, that $\det(A_B(t)) \ne 0$ in the vicinity of $t_i$
+- $w^{near}(t)$ is continuous.
+- $w^{near}(t)$ is strictly feasible: Since $A(t_i)w^{near}(t_i) \le b(t_i) - \varepsilon 1$, then on a neighborhood of $t_i$: $A(t_i)w^{near}(t_i) \le b(t_i) - \frac{\varepsilon}2 1$
+
+
+*Far away from the $t_i$:*
+
+On $(t_i, t_{i+1})$, let $w^{right}(t) = \frac{\sum_{u \in \mathcal V_i} u(t)}{|\mathcal V_i|} \in \mathcal P_t$
+On $(t_{i-1}, t_{i})$, let $w^{left}(t) = \frac{\sum_{u \in \mathcal V_{i-1}} u(t)}{|\mathcal V_i|} \in \mathcal P_t$
+
+Let's prove that  $w^{right}$ is strictly feasible on $J := [t_{i-1}+\beta, t_i-\beta]$
+
+$\varepsilon^{right} = \min_J \min_i (b(t) - A(t)w^{right}(t))_i > 0$, otherwise, by continuity, there exist $i$ and $t \in J$ such that $(b(t) - A(t)w^{right}(t))_i = 0$, which means that $0 = b_i(t) - A_i^T(t)w^{right}(t) = \frac1{|\mathcal V_i|} \sum_{u \in \mathcal V_i} \underbrace{(b_i(t) - A_i(t)^Tu(t))}_{\ge 0}$, i.e. all $\mathcal P_t$ 's vertices belong to same affine hyper plane $A_i(t)^T x = b_i(t)$, which contradicts the existence of a strictly feasible point $x^s(t)$.
+
+Similarly, we define $\varepsilon^{left} > 0$.
+
+
+*Connecting the patches:*
+
+We get a continuous feasible solution on $[-1, 1]$ simply by "connecting" the solutions $w^{left}, w^{right}, w^{near}$ by interpolating from one to the other. To ease notation, define the function $I_a^b(t)$ to be the linear function equal to $0$ at $t = a$, and to $1$ at $t = b$.
+
+Fix $\beta < \min_i (t_{i+1} - t_i)$, and define:
+
+
+
+   \[x^c(t) = \left\{\begin{array}{cc}
+   w^{left}(t) & t_{i-1}+\beta \le t \le t_{i} - \beta\\
+   I_{t_{i} - \beta}^{t_{i} - \beta/2}(t) (w^{left}(t) - w^{near}(t)) + w^{near}(t) & t_{i}-\beta < t \le t_{i} - \beta/2\\
+   w^{near}(t) & t_{i}-\beta/2 < t \le t_{i} + \beta/2\\
+   I_{t_{i} + \beta/2}^{t_{i+1} - \beta}(t) (w^{near}(t) - w^{right}(t)) + w^{right}(t)   & t_{i}-\beta < t \le t_{i} - \beta/2\\
+   w^{right}(t) & t_{i}+\beta < t \le t_{i+1} - \beta\\
+   \end{array}\right.
+   \]
+
+
+   It is easy to see that:
+   - $x^c(t)$ is continuous.
+   - at all times $t$, $x^c(t)$ is a convex combination of solutions that are strictly feasible, so at any given point in time $t$, $A(t) x^c(t) \le b(t) - \min(\varepsilon^{right}, \varepsilon^{left}, \varepsilon) 1$
+#+END_proof
+
+Now we are able to give a conditions under which polynomial solution exist and are near optimal.
+   
    #+NAME: thm:optimality_poly_solution
    #+BEGIN_theorem
    Under the following assumptions:
-   - $\mathcal P_t$ is full dimensional for all $t \in [-1, 1]$
-   -  [[eqn:time_varying_lp_t]] admits a feasible continuous solution.
+   - [[eqn:time_varying_lp_t]] is full dimensional
 
    Then for every $\varepsilon > 0$, there exist a *polynomial* function $p: [-1, 1] \rightarrow \mathbb R^n$ such that:
    - $p(t)$ is feasible of all $t$, e.g $A(t)p(t) \le b(t)$, $\forall t \in [-1, 1]$
@@ -300,29 +449,49 @@
 
 
    #+BEGIN_proof
-   We start with a continuous solution $f$ that is near optimal to [[eqn:time_varying_lp_t]], whose existence is guaranteed by [cite theroem]. Let $p(t)$ be a polynomial $p(t)$ that approximates $f(t)$ uniformly, e.g, $\forall t \in [-1, 1] \; ||p(t) - f(t)||_2^2  \le \delta^2$, where $\delta$ is a constant we are going to fix latex.
+   We start with a continuous solution $f$ that is near optimal to [[eqn:time_varying_lp_t]], whose existence is guaranteed by [[thm:optimality_continuous_solution]]. Let $p(t)$ be a polynomial that approximates $f(t)$ uniformly, e.g, $\forall t \in [-1, 1] \; ||p(t) - f(t)||_2^2  \le \delta^2$, where $\delta$ is a constant we are going to fix latex.
 
-   For $\delta$ small enough, $p(t)$ is inside $\mathcal P_t$. Quantitatively,
-   $$b(t) - A(t)p(t) = \underbrace{b(t) - A(t)f(t)}_{\ge \beta} + A(t)(f(t) - p(t)) \ge \beta - ||A||_2 \delta \ge 0$$
-   As long as $\delta \le \frac{\beta}{||A||_2}$.
-
+   For $\delta$ smaller than $\varepsilon$, $p(t)$ is inside $\mathcal P_t$.
+   
    Let's now examine the objective value of $f$. Similarly:
    $$\int_{-1}^1 \langle c(t), x(t)\rangle - \int_{-1}^1 \langle c(t), p(t)\rangle \le \int_{-1}^1 ||f(t) - p(t)||_2 ||c(t)||_2 dt = O(\delta)$$
+   
    Again, taking $\delta$ small enough give the result.
    #+END_proof
-  
 
-   *Discussion:* in the example given above, $\mathcal P_t$ was never full dimensional.
+      
+   
+We are now ready to present the main characterization for the existence and optimality of polynomial solutions. Indeed, we have reduced that question to the feasibility of the following time varying LP:
+
+$$A(t)x^s(t) \le b(t) - \varepsilon 1$$
 
 
+   #+BEGIN_theorem
+   Under the assumption that the following LP is feasible:
+   
+   $$A(t)x^s(t) \le b(t) - \varepsilon 1$$
+   
+   For every $\varepsilon > 0$, there exist a *polynomial* function $p: [-1, 1] \rightarrow \mathbb R^n$ such that:
+   - $p(t)$ is feasible of all $t$, e.g $A(t)p(t) \le b(t)$, $\forall t \in [-1, 1]$
+   - $\int_{-1}^1 \langle c(t), x(t)\rangle - \int_{-1}^1 \langle c(t), p(t)\rangle \le \varepsilon$.
+   #+END_theorem
+
+   
 * Decidability of the conditions
+
+  This section present finite time algorithms to decide the conditions discussed in above that guarantee feasibility of time varying LP as well as optimality of polynomial solutions.
   
-  Theorem  [[thm:form_optimal_solution_lp]] showed that the feasible set of a time varying LP can fully described by giving the time $t_1, \ldots t_N$ as well as the coefficients of the rational functions in the set $\mathcal V_i$ for all $i=1, \ldots N$. We propose an algorithm that does exactly that.
+  Theorem  [[thm:form_optimal_solution_lp]] showed that the feasible set of a time varying LP can be fully described by giving the time $t_1, \ldots t_N$ as well as the coefficients of the rational functions in the set $\mathcal V_i$ for all $i=1, \ldots N$. We propose an algorithm that does exactly that.
+  
   Notice that since the algorithm produces a vertex description of the moving polytope $\mathcal P_t$, getting an optimal solution for all $t \in [-1, 1]$ is straightforward.
   
   
-** Feasibility
+** Feasibility and strict feasibility
 
+   We present an algorithm that decides whether a time varying LP is feasible, and if yes, produces a feasible solution.
+   
+
+   The following lemma is going to be very useful to us later on.
    #+BEGIN_lemma
    The roots of a univariate polynomial are computable.
    #+END_lemma
@@ -334,36 +503,24 @@
 
    Let $\mathcal U$ be the set of all times, i.e. $U = \cup_B \mathcal U_B$.
     
-   All such $u_B(t)$ change feasibility status (e.g become feasible or infeasible)finitely many times, because that correspond to a zero of one the polynomial components of $b(t) - A(t)u_B(t)$. Add all such times to the set $\mathcal U$.
+   All such $u_B(t)$ change feasibility status (i.e become feasible or infeasible) finitely many times, because that correspond to a zero of one the polynomial components of $b(t) - A(t)u_B(t)$. Add all such times to the set $\mathcal U$.
 
     
 #+NAME: alg:checking_feasibility
-   #+begin_algorithm
+ #+begin_algorithm
+\caption{Check feasibility}
+\begin{algorithmic}[1]
+\Procedure{Check Pt}{}
 \State \text{Compute} $\mathcal U$
     
 \State $i \gets 0$
-\For {$i=0 \ldots \operatorname{len}(\mathcal U)$}
+\For{ $i=0 \ldots \operatorname{len}(\mathcal U)$}
 \State \text{Output the basis of the feasible vertices at time} $\frac{\mathcal U[i] + \mathcal U[i+1]}2$.
 \State $i \gets i+1$
 \EndFor
+\EndProcedure
+\end{algorithmic}
 #+end_algorithm
-
-
-** Feasibility of continuous solutions
-   Using characterization [[thm:existence_cont_solution]], we can decide whether there exist a continuous solution that lives inside $\mathcal P_t$ for all $t \in [-1, 1]$. To do that, we look at times $t_{2}, \ldots t_{N-1}$ given by the previous algorithm, and for $2 \le i \le N-1$, we check that the following polytope is not empty:
-   $$\operatorname{conv}(v(t_i), v \in \mathcal V_i) \cap \operatorname{conv}(v(t_i), v \in \mathcal V_{i+1})$$
-
-   And this can be done in polynomial time.
-   
-   
-** Full dimensionality
-   Full dimensionality can also be checked in the same fashion, we look at times $t_{1}, \ldots t_{N-1}$ given by the previous algorithm, and for $1 \le i \le N-1$, we check that the polytope $\operatorname{conv}(v(t), v \in \mathcal V_i)$ is full dimensional for all $t \in [t_i, t_{i+1}]$.
-
-   [Deal with endpoints]
-   
-   To do that, it is enough to check that  for all $t \in [t_i, t_{i+1}]$, there exist a subset of $\{v_1, \ldots, v_n\} \subseteq \mathcal V_i$, such that $v_1(t) \wedge \ldots \wedge v_n(t) \ne 0$.
-
-   Equivalently, this verified if and only if at least one the following polynomials is not 0 for all times $t \in [t_i, t_{i+1}]$:  $$\{ t \rightarrow v_1(t) \wedge \ldots \wedge v_n(t), \{v_1, \ldots, v_n\} \subseteq \mathcal V_i\}$$. One can do that simply by checking that those polynomials do not have common roots.
    
    
 ** Optimality
@@ -399,9 +556,36 @@
    $\{\det A_B(s) \ne 0, \; A(s)A_B^{-1}(s)b(s) \le b(s), \;  c_B(s)A_B^{-1}(s) \le 0 \; | B \in [n]\}$
 
    Corecteness is obtained because at any given time $t$, the point $x(s) = A(s)A_B^{-1}(s)$ is:
-   - feasibile, e.g. $A(s)A_B^{-1}(s)b(s) \le b(s)$
-   - optimal, because of dual feasibility, e.g $c_B(s)A(s)A_B^{-1}(s)b(s) \le 0$
+   - feasibile, i.e. $A(s)A_B^{-1}(s)b(s) \le b(s)$
+   - optimal, because of dual feasibility, i.e. $c_B(s)A(s)A_B^{-1}(s)b(s) \le 0$
    #+end_proof
+
+
+
+** Strict feasibility
+   We seek to decide whether the following LP is feasible or not for some $\varepsilon > 0$:
+   $$A(t)x(t) \le b(t) - \varepsilon 1$$
+
+   Which can be reformulated as:
+   $$\max \varepsilon \; A(t)x(t) \le b(t) - \varepsilon 1$$
+
+   
+** Feasibility of continuous solutions
+   
+   Using characterization [[thm:existence_cont_solution]], we can decide whether there exist a continuous solution that lives inside $\mathcal P_t$ for all $t \in [-1, 1]$. To do that, we look at times $t_{2}, \ldots t_{N-1}$ given by the previous algorithm, and for $2 \le i \le N-1$, we check that the following polytope is not empty:
+   $$\operatorname{conv}(v(t_i), v \in \mathcal V_i) \cap \operatorname{conv}(v(t_i), v \in \mathcal V_{i+1})$$
+
+   And this can be done in polynomial time.
+   
+
+** COMMENT Full dimensionality
+   Full dimensionality can also be checked in the same fashion, we look at times $t_{1}, \ldots t_{N-1}$ given by the previous algorithm, and for $1 \le i \le N-1$, we check that the polytope $\operatorname{conv}(v(t), v \in \mathcal V_i)$ is full dimensional for all $t \in [t_i, t_{i+1}]$.
+
+   [Deal with endpoints]
+   
+   To do that, it is enough to check that  for all $t \in [t_i, t_{i+1}]$, there exist a subset of $\{v_1, \ldots, v_n\} \subseteq \mathcal V_i$, such that $v_1(t) \wedge \ldots \wedge v_n(t) \ne 0$.
+
+   Equivalently, this verified if and only if at least one the following polynomials is not 0 for all times $t \in [t_i, t_{i+1}]$:  $$\{ t \rightarrow v_1(t) \wedge \ldots \wedge v_n(t), \{v_1, \ldots, v_n\} \subseteq \mathcal V_i\}$$. One can do that simply by checking that those polynomials do not have common roots.
 
 * Time varying LP is an SDP
 
@@ -411,7 +595,7 @@
   
   
   #+begin_theorem
-  A polynomial $p$ of degree $n$ is nonnegative over $[-1,1]$ if and only if it can be written as a weighted sum of squared polynomials \cite{Lukacs-1918}, either in the form of
+  A polynomial $p$ of degree $n$ is nonnegative over $[-1,1]$ if and only if it can be written as a weighted sum of squared polynomials, either in the form of
   \begin{equation}
   p(t)=(1+t)q(t)+(1-t)r(t), \quad q\in SOS_{k-1},\; s\in SOS_{k-1} \qquad \text{if }n=2k-1,\label{eq:wsos-odd}
   \end{equation}
@@ -527,3 +711,7 @@ We can now state the theorem [CHECK CONDITIONS]
 
   - Number of jumps $N$, is it polynomial.
   - Characterization for SDPs
+
+    
+\bibliographystyle{plain}
+\bibliography{citations}
