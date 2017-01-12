@@ -40,18 +40,19 @@
   \begin{equation*}
   \tag{$SDP_t$}
   \begin{array}{ll@{}ll}
-  \text{maximize} & \langle c(t), x(t) \rangle & \\
-  \text{subject to}& A_0(t) + \sum_{i=1}^r A_i(t) x_i(t) \succeq 0
+  \text{maximize} & \langle X(t), C(t) \rangle & \\
+  \text{subject to}& X(t) \succeq 0\\
+  & \langle A_i(t), X(t) \rangle \le b_i(t) 
   \end{array}
   \end{equation*}
-  with $A_i(t) \in \mathbb R^{m \times m}, x(t), c(t) \in \mathbb R^n$ for all $t \in [-1, 1]$
+  with $X(t), C(t), A_i(t) \in \mathbb R^{n \times n}, b(t) \in \mathbb R^m$ for all $t \in [-1, 1]$
 
 
-  A natural question here is how to describe the data of the problem: $(A_0, \ldots A_r, c)$. We made the choice of considering /polynomial/ functions because the set of such function is general enough to approximate a large set of functions, and at the same time simple enough to describe (in the monomial basis for instance) and to solve for (see section [?]). 
+  A natural question here is how to describe the data of the problem: $(A_0, \ldots A_r, c)$. We made the choice of considering /polynomial/ functions because the set of such function is general enough to approximate a large set of functions, and at the same time simple enough to describe (in the monomial basis for instance) and to solve for (see section [[sec:lp_is_sdp]]). 
 
   In many applications, one looks for $x(t)$ that is smooth and optimal. In this paper we discuss when solutions of this form are optimal, and in that case we use sum of squares optimization to obtain the best polynomial solution of a given degree $x(t) \in \mathbb R[t]^n$.
 
-    It is important to notice that in general the optimal solution is not polynomial, and might not even be continuous.
+  It is important to notice that in general the optimal solution is not polynomial, and might not even be continuous.
 
   #+ATTR_LATEX: :width 0.15\textwidth
   [[file:frame1.png]]
@@ -70,8 +71,9 @@
   \begin{equation*}
   \tag{$SDP$}
   \begin{array}{ll@{}ll}
-  \text{maximize} & \int_{-1}^1 \langle c(t), x(t) \rangle dt & \\
-  \text{subject to}& A_0(t) + \sum_{i=1}^r A_i(t) x_i(t) \succeq 0
+  \text{maximize} & \int_{-1}^1 \langle X(t), C(t) \rangle dt & \\
+  \text{subject to}& X(t) \succeq 0\\
+  & \langle A_i(t), X(t) \rangle \le b_i(t) 
   \end{array}
   \end{equation*}
 
@@ -81,8 +83,9 @@
   \begin{equation*}
   \tag{$SDP$}
   \begin{array}{ll@{}ll}
-  \text{maximize} & \min_{t \in [-1, 1]} \langle c(t), x(t) \rangle dt & \\
-  \text{subject to}& A_0(t) + \sum_{i=1}^r A_i(t) x_i(t) \succeq 0
+  \text{maximize} & \min_{t \in [-1, 1]} \langle X(t), C(t) \rangle & \\
+  \text{subject to}& X(t) \succeq 0\\
+  & \langle A_i(t), X(t) \rangle \le b_i(t) 
   \end{array}
   \end{equation*}
 
@@ -112,7 +115,7 @@
 
 ** Contribution of the paper
    In this paper we propose an efficient method to find the best polynomial solution to a time-varying linear program or semi-definite program, as well as a characterization for when polynomial solution are close to the overall optimal one. The paper is organized as follow:
-   - In section 2 we describe the form of solution to ([[eqn:time_varying_sdp_t]]) that need not to be polynomial. We then discuss under which conditions polynomial solutions exist and are optimal.
+   - In section 2 we describe the form of solutions to ([[eqn:time_varying_sdp_t]]) that need not to be polynomial. We then discuss under which conditions polynomial solutions exist and are optimal.
    - In section 3, we give a finite time algorithm to check for those conditions.
    - Section 4 presents an SDP formulation for finding the best polynomial solution.
 
@@ -123,24 +126,26 @@
 
 *** Limits of sets
     
-   The following notion of limits of sets in time will be useful to as:
+    The following notion of limits of sets in time will be useful to as:
 
-   #+BEGIN_definition
-   $$\lim_{t_0} P_t = \{v |\; v(t_n) \in \mathcal P_{t_n}, t_n \rightarrow t_0, \lim v(t_n) = v \}$$
-   #+END_definition
+    #+BEGIN_definition
+    $$\lim_{t_0} P_t = \{v |\; v(t_n) \in \mathcal P_{t_n}, t_n \rightarrow t_0, \lim v(t_n) = v \}$$
+    #+END_definition
    
-*** On the continuity of the optimal value
-    
-   #+NAME: thm:continuity_perturbation
-   #+BEGIN_theorem
-   \cite{Martin1975}
+*** Continuity of the optimal value
 
-   - Optimal value continuous when $A$ constant
-   - Optimal value upper semi-continuous continuous 
+    The following theorem provides some insights on continuity propoerties of linear programs that are subjected to data perturbations
+    #+NAME: thm:continuity_perturbation
+    #+BEGIN_theorem
+    \cite{Martin1975}
+    Consider the LP: $\max_{Ax \le b} \langle c, x \rangle$, and let $\Omega$ be the set of tuples $(A, b)$ for which the program $\{x, Ax \le b\}$ is feasible bounded.
+
+   - The optimal value of this program is continuous with respect to perturbations in $c$ and $b$ as long as $(A, b) \in \Omega$
+   - The Optimal value of same program is upper semi-continuous with respect to changes in $A, b, c$  as long as $(A, b) \in \Omega$.
    #+END_theorem
 
 
-*** On the boundedness of the feasible set
+*** Boundedness of the feasible set
    We prove that as long as $\mathcal P_t$ is bounded, we can assume without loss of generality that $\mathcal P_t$ is uniformly bounded.
 
    #+NAME: thm:bound_equiv_uniform_bound
@@ -178,12 +183,12 @@
    - $A_{B_j}(t)$ is invertible for every $t \in (t_i, t_{i+1})$, 
    - $\mathcal P_t = conv\{ A_{B_j}(t)^{-1}b(t), j=1 \ldots r \}$
    - $\lim_{t_i} \mathcal P_t \subseteq \mathcal P_{t_i}$
-   - Call $\mathcal V_i = \{t \rightarrow A_{B_j}^{-1} (t) b(t)\}$, e.g the set of vertices of $\mathcal P_t$ at the interval $(t_i, t_{i+1})$
+   - Call $\mathcal V_i = \{t \rightarrow A_{B_j}^{-1} (t) b(t)\}$, i.e. the set of vertices of $\mathcal P_t$ at the interval $(t_i, t_{i+1})$
    #+END_theorem
 
    #+NAME: proof:geometry_feasible_set_lp
 #+BEGIN_proof 
-At any given time $t$, $\mathcal P_t$ is a bounded polyhedron, so it is equal to the convex hull of its vertices. All vertices can be written as: $A_B(t)^{-1}b(t)$ for some $B \in [n]$, e.g there exist a set of basis $\mathcal B(t)$ such that $\mathcal P_t = conv\{A_B(t)^{-1}b(t), B \in \mathcal B(t)\}$.
+At any given time $t$, $\mathcal P_t$ is a bounded polyhedron, so it is equal to the convex hull of its vertices. All vertices can be written as: $A_B(t)^{-1}b(t)$ for some $B \in [n]$, i.e. there exist a set of basis $\mathcal B(t)$ such that $\mathcal P_t = conv\{A_B(t)^{-1}b(t), B \in \mathcal B(t)\}$.
 
 It remains to show that $\mathcal B(t)$ changes at most finitely many times. That's indeed true because that set changes only if:
 - on the roots of some polynomial $t \rightarrow \det(A_B(t))$.
@@ -222,7 +227,7 @@ Both things happen finitely many times.
    $\mathcal P_t = [1, \infty)$ when $t > 0$ and   $\mathcal P_t = (-\infty, 0]$ when $t < 0$.
    #+END_examples
 
-   The reason no continuous solution exist is that the $\mathcal P_t$ are "disconnected" at 0, e.g $\lim_{t < 0} \mathcal P_t \cap \lim_{t > 0} \mathcal P_t= \emptyset$, for a solution to exist, it has to "jump" at time 0. The following theorem formalizes this notion of continuity of sets and existence of continuous solutions.
+   The reason no continuous solution exist is that the $\mathcal P_t$ are "disconnected" at 0, i.e. $\lim_{t < 0} \mathcal P_t \cap \lim_{t > 0} \mathcal P_t= \emptyset$, for a solution to exist, it has to "jump" at time 0. The following theorem formalizes this notion of continuity of sets and existence of continuous solutions.
 
    #+NAME: thm:existence_cont_solution
    #+BEGIN_theorem
@@ -251,7 +256,7 @@ Both things happen finitely many times.
    (2 $\implies$ 1)
 
    We are going to construct a continuous solution $x_i(t)$ that is defined for $t \in (t_{i-1}, t_i)$.
-   Let $x_0 \in conv \{ v(t_{i}), v \in \mathcal V_i\} \cap conv \{ v(t_{i}), v \in \mathcal V_{i+1}\}$, e.g.
+   Let $x_0 \in conv \{ v(t_{i}), v \in \mathcal V_i\} \cap conv \{ v(t_{i}), v \in \mathcal V_{i+1}\}$, i.e.
    $u = \sum_{v \in V_i}  \lambda_{v} v(t_i) = \sum_{v \in V_{i+1}}  \mu_{v} v(t_i)$, and define:
 
    \[x_i(t) = \left\{\begin{array}{cc}
@@ -260,10 +265,10 @@ Both things happen finitely many times.
    \end{array}\right.
    \]
 
-   It is clear that $x_i$ is feasible and continuous, e.g $x_i(t_i^-) = x_i(t_i^+) = u$.
+   It is clear that $x_i$ is feasible and continuous, i.e. $x_i(t_i^-) = x_i(t_i^+) = u$.
 
 
-   We get a continuous feasible solution on $[-1, 1]$ simply by "connecting" two solution $x_i, x_{i+1}$ by interpolating from one to the other, e.g
+   We get a continuous feasible solution on $[-1, 1]$ simply by "connecting" two solution $x_i, x_{i+1}$ by interpolating from one to the other:
 
    $x_{i, i+1}(t) = \alpha(t) x_i(t) + (1-\alpha(t)) x_{i+1}(t)$, where $\alpha(t) = \frac{t - t_i}{t_{i+1} - t_i}$
 
@@ -299,6 +304,8 @@ Both things happen finitely many times.
    For every $\varepsilon > 0$, there exist a continuous function $f: [-1, 1] \rightarrow \mathbb R^n$ such that:
    - $f(t)$ is feasible of all $t \in [-1, 1]$.
    - $\int_0^1 \langle c(t), x(t)\rangle - \int_0^1 \langle c(t), f(t)\rangle \le \varepsilon$.
+
+     We say that $f$ is /near-optimal/.
    #+END_theorem
    
     #+BEGIN_proof
@@ -319,7 +326,8 @@ Both things happen finitely many times.
   #+END_proof
   
       
-** From continuous to polynomial      
+** From continuous to polynomial
+   <<sec:condition_polynomials_optimal>>
    Now that we have established that the existence of continuous solution is a necessary condition that is not always verified, one might ask if such condition is also sufficient for existence and optimality of polynomial solution. We rely for that on the fact that polynomial can approximate uniformly continuous solutions, and the hope is that if the approximation is good enough, the polynomial solution will be feasible as well.
 
    Once again, that is not always possible. We consider the following example:
@@ -343,7 +351,7 @@ Such that:
 
 $A(t)x^s(t) \le b(t) - \varepsilon 1$
 
-In this case we say that $x^s(t)$ is strictly feasible for [[eqn:time_varying_lp_t]].
+In this case we say that $x^s(t)$ is strictly feasible for [[eqn:time_varying_lp_t]], and we denote by $\mathcal P_t^{\varepsilon}$ the (non-empty) polytope $\{A(t)x(t) \le b(t) - \varepsilon 1\}$.
 #+END_definition
 
 
@@ -354,12 +362,52 @@ $$[-1, 1] \rightarrow \mathbb R^n, t \rightarrow x^c(t)$$
 
 Such that:
 
-$B(x^c(t), \delta) \subset \mathcal P_t$
+$$B(x^c(t), \delta) \subset \mathcal P_t$$
 #+END_definition
 
 While the first definition provides slackness in the space of the constraints, the second definition provides slackness in the space of the variable $x^c(t)$, at the expense of $x^c(t)$ being continuous.
 
+Furthermore, the definition we gave for full dimensionality was tailored to guarantee optimality of polynomial solution:
+   
+   #+NAME: thm:optimality_poly_solution
+   #+BEGIN_theorem
+   Under the following assumption:
+   - [[eqn:time_varying_lp_t]] is full dimensional
 
+   Then for every $\varepsilon > 0$, there exist a *polynomial* function $p: [-1, 1] \rightarrow \mathbb R^n$ such that:
+   - $p(t)$ is feasible of all $t$, i.e. $A(t)p(t) \le b(t)$, $\forall t \in [-1, 1]$
+   - $\int_{-1}^1 \langle c(t), x(t)\rangle - \int_{-1}^1 \langle c(t), p(t)\rangle \le \varepsilon$.
+   #+END_theorem
+
+
+   #+BEGIN_proof
+   We start with a continuous solution $f$ that is near optimal to [[eqn:time_varying_lp_t]], whose existence is guaranteed by [[thm:optimality_continuous_solution]]. Ideally we would like to approximate $g$ uniformly by a polynomial, but $p$ might not be feasible. To remidy this problem, we replace $g$ by a convex combination of $g$ and $x^s$, the strictly feasible solution. Define $f = \lambda g + (1-\lambda) x^s$, and notice that for $\lambda < 1$, $g$ is strictly feasible, but when $\lambda$ is close to 1, $f$ is also near optimal.
+
+
+   Now let $p(t)$ be a polynomial that approximates $g(t)$ uniformly, i.e., $\forall t \in [-1, 1] \; ||p(t) - f(t)||_2^2  \le \delta^2$, where $\delta$ is a constant we are going to fix latex.
+
+   For $\delta$ smaller than $\varepsilon$, $p(t)$ is inside $\mathcal P_t$.
+   
+   Let's now examine the objective value of $f$. Similarly:
+   $$\int_{-1}^1 \langle c(t), x(t)\rangle - \int_{-1}^1 \langle c(t), p(t)\rangle \le \int_{-1}^1 ||f(t) - p(t)||_2 ||c(t)||_2 dt = O(\delta)$$
+   
+   Again, taking $\delta$ small enough give the result.
+   #+END_proof
+
+The condition that $\delta$ doesn't depend on $t$ is important, as the following example shows:
+   #+BEGIN_examples
+$$A(t) = (1, -1, -t)^T, b(t) = (2, 2, 0)$$
+Or equivalently:
+
+$$-2 \le x(t) \le 2, tx(t) \ge 0$$
+
+This program is not full dimensional, but the solution $x(t) = sign(t)$ verifies $|x(t) - y| \le \frac{t}2 \implies y \in \mathcal P_t$.
+   #+END_examples
+
+
+
+The rest of this section compares the power of the two definitions.
+   
 One can easily see that strict feasibility of a continuous solution $x^c(t)$ implies full dimensionality when the rows of $A(t)$ never cancel.
 
 #+BEGIN_theorem
@@ -378,10 +426,11 @@ We have just proved that $A(t) x^c(t) \le b(t) - \varepsilon 1$
 Perhaps the more surprising result is that the converse is also true (unconditionnaly):
 
 #+BEGIN_theorem
-Full dimensional $\implies$ Strictly feasibility.
+Full dimensionality $\implies$ Strict feasibility.
 #+END_theorem
 
 #+BEGIN_proof
+Assume full dimensionality.
 We aim to construct a continuous function $x^{c}(t)$ that is strictly feasible.
 
 Recall the theorem that says that there exist $N > 0$, and $-1 = t_1 < \ldots < t_N = 1$ such that, for all $i = 1 \ldots N$, there exist $r$ rational functions $\mathcal V_i = \{u_1(t), \ldots, u_r(t)\}$ (the vertices) such that :
@@ -394,7 +443,7 @@ We provide two ways to construct $x^c(t)$ depending on whether we are near the p
 
 $\mathcal P_{t_i}^{\varepsilon} \ne \emptyset$, let $w$ be one of its extreme points. Then there exist a basis $B$ such that $w = A_B(t_i)^{-1}(b(t_i) - \varepsilon 1)$
 
-Now define $w^{near}(t) = A(t)^{-1}(b(t) - \varepsilon 1)$, then there exist a neighborhood of $t_i$, $[t_i-\alpha_i, t_i+\alpha_i]$:
+Now define $w^{near}(t) = A(t)^{-1}(b(t) - \varepsilon 1)$, then there exist a neighborhood of $t_i$, $[t_i-\alpha_i, t_i+\alpha_i]$ such that:
 - $w^{near}(t)$ is well defined: $\det(A_B(t_i)) \ne 0$ implies, that $\det(A_B(t)) \ne 0$ in the vicinity of $t_i$
 - $w^{near}(t)$ is continuous.
 - $w^{near}(t)$ is strictly feasible: Since $A(t_i)w^{near}(t_i) \le b(t_i) - \varepsilon 1$, then on a neighborhood of $t_i$: $A(t_i)w^{near}(t_i) \le b(t_i) - \frac{\varepsilon}2 1$
@@ -402,8 +451,7 @@ Now define $w^{near}(t) = A(t)^{-1}(b(t) - \varepsilon 1)$, then there exist a n
 
 *Far away from the $t_i$:*
 
-On $(t_i, t_{i+1})$, let $w^{right}(t) = \frac{\sum_{u \in \mathcal V_i} u(t)}{|\mathcal V_i|} \in \mathcal P_t$
-On $(t_{i-1}, t_{i})$, let $w^{left}(t) = \frac{\sum_{u \in \mathcal V_{i-1}} u(t)}{|\mathcal V_i|} \in \mathcal P_t$
+On $(t_i, t_{i+1})$, let $w^{right}(t) = \frac{\sum_{u \in \mathcal V_i} u(t)}{|\mathcal V_i|} \in \mathcal P_t$, and similarly, on $(t_{i-1}, t_{i})$, let $w^{left}(t) = \frac{\sum_{u \in \mathcal V_{i-1}} u(t)}{|\mathcal V_i|} \in \mathcal P_t$.
 
 Let's prove that  $w^{right}$ is strictly feasible on $J := [t_{i-1}+\beta, t_i-\beta]$
 
@@ -435,30 +483,6 @@ Fix $\beta < \min_i (t_{i+1} - t_i)$, and define:
    - at all times $t$, $x^c(t)$ is a convex combination of solutions that are strictly feasible, so at any given point in time $t$, $A(t) x^c(t) \le b(t) - \min(\varepsilon^{right}, \varepsilon^{left}, \varepsilon) 1$
 #+END_proof
 
-Now we are able to give a conditions under which polynomial solution exist and are near optimal.
-   
-   #+NAME: thm:optimality_poly_solution
-   #+BEGIN_theorem
-   Under the following assumptions:
-   - [[eqn:time_varying_lp_t]] is full dimensional
-
-   Then for every $\varepsilon > 0$, there exist a *polynomial* function $p: [-1, 1] \rightarrow \mathbb R^n$ such that:
-   - $p(t)$ is feasible of all $t$, e.g $A(t)p(t) \le b(t)$, $\forall t \in [-1, 1]$
-   - $\int_{-1}^1 \langle c(t), x(t)\rangle - \int_{-1}^1 \langle c(t), p(t)\rangle \le \varepsilon$.
-   #+END_theorem
-
-
-   #+BEGIN_proof
-   We start with a continuous solution $f$ that is near optimal to [[eqn:time_varying_lp_t]], whose existence is guaranteed by [[thm:optimality_continuous_solution]]. Let $p(t)$ be a polynomial that approximates $f(t)$ uniformly, e.g, $\forall t \in [-1, 1] \; ||p(t) - f(t)||_2^2  \le \delta^2$, where $\delta$ is a constant we are going to fix latex.
-
-   For $\delta$ smaller than $\varepsilon$, $p(t)$ is inside $\mathcal P_t$.
-   
-   Let's now examine the objective value of $f$. Similarly:
-   $$\int_{-1}^1 \langle c(t), x(t)\rangle - \int_{-1}^1 \langle c(t), p(t)\rangle \le \int_{-1}^1 ||f(t) - p(t)||_2 ||c(t)||_2 dt = O(\delta)$$
-   
-   Again, taking $\delta$ small enough give the result.
-   #+END_proof
-
       
    
 We are now ready to present the main characterization for the existence and optimality of polynomial solutions. Indeed, we have reduced that question to the feasibility of the following time varying LP:
@@ -472,10 +496,12 @@ $$A(t)x^s(t) \le b(t) - \varepsilon 1$$
    $$A(t)x^s(t) \le b(t) - \varepsilon 1$$
    
    For every $\varepsilon > 0$, there exist a *polynomial* function $p: [-1, 1] \rightarrow \mathbb R^n$ such that:
-   - $p(t)$ is feasible of all $t$, e.g $A(t)p(t) \le b(t)$, $\forall t \in [-1, 1]$
+   - $p(t)$ is feasible of all $t$, i.e. $A(t)p(t) \le b(t)$, $\forall t \in [-1, 1]$
    - $\int_{-1}^1 \langle c(t), x(t)\rangle - \int_{-1}^1 \langle c(t), p(t)\rangle \le \varepsilon$.
    #+END_theorem
 
+   *Note:*
+   One can ask whether the condition of strict feasibility would change if we allow $\varepsilon$ to depend on $t$. 
    
 * Decidability of the conditions
 
@@ -501,27 +527,24 @@ $$A(t)x^s(t) \le b(t) - \varepsilon 1$$
     
    Define $\det_B(t) = \det(A_B(t))$, if it is not identically 0, then it has finitely many zeros that we denote by $\mathcal U_B$, and for $t$ outside that set, definite $u_B(t) = A_B(t)^{-1}b(t)$.
 
-   Let $\mathcal U$ be the set of all times, i.e. $U = \cup_B \mathcal U_B$.
+   Let $\mathcal U$ be the set of such times, i.e. $\mathcal U = \cup_B \mathcal U_B$.
     
    All such $u_B(t)$ change feasibility status (i.e become feasible or infeasible) finitely many times, because that correspond to a zero of one the polynomial components of $b(t) - A(t)u_B(t)$. Add all such times to the set $\mathcal U$.
 
+   It is clear that between two consecutive times in $\mathcal U$, the basis of the vertices of the feasible set do not change.
     
 #+NAME: alg:checking_feasibility
  #+begin_algorithm
 \caption{Check feasibility}
 \begin{algorithmic}[1]
-\Procedure{Check Pt}{}
-\State \text{Compute} $\mathcal U$
+\State \text{Compute} $\mathcal U$ \text{like described above (amounts to finding the roots of polynomials)}
     
-\State $i \gets 0$
 \For{ $i=0 \ldots \operatorname{len}(\mathcal U)$}
-\State \text{Output the basis of the feasible vertices at time} $\frac{\mathcal U[i] + \mathcal U[i+1]}2$.
-\State $i \gets i+1$
+\State $t \gets \frac{\mathcal U[i] + \mathcal U[i+1]}2$
+\State \text{Outputs all} $B \in {m \choose [n]}$ \text{such that} $\det(A_B(t)) \ne 0, A(t)A_B(t)^{-1}b(t) \le b(t)$
 \EndFor
-\EndProcedure
 \end{algorithmic}
 #+end_algorithm
-   
    
 ** Optimality
    Finding the optimal solution can be implemented in the same fashion, and the following algorithm is an adaptation of algorithm [[alg:checking_feasibility]].
@@ -555,8 +578,8 @@ $$A(t)x^s(t) \le b(t) - \varepsilon 1$$
    The number of steps of the loop is bounded by the number of roots of the following polynomials:
    $\{\det A_B(s) \ne 0, \; A(s)A_B^{-1}(s)b(s) \le b(s), \;  c_B(s)A_B^{-1}(s) \le 0 \; | B \in [n]\}$
 
-   Corecteness is obtained because at any given time $t$, the point $x(s) = A(s)A_B^{-1}(s)$ is:
-   - feasibile, i.e. $A(s)A_B^{-1}(s)b(s) \le b(s)$
+   Correctness is obtained because at any given time $t$, the point $x(s) = A(s)A_B^{-1}(s)$ is:
+   - feasible, i.e. $A(s)A_B^{-1}(s)b(s) \le b(s)$
    - optimal, because of dual feasibility, i.e. $c_B(s)A(s)A_B^{-1}(s)b(s) \le 0$
    #+end_proof
 
@@ -567,7 +590,13 @@ $$A(t)x^s(t) \le b(t) - \varepsilon 1$$
    $$A(t)x(t) \le b(t) - \varepsilon 1$$
 
    Which can be reformulated as:
-   $$\max \varepsilon \; A(t)x(t) \le b(t) - \varepsilon 1$$
+   \begin{equation*}   
+   \begin{array}{ll@{}ll}
+   \text{max} & \varepsilon & \\
+   \text{s.t}& A(t)x(t) \le b(t) - \varepsilon 1
+   \end{array}
+   \end{equation*}
+
 
    
 ** Feasibility of continuous solutions
@@ -588,6 +617,7 @@ $$A(t)x^s(t) \le b(t) - \varepsilon 1$$
    Equivalently, this verified if and only if at least one the following polynomials is not 0 for all times $t \in [t_i, t_{i+1}]$:  $$\{ t \rightarrow v_1(t) \wedge \ldots \wedge v_n(t), \{v_1, \ldots, v_n\} \subseteq \mathcal V_i\}$$. One can do that simply by checking that those polynomials do not have common roots.
 
 * Time varying LP is an SDP
+    <<sec:lp_is_sdp>>
 
   The algorithm in the previous section proves that one can solve exactly a time-varying LP, and get the optimal solution in finite time, even though the solution is not continuous. The algorithm takes at least exponential time as it checks all the vertices of the polytope.
   
@@ -621,33 +651,117 @@ $$A(t)x^s(t) \le b(t) - \varepsilon 1$$
   $\sigma_-, \sigma_+ \in \text{SOS}_d$
   #+end_theorem
 
-  
-* SDP case
+  To see that this indeed an SDP, one can note that the equality between two polynomials of degree at most $d$ can be written as the equality of the value they take at $d+1$ different times (which is linear in their coefficients), and the condition that a polynomial $\sigma(t)$ is sum of square can be expressed as a PSD condition using the following proposition:
 
+  #+BEGIN_theorem
+  [\cite{Parrilo2004}]
+  
+  Let $t_0< \ldots < t_{2k} \in \mathbb R$,  $p_0, \ldots, p_k$ a basis for $\mathbb R_k[t]$, and $A_{ij}^{(l)} = p_i(t_l)p_j(t_l)$
+  
+   $q \in SOS_k$ if and only if there exist $X \succeq 0$ such that
+$$q(t_l) = \langle X, A^{(l)} \rangle, \forall l \le 2k$$
+
+#+END_theorem
+
+  Choosing the times $(t_i)_0^{2k}$ to be the Chebyhev points of the first kind and the basis $(p_j(t))_0^k$ to be the scaled Chebyshev polynomials makes the matrix $A^{(l)}$ columns orthonormal, which allows for better numerical stability. See section [[sec:numeric]] for an example.
+
+  
+* Time varying SDPs 
+  
+  We seek a characterization for optimality of polynomial solutions to a semi definite program similar to one we found for linear programs. It turns out again that strict feasibility is enough for that. The definition is as follow:
+
+     #+BEGIN_definition
+[[eqn:time_varying_sdp_t]] is strictly feasible if there exist a function (not necessarily continuous):
+  
+$$[-1, 1] \rightarrow \mathbb R^{n \times n}, t \rightarrow X^s(t)$$
+
+Such that:
+- $X^{s}(t) \succeq \varepsilon I$
+- $A_i(t)X^s(t) \le b_i(t) - \varepsilon 1$ for $i = 1, \ldots, m$
+
+In this case we say that $X^s(t)$ is ($\varepsilon$)-strictly feasible for [[eqn:time_varying_sdp_t]].
+#+END_definition
+
+The proof technique relies on the fact that spectrahedrons, the feasible set of semi-definite programs, can be approximated within arbitrary accuracy by polyhedrons, and we generalize this result to the time varying-case when the strict feasibility condition is verified.
+     
+  We also provide an efficient algorithm to find the best polynomial solution relying once again on sum of square techniques.
+
+** Approximating spectrahedrons by polyhedrons
+
+   
+   Let $N(\varepsilon)$ be a $\varepsilon$ -net of the set $\{X \succeq 0, ||X|| = 1\}$. Then for any $X \succeq 0$, we can find an element $Y$ of the finite set $N(\varepsilon)$ such that $||X - Y|| \le \varepsilon ||X||$. The idea now is to inner approximate the feasible set [[eqn:time_varying_sdp_t]]
+   $$S^+(t) = \{ X(t) | X(t) \succeq  0, \langle A_i(t), X(t) \rangle \le b_i(t)\}$$
+by the polyhedron
+$$P(t) = \{ (\alpha(t), X(t)) | X(t) = \sum_{Y \in N(\varepsilon)} \alpha_Y Y, \langle A_i(t), X(t) \rangle \le b_i(t), \alpha(t) \ge 0\}$$
+Where we replaced the psd condition $X \succeq 0$ by the stronger condition of $X$ being a sum of elements of the epsilon net with positive coefficients.
+     
+  #+begin_theorem
+  If [[eqn:time_varying_sdp_t]] is strictly feasible, i.e. there exist a function $x(t)$ and $\delta > 0$ such that $X(t) \succeq \delta I$ and $\langle X(t), A_i(t) \rangle  \ge b_i(t) - \delta$, then:
+  For every $\varepsilon > 0$, there exist a *polynomial* function $p: [-1, 1] \rightarrow \mathbb R^{n \times n}$ such that:
+   - $p(t)$ is feasible of all $t$.
+   - $\int_{-1}^1 \langle c(t), x(t)\rangle - \int_{-1}^1 \langle c(t), p(t)\rangle \le \varepsilon$.
+  #+end_theorem
+
+
+#+begin_proof
+  Assume [[eqn:time_varying_sdp_t]] is strictly feasible.
+
+  Consider the following time varying LP:
+
+  #+NAME: eqn:approx_lp_eps
+  \begin{equation*}
+  \tag{APPROXLPEPS}
+  \begin{array}{ll@{}ll}
+  \text{maximize}_{Z, \alpha} & \int_{-1}^1 \langle Z(t), C(t) \rangle dt & \\
+  \text{subject to}& Z(t) =  \sum_{Y \in N(\varepsilon)} \alpha_Y(t) Y \\
+  & \langle A_i(t), Z(t) \rangle \le b_i(t) 
+  \end{array}
+  \end{equation*}
+
+The proof follows from this observations:
+
+For small enough $\varepsilon$:
+1. [[eqn:approx_lp_eps]] is strictly feasible.
+2. The optimal value of [[eqn:approx_lp_eps]] converges to the optimal value of [[eqn:time_varying_sdp_t]]. 
+3. The optimal value of [[eqn:approx_lp_eps]] is approached within arbitrary accuracy by a polynomial feasible for [[eqn:time_varying_sdp_t]].
+4. Any solution to [[eqn:approx_lp_eps]] is also a solution to [[eqn:time_varying_sdp_t]].
+
+In the following we provide proofs for this claims:
+
+1. Can be proved by taking a strict feasible solution $X^s(t)$, of [[eqn:time_varying_sdp_t]], and choosing $\alpha_Y(t) = ||X^s(t)||$ if $Y$ is the best psd matrix in the epsilon-net to approximate $X^s(t)$ and $0$ otherwise. $||X^s(t) - Z(t)|| \le \varepsilon$. Perturbing the $\alpha$ doesn't affect the constraints.
+2. At time $t$ let $X^*(t)$ be an optimal solution of  [[eqn:time_varying_sdp_t]], then by taking the convex combination  $\lambda X^*(t) + (1-\lambda) X^s(t)$ that puts much of the weight on $X^*(t)$, we obtain a solution that is nearly optimal, but also strictly feasible. It is not very difficult to see that by increasing the accuracy of the epsilon net, we can find a feasible solution $Y(t)$ to [[eqn:approx_lp_eps]] that is very close to this convex combination, which in turn is near optimal.
+3. This follows from [[sec:condition_polynomials_optimal]] by noting that [[eqn:approx_lp_eps]] is strictly feasible.
+4. Trivial.
+   
+#+end_proof
+  
+
+
+   
+** Reformulation of time varying SDP
+   <<sec:sdpt_is_sd>>
+   
   Like we did for LPs, the following theorem restate the time-varying SDP [[eqn:time_varying_sdp_t]] in terms of non-varying SDP:
   
   #+begin_theorem
-  (See Theorem 5.1 in Dette&Studden)
+  (See Theorem 5.1 in \cite{DetteStudden})
   
-  For $x(t)$ polynomial, the following two statements are equivalent:
-  - $A_0(t) + \sum_i A_i(t) x_i(t)  \succeq 0 , \; t \in [-1, 1]$
-  - $u^T(A_0(t) + \sum_i A_i(t) x_i(t))u \in (1+t) SOS(t, u) + (1-t) SOS(t, u), \; t \in [-1, 1]$
+  For $X(t)$ polynomial, the following two statements are equivalent:
+  - $X(t)  \succeq 0 , \; t \in [-1, 1]$
+  - $u^TX(t)u \in (1+t) SOS(t, u) + (1-t) SOS(t, u), \; t \in [-1, 1]$
   #+end_theorem
   
-We can now state the theorem [CHECK CONDITIONS]
 
    #+BEGIN_theorem
   The following SDP find the best polynomial solution of degree $\le 2d+1$:
 
-
-
   \begin{equation*}
   \begin{array}{ll@{}ll}
-  \text{maximize} & \int_{-1}^1 \langle c(t), x(t) \rangle dt & \\
-  \text{subject to}&   u^T (A_0(t) + \sum_i x_i(t) A_i(t))u  = (1-t) \sigma_-(u, t) + (1+t) \sigma_+(u, t)
+  \text{maximize} & \langle X(t), C(t) \rangle & \\
+  \text{subject to}& u^TX(t)u = SOS\\
+  & \langle A_i(t), X(t) \rangle \le b_i(t) 
   \end{array}
   \end{equation*}
-
 
   $\sigma_-, \sigma_+ \in \text{SOS}_d$
 
@@ -656,20 +770,32 @@ We can now state the theorem [CHECK CONDITIONS]
   
   
 * Numerical results
-
-  We present two numerical examples to illustrate the techniques presented in this paper. The first one is time-varying max-flow problem, where the graph is fixed by the capacities are varying with time, and we seek a the best polynomial flow.
+   <<sec:numeric>>
+   
+  We present two numerical examples to illustrate the techniques presented in this paper. The first one is time-varying max-flow problem, where the graph is fixed but the capacities are varying with time, and we seek a the best polynomial flow.
   
 ** Max flow
+
    
-   - $s \approx 1$,  $t \approx N$.
-   - $b_{i,j}(t)$ capacity of the edge $i \rightarrow j$ at time t.
-   - $f_{i,j}(t)$ the flow from node $i$ to $j$ at time $t$.
+   - We identify the nodes with $\{1, \ldots n\}$, where 1 is the source, and $n$ is the target. $b_{i,j}(t) \in \mathbb R$ is the capacity of the edge $i \rightarrow j$ at time $t$ for $i, j \le n$ and  $f_{i,j}(t)$ is the flow on the same node. We can thus formulate the problem of finding the best flow in time as:
 
+  #+NAME: eqn:time_varying_lp_t
+  \begin{equation*}
+  \tag{MAXFLOW}
+  \begin{array}{ll@{}ll}
+  \text{maximize} & \int_{-1}^1  \sum_{j=1}^n f_{1,j}(t) dt & \\
+  \text{subject to}& \sum_j f_{i, j}(t) - f_{j, i}(t) = 0\\
+  & 0 \le f_{i,j}(t) \le b_{ij}(t) \\
+  \end{array}
+  \end{equation*}
+     
 
-   [Discussion about the choice of basis]
+  Using the results from section [[sec:lp_is_sdp]], we parametrize the polynomiall $f_{ij}$ and $b_{ij}$ by the value they take at the times $(t_l)_0^{d}$.
+
 
    $f_{i,j}(t) \approx \begin{pmatrix}f_{i,j}(t_0)\\\vdots\\f_{i,j}(t_d)\end{pmatrix} := \begin{pmatrix}f_{i,j,0}\\\vdots\\f_{i,j,d}\end{pmatrix}$
 
+The quantity $\int_{-1}^1  \sum_{j=1}^n f_{1,j}(t) dt$ is also linear in the $f_{1,j,l}$. Ipndeed, one can express it as $\sum_{l=0}^d \sum_j  f_{1,j,l} w_l$ where the $w_l$ can be found by solving a simple linear system.
 
 
    \begin{equation*}
@@ -685,8 +811,11 @@ We can now state the theorem [CHECK CONDITIONS]
    \end{equation*}
 
 
-   
-   
+  #+ATTR_LATEX: :width 0.5\textwidth
+  #+caption: Maxflow instance
+  file:graph.png
+
+
 ** Time varying certificate of stability
 
    We want to certify that a the following system is stable:
@@ -715,3 +844,5 @@ We can now state the theorem [CHECK CONDITIONS]
     
 \bibliographystyle{plain}
 \bibliography{citations}
+
+
