@@ -1,147 +1,191 @@
-#+LATEX_HEADER: \usepackage[margin=0.5in]{geometry}
+#+LaTeX_CLASS: informs3
+#+LaTeX_CLASS_OPTIONS: [opre,nonblindrev]
+#+OPTIONS: author:nil date:nil title:nil
+#+OPTIONS: toc:nil
+
+#+LATEX_HEADER: \OneAndAHalfSpacedXI
+
+#+LATEX_HEADER: \usepackage{endnotes}
+#+LATEX_HEADER: \let\footnote=\endnote
+#+LATEX_HEADER: \let\enotesize=\normalsize
+#+LATEX_HEADER: \def\notesname{Endnotes}%
+#+LATEX_HEADER: \def\makeenmark{$^{\theenmark}$}
+#+LATEX_HEADER: \def\enoteformat{\rightskip0pt\leftskip0pt\parindent=1.75em
+#+LATEX_HEADER:   \leavevmode\llap{\theenmark.\enskip}}
+
+#+LATEX_HEADER: \usepackage{natbib}
+#+LATEX_HEADER: \bibpunct[, ]{(}{)}{,}{a}{}{,}%
+#+LATEX_HEADER:  \def\bibfont{\small}%
+#+LATEX_HEADER:  \def\bibsep{\smallskipamount}%
+#+LATEX_HEADER:  \def\bibhang{24pt}%
+#+LATEX_HEADER:  \def\newblock{\ }%
+#+LATEX_HEADER:  \def\BIBand{and}%
+#+LATEX_HEADER: \TheoremsNumberedThrough
+#+LATEX_HEADER: \ECRepeatTheorems
+#+LATEX_HEADER: \EquationsNumberedThrough
+#+LATEX_HEADER: \MANUSCRIPTNO{1}
+
 #+LATEX_HEADER: \usepackage{listing}
 #+LATEX_HEADER: \usepackage{algorithm}
 #+LATEX_HEADER:\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
 #+LATEX_HEADER: %\usepackage[noend]{algpseudocode}
-#+LATEX_HEADER: \usepackage{amsmath} % assumes amsmath package installed
-#+LATEX_HEADER: \usepackage{amssymb}  % assumes amsmath package installed
-#+LATEX_HEADER: \usepackage{amsthm}
 
 
-#+LATEX_HEADER: \theoremstyle{plain}  % Bold name, italics font
-#+LATEX_HEADER: \newtheorem{theorem}{Theorem}[section]
-#+LATEX_HEADER: \newtheorem{lemma}[theorem]{Lemma}
-#+LATEX_HEADER: \newtheorem{proposition}[theorem]{Proposition}
-#+LATEX_HEADER: \newtheorem{corollary}[theorem]{Corollary}
-#+LATEX_HEADER: \newtheorem{definition}[theorem]{Definition}
-#+LATEX_HEADER: \newtheorem{hyp}[theorem]{Hypothesis}
-#+LATEX_HEADER: \newtheorem{idea}[theorem]{Idea}
-#+LATEX_HEADER: \newtheorem{remark}[theorem]{Remark}
 
-#+LATEX_HEADER: \theoremstyle{definition}
-#+LATEX_HEADER: \theoremstyle{remark} % italics name, roman font
-#+LATEX_HEADER: \newtheorem{examples}{Example}[section]
-
+#+LATEX_HEADER: \newtheorem{myexample}{Example}[section]
 #+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
 #+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
 
 
-#+OPTIONS: toc:nil
+#+TITLE: ORGTime-Varying Linear and Semidefinite Programs
 
-#+TITLE: Time varying LP and SDPs
-#+AUTHOR: Bachir El Khadir
 
-* Introduction and notation
-  #+NAME: img:example_tv_lp
-  #+ATTR_LATEX: :float wrap :width 0.5\textwidth :placement {r}{0.4\textwidth}
-  #+caption:Example of timevarying LP
-  [[file:scripts/example_tv_lp.png]]
+#+BEGIN_SRC latex
+\TITLE{Time-Varying Linear and Semidefinite Programs}
+\RUNAUTHOR{Bachir}
+\RUNTITLE{Time-Varying Linear and Semidefinite Programs}
 
+\ARTICLEAUTHORS{%
+\AUTHOR{AAA}
+\AFF{ORFE \EMAIL{aaa@princeton}} %, \URL{}}
+\AUTHOR{Bachir}
+\AFF{ORFE, \EMAIL{bachir@princeton}}
+% Enter all authors
+} % end of the block
+
+\ABSTRACT{
+We study linear, quadratic, second order cone, and semidefinite programs whose data (e.g., the matrices $A$, $b$, $c$ in the LP case) are not constant but vary polynomially with time. We show that, under some conditions, we can approximate the optimal value of these problems arbitrarily well by searching for solutions that are polynomial functions of time themselves. Furthermore, we show that the problem of finding the optimal polynomial solution of a given degree can be cast exactly as a semidefinite program. 
+}
+
+\maketitle
+#+END_SRC
+
+
+
+* Introduction
+
+  In this paper we investigate time varying convex programs, i.e. optimization problems for which the feasible set and the objective function depend  on time over a compact interval.
   
-  In this paper we investigate time varying convex programs, i.e. programs for which the feasible set and the objective function depend continously on time $t \in [-1, 1]$. More specifically we study timevarying semidefinite and linear programs (abbreviated timevarying SDP and timevarying LP respectively):
-  
-  #+NAME: eqn:time_varying_sdp_l2
-  \begin{equation*}
-  \tag{$TV-SDP$}
-  \begin{array}{ll@{}ll}
-  \text{maximize} & \int_{-1}^1 \langle X(t), C(t) \rangle dt & \\
-  \text{subject to}& X(t) \succeq 0 & \forall t \in [-1, 1]\\
-  & \langle A_i(t), X(t) \rangle \le b_i(t) & \forall t \in [-1, 1]
-  \end{array}
-  \end{equation*}
+  Concrete applications of this kind of problems include scheduling an electric power generation when users daily consumption is known in advance or insuring maximum cellular coverage of customers at minimum cost when geographical population density fluctuates over the course of a day.
 
-  With $A_i(t) , X(t), C(t) \in \mathbb S_n, b_i(t) \in \mathbb R$ for all $t \in [-1, 1], i=1\ldots m$ and $\mathbb S_n$ is the set of $n \times n$ symmetric matrices.
+  #+BEGIN_COMMENT
+  ---or the decision problem that airline companies face when assigning crew to flights throughout the day while making sure each flight is covered maximizing comfort for the crew members---.
+  #+END_COMMENT
+  
+  More specifically, a time-varying linear program (abbreviated [[eqn:time_varying_lp_l2]]) is defined as follow:
   
   #+NAME: eqn:time_varying_lp_l2
   \begin{equation*}
-  \tag{$TV-LP$}
+  \tag{TV-LP}
   \begin{array}{ll@{}ll}
-  \text{maximize} & \int_{-1}^1 \langle c(t), x(t) \rangle dt & \\
+  \underset{x(t)}{\text{maximize}} & \int_{-1}^1 \langle c(t), x(t) \rangle dt & \\
   \text{subject to}& A(t) x(t) \le b(t) & \forall t \in [-1, 1]
   \end{array}
   \end{equation*}
   
-  with $A(t) \in \mathbb R^{m \times n}, x(t), c(t) \in \mathbb R^n$ for all $t \in [-1, 1]$
+\noindent  with $A(t) \in \mathbb R^{m \times n}, x(t), c(t) \in \mathbb R^n$ and $b(t) \in \mathbb R^m$ for all $t \in [-1, 1]$, and moreover, the components of $A$, $b$, $c$ are polynomial functions time $t$.
+
+  We consider the data of the problem $(A, b, c)$ to belong to the set of /polynomial/ functions because on the one hand, this set is dense in the set of continuous functions defined on $[0, 1]$, and on the other hand, polynomials can be parameterized in a natural way (in the monomial basis for instance) and are more suitable to algorithmic operations (see section [[sec:lp_is_sdp]]). 
+
+  The optimization variable is a function $x: [-1, 1]\rightarrow \mathbb R^n$. When such function verifies the program constraints for all $t \in [-1,1]$, we call it a /feasible function/. 
+
+    One numerical example of a time varying LP to consider is the following (illustrated in figure [[img:example_tv_lp]]):
+  \[
+A(t) = \begin{pmatrix}
+2-t&-1-t\\
+1+t&2-t\\
+-2+t&1+t\\
+-1-t&2-t\\
+2+t&2+t
+\end{pmatrix}
+b(t) = \begin{pmatrix}1\\1\\2\\2\\-t\end{pmatrix}
+c(t) = \begin{pmatrix}t \\ t^2\end{pmatrix} \]
+
+  #+NAME: img:example_tv_lp
+  #+ATTR_LATEX:  :width 0.5\textwidth
+  #+caption:An example of a time-varying LP
+  [[file:scripts/example_tv_lp.png]]
 
   
-  The optimization variable is a function $x: [-1, 1]\rightarrow \mathbb R^n$. When such function verifies the program constraints for all $t \in [-1,1]$, we call it a /feasible function/. Note that timevarying LPs are a specific case of timevarying SDPs, hence properties that apply to the latter apply to the former as well. We focus on timevarying LPs however because they are easier to study and provide insights into the more general problem of SDPs.
-  
-  Notice that in general the optimal solution to a timevarying SDP is the function that we denote by $X^{opt}(t)$ that maximize the following program for almost all times $t \in [-1, 1]$ :
+  The blue circles represent the optimal solution $x^{opt}(t)$ for each time $t$ that maximizes $\langle c(t), x(t)\rangle$ under the constraint $A(t)x(t) \le b(t)$, and the dotted red line represents the optimal polynomial solution $x^{poly}(t)$ of degree $11$. The feasible set $\{x \in \mathbb R^n\; |\;  A(t)x \le b(t)\}$ for any time $t$ is delimited by blue lines. As time progresses, the number of facets of this set changes. The objective function $c(t)$ is represented by a black arrow. 
 
-  #+NAME: eqn:time_varying_sdp_t
-  \begin{equation*}
-  \tag{$SDP_t$}
-  \begin{array}{ll@{}ll}
-  \text{maximize} & \langle X(t), C(t) \rangle & \\
-  \text{subject to}& X(t) \succeq 0\\
-  & \langle A_i(t), X(t) \rangle \le b_i(t) \; i=1\ldots m
-  \end{array}
-  \end{equation*}
-  
-Or in the case of LPs:
+    Notice that in general the optimal solution to a time-varying LP is the function that we denote by $x^{opt}(t)$ that maximizes the following program for almost all times $t \in [-1, 1]$ :
 
   #+NAME: eqn:time_varying_lp_t
   \begin{equation*}
   \tag{$LP_t$}
   \begin{array}{ll@{}ll}
-  \text{maximize} & \langle c(t), x(t) \rangle & \\
+  \underset{x(t)}{\text{maximize}} & \langle c(t), x(t) \rangle & \\
   \text{subject to}& A(t)x(t) \le b(t)\\
   \end{array}
   \end{equation*}
   
 
-  One numerical example of a time varying LP to consider is the following (illustrated in figure [[img:example_tv_lp]]):
-  \[
-A(t) = \begin{pmatrix}
-2-t&-1-t\\
-1+t&2-t\\
--(2-t)&-(-1-t))\\
--(1+t)&(2-t)\\
-(2+t)&(2+t)
-\end{pmatrix}
-b(t) = \begin{pmatrix}1\\1\\2\\2\\-t\end{pmatrix}
-c(t) = \begin{pmatrix}t \\ t^2\end{pmatrix} \]
-
-  The blue circles represent the optimal solution $x^{opt}(t)$ for each time $t$ that maximizes $\langle c(t), x(t)\rangle$ under the constraint $A(t)x(t) \le b(t)$, and the dotted red-line represents the optimal polynomial solution $x^{poly}(t)$ of degree smaller than $11$. the feasible set for any time $t$ is delimited by blue lines, and the objective function $c(t)$ is represented by a black arrow.
+  A time-varying semidefinite program (abbreviated [[eqn:time_varying_sdp_l2]]) is the following optimization problem:
   
-  The optimal solution $x^{opt}$ lives on the vertices of the feasible set and occasionally jumps from one vertex to a different one, while the optimal polynomial solution moves continuously in the feasible set and tries to be as close as possible to $x^{opt}$.
+  #+NAME: eqn:time_varying_sdp_l2
+  \begin{equation*}
+  \tag{TV-SDP}
+  \begin{array}{ll@{}ll}
+  \underset{X(t)}{\text{maximize}} & \int_{-1}^1 \langle X(t), C(t) \rangle dt & \\
+  \text{subject to}& X(t) \succeq 0 & \forall t \in [-1, 1]\\
+  & \langle A_i(t), X(t) \rangle \le b_i(t) & \forall t \in [-1, 1]
+  \end{array}
+  \end{equation*}
 
+\noindent with $A_i(t) , X(t), C(t) \in \mathbb S_n, b_i(t) \in \mathbb R$ for all $t \in [-1, 1], i=1\ldots m$ and $\mathbb S_n$ is the set of $n \times n$ symmetric matrices. $A_i, b_i$ for $i=1,\ldots,m$ and $C$ are polynomial functions of time. 
 
-  It is important to notice that in general the optimal solution to an timevarying LP (and more generally, to a timevarying SDP) is not polynomial, and might not even be continuous.
+  The optimal solution to a time-varying SDP is the function that we denote by $X^{opt}(t)$ that maximize the following program for almost all times $t \in [-1, 1]$ :
+
+  #+NAME: eqn:time_varying_sdp_t
+  \begin{equation*}
+  \tag{$SDP_t$}
+  \begin{array}{ll@{}ll}
+  \underset{X(t)}{\text{maximize}} & \langle X(t), C(t) \rangle & \\
+  \text{subject to}& X(t) \succeq 0\\
+  & \langle A_i(t), X(t) \rangle \le b_i(t) \; i=1\ldots m
+  \end{array}
+  \end{equation*}
   
-    A natural question here is how to describe the data of the problem: $(A_0, \ldots A_r, b, c)$. We made the choice of considering /polynomial/ functions because they are general enough to approximate a large set of functions, and at the same time simple enough to describe (in the monomial basis for instance) and to solve for (see section [[sec:lp_is_sdp]]). 
 
-  In many applications, one looks for a feasible of function that is smooth and optimal. In this paper we discuss when solutions of this form are optimal, and in that case we use sum of squares optimization to obtain the best feasible solution whose components are polynomial of a bounded degree.
-
-  Since we are looking specifically for polynomial feasible solutions, it is necessary to settle for a weaker notion of optimality than pointwise optimality. We say that continuous (resp. polynomial) solutions are near optimal if there is a sequence of continuous (resp. polynomial) feasible solution $X_n(t)$ that converges to the optimal solution $X^{opt}(t)$ in the $L_2$ sense.
+  Note that time-varying LPs are a special case of time-varying SDPs, hence properties that apply to the latter apply to the former as well. We focus for the most part on time-varying LPs however because they are easier to study and provide insights into the more general problem of SDPs.
   
-  We first provide a necessary and sufficient condition for feasibility continuous solutions, and prove that in that case continuous solutions are optimal as well. We then prove that strict feasibility (see definition [[def:strict_feasibility]]) is enough to guarantee optimality of polynomial solutions. We also discuss the easy case where the left-hand sight of the constraints is independent of time (e.g. for timevarying LPs, the matrix $A(t)$ is always equal to $A(0)$).
+  It is important to notice that in general the optimal solution to a time-varying LP $x^{opt}(t)$ (and more generally, to a time-varying SDP $X^{opt}(t)$) is not polynomial, and might not even be continuous. In the example of Figure [[img:example_tv_lp]] for instance, the optimal solution $x^{opt}(t)$ lives on the vertices of the feasible set and occasionally jumps from one vertex to a different one, or in other terms, there are times when the set of indices of constraints that are tight for $x^{opt}(t)$ changes, while the optimal polynomial solution moves continuously in the feasible set and tries to be as close as possible to $x^{opt}(t)$.
 
+  
+  In the applications mentioned at the beginning of this introduction, one looks for a feasible function that is smooth and optimal. In this paper we discuss when solutions of this form are optimal, and in that case we use sum of squares optimization to obtain the best feasible solution whose components are polynomial of a bounded degree.
+
+  Since we are looking specifically for polynomial feasible solutions, it is necessary to settle for a weaker notion of optimality than point-wise optimality. We say that continuous (resp. polynomial) solutions are near optimal if there is a sequence of continuous (resp. polynomial) feasible solution $X_n(t)$ that converges to the optimal solution $X^{opt}(t)$ in the $L_2$ sense, i.e. $\int_{-1}^1 ||X^{opt}(t) - X_n(t)|| dt \rightarrow 0$.
+
+  #+BEGIN_COMMENT
+  We first provide a necessary and sufficient condition for feasibility continuous solutions, and prove that in that case continuous solutions are optimal as well. We then prove that strict feasibility (see Definition [[def:strict_feasibility]]) is enough to guarantee optimality of polynomial solutions. 
+#+END_COMMENT
   
 ** Notations
-   - If $A$ a matrix of dimension $m \times n$, with $m \ge n$, and $B \subseteq \{1, \ldots n\}$, then $A_B$ is the submatrix $(A_{B_i,i})_{1 \le i \le m}$.
-   - $\mathbb R_d[y]$ is the set of polynomial of degree at most $d \in \mathbb N$ in the variable $y$.
-   - $SOS_d(y)$ denote the set of polynomials in the variable $y$ that can be written as sum of squares of some polynomials of degree at most $d$, e.g., $SOS_d(y) = \sum \mathbb R_d[y]^2$ . $y$ need not be univariate.
-   - $\mathcal P_t$ is the feasible set of ([[eqn:time_varying_lp_t]]) at time $t$: $\mathcal P_t = \{x \in \mathbb R^n | A(t) x \le b(t) \}$.
+   - For a matrix $A$ of dimension $m \times n$, with $m \ge n$, and an index set $B \subseteq \{1, \ldots n\}$, then $A_B$ is the sub-matrix $(A_{B_i,i})_{1 \le i \le m}$.
+   - $\mathbb R_d[y]$ is the set of polynomial of degree at most $d \in \mathbb N$ in the variable $y$ with real coefficients.
+   - The set $SOS_d(y)$ denote the set of polynomials of degree $d$ in the variable $y$ that can be written as sum of squares of some polynomials i.e., $SOS_d(y) = \mathbb R_d[y] \cap \sum \mathbb R[y]^2$ . the variable $y$ need not to be univariate.
+   - The set $\mathcal P_t$ is the feasible set of ([[eqn:time_varying_lp_t]]) at time $t$: $\mathcal P_t = \{x \in \mathbb R^n | A(t) x \le b(t) \}$.
    
 ** Assumptions
    Throughout the whole paper, we make the following assumption for all $t \in [-1, 1]$:
-   - $\mathcal P_t \ne \emptyset$, i.e. there exist at least one feasible solution. We provide an algorithm [[alg:checking_feasibility]] to check for that.
-   - $\mathcal P_t$ is bounded: In theorem [[thm:bound_equiv_uniform_bound]] we prove that this is in fact equivalent to $\mathcal P_t$ being bounded uniformly in $t$.
+   - $\mathcal P_t \ne \emptyset$, i.e. there exist at least one feasible solution at time $t$. We provide Algorithm [[alg:checking_feasibility]] to check for that.
+   - $\mathcal P_t$ is bounded: In Theorem [[thm:bound_equiv_uniform_bound]] we prove that this is in fact equivalent to $\mathcal P_t$ being bounded uniformly in $t$.
 
 
 ** Contribution of the paper
-   In this paper we propose an efficient method to find the best polynomial solution to a timevarying linear program or semi-definite program, as well as a characterization for when polynomial solution are close to the overall optimal one. The paper is organized as follow:
-   - In section 2 we describe the form of solutions to ([[eqn:time_varying_lp_t]]) that need not to be polynomial. We then prove that under strict feasibility conditions ([[thm:strict_feasibility_implies_polynomial_optimality]]) polynomial solutions exist and are optimal.
-   - In section 3, we give a finite time algorithm to check for those conditions.
-   - Section 4 presents an SDP formulation for finding the best polynomial solution.
+   In this paper we propose an efficient method to find the best polynomial solution to a time-varying linear program or semidefinite program, as well as a characterization for when polynomial solution are close to the optimal one. The paper is organized as follow:
+   - In Section [[sec:timevaryinglp]] we describe the form of solutions to ([[eqn:time_varying_lp_t]]) that need not to be polynomial. We then prove that under strict feasibility conditions (Theorem [[thm:strict_feasibility_implies_polynomial_optimality]]), polynomial solutions exist and are optimal. We also discuss the easy case where the left-hand sight of the constraints is independent of time (e.g. for time-varying LPs, the matrix $A(t)$ is always equal to $A(0)$).
+   - In Section [[sec:decidabilityconditions]], we give a finite time algorithm to check for those conditions.
+   - Section [[sec:lp_is_sdp]] presents an SDP formulation for finding the best polynomial solution.
+   - Section [[sec:timevaryingsdp]] discusses the case of time-varying SDPs, and proves that under similar condition to time-varying LPs, polynomial solutions exist and are optimal.
 
    
-* Timevarying LP
-
+* Time-Varying LP
+   <<sec:timevaryinglp>>
 ** Preliminary
 
-   We present here some definitions are properties of linear programs that are going to be useful to us later for proofs (Theorem [[thm:continuity_perturbation]] for instance will help us decide the existence of continuous feasible solution to timevarying LP whose matrix constraint $A(t)$ is constant in time), or to make some simplifying assumptions, like to assume  that the feasible set $\mathcal P_t$ is uniformly bounded for all $t \in [-1, 1]$.
+   We present here some definitions are properties of linear programs that are going to be useful to us later for proofs (Theorem [[thm:continuity_perturbation]] for instance will help us decide the existence of continuous feasible solution to time-varying LP whose matrix constraint $A(t)$ is constant in time), or to make some simplifying assumptions, like to assume  that the feasible set $\mathcal P_t$ is uniformly bounded for all $t \in [-1, 1]$.
    
 *** Limits of sets
     
@@ -229,22 +273,23 @@ Both things happen finitely many times.
    We defined $x^{opt}$ everywhere except on the times $t_i$.
    We could extend it at $t_i$ by taking the right limit for example (that exist, since x^{opt} is a bounded rational function on $(t_i, t_{i+1})$). Call that function $\bar x^{opt}$. Even though feasibility will be preserved, optimality may not as the following example shows:
 
-   #+BEGIN_examples
+
+   #+BEGIN_myexample
    $\max x(t)$ s.t. $-t \le tx(t) \le t, -2 \le x(t) \le 2$
    \[x^{opt}(t) = \left\{\begin{array}{cc}1&t \ne 0\\0&t = 0\end{array}\right.\]
-   #+END_examples
+   #+END_myexample
 
    This is not a problem in our framework however, since we are mainly concerned by the average optimal value in time $\int_{-1}^1 \langle c(t), x(t) \rangle dt$, and changing $x(t)$ at the set of measure 0 will not change that value. In the case where we are interested in maximizing the worst case $\min_{t} \langle c(t), x(t) \rangle$, we can notice that $\langle c(t_i), \bar x^{opt}(t_i)\rangle \ge \min_{t} \langle c(t), x^{opt}(t) \rangle$, and therefore we don't lose by extending $x^{opt}$ in this way neither.
 
 ** Existence of continuous solutions
    We are interested in the existence of polynomial solutions, one natural question to ask is whether such solution always exist. The answer to that question is negative, and we prove that in fact even continuous solutions might not exist:
 
-   #+BEGIN_examples
+   #+BEGIN_myexample
    Example where a continuous solution doesn't exist:
   
    $\mathcal P_t = \{ tx \ge 0, t(x-1) \ge 0\}$ doesn't have a continuous solution. One can see that by observing that
    $\mathcal P_t = [1, \infty)$ when $t > 0$ and   $\mathcal P_t = (-\infty, 0]$ when $t < 0$.
-   #+END_examples
+   #+END_myexample
 
    The reason no continuous solution exist is that the $\mathcal P_t$ are ``disconnected" at 0, i.e. $\lim_{t < 0} \mathcal P_t \cap \lim_{t > 0} \mathcal P_t= \emptyset$, for a solution to exist, it has to "jump" at time 0. The following theorem formalizes this notion of continuity of sets and existence of continuous solutions.
 
@@ -252,9 +297,9 @@ Both things happen finitely many times.
    #+BEGIN_theorem
    The following are equivalent:
    1. There exist a continuous solution.
-   2. $dist(P_{t_i-\alpha}, P_{t_i+\alpha}) \rightarrow_{\alpha} 0$ for $i = 1 \ldots N$
-   3. $conv \{ v(t_{i}), v \in \mathcal V_i\} \cap conv \{ v(t_{i}), v \in \mathcal V_{i+1}\} \ne \emptyset$
-   4. $\min_{x \in \mathcal P_{t_i-\alpha}, x \in \mathcal P_{t_i+\alpha}} |x - y| \rightarrow 0$
+   2. $dist(\mathcal P_{t_i-\alpha}, \mathcal P_{t_i+\alpha}) \rightarrow_{\alpha} 0$ for $i = 1 \ldots N$
+   3. $conv \{ v(t_{i}), v \in \mathcal V_i\} \cap conv \{ v(t_{i}), v \in \mathcal V_{i+1}\} \ne \emptyset$ for $i = 1 \ldots N$
+   4. $\min_{x \in \mathcal P_{t_i-\alpha}, x \in \mathcal P_{t_i+\alpha}} |x - y| \rightarrow 0$ for $i = 1 \ldots N$
    #+END_theorem
 
    #+BEGIN_proof
@@ -348,10 +393,10 @@ Both things happen finitely many times.
 
    Once again, that is not always possible. We consider the following example:
   
-   #+BEGIN_examples
+   #+BEGIN_myexample
    Examples where a continuous solution exists but a polynomial solution doesn't exist:
    $\mathcal P_t = \{ (1+t^2) x = 1\} = \{ \frac1{1+t^2} \}$ 
-   #+END_examples
+   #+END_myexample
 
       
    What went wrong? $\mathcal P_t$ in this example is not ``full dimensional", and even though it contains a continuous solution, there is no "slackness" to approximate it with a polynomial. This motivates the following two definitions:
@@ -382,7 +427,7 @@ $$B(x^c(t), \delta) \subset \mathcal P_t$$
 #+END_definition
 
 The condition that $\delta$ doesn't depend on $t$ as well as continuity of $x^c(t)$ is important, as the following example shows:
-   #+BEGIN_examples
+   #+BEGIN_myexample
 $$A(t) = (1, -1, -t)^T, b(t) = (2, 2, 0)$$
 Or equivalently:
 
@@ -391,7 +436,7 @@ $$-2 \le x(t) \le 2, tx(t) \ge 0$$
 This program is not continuously full dimensional, but:
    - The feasible continuous solution $x(t) = t$ verifies $B(x(t), \delta_t) \subset \mathcal P_t$, with $\delta_t = \frac t2 + 1_{t = 0} > 0$ for $t \in [-1, 1]$.
    - The feasible (non-continuous) solution $x(t) = 1_{t > 0} - 1_{t < 0}$ verifies $B(x(t), \delta) \in \mathcal P_t$ with $\delta = 1$ for $t \in [-1, 1]$.
-   #+END_examples
+   #+END_myexample
 
 
 
@@ -431,18 +476,18 @@ The rest of this section compares the power of the two definitions.
 One can easily see that strict feasibility of a continuous solution $x^c(t)$ implies full dimensionality when the rows of $A(t)$ never cancel.
 
 #+BEGIN_theorem
-If $A(t)$ rows never cancel and ([[eqn:time_varying_lp_t]]) is strictly feasible, then ([[eqn:time_varying_lp_t]]) is continuously full dimensional.
+If $A(t)$ rows never cancel and ([[eqn:time_varying_lp_t]]) is continuously full dimensional, then ([[eqn:time_varying_lp_t]]) is strictly feasible.
 #+END_theorem
 
 #+BEGIN_proof
 Define
 $$\varepsilon = \min_{i} \min_{t \in [-1, 1]} (b(t) - A(t)x^c(t))_i$$
-$\varepsilon > 0$, because otherwise, if $\varepsilon = 0$, then by continuity the minimum is attained at some $(t_m, i_m)$ for which $b_{i_m}(t_m) - A_{i_m}(t_m)x^c(t_m) = 0$. By strict feasibility of $x^c(t)$, if $u \in \mathbb R^n$ has norm smaller than  $\delta$, then $b_{i_m}(t) - A_{i_m}(t_m)(x^c(t_m) + u) \ge 0$, which leads to $A_i(t_m)^Tu \ge 0$, and to $A_i(t_m) = 0$.
+$\varepsilon > 0$, because otherwise, if $\varepsilon = 0$, then by continuity the minimum is attained at some $(t_m, i_m)$ for which $b_{i_m}(t_m) - A_{i_m}(t_m)x^c(t_m) = 0$. By continuous full dimensionality of $x^c(t)$, if $u \in \mathbb R^n$ has norm smaller than  $\delta$, then $b_{i_m}(t) - A_{i_m}(t_m)(x^c(t_m) + u) \ge 0$, which leads to $A_i(t_m)^Tu \ge 0$, and to $A_i(t_m) = 0$.
 
 We have just proved that $(\forall t \in [-1, 1]) \; A(t) x^c(t) \le b(t) - \varepsilon 1$ for some $\varepsilon > 0$..
 #+END_proof
 
-Perhaps the more surprising result is that the converse is also true (unconditionnaly):
+Perhaps the more surprising result is that the converse is also true (unconditionally):
 
 #+BEGIN_theorem
 Strict feasibility of ([[eqn:time_varying_lp_t]]) implies Continuous full dimensionality of ([[eqn:time_varying_lp_t]]).
@@ -523,7 +568,7 @@ $$A(t)x^s(t) \le b(t) - \varepsilon 1$$
 
 #+NAME: thm:strict_feasibility_implies_polynomial_optimality
    #+BEGIN_theorem
-   Under the strict feasibility assumption, i.e. that the following timevarying LP is feasible:
+   Under the strict feasibility assumption, i.e. that the following time-varying LP is feasible:
    
    $$A(t)x(t) \le b(t) - \varepsilon 1, t \in [-1, 1]$$
    
@@ -536,7 +581,7 @@ $$A(t)x^s(t) \le b(t) - \varepsilon 1$$
    
    
 * Decidability of the sufficient conditions for existence and optimality of polynomial solutions to LPs
-
+<<sec:decidabilityconditions>>
   This section present finite time algorithms to decide the conditions discussed above that guarantee feasibility of time varying LP as well as optimality of polynomial solutions.
   
   Theorem [[thm:form_optimal_solution_lp]] showed that the feasible set of a time varying LP can be fully described by giving the times $t_1, \ldots t_N$ as well as the coefficients of the rational functions in the set $\mathcal V_i$ for all $i=1, \ldots N$. We propose an algorithm that does exactly that.
@@ -656,7 +701,7 @@ $$A(t)x^s(t) \le b(t) - \varepsilon 1$$
 * Time-varying LP is an SDP
     <<sec:lp_is_sdp>>
 
-  Algorithm [[alg:solving-time-varying-lp-exactly]] of the previous section proves that one can solve exactly a time-varying LP, and get the optimal solution in finite time, even though the solution is not continuous. The algorithm takes at least exponential time[fn::the time complexity of algorithms described in this paper is always with respect to the size of the input $(A, b, c)$ for timevarying LPs and $((A_i)_{i=1}^m, (b_i)_{i=1}^m, C)$ for timevaryign SDPs] as it checks all the vertices of the polytope.
+  Algorithm [[alg:solving-time-varying-lp-exactly]] of the previous section proves that one can solve exactly a time-varying LP, and get the optimal solution in finite time, even though the solution is not continuous. The algorithm takes at least exponential time[fn::the time complexity of algorithms described in this paper is always with respect to the size of the input $(A, b, c)$ for time-varying LPs and $((A_i)_{i=1}^m, (b_i)_{i=1}^m, C)$ for timevaryign SDPs] as it checks all the vertices of the polytope.
   
   This section describes how one can find the best /polynomial/ solution of a given degree, and in fact describes an algorithm that is efficient (in fact polynomial). Indeed, we prove that we can turn a time-varying LP into an semi-definite. The idea behind such a reduction is that a univariate polynomial $p(t)$ is non-negative on some interval, say $[-1, 1]$ if and only if it can be written as a sum of square of two polynomials $q(t), s(t)$, potentially weightted by $(1-t)$ and/or $(1+t)$, and searching for $q(t)$ and $s(t)$ can be done efficiently.
   
@@ -680,7 +725,7 @@ $$A(t)x^s(t) \le b(t) - \varepsilon 1$$
   #+NAME: eqn:Ppoly
   \begin{equation*}
   \begin{array}{ll@{}ll}
-  \text{maximize} & \int_{-1}^1 \langle c(t), x(t) \rangle dt & \\
+  \underset{x(t)}{\text{maximize}} & \int_{-1}^1 \langle c(t), x(t) \rangle dt & \\
   \text{subject to}& b(t) - A(t) x(t) = (1-t) \sigma_-(t) + (1+t) \sigma_+(t)
   \end{array}
   \end{equation*}
@@ -704,7 +749,7 @@ $$q(t_l) = \langle X, A^{(l)} \rangle, \forall l \le 2k$$
 
   
 * Time-varying SDPs 
-  
+  <<sec:timevaryingsdp>>
   We seek a characterization for optimality of polynomial solutions to a semi definite program similar to one we found for linear programs. It turns out again that strict feasibility is enough for that. The definition is as follow:
 
      #+BEGIN_definition
@@ -747,7 +792,7 @@ To prove the theorem, let's assume ([[eqn:time_varying_sdp_l2]]) is strictly fea
   \begin{equation*}
   \tag{$APPROX-LP_{\varepsilon}$}
   \begin{array}{ll@{}ll}
-  \text{maximize}_{Z, \alpha} & \int_{-1}^1 \langle Z(t), C(t) \rangle dt & \\
+  \underset{x(t)}{\text{maximize}}_{Z, \alpha} & \int_{-1}^1 \langle Z(t), C(t) \rangle dt & \\
   \text{subject to}& Z(t) =  \sum_{Y \in N(\varepsilon)} \alpha_Y(t) Y \\
   & \langle A_i(t), Z(t) \rangle \le b_i(t) 
   \end{array}
@@ -800,7 +845,7 @@ We now prove [[lem:approx_lp_converge_tv_sdp]]. We start with an optimal solutio
 
   \begin{equation*}
   \begin{array}{ll@{}ll}
-  \text{maximize} & \langle X(t), C(t) \rangle & \\
+  \underset{x(t)}{\text{maximize}} & \langle X(t), C(t) \rangle & \\
   \text{subject to}& u^TX(t)u = SOS(t, u)\\
   & \langle A_i(t), X(t) \rangle \le b_i(t) 
   \end{array}
@@ -811,7 +856,34 @@ We now prove [[lem:approx_lp_converge_tv_sdp]]. We start with an optimal solutio
    #+END_theorem
 
   
-  
+
+
+** Application: Time varying certificate of stability
+
+   As an application of the characterization in this paper, we consider the problem of certifying the stability of a linear system.
+   More concretely , we want to certify that a the following system is stable:
+   
+   $$\frac{d f(u)}{du} = A(t) f(u)$$
+
+   Where $A(t) \in \mathbb R^{n \times n}$ is varying with time $t \in [-1, 1]$, and $f(u)$ is a column vector of univariate functions in $u$.
+
+   We can prove that the system is stable if and only if the matrix $A(t)$ is Herwitz, and we can check for the later by solving the following SDP:
+   
+   $$\forall t \in [-1, 1]\; \exists P_t \succeq I, - P_t^TA(t) - A(t)^T P_t \succeq 0$$
+
+   $P_t$ is called a certificate of stability.
+
+   Following the framework presented in this paper, we can look efficiently for a certificate $P(t)$ that depend polynomially on $t$.
+
+   $$P(t) \succeq I, P(t)^TA(t) + A(t)^T P(t) \succeq I$$
+
+   It can be easily seen (by multiplying $P(t)$ by 2) that this system of matrix inequalities is feasible if and only if the following system is feasible:
+   
+   $$P(t) \succeq 2I, - P(t)^TA(t) - A(t)^T P(t) \succeq 2I$$
+
+  Now if a certificate of stability exists and is /bounded/ in time, then all conditions for theorem [[thm:strict_feasibility_implies_polynomial_optimality_sdp]] are verified, and therefore a /polynomial/ ceritificate $P(t)$ (and afortiori continuous) exists.
+   
+      
 * Numerical results
    <<sec:numeric>>
    
@@ -819,7 +891,6 @@ We now prove [[lem:approx_lp_converge_tv_sdp]]. We start with an optimal solutio
   
 ** Max flow
   #+ATTR_LATEX: :width 0.5\textwidth
-  #+ATTR_LATEX: :float wrap :width 0.38\textwidth :placement {r}{0.4\textwidth}
   #+caption: Maxflow instance
   file:graph.png
 
@@ -830,7 +901,7 @@ We now prove [[lem:approx_lp_converge_tv_sdp]]. We start with an optimal solutio
   \begin{equation*}
   \tag{MAXFLOW}
   \begin{array}{ll@{}ll}
-  \text{maximize} & \int_{-1}^1  \sum_{j=1}^n f_{1,j}(t) dt & \\
+  \underset{x(t)}{\text{maximize}} & \int_{-1}^1  \sum_{j=1}^n f_{1,j}(t) dt & \\
   \text{subject to}& \sum_j f_{i, j}(t) - f_{j, i}(t) = 0\\
   & 0 \le f_{i,j}(t) \le b_{ij}(t) \\
   \end{array}
@@ -847,7 +918,7 @@ The quantity $\int_{-1}^1  \sum_{j=1}^n f_{1,j}(t) dt$ is also linear in the $f_
 
    \begin{equation*}
    \begin{aligned}
-   & \text{maximize}
+   & \underset{x(t)}{\text{maximize}}
    & & \sum_j \sum_{l=0}^d f_{1,j,l} w_l \\
    & \text{subject to}\\
    &&& \sum_{j=1}^N f_{i,j,l} - f_{j,i,l} &=& 0                                                          & \forall l, \forall i \ne s, t &: (c_{i,l})\\
@@ -860,29 +931,11 @@ The quantity $\int_{-1}^1  \sum_{j=1}^n f_{1,j}(t) dt$ is also linear in the $f_
 
 
 
-** Time varying certificate of stability
 
-   We want to certify that a the following system is stable:
-   
-   $$\dot x = A(t) x$$
-
-   Where $A(t)$ is varying with time.
-
-   We can prove that the system is stable if and only if the matrix $A(t)$ is Herwitz, and we can check for the later by solving the following SDP:
-   
-   $$\forall t \; \exists P \succeq I, P^TA(t) + A(t)^T P \succeq 0$$
-
-   $P$ is called a certificate of stability.
-
-   Following the framework presented in this paper, we can look efficiently for a certificate $P(t)$ that depend polynomially on $t$.
-
-   $$P(t) \succeq I, P(t)^TA(t) + A(t)^T P(t) \succeq 0$$
-
-   
    
 * Conclusion and open questions   
 
-This paper presented a natural method to optimize over polynomial solutions to timevarying convex program using the sum of squares framework. We note that even though there exist polynomial algorithms for sum of squares optimization, the best known algorithms scale very poorly as the number of variables the polynomials depend on grow. One notable exception is certifying non-negativity of univariate polynomials, which can be done efficiently using an appropriate basis. We exploit this fact in the case of timevarying linear programs.
+This paper presented a natural method to optimize over polynomial solutions to time-varying convex program using the sum of squares framework. We note that even though there exist polynomial algorithms for sum of squares optimization, the best known algorithms scale very poorly as the number of variables the polynomials depend on grow. One notable exception is certifying non-negativity of univariate polynomials, which can be done efficiently using an appropriate basis. We exploit this fact in the case of time-varying linear programs.
 
 The paper also provided sufficient conditions under which polynomial solutions are optimal. It is worth mentioning that the main characterization given here might be asking for too much in certain cases, since it doesn't cover the case of /equality constraints/.
 
