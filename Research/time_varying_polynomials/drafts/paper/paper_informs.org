@@ -1,0 +1,74 @@
+#+OPTIONS: toc:nil
+#+AUTHOR: noone
+
+#+LaTeX_CLASS: informs1
+#+LaTeX_CLASS_OPTIONS: [moor]
+
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usetikzlibrary{arrows.meta}
+#+LATEX_HEADER: \usepackage{natbib}
+#+LATEX_HEADER: \usepackage{listing}
+#+LATEX_HEADER: \usepackage{algorithm}
+#+LATEX_HEADER: \usepackage{mathtools}
+
+
+#+LATEX_HEADER: \def\TheoremsNumberedThrough{%
+#+LATEX_HEADER: \theoremstyle{TH}%
+#+LATEX_HEADER: \newtheorem{thm}{Theorem}
+#+LATEX_HEADER: \newtheorem{lemma}{Lemma}
+#+LATEX_HEADER: \newtheorem{prop}{Proposition}
+#+LATEX_HEADER: \newtheorem{cor}{Corollary}
+#+LATEX_HEADER: \newtheorem{claim}{Claim}
+#+LATEX_HEADER: \newtheorem{conjecture}{Conjecture}
+#+LATEX_HEADER: \newtheorem{hypothesis}{Hypothesis}
+#+LATEX_HEADER: \newtheorem{assumption}{Assumption}
+#+LATEX_HEADER: \newtheorem{definition}{Definition}
+#+LATEX_HEADER: \newtheorem{myexample}{Example}
+#+LATEX_HEADER: \newtheorem{remark}{Remark}
+#+LATEX_HEADER: }
+
+#+LATEX_HEADER: \def\EMAIL#1{\href{mailto:#1}{#1}}% When hyperref is used, otherwise outcomment 
+#+LATEX_HEADER: \def\URL#1{\href{#1}{#1}}         % When hyperref is used, otherwise outcomment 
+
+#+LATEX_HEADER: \TheoremsNumberedThrough     % Preferred (Theorem 1, Lemma 1, Theorem 2)
+#+LATEX_HEADER: \EquationsNumberedThrough    % Default: (1), (2), ...
+#+LATEX_HEADER:  \NatBibNumeric
+#+LATEX_HEADER:  \def\bibfont{\small}%
+#+LATEX_HEADER:  \def\bibsep{\smallskipamount}%
+#+LATEX_HEADER:  \def\bibhang{24pt}%
+#+LATEX_HEADER:  \def\BIBand{and}%
+#+LATEX_HEADER:  \def\newblock{\ }%
+#+LATEX_HEADER:  \bibpunct[, ]{[}{]}{,}{n}{}{,}%
+
+
+#+LATEX_HEADER:\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+#+LATEX_HEADER: %\usepackage[noend]{algpseudocode}
+#+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+#+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+#+LATEX_HEADER: \usepackage[colorlinks=true,breaklinks=true,bookmarks=true,urlcolor=blue,
+#+LATEX_HEADER:      citecolor=blue,linkcolor=blue,bookmarksopen=false,draft=false]{hyperref}
+
+#+LATEX_HEADER: \renewenvironment{proof}{\emph{Proof.}}{\(\blacksquare\)}
+
+#+BEGIN_SRC latex :export results
+\TITLE{Time-Varying Linear and Semidefinite Programs}
+
+\RUNAUTHOR{Ahmadi and El Khadir}
+\RUNTITLE{Time-Varying LPs and SDPs}
+
+\ARTICLEAUTHORS{
+\AUTHOR{Amirali Ahmadi}
+\AFF{Princeton University, \EMAIL{aaa@princeton.edu}}
+\AUTHOR{Bachir El Khadir}
+\AFF{Princeton University, \EMAIL{bkhadir@princeton.edu}}
+}
+
+\ABSTRACT{
+We study linear semidefinite programs whose data (e.g., the matrices $A$, $b$, $c$ in the LP case) are not constant but vary polynomially with time. We show that, under some conditions, we can approximate the optimal value of these problems arbitrarily well by searching for solutions that are polynomial functions of time themselves. Furthermore, we show that the problem of finding the optimal polynomial solution of a given degree can be cast exactly as a semidefinite program. 
+}
+
+\maketitle
+#+END_SRC
+
+#+INCLUDE: paper.org
+
