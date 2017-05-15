@@ -1,0 +1,613 @@
+#+Title: Time-Varying LPs and SDPs
+#+Author: Bachir El Khadir
+#+DATE: 2017-05-17
+
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   num:t toc:t ::t |:t ^:{} -:t f:t *:t <:t
+#+OPTIONS:   tex:t d:nil todo:t pri:nil tags:nil
+#+OPTIONS:   timestamp:t
+
+# this allows defining headlines to be exported/not be exported
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+
+# By default I do not want that source code blocks are evaluated on export. Usually
+# I want to evaluate them interactively and retain the original results.
+#+PROPERTY: header-args :eval never-export
+
+#+LATEX_HEADER: \usepackage{mathtools}
+#+LATEX_HEADER: \usepackage{amsthm}
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usetikzlibrary{arrows.meta}
+
+#+LATEX_HEADER:\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+#+LATEX_HEADER: %\usepackage[noend]{algpseudocode}
+#+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+#+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+
+
+#+LATEX_HEADER: \newcommand{\makeappear}[1]{\onslide<2->{\textcolor{red}{#1}}}
+#+LATEX_HEADER: \newcommand{\maketappear}{\makeappear{(t)}}
+
+* Beamer configuration                                             :noexport:
+** Basic
+   # this triggers loading the beamer menu (C-c C-b) when the file is read
+   #+startup: beamer
+
+   #+LaTeX_CLASS: beamer
+
+   #    LATEX CLASS OPTIONS
+   # [bigger]
+   # [presentation]
+   # [handout] : print handouts, i.e. slides with overlays will be printed with
+   #   all overlays turned on (no animations).
+   # [notes=show] : show notes in the generated output (note pages follow the real page)
+   # [notes=only] : only render the nodes pages
+
+   # this setting affects whether the initial PSI picture correctly fills
+   # the title page, since it scales the title text. One can also use the
+   # notes=show or notes=only options to produce notes pages in the output.
+   # #+LaTeX_CLASS_OPTIONS: [t,10pt,notes=show]
+
+   #+LaTeX_CLASS_OPTIONS: [t,10pt]
+
+
+   #+COLUMNS: %20ITEM %13BEAMER_env(Env) %6BEAMER_envargs(Args) %4BEAMER_col(Col) %7BEAMER_extra(Extra)
+
+   # export second level headings as beamer frames. All headlines below
+   # the org-beamer-frame-level (i.e. below H value in OPTIONS), are
+   # exported as blocks
+   #+OPTIONS: H:2
+
+** Beamer Theme Definition
+   #+BEAMER_THEME: Madrid
+   # #+BEAMER_THEME: Hydrogen
+
+   # Note: custom style files can be placed centrally in the user specific directory
+   # ~/texmf/tex. This will be searched recursively, so substructures are possible.
+   # q.v. http://tex.stackexchange.com/questions/1137/where-do-i-place-my-own-sty-or-cls-files-to-make-them-available-to-all-my-te
+
+   # One could also fine tune a number of theme settings instead of specifying the full theme
+   # #+BEAMER_COLOR_THEME: default
+   # #+BEAMER_FONT_THEME:
+   # #+BEAMER_INNER_THEME:
+   #+BEAMER_OUTER_THEME: miniframes [subsection=false]
+   # #+LATEX_CLASS: beamer
+
+
+** changes to BeginSection for TOC and navigation
+   #+BEAMER_HEADER: \AtBeginSection[]{
+
+   # This line inserts a table of contents with the current section highlighted at
+   # the beginning of each section
+   #+BEAMER_HEADER: \begin{frame}<beamer>\frametitle{Topic}\tableofcontents[currentsection]\end{frame}
+
+   # In order to have the miniframes/smoothbars navigation bullets even though we do not use subsections 
+   # q.v. https://tex.stackexchange.com/questions/2072/beamer-navigation-circles-without-subsections/2078#2078
+   #+BEAMER_HEADER: \subsection{}
+   #+BEAMER_HEADER: }
+
+** misc configuration
+   # I want to define a style for hyperlinks
+   #+BEAMER_HEADER: \hypersetup{colorlinks=true, linkcolor=blue}
+
+   # this can be used to define the transparency of the covered layers
+   #+BEAMER: \setbeamercovered{transparent=30}
+
+
+
+** Some remarks on options
+   - [[info:org#Export%20settings][info:org#Export settings]]
+   - The H:2 setting in the options line is important for setting the
+     Beamer frame level. Headlines will become frames when their level
+     is equal to =org-beamer-frame-level=.
+   - ^:{} interpret abc_{subs} as subscript, but not abc_subs
+   - num:t configures whether to use section numbers. If set to a number
+     only headlines of this level or above will be numbered
+   - ::t defines that lines starting with ":" will use fixed width font
+   - |:t include tables in export
+   - -:t Non-nil means interpret "\-", "--" and "---" for export.
+   - f:t include footnotes
+   - *:t Non-nil means interpret
+     : *word*, /word/, _word_ and +word+.
+   - <:t toggle inclusion of timestamps
+   - timestamp:t include a document creation timestamp into the exported file
+   - todo:t include exporting of todo keywords
+   - d:nil do not export org heading drawers
+   - tags:nil do not export headline tags
+
+
+* Introduction
+
+** TV-LP
+
+   \begin{equation*}
+   \tag{TV-LP}
+   \begin{array}{ll@{}ll}
+   \underset{x\maketappear \in \mathbb R^n \makeappear{[t]}}{\text{maximize} }
+   &\onslide<-1>{\langle c, x\rangle}
+   \onslide<2->{\int_{-1}^1 \langle c\textcolor{red}{(t)}, x\textcolor{red}{(t)} \rangle dt} & \\
+   \text{subject to}& A\maketappear x\maketappear \le b\maketappear & \makeappear{\forall t \in [-1, 1]}
+   \end{array}
+   \end{equation*}
+
+   \begin{figure}
+   \includegraphics<1>[scale=.25]{includes/tvlp2d.png}
+   \includegraphics<2>[scale=.17]{includes/tvlp3d.png}
+   \caption{\only<2>{\textcolor{red}{TV-}}LP}
+   \end{figure}
+
+** Maxflow
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+
+   #+INCLUDE: includes/maxflowgraph.tikz
+
+* Motivation
+  
+** Positivestellnaz (LPs)
+***  Positivestellnaz for LPs
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+    Every non-negative univariate polynomials $p(t)$ on $[-1, 1]$ can be written as
+    $$p = \sigma_0 + (1-t) \sigma_1 + (1+t) \sigma_2 + (1-t^2)\sigma_3.$$
+
+    where $\sigma_i \in SOS$, $i=0\ldots 3$.
+
+*** In our case
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <2->
+    :END:
+ 
+    Constraint:
+    $$A(t) x(t) \le b(t) \quad \forall t \in [-1, 1]$$
+    becomes
+    $$b(t) - A(t)x(t) = \sigma_0 + (1-t) \sigma_1 + (1+t) \sigma_2 + \sigma_3 (1-t^2)$$
+  
+  
+** Positivestellnaz (SDPs)
+*** Positivestellnaz (SDPs)
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+
+    Every psd polynomial matrix $X(t)$ on $[-1, 1]$ can be written as
+
+    $$X = \Sigma_0 + (1-t) \Sigma_1 + (1+t) \Sigma_2 + (1-t^2)\Sigma_3$$.
+
+    where $\Sigma_i(t) = A_i(t)^TA_i(t)$, $i=0\ldots 3$.
+
+*** In our case
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <2->
+    :END:
+ 
+    Constraint:
+    $$X(t) \succeq 0 \quad \forall t \in [-1, 1]$$
+    becomes
+    $$X(t) = \Sigma_0 + (1-t) \Sigma_1 + (1+t) \Sigma_2 + \Sigma_3 (1-t^2)$$
+  
+    (Know the proof)
+
+** Question
+***    
+   When are polynomials optimal to an LP or SDP?
+
+*** Contributions   
+    - Finite time algorithm to solve TV-LP.
+    - Sufficient condition that guarantees near optimality of polynomials to TV-LPs and TV-SDPs.
+   
+* Geometry of a TV-LP
+
+
+** Geometry of a TV-LP
+   \begin{equation*}
+   \tag{TV-LP}
+   \begin{array}{ll@{}ll}
+   \underset{x(t)}{\text{maximize}} & \int_{-1}^1 \langle c(t), x(t) \rangle dt & \\
+   \text{subject to}& A(t) x(t) \le b(t) & \forall t \in [-1, 1]
+   \end{array}
+   \end{equation*}
+
+*** Theorem
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <2->
+    :END:
+
+    - There exist :
+      - $N$ break points $-1 = t_1 < \cdots < t_N = 1$,
+      - $N-1$ finite sets of rational functions $\mathcal V_1, \ldots, \mathcal V_{N-1} \subset \mathbb R^n(X)$.
+    such that:
+    $$\mathcal P_t = conv\{v(t), \; v \in \mathcal V_i\}$$
+    for every $i \in [N-1], t \in (t_i, t_{i+1})$.
+    - <3-> Every  $v \in \mathcal V_i$ has the form $v(t) = A_{B_v}(t)^{-1}b_{B_v}(t)$.
+
+
+** Algorithms
+
+*** Computing the $t_i$
+
+    A vertex $v(t) = A_B(t)b(t)$ disappears if:
+    - $t \rightarrow \det(A_B(t))$ hits 0.
+    - $t \rightarrow b(t) - A_B(t)^{-1}b_B(t)$ changes sign.
+
+*** Find $\mathcal V_i$
+    Find the vertices of $\mathcal P_t$ at time $t = \frac{t_i + t_{i+1}}2$.
+
+    
+* Continuous solution
+
+
+** Feasibility and (near-)Optimality are equivalent
+
+*** Theorem
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+
+    If the TV-LP admits a feasible continuous solution $f_0$, then, continuous solutions are near optimal.
+
+   
+*** 
+    :PROPERTIES:
+    :BEAMER_env: proof
+    :END:
+
+    Construct a near optimal solution $f^{\alpha}$ that:
+    - lives on the optimal vertex.
+    - ``travels'' to the continuous solution $f_0$ to get through the possibly problematic time $t_i$.
+
+
+** Continuity with respect to perturbations  
+    
+   #+NAME: eq:lp
+   \begin{equation*}
+   \tag{LP}
+   \begin{array}{ll@{}ll}
+   \underset{x \in \mathbb R^n}{\text{maximize}} & \langle c, x \rangle\\
+   \text{subject to}& A x \le b
+   \end{array}
+   \end{equation*}
+    
+   - $\Omega \coloneqq \{ (A, b)\; | \quad  \{x \in \mathbb R^n, Ax \le b\} \;\text{is non empty and bounded} \}$.
+
+   - $opt(A, b, c) \coloneqq \underset{Ax \le b}{\max} \langle c, x \rangle$  defined for $(A, b, c) \in \Omega \times \mathbb R^n$.
+
+*** Theorem
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+      
+    $opt(A, b, c)$ is
+    - /Continuous/ with respect to the variables $b$ and $c$.
+    - /Upper semi-continuous/ with respect to the variable $A$.
+
+
+** What could go wrong?
+
+*** A ``discontinuous'' TV-LP 
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+
+    $\mathcal P_t \coloneqq \{x \in \mathbb R, tx \ge 0, t(x-1) \ge 0\}$ for $t \in [-1, 1]$.
+
+
+          - $\mathcal P_t = [1, \infty)$ when $t > 0$.
+          - $\mathcal P_t = (-\infty, 0]$ when $t < 0$.
+            No continuous solution!
+
+
+*** Equivalent condition
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <2->
+    :END:
+    Their exists a continuous feasible solution if and only if
+    $$conv \{ v(t_{i}), v \in \mathcal V_i\} \cap conv \{ v(t_{i}), v \in \mathcal V_{i+1}\} \ne \emptyset$$ for $i = 1, \ldots, N-1$.
+ 
+    ($\mathcal V_1, \ldots, \mathcal V_{N-1}$ are the sets of vertices moving in time.)
+
+** An easy case
+
+*** $A(t)$ is fixed
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+    If $A(t) =$ is constant, their always exists a continuous feasible solution.
+
+*** 
+    :PROPERTIES:
+    :BEAMER_env: proof
+    :BEAMER_act: <2->
+    :BEAMER_col: 0.5
+    :END:
+
+
+    - <2-> O.w., $\exists i \in [m]$, st $\underset{v \in \mathcal V_i}{conv}v(t_{i}) \cap \underset{w \in \mathcal V_{i+1}}{conv} v(t_{i}) = \emptyset$.
+    - <3-> $\exists u \in \mathbb R^n$ and $\delta > 0$:
+      - $\langle v(t_i) , u \rangle > \delta$ for $v \in \mathcal V_i$.
+      - $\langle w(t_i) , u \rangle < -\delta$ for $w \in \mathcal V_{i+1}$.
+    - <4-> Contradicts the continuity of the optimal value of 
+      $$\underset{x \in P_{t_i+\alpha}}{\text{minimize}} \langle x, u \rangle.$$
+
+*** 
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.45
+    :BEAMER_act: <3->
+    :END:
+    [[file:includes/fixedAproof.png]]
+
+** Strict Feasibility
+
+*** Strict Feasibility
+    :PROPERTIES:
+    :BEAMER_env: definition
+    :END:
+   
+    A TV-LP is \emph{strictly feasible} if there exists a (not necessarily continuous) function $x^s: [-1, 1] \rightarrow \mathbb R^n$   and a scalar $\varepsilon > 0$ such that
+
+    $$A(t)x^s(t) \le b(t) - \varepsilon \textbf{1}, \; \forall t \in [-1, 1].$$
+
+    
+*** Strict feasibility $\implies$ Continuous solutions
+    :PROPERTIES:
+    :BEAMER_env: theorem
+    :BEAMER_act: <2->
+    :END:
+    
+    If a TV-LP is strictly feasible, then it has a continuous near optimal solution.
+
+** Proof
+   - It is enough to prove the existence of a continuous feasible solution $x^c(t)$.
+
+   We construction  $x^c(t)$ in two steps:
+   - near the problematic points $t_i$.
+   - away from the $t_i$.
+
+** Near the problematic points $t_i$:
+
+   - Choose an arbitrary vertex $w \coloneqq A_b(t)^{-1}(b(t) - \varepsilon \textbf{1})$ of the non-empty polytope $\{x \in \mathbb R^n |  A(t_i)x \le b(t_i) - \varepsilon \textbf{1}\}$.
+
+
+   - Define $w_i^{near}(t) \coloneqq A_B(t)^{-1}(b_B(t) - \varepsilon 1)$.
+
+
+   - By continuity, $\exists$ a neighborhood $[t_i-\alpha, t_i+\alpha]$, such that  $w_i^{near}(t)$ is a well defined continuous function and  $w_i^{near}(t)$ is strictly feasible.
+
+
+   - Furthermore, since the number of breakpoints $t_i$ s is finite, we can make the same choice of $\alpha$ for all $i = 1, \cdots, N$.
+
+** Far away from the $t_i$:
+
+   - For  $t \in (t_i, t_{i+1})$, let $w_i^{far}(t) \coloneqq \frac{\sum_{u \in \mathcal V_i} u(t)}{|\mathcal V_i|} \in \mathcal P_t$.
+
+   - $\delta_i \coloneqq \underset{t \in J_i, j=1,\ldots, m}{\min} (b(t) - A(t)w_i^{far}(t))_j$.
+
+   - Observe that $\delta_i > 0$. O.w., by continuity, there exist $\hat j$ and $\hat t \in J_i$ such that $(b(\hat t) - A(\hat t)w^{far}(\hat t))_{\hat j} = 0$.
+
+             - This means that $\mathcal P_{\hat t} \subseteq \{x \in \mathbb R^n |\; A_{\hat j}(\hat t)^T x = b_{\hat j}(\hat t) \}$
+
+** Connecting the patches:
+
+*** Recap
+    We have constructed $w_i^{near}, w_i^{far}$ that are continuous and strictly feasible on $(t_i, t_{i+1})$ and $(t_{i+1}-\alpha, t_{i+1} + \alpha)$ resp.
+
+
+*** 
+    :PROPERTIES:
+    :BEAMER_env: ignoreheading
+    :END:
+
+    We get a continuous feasible solution on $[-1, 1]$ simply by ``connecting'' the solutions $w_i^{far}, w_i^{near}$ by interpolating from one to the other linearly. 
+    
+* Polynomials
+** What could go wrong?
+
+Optimality of continuous functions $\implies$ Optimality of polynomials?
+
+*** A ``tight'' TV-LP 
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+
+    - $(1+t^2) x(t) \le 1$
+    - $-(1+t^2) x(t) \le -1$
+
+    $\forall t \in [-1, 1]$.
+
+    Only one solution $x(t) = \frac1{1+t^2}$. Not polynomial.
+
+       
+*** Full-Dimensionality
+    :PROPERTIES:
+    :BEAMER_env: definition
+    :BEAMER_act: <2->
+    :END:
+    TV-LP  is \emph{continuously full-dimensional} if there exists a scalar $\delta > 0$ and a *continuous* function $x^c: [-1, 1] \rightarrow \mathbb R^n$ such that $B(x^c(t), \delta) \subset \mathcal P_t, \; \forall t \in [-1, 1]$.
+
+*** Full-Dimensionality $\implies$ Optimality of polynomials
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <3->
+    :END:
+
+    - Approximate $x^c$ by a polynomial.
+    - Continuity of $x^c(t)$ and constant $\delta$ are important.
+
+** Strict feasibility vs Continuous Full dimensionality   
+
+   - *Strict Feasibility* provides slackness in the space of the constraints.
+   - *Continuous Full dimensionality* provides slackness in the space of the variables.
+
+   Full dimensionality $\implies$ Strict feasibility?
+
+*** No!
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+
+    $tx = 0, \quad \forall t \in [-1, 1]$ if full-dimensional but *not* strictly feasible. 
+
+*** Yes, if the rows of $A(t)$ don't cancel!
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+
+    - Let $\varepsilon \coloneqq \min_{i=1, \ldots, n} \min_{t \in [-1, 1]} (b(t) - A(t)x^c(t))_i$.
+
+    - $\varepsilon > 0$.Otherwise, $\exists (t_m, i_m)$ for which $b_{i_m}(t_m) - A_{i_m}(t_m)x^c(t_m) = 0$.
+
+    - If $u \in \mathbb R^n$ has norm smaller than  $\delta$, then $b_{i_m}(t) - A_{i_m}(t_m)(x^c(t_m) + u) \ge 0$, which leads to $A_i(t_m)^Tu \ge 0$, and to $A_i(t_m) = 0$.
+
+
+** Strict feasibility vs Full dimensionality (Suite)
+
+   Strict feasibility $\implies$ Full dimensionality.
+*** Yes
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <2->
+    :END:
+
+    - Strict feasibility $\implies$ existence of continuous strict feasible solution $x^c(t)$, $A(t)x^c(t) \le b(t) - \textbf{1}\varepsilon$.
+    - If $||y||=1$, $A(t)(x^c(t) + \delta y) \le b(t) - \textbf{1}\varepsilon + \delta A(t)y \le b(t) - (\varepsilon - \delta ||A||) \textbf{1}$.
+
+
+*** Strict feasibility $\implies$ Optimality of Polynomial solutions
+    :PROPERTIES:
+    :BEAMER_env: theorem
+    :BEAMER_act: <3->
+    :END:
+
+    If a TV-LP is strictly feasible, then polynomials as near optimal.
+
+** Application: Min-Cut    
+  \begin{equation*}
+  \tag{MINCUT}
+  \begin{array}{ll@{}ll}
+  \underset{(d_{ij}(t))_{(i,j) \in E}, (p_i(t))_{i \in V}}{\text{minimize}} & \int_{-1}^1  \sum_{(i,j) \in E} b_{ij}(t) d_{ij}(t) dt & \\
+  \text{subject to}& d_{ij}(t) - p_i(t) + p_j(t)  \geq 0 & \forall (i, j) \in E & \; \forall t \in [-1, 1]\\
+  &p_1(t) - p_n(t) \geq 1 && \; \forall t \in [-1, 1] \\
+  &p_i(t) \geq 0 & \forall i \in V & \; \forall t \in [-1, 1]\\
+  & d_{ij}(t)  \geq 0 & \forall (i, j) \in E & \; \forall t \in [-1, 1]
+  \end{array}
+  \end{equation*}
+
+   
+* TV-SDPs  
+
+**   
+   \begin{equation*}
+   \tag{TV-LP}
+   \begin{array}{ll@{}ll}
+   \underset{X\maketappear \in \mathcal S_n \makeappear{[t]}}{\text{maximize} }
+   &\onslide<-1>{\langle C, X\rangle}
+   \onslide<2->{\int_{-1}^1 \langle C\textcolor{red}{(t)}, X\textcolor{red}{(t)} \rangle dt} & \\
+   \text{subject to}& A_i\maketappear X\maketappear \le b_i\maketappear & \forall i \in [m], \;\makeappear{\forall t \in [-1, 1]}
+   \end{array}
+   \end{equation*}
+*** Strict Feasibility for TV-SDPs
+    :PROPERTIES:
+    :BEAMER_env: definition
+    :END:
+   
+    A TV-SDP is \emph{strictly feasible} if there exists a (not necessarily continuous) function $X^s: [-1, 1] \rightarrow \mathcal S_n$   and a scalar $\varepsilon > 0$ such that
+
+    - $X^s(t) \succeq \varepsilon I, \; \forall t \in [-1, 1]$.
+    - $\langle A_i(t), X^s(t)\rangle \le b_i(t) - \varepsilon, \; \forall t \in [-1, 1]$.
+
+   
+*** 
+  If a TV-SDLP is strictly feasible, then polynomials are near optimal.
+
+  
+** Approximating a spectrahedron by a polyhedron
+
+*** 
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.5
+    :END:
+   - $N(\varepsilon)$ a  $\varepsilon$ -covering of the compact set $\{X \succeq 0, ||X|| = 1\}$
+
+   - We replace the psd condition $X \succeq 0$ by the stronger condition of $X$ being a sum of elements of the $N(\varepsilon)$ with /positive/ coefficients.
+
+  #+NAME: eqn:approx_lp_eps
+   \begin{equation*}
+   \tag{$APPROX-LP_{\varepsilon}$}
+   \begin{array}{ll@{}ll}
+   \underset{X(t)}{\max} & \int_{-1}^1 \langle X(t), C(t) \rangle dt & \\
+   \text{s.t}
+   & X(t) = \sum_{Y \in N(\varepsilon)} \alpha_Y(t) Y\\
+   & \langle A_i(t), X(t) \rangle \le b_i(t), \\& i=1,\ldots,m \; \forall t \in [-1, 1]
+   \end{array}
+   \end{equation*}
+
+   
+*** 
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.45
+    :END:
+    #+BEGIN_center
+    #+ATTR_LATEX: :width 0.4\textwidth 
+    [[file:includes/sphere.png]]
+
+    #+ATTR_LATEX: :width 0.2\textwidth 
+    [[file:includes/downarrow.jpg]]
+
+    #+ATTR_LATEX: :width 0.8\textwidth 
+    [[file:includes/meshsphere.jpg]]
+    #+END_center
+
+   
+** Approximating (suite)   
+
+
+*** Lemma
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+   As $\varepsilon \rightarrow 0$, the optimal value of [[eqn:approx_lp_eps]] converges to the optimal value of the TV-SDP.
+
+*** Lemma
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+
+    Polynomial solutions are near optimal for [[eqn:approx_lp_eps]].
+
+
+** Wireless coverage
+    
+* Numerical Considerations
+
+** Numerical Stability
+
+  - Choose Breakpoints $t_0< \cdots < t_{2k}$.
+  - Choose a basis of $\mathbb R_k[t]$, $p_0, \ldots, p_k$.
+  - Let $A^{(l)}$ is $(k+1) \times (k+1)$ such that $A_{ij}^{(l)} = p_i(t_l)p_j(t_l)$ for $0 \le i, j \le k$.
+  
+  A polynomial $q(t)$ is in $SOS_k$ if and only if there exists $X \in \mathcal S_{k+1}$ such that
+$$q(t_l) = \langle X, A^{(l)} \rangle \quad \forall l \in [2k].$$
+
+
+*** Choice of breakpoints and basis
+    - $t_i = \cos((i+\frac12)\frac{\pi}{2k+1}) \; \text{for} \; i\in [2k]$
+- $(p_j(t))_{j \in [k]}$ to be as follow: $p_0 = \sqrt{\frac{1}{2k+1}}T_0$ and $p_j = \sqrt{\frac{2}{2k+1}}T_j$ for $j=1,\ldots,k$.
+-  $T_j$ are the Chebyshev polynomial:
+  $$T_0(t) = 1, T_1(t) = t, T_i(t) = 2tT_{i-1}(t) - T_{i-2}(t)  \; \text{for} \; i=2,3 \ldots$$
+
+- This makes the columns of the matrix $A^{(l)}$ orthonormal.
+
+
+   
