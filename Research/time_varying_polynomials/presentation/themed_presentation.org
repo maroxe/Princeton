@@ -27,8 +27,8 @@
 #+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
 #+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
 
-
-#+LATEX_HEADER: \newcommand{\makeappear}[1]{\onslide<2->{\textcolor{red}{#1}}}
+#+LATEX_HEADER: \newcommand{\makealternate}[2]{\alt<1>{#1}{#2}}
+#+LATEX_HEADER: \newcommand{\makeappear}[1]{\makealternate{}{\textcolor{red}{#1}}}
 #+LATEX_HEADER: \newcommand{\maketappear}{\makeappear{(t)}}
 
 * Beamer configuration                                             :noexport:
@@ -124,21 +124,32 @@
 ** TV-LP
 
    \begin{equation*}
-   \tag{TV-LP}
-   \begin{array}{ll@{}ll}
+   \tag{\makeappear{TV-}LP}
+   \begin{array}{llll}
    \underset{x\maketappear \in \mathbb R^n \makeappear{[t]}}{\text{maximize} }
-   &\onslide<-1>{\langle c, x\rangle}
-   \onslide<2->{\int_{-1}^1 \langle c\textcolor{red}{(t)}, x\textcolor{red}{(t)} \rangle dt} & \\
+   &\makeappear{\int_{-1}^1} \langle c\maketappear, x\maketappear \rangle \makeappear{dt} & \\
    \text{subject to}& A\maketappear x\maketappear \le b\maketappear & \makeappear{\forall t \in [-1, 1]}
    \end{array}
    \end{equation*}
 
+*** 
+   :PROPERTIES:
+   :BEAMER_col: 0.6
+   :END:
    \begin{figure}
-   \includegraphics<1>[scale=.25]{includes/tvlp2d.png}
+   \includegraphics<1>[scale=.3]{includes/tvlp2d.png}
+   \vspace*{-.4in}
    \includegraphics<2>[scale=.17]{includes/tvlp3d.png}
-   \caption{\only<2>{\textcolor{red}{TV-}}LP}
    \end{figure}
 
+*** 
+   :PROPERTIES:
+   :BEAMER_env: block
+   :BEAMER_col: 0.3
+   :BEAMER_act: <2->
+   :END:
+   - $A, b, c, x$ polynomials.
+   
 ** Maxflow
    :PROPERTIES:
    :BEAMER_env: fullframe
@@ -197,10 +208,15 @@
 
 ** Question
 ***    
-   When are polynomials optimal to an LP or SDP?
+   When are polynomials near optimal to a TV-LP or TV-SDP?
 
+   Near optimal $\iff$ $\forall \varepsilon > 0$, $\exists x(t) \in \mathbb R[t]$ such that:
+   - $A(t)x(t) \le b(t)$
+   -  $opt - \int_{-1}^{1} \langle c(t), x(t) \rangle dt \le \varepsilon$.
+   
+   
 *** Contributions   
-    - Finite time algorithm to solve TV-LP.
+    - Finite time algorithm to solve TV-LPs.
     - Sufficient condition that guarantees near optimality of polynomials to TV-LPs and TV-SDPs.
    
 * Geometry of a TV-LP
@@ -215,10 +231,21 @@
    \end{array}
    \end{equation*}
 
-*** Theorem
+*** Assumptions
     :PROPERTIES:
     :BEAMER_env: block
     :BEAMER_act: <2->
+    :BEAMER_col: 0.2
+    :END:
+    The feasible set is:
+    - not empty
+    - is bounded.
+      
+*** Theorem
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <3->
+    :BEAMER_col: 0.7
     :END:
 
     - There exist :
@@ -245,7 +272,7 @@
 * Continuous solution
 
 
-** Feasibility and (near-)Optimality are equivalent
+** Feasibility and Near-Optimality are equivalent
 
 *** Theorem
     :PROPERTIES:
@@ -262,7 +289,7 @@
 
     Construct a near optimal solution $f^{\alpha}$ that:
     - lives on the optimal vertex.
-    - ``travels'' to the continuous solution $f_0$ to get through the possibly problematic time $t_i$.
+    - travels to the continuous solution $f_0$ to get through the possibly problematic time $t_i$.
 
 
 ** Continuity with respect to perturbations  
@@ -366,7 +393,11 @@
     
     If a TV-LP is strictly feasible, then it has a continuous near optimal solution.
 
-** Proof
+*** Proof
+    :PROPERTIES:
+    :BEAMER_env: proof
+    :BEAMER_act: <3->
+    :END:    
    - It is enough to prove the existence of a continuous feasible solution $x^c(t)$.
 
    We construction  $x^c(t)$ in two steps:
@@ -490,18 +521,47 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
 
     If a TV-LP is strictly feasible, then polynomials as near optimal.
 
-** Application: Min-Cut    
+** Application: MinCut
+
+*** Maxflow(Primal)
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.49
+    :END:
+
+    \begin{equation*}
+    \begin{array}{llll}
+    \underset{f_{ij}}{\max} \makeappear{\int_{-1}^1} \underset{j \sim 1}{\sum} f_{1,j}\maketappear \makeappear{dt} \\
+    \underset{j \sim i}{\sum} f_{i, j}\maketappear - f_{j, i}\maketappear = 0,& i \in V\\
+    0 \le f_{i,j}\maketappear \le b_{ij}\maketappear, &i \sim j
+    \end{array}
+    \end{equation*}
+
+
+*** Mincut (Dual)
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.49
+    :END:
+
   \begin{equation*}
-  \tag{MINCUT}
-  \begin{array}{ll@{}ll}
-  \underset{(d_{ij}(t))_{(i,j) \in E}, (p_i(t))_{i \in V}}{\text{minimize}} & \int_{-1}^1  \sum_{(i,j) \in E} b_{ij}(t) d_{ij}(t) dt & \\
-  \text{subject to}& d_{ij}(t) - p_i(t) + p_j(t)  \geq 0 & \forall (i, j) \in E & \; \forall t \in [-1, 1]\\
-  &p_1(t) - p_n(t) \geq 1 && \; \forall t \in [-1, 1] \\
-  &p_i(t) \geq 0 & \forall i \in V & \; \forall t \in [-1, 1]\\
-  & d_{ij}(t)  \geq 0 & \forall (i, j) \in E & \; \forall t \in [-1, 1]
+  \begin{array}{ll}
+  \underset{d_{ij}, p_i}{\min} \makeappear{\int_{-1}^1}  \underset{i \sim j}{\sum} b_{ij}\maketappear d_{ij}\maketappear \makeappear{dt} & \\
+  d_{ij}\maketappear - p_i\maketappear + p_j\maketappear  \geq 0,&  i \sim j\\
+  p_1\maketappear - p_n\maketappear \geq 1 \\
+  p_i\maketappear \geq 0, &i \in V \\
+   d_{ij}\maketappear  \geq 0, &i \sim j 
   \end{array}
   \end{equation*}
 
+*** Simulation
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <3->
+    :END:
+
+    - Find best polynomial solution to both of degree $11$.
+    - $84 < opt < 85$.
    
 * TV-SDPs  
 
@@ -518,6 +578,7 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
 *** Strict Feasibility for TV-SDPs
     :PROPERTIES:
     :BEAMER_env: definition
+    :BEAMER_act: <3->
     :END:
    
     A TV-SDP is \emph{strictly feasible} if there exists a (not necessarily continuous) function $X^s: [-1, 1] \rightarrow \mathcal S_n$   and a scalar $\varepsilon > 0$ such that
@@ -527,6 +588,11 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
 
    
 *** 
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <3->
+    :END:
+
   If a TV-SDLP is strictly feasible, then polynomials are near optimal.
 
   
@@ -535,20 +601,21 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
 *** 
     :PROPERTIES:
     :BEAMER_env: block
-    :BEAMER_col: 0.5
+    :BEAMER_col: 0.55
     :END:
-   - $N(\varepsilon)$ a  $\varepsilon$ -covering of the compact set $\{X \succeq 0, ||X|| = 1\}$
+   - $N(\varepsilon)$ a  $\varepsilon$ -covering of $\{X \succeq 0, ||X|| = 1\}$.
 
-   - We replace the psd condition $X \succeq 0$ by the stronger condition of $X$ being a sum of elements of the $N(\varepsilon)$ with /positive/ coefficients.
+   - Replace  $X \succeq 0$ by  $X \in \sum \mathbb R^+[t] . N(\varepsilon)$.
 
   #+NAME: eqn:approx_lp_eps
    \begin{equation*}
    \tag{$APPROX-LP_{\varepsilon}$}
    \begin{array}{ll@{}ll}
-   \underset{X(t)}{\max} & \int_{-1}^1 \langle X(t), C(t) \rangle dt & \\
-   \text{s.t}
-   & X(t) = \sum_{Y \in N(\varepsilon)} \alpha_Y(t) Y\\
-   & \langle A_i(t), X(t) \rangle \le b_i(t), \\& i=1,\ldots,m \; \forall t \in [-1, 1]
+   \underset{X(t)}{\max} \int_{-1}^1 \langle X(t), C(t) \rangle dt \\
+   \text{s.t}\\
+   X(t) = \underset{Y \in N(\varepsilon)}{\sum} \alpha_Y(t) Y\\
+   \langle A_i(t), X(t) \rangle \le b_i(t),
+   \\ i \in [m],  t \in [-1, 1]
    \end{array}
    \end{equation*}
 
@@ -556,7 +623,7 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
 *** 
     :PROPERTIES:
     :BEAMER_env: block
-    :BEAMER_col: 0.45
+    :BEAMER_col: 0.4
     :END:
     #+BEGIN_center
     #+ATTR_LATEX: :width 0.4\textwidth 
@@ -579,6 +646,13 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
     :END:
    As $\varepsilon \rightarrow 0$, the optimal value of [[eqn:approx_lp_eps]] converges to the optimal value of the TV-SDP.
 
+*** Proof Sketch
+    :PROPERTIES:
+    :BEAMER_env: ignoreheading
+    :END:
+    
+    nggnngFeasible set of [[eqn:approx_lp_eps]] $\rightarrow$ feasible set of the TV-SDP.
+   
 *** Lemma
     :PROPERTIES:
     :BEAMER_env: block
@@ -586,27 +660,88 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
 
     Polynomial solutions are near optimal for [[eqn:approx_lp_eps]].
 
-
-** Wireless coverage
+*** Proof Sketch
+    :PROPERTIES:
+    :BEAMER_env: ignoreheading
+    :END:
     
+    TV-SDP strictly feasible $\implies$  [[eqn:approx_lp_eps]] strictly feasible
+
+
+    
+
+** Wireless Coverage Problem
+
+   [[file:includes/wireless.png]]
+
+** SDP Formulation
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+
+$$\mathcal B_j = \{(x, y\makeappear{, t}), \quad ||\begin{pmatrix}x\\y\end{pmatrix} - z_j\maketappear|| \le 1\}, j=1,2.$$
+   
+Minimize $\makeappear{\int_{-1}^1} c_1\maketappear + c_2\maketappear$
+
+
+
+$$E(x, y\makeappear{, t}) \ge C \quad \forall (x, y\makeappear{, t})\in \mathcal B_1 \cup \mathcal B_2.$$
+
+Equivalently:
+
+$$p(x, y\makeappear{, t}) \coloneqq -C \prod_{i=1}^2 [(x - \bar x_i)^2 + (y - \bar y_i)^2] + \sum_{i=1}^2  [(x - \bar x_i)^2 + (y - \bar y_i)^2] c_i\maketappear \ge 0$$
+
+
+SOS relaxation:
+
+$$p(x, y\makeappear{, t}) = \sigma^{(j)}\maketappear + \mu^{(j)}\maketappear (1 - (x - \bar x_j)^2 - (y - \bar y_j)^2 ) \quad j=1,2$$
+
+$$\sigma^{(j)}\maketappear = z' P^{(j)}\maketappear z, \mu^{(j)} = z' Q^{(j)}\maketappear z, , z \text{ vector of monomials in x and y.}$$
+
+$$P^{(j)}\maketappear, Q^{(j)}\maketappear \succeq 0 \quad \makeappear{,t \in [-1, 1]}$$ 
+
+$$\uncover<2>{}$$
+
+
+** Results
+    \begin{table}
+    \begin{tabular}{|l|l|l|l|}\hline
+    $d$ & $c1(t)$ & $c2(t)$ & $\int_{-1}^1 (c_1(t) + c_2(t)) dt$\\\hline
+    0 & 31.96 & 21.63 & 107.19\\
+    1 & $28.97+4.07t$ & $24.23-3.7t$ & 106.38\\
+    2 & $26.67+6.1t+0.47 t^2$ & $25.78-5.82t+0.44t^2$ & 105.49\\
+    7 & $26.21+7.49 t+0.43 t^2$ & $26.18+7.16t+0.81t^2$  &\\
+     & $-3.27 t^3+2.95 t^4-0.15 t^5$ & $3.02 t^3-3.38 t^4+0.44 t^5$  & \\
+     & $-0.63 t^6$ & $0.63 t^6$  & 105.42\\
+    \hline
+    \end{tabular}
+    \end{table}
+
+\begin{figure}[htp]
+\centering
+\includegraphics[width=.3\textwidth]{includes/wireless-0.png}\quad
+\includegraphics[width=.3\textwidth]{includes/wireless-2.png}
+\includegraphics[width=.3\textwidth]{includes/wireless-5.png}
+\end{figure}
+
+
+   
 * Numerical Considerations
 
 ** Numerical Stability
-
-  - Choose Breakpoints $t_0< \cdots < t_{2k}$.
-  - Choose a basis of $\mathbb R_k[t]$, $p_0, \ldots, p_k$.
-  - Let $A^{(l)}$ is $(k+1) \times (k+1)$ such that $A_{ij}^{(l)} = p_i(t_l)p_j(t_l)$ for $0 \le i, j \le k$.
+  - Choice of points $t_0< \cdots < t_{2k}$.
+  - Choice of basis of $\mathbb R_k[t]$, $p_0, \ldots, p_k$.
+  - $A^{(l)}$ is $(k+1) \times (k+1)$ such that $A_{ij}^{(l)} = p_i(t_l)p_j(t_l)$ for $0 \le i, j \le k$.
   
   A polynomial $q(t)$ is in $SOS_k$ if and only if there exists $X \in \mathcal S_{k+1}$ such that
 $$q(t_l) = \langle X, A^{(l)} \rangle \quad \forall l \in [2k].$$
 
 
 *** Choice of breakpoints and basis
-    - $t_i = \cos((i+\frac12)\frac{\pi}{2k+1}) \; \text{for} \; i\in [2k]$
+- $t_i = \cos((i+\frac12)\frac{\pi}{2k+1}) \; \text{for} \; i\in [2k]$
 - $(p_j(t))_{j \in [k]}$ to be as follow: $p_0 = \sqrt{\frac{1}{2k+1}}T_0$ and $p_j = \sqrt{\frac{2}{2k+1}}T_j$ for $j=1,\ldots,k$.
 -  $T_j$ are the Chebyshev polynomial:
   $$T_0(t) = 1, T_1(t) = t, T_i(t) = 2tT_{i-1}(t) - T_{i-2}(t)  \; \text{for} \; i=2,3 \ldots$$
-
 - This makes the columns of the matrix $A^{(l)}$ orthonormal.
 
 
