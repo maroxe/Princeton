@@ -126,13 +126,13 @@
    \begin{equation*}
    \tag{\makeappear{TV-}LP}
    \begin{array}{llll}
-   \underset{x\maketappear \in \mathbb R^n \makeappear{[t]}}{\text{maximize} }
+   \underset{x\maketappear}{\text{maximize} }
    &\makeappear{\int_{-1}^1} \langle c\maketappear, x\maketappear \rangle \makeappear{dt} & \\
    \text{subject to}& A\maketappear x\maketappear \le b\maketappear & \makeappear{\forall t \in [-1, 1]}
    \end{array}
    \end{equation*}
 
-*** 
+***  
    :PROPERTIES:
    :BEAMER_col: 0.6
    :END:
@@ -141,15 +141,16 @@
    \vspace*{-.4in}
    \includegraphics<2>[scale=.17]{includes/tvlp3d.png}
    \end{figure}
-
+     
 *** 
    :PROPERTIES:
    :BEAMER_env: block
    :BEAMER_col: 0.3
    :BEAMER_act: <2->
    :END:
-   - $A, b, c, x$ polynomials.
-   
+   - $A, b, c$ polynomials.
+   - Polynomials are dense.
+     
 ** Maxflow
    :PROPERTIES:
    :BEAMER_env: fullframe
@@ -157,68 +158,119 @@
 
    #+INCLUDE: includes/maxflowgraph.tikz
 
-* Motivation
-  
-** Positivestellnaz (LPs)
-***  Positivestellnaz for LPs
-    :PROPERTIES:
-    :BEAMER_env: block
-    :END:
-    Every non-negative univariate polynomials $p(t)$ on $[-1, 1]$ can be written as
-    $$p = \sigma_0 + (1-t) \sigma_1 + (1+t) \sigma_2 + (1-t^2)\sigma_3.$$
+** TV-SDP
+   \begin{equation*}
+   \tag{TV-SDP}
+   \begin{array}{ll@{}ll}
+   \underset{X\maketappear \in \mathcal S_n \makeappear{[t]}}{\text{maximize} }
+   &\onslide<-1>{\langle C, X\rangle}
+   \onslide<2->{\int_{-1}^1 \langle C\textcolor{red}{(t)}, X\textcolor{red}{(t)} \rangle dt} & \\
+   \text{subject to}& A_i\maketappear X\maketappear \le b_i\maketappear & \forall i \in [m], \;\makeappear{\forall t \in [-1, 1]}
+   \end{array}
+   \end{equation*}
 
-    where $\sigma_i \in SOS$, $i=0\ldots 3$.
 
-*** In our case
-    :PROPERTIES:
-    :BEAMER_env: block
-    :BEAMER_act: <2->
-    :END:
- 
-    Constraint:
-    $$A(t) x(t) \le b(t) \quad \forall t \in [-1, 1]$$
-    becomes
-    $$b(t) - A(t)x(t) = \sigma_0 + (1-t) \sigma_1 + (1+t) \sigma_2 + \sigma_3 (1-t^2)$$
-  
-  
-** Positivestellnaz (SDPs)
-*** Positivestellnaz (SDPs)
-    :PROPERTIES:
-    :BEAMER_env: block
-    :END:
+** Contributions
+   
+    - Find the best polynomial solution of a given degree to a TV-LP / TV-SDP using a (non varying) SDP.
+    - Study when polynomial solutions are optimal in several level of details.
 
-    Every psd polynomial matrix $X(t)$ on $[-1, 1]$ can be written as
+*** 
+   :PROPERTIES:
+   :BEAMER_env: block
+   :BEAMER_act: <2->
+   :END:
+      
+    - When are polynomials near optimal to a TV-LP or TV-SDP?
+    - <3-> Almost never!  
+*** 
+   :PROPERTIES:
+   :BEAMER_env: block
+   :BEAMER_col: 0.4
+   :BEAMER_act: <4->
+   :END:
 
-    $$X = \Sigma_0 + (1-t) \Sigma_1 + (1+t) \Sigma_2 + (1-t^2)\Sigma_3$$.
-
-    where $\Sigma_i(t) = A_i(t)^TA_i(t)$, $i=0\ldots 3$.
-
-*** In our case
-    :PROPERTIES:
-    :BEAMER_env: block
-    :BEAMER_act: <2->
-    :END:
- 
-    Constraint:
-    $$X(t) \succeq 0 \quad \forall t \in [-1, 1]$$
-    becomes
-    $$X(t) = \Sigma_0 + (1-t) \Sigma_1 + (1+t) \Sigma_2 + \Sigma_3 (1-t^2)$$
-  
-    (Know the proof)
-
-** Question
-***    
-   When are polynomials near optimal to a TV-LP or TV-SDP?
-
-   Near optimal $\iff$ $\forall \varepsilon > 0$, $\exists x(t) \in \mathbb R[t]$ such that:
+   Near optimal $\iff$ $\forall \varepsilon > 0$, $\exists x(t) \in \mathbb R^n[t]$ such that:
    - $A(t)x(t) \le b(t)$
-   -  $opt - \int_{-1}^{1} \langle c(t), x(t) \rangle dt \le \varepsilon$.
+   - $opt - \int_{-1}^{1} \langle c(t), x(t) \rangle dt \le \varepsilon$.
+
+     
+*** 
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   \begin{figure}
+   \vspace*{-.4in}
+   \includegraphics<3->[scale=.17]{includes/tvlp3d.png}
+   \end{figure}
+
    
-   
-*** Contributions   
-    - Finite time algorithm to solve TV-LPs.
-    - Sufficient condition that guarantees near optimality of polynomials to TV-LPs and TV-SDPs.
-   
+* Motivation
+
+** We are interested in continuous solutions
+
+*** Problems in practice:
+   :PROPERTIES:
+   :BEAMER_env: block
+   :END:
+    
+   - Deciding the power of transmission of a cell tower during the day.
+   - Chosing the optimal control of a robot hand.
+   - ...
+     
+*** 
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <2->
+    :END:
+    We want smooth solutions!
+
+
+** Positivestellnaz (TV-LPs)
+***  Positivestellnaz for TV-LPs
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+    Every non negative univariate polynomials $p(t)$ on $[-1, 1]$ can be written as
+    $$p = \sigma_0 + (1-t) \sigma_1 + (1+t) \sigma_2 + (1-t^2)\sigma_3,
+$$
+
+    where $\sigma_i \in SOS$, $i=0,\ldots,3$, with degree bounded by $deg(p)$.
+
+*** In our case
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <2->
+    :END:
+ 
+    - Constraint $A(t) x(t) \le b(t) \quad \forall t \in [-1, 1]$
+    - Becomes $b(t) - A(t)x(t) = \sigma_0 + (1-t) \sigma_1 + (1+t) \sigma_2 + \sigma_3 (1-t^2)$
+    - Efficient search!
+     
+  
+** Positivestellnaz (TV-SDPs)
+*** Positivestellnaz for TV-SDPs, (H. Dette and W. J. Studden, 2002)
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+
+    A polynomial matrix $X(t)$ is psd (i.e. $X(t) \succeq 0$) for all $t \in [-1, 1]$ iff it can be written as
+
+    $$X = \Sigma_0 + (1-t) \Sigma_1 + (1+t) \Sigma_2 + (1-t^2)\Sigma_3,$$
+
+    where $\Sigma_i(t) = A_i(t)^TA_i(t)$, $i=0,\ldots, 3$ with $deg(A_i) \le deg(X)$.
+
+*** In our case
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <2->
+    :END:
+ 
+    - Constraint $X(t) \succeq 0 \quad \forall t \in [-1, 1]$
+    - Becomes $X(t) = \Sigma_0 + (1-t) \Sigma_1 + (1+t) \Sigma_2 + \Sigma_3 (1-t^2)$.
+    - Efficient search!
+
+      
 * Geometry of a TV-LP
 
 
@@ -237,9 +289,9 @@
     :BEAMER_act: <2->
     :BEAMER_col: 0.2
     :END:
-    The feasible set is:
+    The feasible set $\mathcal P_t$ at time $t \in [-1, 1]$ is:
     - not empty
-    - is bounded.
+    - bounded.
       
 *** Theorem
     :PROPERTIES:
@@ -261,15 +313,28 @@
 
 *** Computing the $t_i$
 
-    A vertex $v(t) = A_B(t)b(t)$ disappears if:
-    - $t \rightarrow \det(A_B(t))$ hits 0.
-    - $t \rightarrow b(t) - A_B(t)^{-1}b_B(t)$ changes sign.
-
-*** Find $\mathcal V_i$
-    Find the vertices of $\mathcal P_t$ at time $t = \frac{t_i + t_{i+1}}2$.
+    A vertex $v(t) = A_B(t)b_B(t)$ disappears if:
+    #+ATTR_BEAMER: :overlay +(1)-
+    - It becomes undefined: $t \rightarrow \det(A_B(t))$ hits 0.
+    - It becomes unfeasible: $t \rightarrow b(t) - A_B(t)^{-1}b_B(t)$ changes sign.
+    - Roots can be computed to any accuracy.
 
     
-* Continuous solution
+*** Find $\mathcal V_i$
+    #+ATTR_BEAMER: :overlay +(1)-
+    - $\mathcal V_i$ doesn't change between $t_i$ and $t_{i+1}$.
+    - Pick a time $t \in (t_i, t_{i+1})$, and find the vertices of $\mathcal P_t$.
+    - We need a lower bound on $\min_i t_{i+1} - t_i$.
+    - Result of Mahler: If $\alpha, \beta$ two distinct roots of $P = \sum_i^n a_i X_i$, then $$|\alpha - \beta| \ge C_n \frac1{\max |a_i|^{n-1}}.$$
+
+** Algorithms
+
+*** Finding the optimal solution:
+    A vertex $v(t) \in \mathcal V_i$ is no longer optimal if:
+    - $t \rightarrow \langle c(t), v(t) \rangle - \langle c(t), w(t) \rangle$ changes sign for some other vertex $w \in \mathcal V_i$.
+
+    
+* Continuous Solutions
 
 
 ** Feasibility and Near-Optimality are equivalent
@@ -287,9 +352,12 @@
     :BEAMER_env: proof
     :END:
 
-    Construct a near optimal solution $f^{\alpha}$ that:
-    - lives on the optimal vertex.
-    - travels to the continuous solution $f_0$ to get through the possibly problematic time $t_i$.
+    Construct a near optimal solution $f^{\alpha}$ that lives on the optimal vertex, travels to the continuous solution $f_0$ to get through the possibly problematic time $t_i$.
+
+#+BEGIN_center
+      #+ATTR_LATEX: :width 0.5\textwidth
+      [[file:includes/travel.png]]
+#+END_center
 
 
 ** Continuity with respect to perturbations  
@@ -307,9 +375,9 @@
 
    - $opt(A, b, c) \coloneqq \underset{Ax \le b}{\max} \langle c, x \rangle$  defined for $(A, b, c) \in \Omega \times \mathbb R^n$.
 
-*** Theorem
+***  D. H. Martin, 1975
     :PROPERTIES:
-    :BEAMER_env: block
+    :BEAMER_env: theorem
     :END:
       
     $opt(A, b, c)$ is
@@ -331,13 +399,15 @@
           - $\mathcal P_t = (-\infty, 0]$ when $t < 0$.
             No continuous solution!
 
-
+            #+ATTR_LATEX: :width 0.7\textwidth 
+          [[file:includes/disclp.png]]
+         
 *** Equivalent condition
     :PROPERTIES:
     :BEAMER_env: block
     :BEAMER_act: <2->
     :END:
-    Their exists a continuous feasible solution if and only if
+    Theire exists a continuous feasible solution if and only if
     $$conv \{ v(t_{i}), v \in \mathcal V_i\} \cap conv \{ v(t_{i}), v \in \mathcal V_{i+1}\} \ne \emptyset$$ for $i = 1, \ldots, N-1$.
  
     ($\mathcal V_1, \ldots, \mathcal V_{N-1}$ are the sets of vertices moving in time.)
@@ -378,13 +448,24 @@
 *** Strict Feasibility
     :PROPERTIES:
     :BEAMER_env: definition
+    :BEAMER_col: 0.5
     :END:
    
     A TV-LP is \emph{strictly feasible} if there exists a (not necessarily continuous) function $x^s: [-1, 1] \rightarrow \mathbb R^n$   and a scalar $\varepsilon > 0$ such that
 
     $$A(t)x^s(t) \le b(t) - \varepsilon \textbf{1}, \; \forall t \in [-1, 1].$$
 
-    
+***  
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.4
+    :END:
+
+    #+ATTR_LATEX: :width 1\textwidth 
+    [[file:includes/strictfeasibility.png]]
+
+
+** Strict Feasibility
 *** Strict feasibility $\implies$ Continuous solutions
     :PROPERTIES:
     :BEAMER_env: theorem
@@ -440,12 +521,12 @@
 
     We get a continuous feasible solution on $[-1, 1]$ simply by ``connecting'' the solutions $w_i^{far}, w_i^{near}$ by interpolating from one to the other linearly. 
     
-* Polynomials
+* Polynomials Solutions
 ** What could go wrong?
 
 Optimality of continuous functions $\implies$ Optimality of polynomials?
 
-*** A ``tight'' TV-LP 
+*** No! A ``Tight'' TV-LP 
     :PROPERTIES:
     :BEAMER_env: example
     :END:
@@ -453,26 +534,23 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
     - $(1+t^2) x(t) \le 1$
     - $-(1+t^2) x(t) \le -1$
 
-    $\forall t \in [-1, 1]$.
-
     Only one solution $x(t) = \frac1{1+t^2}$. Not polynomial.
 
        
-*** Full-Dimensionality
+*** Continuous Full-Dimensionality
     :PROPERTIES:
     :BEAMER_env: definition
     :BEAMER_act: <2->
     :END:
-    TV-LP  is \emph{continuously full-dimensional} if there exists a scalar $\delta > 0$ and a *continuous* function $x^c: [-1, 1] \rightarrow \mathbb R^n$ such that $B(x^c(t), \delta) \subset \mathcal P_t, \; \forall t \in [-1, 1]$.
+    TV-LP  is \emph{continuously full-dimensional} if there exists a *constant* $\delta > 0$ and a *continuous* function $x^c: [-1, 1] \rightarrow \mathbb R^n$ such that $B(x^c(t), \delta) \subset \mathcal P_t, \; \forall t \in [-1, 1]$.
 
-*** Full-Dimensionality $\implies$ Optimality of polynomials
+*** Full-Dimensionality $\implies$ Optimality of Polynomials
     :PROPERTIES:
     :BEAMER_env: block
     :BEAMER_act: <3->
     :END:
 
-    - Approximate $x^c$ by a polynomial.
-    - Continuity of $x^c(t)$ and constant $\delta$ are important.
+    - Approximate $x^c(t)$ by a polynomial.
 
 ** Strict feasibility vs Continuous Full dimensionality   
 
@@ -484,13 +562,15 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
 *** No!
     :PROPERTIES:
     :BEAMER_env: example
+    :BEAMER_act: <2->
     :END:
 
-    $tx = 0, \quad \forall t \in [-1, 1]$ if full-dimensional but *not* strictly feasible. 
+    $tx = 0$ if full-dimensional but *not* strictly feasible. 
 
 *** Yes, if the rows of $A(t)$ don't cancel!
     :PROPERTIES:
     :BEAMER_env: block
+    :BEAMER_act: <3->
     :END:
 
     - Let $\varepsilon \coloneqq \min_{i=1, \ldots, n} \min_{t \in [-1, 1]} (b(t) - A(t)x^c(t))_i$.
@@ -559,15 +639,33 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
     :BEAMER_env: block
     :BEAMER_act: <3->
     :END:
+    - Mincut is strictly feasible.
+    - Find best polynomial solution to both of degree $9$.
+    - $85.42 \le opt \le 85.52$.
 
-    - Find best polynomial solution to both of degree $11$.
-    - $84 < opt < 85$.
+
    
+* Numerical Considerations
+
+** Numerical Stability
+  - Choice of points $t_0< \cdots < t_{2k}$.
+  - Choice of basis of $\mathbb R_k[t]$, $p_0, \ldots, p_k$.
+  - $A^{(l)} = (p_i(t_l)p_j(t_l))_{ij}$.
+  - $q(t)$ is in $SOS$ if and only if there exists $X \succeq 0$ such that $q(t_l) = \langle X, A^{(l)} \rangle, \; \forall l \in [2k]$
+
+
+*** Choice of breakpoints and basis
+- $t_i = \cos((i+\frac12)\frac{\pi}{2k+1}) \; \text{for} \; i\in [2k]$
+- $(p_j(t))_{j \in [k]}$ scaled Chebyshev polynomial.
+  $$p_0(t) = \frac1{2k+1}, p_1(t) = \sqrt{\frac{2t}{2k+1}}, p_i(t) = 2tp_{i-1}(t) - p_{i-2}(t)  \; \text{for} \; i=2,3 \ldots$$
+- This makes the columns of the matrix $A^{(l)}$ orthonormal.
+   
+
 * TV-SDPs  
 
 **   
    \begin{equation*}
-   \tag{TV-LP}
+   \tag{TV-SDP}
    \begin{array}{ll@{}ll}
    \underset{X\maketappear \in \mathcal S_n \makeappear{[t]}}{\text{maximize} }
    &\onslide<-1>{\langle C, X\rangle}
@@ -605,14 +703,14 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
     :END:
    - $N(\varepsilon)$ a  $\varepsilon$ -covering of $\{X \succeq 0, ||X|| = 1\}$.
 
-   - Replace  $X \succeq 0$ by  $X \in \sum \mathbb R^+[t] . N(\varepsilon)$.
+   - Replace  $X(t) \succeq 0$ by  $X(t) \in \sum \mathbb R^+[t] N(\varepsilon)$.
 
   #+NAME: eqn:approx_lp_eps
    \begin{equation*}
    \tag{$APPROX-LP_{\varepsilon}$}
    \begin{array}{ll@{}ll}
    \underset{X(t)}{\max} \int_{-1}^1 \langle X(t), C(t) \rangle dt \\
-   \text{s.t}\\
+   \text{s.t.}\\
    X(t) = \underset{Y \in N(\varepsilon)}{\sum} \alpha_Y(t) Y\\
    \langle A_i(t), X(t) \rangle \le b_i(t),
    \\ i \in [m],  t \in [-1, 1]
@@ -638,6 +736,37 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
 
    
 ** Approximating (suite)   
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+   
+*** $APPROX-LP_{\varepsilon}$
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.4
+    :END:
+    \begin{equation*}
+    \begin{array}{ll@{}ll}
+    \underset{X(t)}{\max} \int_{-1}^1 \langle C(t), X(t) \rangle dt \\
+    \text{s.t.}\\
+    X(t) = \underset{Y \in N(\varepsilon)}{\sum} \alpha_Y(t) Y\\
+    \langle A_i(t), X(t) \rangle \le b_i(t)
+    \end{array}
+    \end{equation*}
+
+*** TV-SDP
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.4
+    :END:
+   \begin{equation*}
+   \begin{array}{ll@{}ll}
+   \underset{X(t) \in \mathcal S_n [t]}{\max}
+   \int_{-1}^1 \langle C(t), X(t) \rangle dt & \\
+   \text{s.t.}\\
+   A_i(t) X(t) \le b_i(t) 
+   \end{array}
+   \end{equation*}
 
 
 *** Lemma
@@ -651,7 +780,7 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
     :BEAMER_env: ignoreheading
     :END:
     
-    nggnngFeasible set of [[eqn:approx_lp_eps]] $\rightarrow$ feasible set of the TV-SDP.
+    Feasible set of [[eqn:approx_lp_eps]] $\rightarrow$ feasible set of the TV-SDP.
    
 *** Lemma
     :PROPERTIES:
@@ -667,7 +796,7 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
     
     TV-SDP strictly feasible $\implies$  [[eqn:approx_lp_eps]] strictly feasible
 
-
+     
     
 
 ** Wireless Coverage Problem
@@ -681,7 +810,7 @@ Optimality of continuous functions $\implies$ Optimality of polynomials?
 
 $$\mathcal B_j = \{(x, y\makeappear{, t}), \quad ||\begin{pmatrix}x\\y\end{pmatrix} - z_j\maketappear|| \le 1\}, j=1,2.$$
    
-Minimize $\makeappear{\int_{-1}^1} c_1\maketappear + c_2\maketappear$
+Minimize $\makeappear{\int_{-1}^1} c_1\maketappear + c_2\maketappear \makeappear{dt}$
 
 
 
@@ -708,8 +837,11 @@ $$\uncover<2>{}$$
     \begin{tabular}{|l|l|l|l|}\hline
     $d$ & $c1(t)$ & $c2(t)$ & $\int_{-1}^1 (c_1(t) + c_2(t)) dt$\\\hline
     0 & 31.96 & 21.63 & 107.19\\
+    \hline
     1 & $28.97+4.07t$ & $24.23-3.7t$ & 106.38\\
+    \hline
     2 & $26.67+6.1t+0.47 t^2$ & $25.78-5.82t+0.44t^2$ & 105.49\\
+    \hline
     7 & $26.21+7.49 t+0.43 t^2$ & $26.18+7.16t+0.81t^2$  &\\
      & $-3.27 t^3+2.95 t^4-0.15 t^5$ & $3.02 t^3-3.38 t^4+0.44 t^5$  & \\
      & $-0.63 t^6$ & $0.63 t^6$  & 105.42\\
@@ -725,24 +857,8 @@ $$\uncover<2>{}$$
 \end{figure}
 
 
-   
-* Numerical Considerations
-
-** Numerical Stability
-  - Choice of points $t_0< \cdots < t_{2k}$.
-  - Choice of basis of $\mathbb R_k[t]$, $p_0, \ldots, p_k$.
-  - $A^{(l)}$ is $(k+1) \times (k+1)$ such that $A_{ij}^{(l)} = p_i(t_l)p_j(t_l)$ for $0 \le i, j \le k$.
-  
-  A polynomial $q(t)$ is in $SOS_k$ if and only if there exists $X \in \mathcal S_{k+1}$ such that
-$$q(t_l) = \langle X, A^{(l)} \rangle \quad \forall l \in [2k].$$
-
-
-*** Choice of breakpoints and basis
-- $t_i = \cos((i+\frac12)\frac{\pi}{2k+1}) \; \text{for} \; i\in [2k]$
-- $(p_j(t))_{j \in [k]}$ to be as follow: $p_0 = \sqrt{\frac{1}{2k+1}}T_0$ and $p_j = \sqrt{\frac{2}{2k+1}}T_j$ for $j=1,\ldots,k$.
--  $T_j$ are the Chebyshev polynomial:
-  $$T_0(t) = 1, T_1(t) = t, T_i(t) = 2tT_{i-1}(t) - T_{i-2}(t)  \; \text{for} \; i=2,3 \ldots$$
-- This makes the columns of the matrix $A^{(l)}$ orthonormal.
-
-
-   
+** Conclusion and Future Work
+   - Natural method to optimize over polynomial solutions to TV convex program using SOS.
+   - Sufficient conditions under which polynomial solutions are optimal.
+   - Strict feasibility exclude equality constraints.
+   - Except for LPs, SOS optimization scales poorly.
