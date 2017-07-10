@@ -1,0 +1,593 @@
+#+Title: Time-Varying LPs and SDPs
+#+Author: Bachir El Khadir
+#+DATE: July 13, 2017
+
+#+BEAMER_HEADER: \subtitle{Joint work with Amirali Ahmadi}
+#+BEAMER_HEADER: \institute[INST]{Princeton University}
+#+BEAMER_HEADER: \titlegraphic{\includegraphics[height=1.5cm]{includes/princeton.png}}
+
+
+
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   num:t toc:t ::t |:t ^:{} -:t f:t *:t <:t
+#+OPTIONS:   tex:t d:nil todo:t pri:nil tags:nil
+#+OPTIONS:   timestamp:t
+
+# this allows defining headlines to be exported/not be exported
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+
+# By default I do not want that source code blocks are evaluated on export. Usually
+# I want to evaluate them interactively and retain the original results.
+#+PROPERTY: header-args :eval never-export
+
+#+LATEX_HEADER: \usepackage{mathtools}
+#+LATEX_HEADER: \usepackage{amsthm}
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usetikzlibrary{arrows.meta}
+
+#+LATEX_HEADER:\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+#+LATEX_HEADER: %\usepackage[noend]{algpseudocode}
+#+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+#+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+
+#+LATEX_HEADER: \newcommand{\makealternate}[2]{\alt<1>{#1}{#2}}
+#+LATEX_HEADER: \newcommand{\makeappear}[1]{\makealternate{}{\textcolor{red}{#1}}}
+#+LATEX_HEADER: \newcommand{\maketappear}{\makeappear{(t)}}
+
+* Beamer configuration                                             :noexport:
+** Basic
+   # this triggers loading the beamer menu (C-c C-b) when the file is read
+   #+startup: beamer
+
+   #+LaTeX_CLASS: beamer
+
+   #    LATEX CLASS OPTIONS
+   # [bigger]
+   # [presentation]
+   # [handout] : print handouts, i.e. slides with overlays will be printed with
+   #   all overlays turned on (no animations).
+   # [notes=show] : show notes in the generated output (note pages follow the real page)
+   # [notes=only] : only render the nodes pages
+
+   # this setting affects whether the initial PSI picture correctly fills
+   # the title page, since it scales the title text. One can also use the
+   # notes=show or notes=only options to produce notes pages in the output.
+   # #+LaTeX_CLASS_OPTIONS: [t,10pt,notes=show]
+
+   #+LaTeX_CLASS_OPTIONS: [t,10pt]
+
+
+   #+COLUMNS: %20ITEM %13BEAMER_env(Env) %6BEAMER_envargs(Args) %4BEAMER_col(Col) %7BEAMER_extra(Extra)
+
+   # export second level headings as beamer frames. All headlines below
+   # the org-beamer-frame-level (i.e. below H value in OPTIONS), are
+   # exported as blocks
+   #+OPTIONS: H:2
+
+** Beamer Theme Definition
+   #+BEAMER_THEME: Madrid
+   # #+BEAMER_THEME: Hydrogen
+
+   # Note: custom style files can be placed centrally in the user specific directory
+   # ~/texmf/tex. This will be searched recursively, so substructures are possible.
+   # q.v. http://tex.stackexchange.com/questions/1137/where-do-i-place-my-own-sty-or-cls-files-to-make-them-available-to-all-my-te
+
+   # One could also fine tune a number of theme settings instead of specifying the full theme
+   # #+BEAMER_COLOR_THEME: beaver
+   # #+BEAMER_FONT_THEME:
+   # #+BEAMER_INNER_THEME:
+   #+BEAMER_OUTER_THEME: miniframes [subsection=false]
+   # #+LATEX_CLASS: beamer
+
+   
+** changes to BeginSection for TOC and navigation
+   #+BEAMER_HEADER: \AtBeginSection[]{
+
+   # This line inserts a table of contents with the current section highlighted at
+   # the beginning of each section
+   #+BEAMER_HEADER: \begin{frame}<beamer>\frametitle{Topic}\tableofcontents[currentsection]\end{frame}
+
+   # In order to have the miniframes/smoothbars navigation bullets even though we do not use subsections 
+   # q.v. https://tex.stackexchange.com/questions/2072/beamer-navigation-circles-without-subsections/2078#2078
+   #+BEAMER_HEADER: \subsection{}
+   #+BEAMER_HEADER: }
+
+** misc configuration
+   # I want to define a style for hyperlinks
+   #+BEAMER_HEADER: \hypersetup{colorlinks=true, linkcolor=blue}
+
+   # this can be used to define the transparency of the covered layers
+   #+BEAMER: \setbeamercovered{transparent=30}
+
+
+
+
+
+* Introduction
+
+** TV-LP
+
+   \begin{equation*}
+   \tag{\makeappear{TV-}LP}
+   \begin{array}{llll}
+   \underset{x\maketappear}{\text{maximize} }
+   &\makeappear{\int_{-1}^1} \langle c\maketappear, x\maketappear \rangle \makeappear{dt} & \\
+   \text{subject to}& A\maketappear x\maketappear \le b\maketappear & \makeappear{\forall t \in [-1, 1]}
+   \end{array}
+   \end{equation*}
+
+***  
+   :PROPERTIES:
+   :BEAMER_col: 0.6
+   :END:
+   \begin{figure}
+   \includegraphics<1>[scale=.3]{includes/tvlp2d.png}
+   \vspace*{-.4in}
+   \includegraphics<2>[scale=.17]{includes/tvlp3d.png}
+   \end{figure}
+     
+*** 
+   :PROPERTIES:
+   :BEAMER_env: block
+   :BEAMER_col: 0.3
+   :BEAMER_act: <2->
+   :END:
+   - $A, b, c$ polynomials.
+   - Polynomials are general enough.
+     
+** Maxflow
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+
+   #+INCLUDE: includes/maxflowgraph.tikz
+
+** TV-SDP :noexport:
+   \begin{equation*}
+   \tag{TV-SDP}
+   \begin{array}{ll@{}ll}
+   \underset{X\maketappear}{\text{maximize} }
+   &\onslide<-1>{\langle C, X\rangle}
+   \onslide<2->{\int_{-1}^1 \langle C\textcolor{red}{(t)}, X\textcolor{red}{(t)} \rangle dt} & \\
+   \text{subject to}& \langle A_i\maketappear, X\maketappear\rangle \le b_i\maketappear & \forall i \in [m], \;\makeappear{\forall t \in [-1, 1]}\\
+   &  X\maketappear \succeq 0  &\makeappear{\forall t \in [-1, 1]}
+   \end{array}
+   \end{equation*}
+
+
+** Contributions
+
+    - Study existence and optimality of polynomial solutions.
+    - Find the best polynomial solution of a given degree to a TV-LP / TV-SDP using a (non time-varying) SDP.
+
+
+*** Are polynomials optimal to a TV-LP or TV-SDP?
+   :PROPERTIES:
+   :BEAMER_env: block
+   :BEAMER_act: <2->
+   :END:
+      
+
+    - <3-> *Generally no!*  
+***  Near Optimality
+   :PROPERTIES:
+   :BEAMER_env: block
+   :BEAMER_col: 0.4
+   :BEAMER_act: <4->
+   :END:
+
+   $\forall \varepsilon > 0$, $\exists x(t) \in \mathbb R^n[t]$ such that:
+   - $A(t)x(t) \le b(t)$
+   - $opt - \int_{-1}^{1} \langle c(t), x(t) \rangle dt \le \varepsilon$.
+
+     
+*** 
+   :PROPERTIES:
+   :BEAMER_col: 0.5
+   :END:
+   \begin{figure}
+   \vspace*{-.4in}
+   \includegraphics<3->[scale=.17]{includes/tvlp3d.png}
+   \end{figure}
+
+   
+* Motivation for Polynomial Solutions
+
+** We are interested in continuous solutions
+
+*** Problems in practice:
+   :PROPERTIES:
+   :BEAMER_env: block
+   :END:
+    
+   - Deciding the transmission power of a cell tower during the day.
+   - Chosing the optimal control of a robotic arm.
+   - ...
+     
+*** 
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <2->
+    :END:
+    We want smooth solutions!
+
+
+** Positivstellensatz (TV-LPs)
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+
+*** Positivstellensatz for TV-LPs (Polya-Szego, 1976)
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+    Every nonnegative univariate polynomial $p(t)$ on $[-1, 1]$ can be written as
+    $$p = \sigma_0 + (1-t) \sigma_1 + (1+t) \sigma_2 + (1-t^2)\sigma_3,
+$$
+
+    where $\sigma_i \in SOS$, $i=0,\ldots,3$, with degree bounded by $deg(p)$.
+
+*** In our case
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <2->
+    :END:
+ 
+    - Constraint $A_i(t) x(t) \le b_i(t) \quad \forall t \in [-1, 1]$
+    - Becomes $b_i(t) - A_i(t)x(t) = \sigma_0(t) + (1-t) \sigma_1(t) + (1+t) \sigma_2(t) + (1-t^2) \sigma_3(t)$
+
+*** That's a (non time-varying) SDP
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <3->
+    :END:    
+    $$\sigma(t) \in SOS \iff \exists Q \succeq 0, \sigma(t) = \begin{pmatrix}1\\t\\\vdots\\t^{\frac n2}\end{pmatrix}^TQ\begin{pmatrix}1\\t\\\vdots\\t^{\frac n2}\end{pmatrix}$$
+    
+  
+** Positivstellensatz (TV-SDPs) :noexport:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+
+*** Positivstellensatz for TV-SDPs, (H. Dette and W. J. Studden, 2002)
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+
+    A polynomial matrix $X(t)$ is psd  for all $t \in [-1, 1]$ (i.e. $X(t) \succeq 0 \quad \forall t \in [-1, 1]$) iff it can be written as
+
+    $$X = \Sigma_0 + (1-t) \Sigma_1 + (1+t) \Sigma_2 + (1-t^2)\Sigma_3,$$
+
+    where $\Sigma_i(t) = A_i(t)^TA_i(t)$, $i=0,\ldots, 3$ with $deg(A_i) \le deg(X)$.
+
+*** In our case
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <2->
+    :END:
+ 
+    - Constraint $X(t) \succeq 0 \quad \forall t \in [-1, 1]$
+    - Becomes $X(t) = \Sigma_0(t) + (1-t) \Sigma_1(t) + (1+t) \Sigma_2(t) +  (1-t^2) \Sigma_3(t)$.
+
+*** That's a (non time-varying) SDP
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <3->
+    :END:    
+    
+    $$\Sigma(t) = A(t)^TA(t) \iff \exists Q \succeq 0, u^T\Sigma(t)u = z(u, t)^TQz(u, t),$$
+    where $z(u, t)$ is the vector of monomials in  $u$ and $t$.
+
+    
+* Geometry of a TV-LP
+
+
+** Geometry of a TV-LP
+   \begin{equation*}
+   \tag{TV-LP}
+   \begin{array}{ll@{}ll}
+   \underset{x(t)}{\text{maximize}} & \int_{-1}^1 \langle c(t), x(t) \rangle dt & \\
+   \text{subject to}& A(t) x(t) \le b(t) & \forall t \in [-1, 1]
+   \end{array}
+   \end{equation*}
+
+*** Assumptions
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <2->
+    :BEAMER_col: 0.2
+    :END:
+    The feasible set $\mathcal P_t$ at time $t \in [-1, 1]$ is:
+    - nonempty
+    - bounded.
+      
+*** Geometry of the Feasible Set
+    :PROPERTIES:
+    :BEAMER_env: theorem
+    :BEAMER_act: <3->
+    :BEAMER_col: 0.7
+    :END:
+
+    - There exist:
+      - $N$ break points $-1 = t_1 < \cdots < t_N = 1$,
+      - $N-1$ finite sets of rational functions $\mathcal V_1, \ldots, \mathcal V_{N-1} \subset \mathbb R^n(t)$,
+    such that:
+    $$\mathcal P_t = conv\{v(t), \; v \in \mathcal V_i\}$$
+    for every $i \in [N-1], t \in (t_i, t_{i+1})$.
+    - <3-> Every  $v \in \mathcal V_i$ has the form $v(t) = A_{B_v}(t)^{-1}b_{B_v}(t)$.
+
+
+
+* Continuous Solutions and Polynomials
+
+
+** Continuous Solutions: What could go wrong?
+
+*** Good news
+   Continuous Feasibility $\implies$ Continuous Optimality.    
+    
+*** What could go wrong?
+    :PROPERTIES:
+    :BEAMER_env: example
+    :BEAMER_act: <2->
+    :END:
+    A ``discontinuous'' TV-LP $\mathcal P_t \coloneqq \{x \in \mathbb R, tx \ge 0, t(x-1) \ge 0\}$.
+          - $\mathcal P_t = [1, \infty)$ when $t > 0$.
+          - $\mathcal P_t = (-\infty, 0]$ when $t < 0$.
+            No continuous solution!
+
+
+*** 
+    :PROPERTIES:
+    :BEAMER_act: <2->
+    :END:
+
+          #+ATTR_LATEX: :width 0.8\textwidth 
+          [[file:includes/disclp.png]]
+         
+
+
+** Strict Feasibility
+
+*** Strict Feasibility
+    :PROPERTIES:
+    :BEAMER_env: definition
+    :BEAMER_col: 0.5
+    :END:
+   
+    A TV-LP is \emph{strictly feasible} if there exists a (not necessarily continuous) function $x^s: [-1, 1] \rightarrow \mathbb R^n$   and a scalar $\varepsilon > 0$ such that
+
+    $$A(t)x^s(t) \le b(t) - \varepsilon \textbf{1}, \; \forall t \in [-1, 1].$$
+
+***  
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.4
+    :END:
+
+    #+ATTR_LATEX: :width 1\textwidth 
+    [[file:includes/strictfeasibility.png]]
+
+
+** 
+
+*** Strict feasibility $\implies$ Continuous solutions
+    :PROPERTIES:
+    :BEAMER_env: theorem
+    :END:
+    
+    If a TV-LP is strictly feasible, then it has a continuous near optimal solution.
+    Futhermore, the continuous solution can be chosen to be strictly feasible.
+
+
+
+** Polynomials: What could go wrong?
+
+Optimality of continuous functions $\implies$ Optimality of polynomials?
+
+*** No! A ``Tight'' TV-LP 
+    :PROPERTIES:
+    :BEAMER_env: example
+    :END:
+
+    - $(1+t^2) x(t) = 1$
+    - Only one solution $x(t) = \frac1{1+t^2}$. Not polynomial.
+
+*** Continuous Full-Dimensionality
+    :PROPERTIES:
+    :BEAMER_env: definition
+    :BEAMER_act: <2->
+    :END:
+    TV-LP  is \emph{continuously full-dimensional} if there exists a *constant* $\delta > 0$ and a *continuous* function $x^c: [-1, 1] \rightarrow \mathbb R^n$ such that $B(x^c(t), \delta) \subset \mathcal P_t, \; \forall t \in [-1, 1]$.
+
+*** Full-Dimensionality $\implies$ Optimality of Polynomials
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <3->
+    :END:
+
+    - Approximate $x^c(t)$ by a polynomial.
+
+** Strict Feasibility vs Continuous Full-dimensionality   
+
+   - *Strict Feasibility* provides slackness in the space of the constraints.
+   - *Continuous full-dimensionality* provides slackness in the space of the variables.
+
+   Full-dimensionality $\implies$ Strict feasibility?
+
+*** No!
+    :PROPERTIES:
+    :BEAMER_env: example
+    :BEAMER_act: <2->
+    :END:
+
+    $t^2 x \ge 0$ is continuously full-dimensional but *not* strictly feasible. 
+
+*** Strict feasibility $\implies$ Optimality of Polynomial Solutions
+    :PROPERTIES:
+    :BEAMER_env: theorem
+    :BEAMER_act: <3->
+    :END:
+    Strict feasibility $\implies$ Full dimensionality  $\implies$ Optimality of Polynomial Solutions.
+
+    
+
+** Application: MinCut
+
+*** Maxflow (Primal)
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.49
+    :END:
+
+    \begin{equation*}
+    \begin{array}{llll}
+    \underset{f_{ij}}{\max} \makeappear{\int_{-1}^1} \underset{j \sim 1}{\sum} f_{1j}\maketappear \makeappear{dt} \\
+    \underset{j \sim i}{\sum} f_{ij}\maketappear - f_{ji}\maketappear = 0,& i \in V\\
+    0 \le f_{ij}\maketappear \le b_{ij}\maketappear, &i \sim j
+    \end{array}
+    \end{equation*}
+
+    #+BEGIN_SRC latex :export results
+    \href{http://www.bachirelkhadir.com/research/}{\beamergotobutton{Live simulation.}}
+    #+END_SRC
+
+    #+RESULTS:
+    #+BEGIN_EXPORT latex
+    \href{http://www.bachirelkhadir.com/research/}{\beamergotobutton{Live simulation.}}
+    #+END_EXPORT
+
+    
+*** Mincut (Dual)
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.49
+    :END:
+
+  \begin{equation*}
+  \begin{array}{ll}
+  \underset{d_{ij}, p_i}{\min} \makeappear{\int_{-1}^1}  \underset{i \sim j}{\sum} b_{ij}\maketappear d_{ij}\maketappear \makeappear{dt} & \\
+  d_{ij}\maketappear - p_i\maketappear + p_j\maketappear  \geq 0,&  i \sim j\\
+  p_1\maketappear - p_n\maketappear \geq 1 \\
+  p_i\maketappear \geq 0, &i \in V \\
+   d_{ij}\maketappear  \geq 0, &i \sim j 
+  \end{array}
+  \end{equation*}
+
+*** Simulation
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <3->
+    :END:
+    - Mincut is strictly feasible.
+    - Find best polynomial solution to both of degree $9$.
+    - $85.42 \le opt \le 85.52$.
+
+
+   
+
+* TV-SDPs  
+
+** TV-SDPs
+
+   \begin{equation*}
+   \tag{TV-SDP}
+   \begin{array}{ll@{}ll}
+   \underset{X\maketappear}{\text{maximize} }
+   &\onslide<-1>{\langle C, X\rangle}
+   \onslide<2->{\int_{-1}^1 \langle C\textcolor{red}{(t)}, X\textcolor{red}{(t)} \rangle dt} & \\
+   \text{subject to}& \langle A_i\maketappear, X\maketappear\rangle \le b_i\maketappear & \forall i \in [m], \;\makeappear{\forall t \in [-1, 1]}\\
+   &  X\maketappear \succeq 0  &\makeappear{\forall t \in [-1, 1]}
+   \end{array}
+   \end{equation*}
+
+   
+*** 
+  - Generalisation of TV-LPs where we allow psd constraints $$X\maketappear \succeq 0 \makeappear{\quad \forall t \in [-1, 1]}.$$
+
+  
+** Approximating a spectrahedron by a polyhedron
+
+*** 
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.55
+    :END:
+   - $N(\varepsilon)$ a  $\varepsilon$ -covering of $\{X \succeq 0, ||X|| = 1\}$.
+
+   - Replace  $X(t) \succeq 0$ by  $\sum_{Y \in N(\varepsilon)} \underbrace{\alpha_Y(t)}_{\ge 0} Y$.
+
+   
+*** 
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_col: 0.4
+    :END:
+    #+BEGIN_center
+    #+ATTR_LATEX: :width 0.4\textwidth 
+    [[file:includes/sphere.png]]
+
+    #+ATTR_LATEX: :width 0.2\textwidth 
+    [[file:includes/downarrow.jpg]]
+
+    #+ATTR_LATEX: :width 0.8\textwidth 
+    [[file:includes/meshsphere.jpg]]
+    #+END_center
+
+
+*** 
+    :PROPERTIES:
+    :BEAMER_env: block
+    :BEAMER_act: <2->
+    :END:
+   If a TV-SDP is strictly feasible, then polynomials are near optimal.
+
+** Wireless Coverage Problem
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+ 
+[[file:includes/wirelesswithphones.png]]
+
+$$r_i^2 = (x - \bar x_i)^2 + (y - \bar y_i)^2, i=1,2$$
+
+
+** Results
+   \begin{table}
+   \begin{tabular}{|l|l|l|l|}\hline
+   $d$ & $c_1(t)$ & $c_2(t)$ & $\int_{-1}^1 (c_1(t) + c_2(t)) dt$\\\hline
+   0 & 31.96 & 21.63 & 107.19\\
+   \hline
+   1 & $28.97+4.07t$ & $24.23-3.7t$ & 106.38\\
+   \hline
+   2 & $26.67+6.1t+0.47 t^2$ & $25.78-5.82t+0.44t^2$ & 105.49\\
+   \hline
+   7 & $26.21+7.49 t+0.43 t^2$ & $26.18+7.16t+0.81t^2$  &\\
+   & $-3.27 t^3+2.95 t^4-0.15 t^5$ & $3.02 t^3-3.38 t^4+0.44 t^5$  & \\
+   & $-0.63 t^6$ & $0.63 t^6$  & 105.42\\
+   \hline
+   \end{tabular}
+   \end{table}
+
+   \begin{figure}[htp]
+   \centering
+   \includegraphics[width=.3\textwidth]{includes/wireless-0.png}\quad
+   \includegraphics[width=.3\textwidth]{includes/wireless-2.png}
+   \includegraphics[width=.3\textwidth]{includes/wireless-5.png}
+   \end{figure}
+
+
+** Conclusion and Future Work
+   
+   - Algorithms to optimize over polynomial solutions to TV-LPs / TV-SDPs using SOS optimization.
+   - Sufficient conditions under which polynomial solutions are optimal.
+     
+*** Possible improvements
+    - Strict feasibility excludes equality constraints.
+    - Except for TV-LPs, SOS optimization scales poorly. What about SOCP? QCQP?
+    - Add new dimension.
+
+    
