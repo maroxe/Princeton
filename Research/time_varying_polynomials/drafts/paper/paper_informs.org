@@ -57,14 +57,14 @@
 \RUNTITLE{Time-Varying LPs and SDPs}
 
 \ARTICLEAUTHORS{
-\AUTHOR{Amirali Ahmadi}
-\AFF{Princeton University, \EMAIL{aaa@princeton.edu}}
+\AUTHOR{Amir Ali Ahmadi}
+\AFF{Princeton University, \EMAIL{a_a_a@princeton.edu}}
 \AUTHOR{Bachir El Khadir}
 \AFF{Princeton University, \EMAIL{bkhadir@princeton.edu}}
 }
 
 \ABSTRACT{
-We study linear semidefinite programs whose data (e.g., the matrices $A$, $b$, $c$ in the LP case) are not constant but vary polynomially with time. We show that, under some conditions, we can approximate the optimal value of these problems arbitrarily well by searching for solutions that are polynomial functions of time themselves. Furthermore, we show that the problem of finding the optimal polynomial solution of a given degree can be cast exactly as a semidefinite program. 
+We study linear and semidefinite programs whose data (e.g., the matrices $A$, $b$, $c$ for a linear program) are not constant but vary polynomially with time. We show that, under some conditions, we can approximate the optimal value of these problems arbitrarily well by searching for solutions that are polynomial functions of time themselves. Furthermore, we show that the problem of finding the optimal polynomial solution of a given degree can be cast exactly as a semidefinite program. 
 }
 
 \maketitle

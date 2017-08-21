@@ -1,6 +1,6 @@
 * Introduction
 
-  In this paper we investigate time varying convex programs, i.e. optimization problems for which the feasible set and the objective function depend  on time over a compact interval.
+  In this paper we investigate time-varying convex programs, i.e. optimization problems for which the feasible set and the objective function depend  on time over a compact interval.
   
   Concrete applications of this kind of problems include scheduling an electric power generation when users daily consumption is known in advance or insuring maximum cellular coverage of customers at minimum cost when geographical population density fluctuates over the course of a day.
 
@@ -15,17 +15,17 @@
   \tag{TV-LP}
   \begin{array}{ll@{}ll}
   \underset{x(t)}{\text{maximize}} & \int_{-1}^1 \langle c(t), x(t) \rangle dt & \\
-  \text{subject to}& A(t) x(t) \le b(t) & \forall t \in [-1, 1]
+  \text{subject to}& A(t) x(t) \le b(t) & \forall t \in [-1, 1],
   \end{array}
   \end{equation*}
   
-\noindent  with $A(t) \in \mathbb R^{m \times n}, x(t), c(t) \in \mathbb R^n$ and $b(t) \in \mathbb R^m$ for all $t \in [-1, 1]$, and moreover, the components of $A$, $b$, $c$ are polynomial functions time $t$.
+\noindent  with $A(t) \in \mathbb R^{m \times n}, x(t), c(t) \in \mathbb R^n$ and $b(t) \in \mathbb R^m$ for all $t \in [-1, 1]$, and moreover, the components of $A(t)$, $b(t)$, $c(t)$ are polynomial functions time $t$.
 
-  We consider the data of the problem $(A, b, c)$ to belong to the set of /polynomial/ functions because on the one hand, this set is dense in the set of continuous functions defined on $[0, 1]$, and on the other hand, polynomials can be parameterized in a natural way (in the monomial basis for instance) and are more suitable to algorithmic operations (see section [[sec:lp_is_sdp]]). 
+  We consider the data of the problem $(A(t), b(t), c(t))$ to belong to the set of /polynomial/ functions because on the one hand, this set is dense in the set of continuous functions defined on $[0, 1]$, and on the other hand, polynomials can be parameterized in a natural way (in the monomial basis for instance) and are more suitable to algorithmic operations (see Section [[sec:lp_is_sdp]]). 
 
   The optimization variable is a function $x: [-1, 1]\rightarrow \mathbb R^n$. When such function verifies the program constraints for all $t \in [-1,1]$, we call it a /feasible function/. 
 
-    One numerical example of a time varying LP to consider is the following (illustrated in figure [[img:example_tv_lp]]):
+    One numerical example of a time-varying LP to consider is the following (illustrated in Figure [[img:example_tv_lp]]):
   \[
 A(t) = \begin{pmatrix}
 2-t&-1-t\\
@@ -45,7 +45,7 @@ c(t) = \begin{pmatrix}t \\ t^2\end{pmatrix} \]
   
   The blue circles represent the optimal solution $x^{opt}(t)$ for each time $t$ that maximizes $\langle c(t), x(t)\rangle$ under the constraint $A(t)x(t) \le b(t)$, and the dotted red line represents the optimal polynomial solution $x^{poly}(t)$ of degree $11$. The feasible set $\{x \in \mathbb R^n\; |\;  A(t)x \le b(t)\}$ for any time $t$ is delimited by blue lines. As time progresses, the number of facets of this set changes. The objective function $c(t)$ is represented by a black arrow. 
 
-    Notice that in general the optimal solution to a time-varying LP is the function that we denote by $x^{opt}(t)$ that maximizes the following program for almost all times $t \in [-1, 1]$ :
+    Notice that in general the optimal solution to a time-varying LP is the function that we denote by $x^{opt}(t)$ that maximizes the following program for all times $t \in [-1, 1]$ :
 
   #+NAME: eqn:time_varying_lp_t
   \begin{equation*}
@@ -71,7 +71,7 @@ c(t) = \begin{pmatrix}t \\ t^2\end{pmatrix} \]
 
 \noindent with $A_i(t) , X(t), C(t) \in \mathcal S_n, b_i(t) \in \mathbb R$ for all $t \in [-1, 1], i=1, \ldots, m$. $A_i, b_i$ for $i=1,\ldots,m$ and $C$ are polynomial functions of time. 
 
-  The optimal solution to a time-varying SDP is the function that we denote by $X^{opt}(t)$ that maximize the following program for almost all times $t \in [-1, 1]$ :
+  The optimal solution to a time-varying SDP is the function that we denote by $X^{opt}(t)$ that maximize the following program for all times $t \in [-1, 1]$ :
 
   #+NAME: eqn:time_varying_sdp_t
   \begin{equation*}
@@ -94,7 +94,7 @@ c(t) = \begin{pmatrix}t \\ t^2\end{pmatrix} \]
   Every non-negative univariate polynomials can be written as a sum of squares of polynomials (abbreviated SOS).
   #+END_thm
 
-  This result has been refined later, for example in \cite{DetteStudden}, to cover PSD constraints $X(t) \succeq 0$ as well, where $X(t)$ is a matrix polynomial. (See Section [[sec:timevaryingsdp]]) It is crucial that the polynomial (real or matrix valued) under consideration depends only on one variable, otherwise the sum of squares relaxation is not exact anymore.
+  This result has been refined later, for example in \cite{DetteStudden}, to cover PSD constraints $X(t) \succeq 0$ as well, where $X(t)$ is a matrix polynomial. (See Section [[sec:timevaryingsdp]]) It is crucial that the polynomial (real or matrix valued) under consideration depends only on one real variable, otherwise the sum of squares relaxation is not exact anymore.
   
   In this paper, we are looking specifically for polynomial feasible solutions, it is necessary to settle for a weaker notion of optimality than point-wise optimality. We say that a continuous solution $f$ for a [[eqn:time_varying_lp_l2]] (resp. [[eqn:time_varying_sdp_l2]]) is $\varepsilon$ -near optimal if $\int_{-1}^1 \langle f(t), c(t)\rangle dt - \int_{-1}^1 \langle x^{opt}(t), c(t)\rangle dt \le \varepsilon$. (resp. $\int_{-1}^1 \langle f(t), c(t)\rangle dt - \int_{-1}^1 \langle X^{opt}(t), c(t)\rangle dt \le \varepsilon$). If for all positive $\varepsilon$, there exist a continuous (resp. polynomial) feasible solution that is $\varepsilon-$ near optimal for the TV-LP or TV-SDP, we say that continuous (resp. polynomial) solutions are near optimal for the TV-LP or TV-SDP.
   
@@ -102,14 +102,14 @@ c(t) = \begin{pmatrix}t \\ t^2\end{pmatrix} \]
   
 ** Notation
    - For a  integer $n$, we denote by $[n]$ the set $\{0, \ldots, n\}$.
-   - The $n \times 1$ vector whose component are all equal to 1 is denoted by a capital $\bf{1}$.
+   - The $n \times 1$ vector whose component are all equal to 1 is denoted by a capital $\textbf{1}$.
    - For a matrix $A$ of dimension $m \times n$, $A_i$ is the $i^{th}$ row of $A$ for $i=1, \cdots, n$. If $m \ge n$, given an index set $B = (b_1, \ldots, b_n)$, then $A_B$ is the $n \times n$ sub-matrix $(A_{b_i,j})_{1 \le i, j \le n}$.
    - We denote the set of $n \times n$ symmetric matrices by $\mathcal S_n$, and the set of positive semidefinite matrices by $\mathcal S_n^+$.
    - For $d \in \mathbb N$, $\mathbb R_d[t]$ is the set of polynomials in the variable $t$ with real coefficients that have degree  at most $d$.
    - For $d \in \mathbb N$, $\mathbb R^{n \times n}_d[t]$ is the set of $n \times n$ matrices whose components are polynomials in the variable $t$ with real coefficients that have degree  at most $d$.
    - We denote by $SOS_d$ the set of polynomials in $\mathbb R_d[t]$ that can be written as sum of squares of some polynomials, i.e. $SOS_d = \mathbb R_d[t] \cap \sum \mathbb R[t]^2$.
    - We denote by $MSOS_d$ the set of symmetric matrix polynomials $X(t)$ in $\mathbb R^{n \times n}_d[t]$ that can be written as $Y(t)^TY(t)$, where $Y(t) \in \mathbb R^{n \times s}[t]$ and $s \in \mathbb N$.
-   - The set $\mathcal P_t$ is the feasible set of a [[eqn:time_varying_lp_l2]] with data $(A, b, c)$ at time $t$, i.e. $\mathcal P_t = \{x \in \mathbb R^n | A(t) x \le b(t) \}$.
+   - The set $\mathcal P_t$ is the feasible set of a [[eqn:time_varying_lp_l2]] with data $(A(t), b(t), c(t))$ at time $t$, i.e. $\mathcal P_t = \{x \in \mathbb R^n | A(t) x \le b(t) \}$.
    - For a subset $C$ of $\mathbb R^n$, $conv(C)$ denotes is convex hull.
    - The subset $B(x, r)$ of $\mathbb R^n$ denotes the ball of radius $r$ around $x \in \mathbb R^n$.
      
@@ -128,7 +128,7 @@ c(t) = \begin{pmatrix}t \\ t^2\end{pmatrix} \]
      
    - Section [[sec:timevaryingsdp]] discusses the case of a [[eqn:time_varying_sdp_l2]]s, and proves that under similar condition to [[eqn:time_varying_lp_l2]]s , polynomial solutions exist and are optimal, (Theorem [[thm:strict_feasibility_implies_polynomial_optimality_sdp]]). Moreover, the search problem for such polynomials with bounded degree can be cast as non-varying SDP. (Theorem [[thm:tvsdp_as_sdp]])
 
-   - Section [[sec:numeric]] presents three applications of time-varying convex problems. The first one is TV-LP deciding the number of production units in an economy for which dependence of sectors and external demand vary with time. (Section [[sec:leontief]])The second one is a TV-LP that finds the maximum flow in a graph whose edge capacities change in time (Section [[sec:maxflow]]). The second one is a TV-SDP that solves the wireless coverage problem of regions moving in space. (Section [[sec:wireless]])
+   - Section [[sec:numeric]] presents three applications of time-varying convex problems. The first one is TV-LP deciding the number of production units in an economy for which dependence of sectors and external demand vary with time. (Section [[sec:leontief]])The second one is a TV-LP that finds the maximum flow in a graph whose edge capacities change in time. (Section [[sec:maxflow]]) The last one is a TV-SDP that solves the wireless coverage problem of regions moving in space. (Section [[sec:wireless]])
      
      
 * Time-Varying LP
@@ -163,11 +163,15 @@ c(t) = \begin{pmatrix}t \\ t^2\end{pmatrix} \]
    #+END_thm
 
    #+BEGIN_proof
-   For $t \in [-1, 1]$, consider the following maximization program $$\underset{x \in \mathcal P_t}{\text{maximize}} \sum_{i=1}^n |x_i|$$ and denote its optimal value by $f(t)$. The function $f(t)$ is finite for all $t \in [-1, 1]$ and we want to prove that $f(t)$ can be uniformly bounded on $[-1, 1]$.
+   For $t \in [-1, 1]$, and $u \in \{-1, 1\}^n$, consider the following maximization program $$\underset{x \in \mathcal P_t}{\text{maximize}} \sum_{i=1}^n u_i x_i$$ and denote its optimal value by $f_u(t)$. The function $f_u(t)$ is finite for all $t \in [-1, 1]$ and we want to prove that $f_u(t)$ can be uniformly bounded on $[-1, 1]$.
+
+   Notice that $f_u(t)$ is the optimal value of an LP for all $t \in [-1,1]$.
+
+   By the assumption made earlier, those LPs have their sets of solution bounded for all $t \in [-1, 1]$. As a result, all conditions for Theorem [[thm:continuity_perturbation]] are verified, and we conclude that  the function $f_u(t)$ is upper semi-continuous.
    
-   Notice that this is an LP for all $t \in [-1,1]$, and that by the assumption we made earlier, its set of solution must be bounded for all $t \in [-1, 1]$. As a result, all conditions for Theorem [[thm:continuity_perturbation]] are verified, and we conclude that  the function $f(t)$ is upper semi-continuous.
-   
-   Now, if $(t_n)_{n \in \mathbb N}$ is a convergent sequence such that $t_0 = \underset{n \rightarrow \infty}{\lim} t_n$ and $ \sup_t f(t) =  \underset{n \rightarrow \infty}{\lim} f(t_n)$, then: $\sup_t f(t) = \lim_n f(t_n) \le f(t_0) < \infty$. We have just found a uniform bound for the function $f(t)$ on $[-1, 1]$.
+   Now, if $(t_n)_{n \in \mathbb N}$ is a convergent sequence such that $t_0 = \underset{n \rightarrow \infty}{\lim} t_n$ and $ \sup_t f_u(t) =  \underset{n \rightarrow \infty}{\lim} f_u(t_n)$, then: $\sup_t f_u(t) = \lim_n f_u(t_n) \le f_u(t_0) < \infty$. We have just found a uniform bound for the function $f_u(t)$ on $[-1, 1]$.
+
+   We conclude by noting that $\underset{x \in \underset{t \in [-1, 1]}{\cup} \mathcal P_t}{\sup} ||x||_1 = \underset{u \in \{-1, 1\}}{max} f_u(x) < \infty$.
    #+END_proof
 
    Without loss of generality, we assume for the rest of this paper that we can amend the constraints $\{-M \le x_i \le M, i=1, \ldots, n\}$ for some positive $M \in \mathbb R$ to a [[eqn:time_varying_lp_l2]].
@@ -175,11 +179,11 @@ c(t) = \begin{pmatrix}t \\ t^2\end{pmatrix} \]
    
 ** Geometry of the feasible set of a [[eqn:time_varying_lp_l2]]
    
-   We start be presenting the following theorem that describes the geometry of the feasible set $\mathcal P_t$ of a [[eqn:time_varying_lp_l2]]. The theorem states that, except for some finite number of times, the feasible set is a convex combination of points that move as rational functions in time. More formally:
+   We start be presenting the following theorem that describes the geometry of the feasible set $\mathcal P_t$ of a [[eqn:time_varying_lp_l2]]. The theorem states that, except for some finite number of times, the feasible set is a the convex hull of points that move as rational functions in time. More formally:
   
    #+NAME: thm:geometry_feasible_set_lp
    #+BEGIN_thm
-   Consider a [[eqn:time_varying_lp_l2]] with data $(A, b, c)$ and feasible set $\mathcal P_t$ at time $t \in [-1, 1]$.
+   Consider a [[eqn:time_varying_lp_l2]] with data $(A(t), b(t), c(t))$ and feasible set $\mathcal P_t$ at time $t \in [-1, 1]$.
    
    There exist $N$ break points $-1 = t_1 < \cdots < t_N = 1$ and $N-1$ finite sets of rational functions $\mathcal V_1, \ldots, \mathcal V_{N-1} \subset \mathbb R^n(X)$ such that, for every $i \in \{ 1, \ldots, N-1\}$, for $t \in (t_i, t_{i+1})$, the feasible set $\mathcal P_t$ is the convex hull of the set of vertices $\{v(t), \; v \in \mathcal V_i\}$.
 
@@ -190,15 +194,14 @@ c(t) = \begin{pmatrix}t \\ t^2\end{pmatrix} \]
 #+BEGIN_proof 
 At any given time $t \in [-1, 1]$, $\mathcal P_t$ is a bounded polyhedron, so it is equal to the convex hull of its vertices. All vertices can be written as: $A_B(t)^{-1}b_B(t)$ for some $B \in  {[m] \choose n}$, i.e. for all $t \in [-1, 1]$, there exists a finite set $\mathcal B(t)$ such that $\mathcal P_t = conv\{A_B(t)^{-1}b_B(t), B \in \mathcal B(t)\}$.
 
-It remains to show that $\mathcal B(t)$ changes at most finitely many times, which would prove the claim of the theorem. Indeed, that set changes at time $t_0$ only if one of these two things happen for some index set $B \in  {[m] \choose n}$: A nonzero polynomial of the form $t \rightarrow \det(A_B(t))$ equals $0$ at $t_0$, or one of the components of $t \rightarrow b(t) - A_B(t)^{-1}b_B(t)$ changes sign at $t_0$, with the convention $A_B(t)^{-1} = I_n$ when $A_B(t)$ is not invertible.
-Both things happen only finitely many times.
+It remains to show that $\mathcal B(t)$ changes at most finitely many times, which would prove the claim of the theorem. Indeed, that set changes at time $t_0$ only if one of these two things happen for some index set $B \in  {[m] \choose n}$: A nonzero polynomial of the form $t \rightarrow \det(A_B(t))$ equals $0$ at $t_0$, or one of the components of $t \rightarrow b(t) - A(t)A_B(t)^{-1}b_B(t)$ changes sign at $t_0$. Both things happen only finitely many times.
 #+END_proof
 
    Even though the previous theorem gives a description of the feasible set and ignores the objective function, it is not very hard to see that the optimal solution can also be chosen to be a piecewise rational function in $t$. Indeed, there always exist an optimal solution of a linear program on a vertex, and if $c(t)$ is ``nice'' enough, e.g. a polynomial, optimality of any given vertex changes only finitely many time inside $[-1, 1]$.
   
    #+NAME: thm:form_optimal_solution_lp
    #+BEGIN_thm
-   Consider a [[eqn:time_varying_lp_l2]] with data $(A, b, c)$. There exist breakpoints $-1 = t_1 < \cdots < t_N = 1$ and $N-1$ sets of rational functions $\mathcal V_1, \ldots, \mathcal V_{N-1}$ such that the following holds:
+   Consider a [[eqn:time_varying_lp_l2]] with data $(A(t), b(t), c(t))$. There exist breakpoints $-1 = t_1 < \cdots < t_N = 1$ and $N-1$ sets of rational functions $\mathcal V_1, \ldots, \mathcal V_{N-1}$ such that the following holds:
 
   For all $i = 1, \ldots, N$, there exist $v \in \mathcal V_i$ such that for every $t \in (t_i, t_{i+1})$, the optimal value at time $t$ of the [[eqn:time_varying_lp_l2]] is achieved at the point $v(t)$.
 
@@ -226,11 +229,11 @@ Both things happen only finitely many times.
    Consider the [[eqn:time_varying_lp_l2]] with two constraints: $tx \ge 0$ and $t(x-1) \ge 0$ for $t \in [-1, 1]$. The [[eqn:time_varying_lp_l2]] does not have a continuous feasible solution. We can see that by observing that the feasible set of this [[eqn:time_varying_lp_l2]]  is $[1, \infty)$ when $t > 0$ and $(-\infty, 0]$ when $t < 0$.
    #+END_myexample
 
-   The reason no continuous solution exist is that the $\mathcal P_t$ are ``disconnected'' at 0, for a solution to exist, it has to ``jump'' at time 0. The following theorem formalizes this notion of continuity of sets and existence of continuous solutions.
+   The reason no continuous solution exist is that the $\mathcal P_t$ are ``disconnected'' at 0. For a solution to exist, it has to ``jump'' at time 0. The following theorem formalizes this notion of continuity of sets and existence of continuous solutions.
 
    #+NAME: prop:existence_cont_solution
    #+BEGIN_prop
-   Fix a [[eqn:time_varying_lp_l2]] with data $(A, b, c)$. Let $\mathcal P_t$ be its feasible set at time $t$, and let  $\mathcal V_1, \ldots, \mathcal V_{N-1}$ be the sets of rational functions defined by Theorem [[thm:geometry_feasible_set_lp]].
+   Fix a [[eqn:time_varying_lp_l2]] with data $(A(t), b(t), c(t))$. Let $\mathcal P_t$ be its feasible set at time $t$, and let  $\mathcal V_1, \ldots, \mathcal V_{N-1}$ be the sets of rational functions defined by Theorem [[thm:geometry_feasible_set_lp]].
    
    The following statements are equivalent:
    1. the [[eqn:time_varying_lp_l2]] admits a continuous feasible solution.
@@ -274,10 +277,10 @@ Both things happen only finitely many times.
 
    In the same way, we prove that there exist convex coefficients $\{\mu_v, v \in \mathcal V_{i+1}\}$ such that $l = \sum_{v \in \mathcal V_{i+1}} \mu_v v(t_i)$.
 
-   We have just proved that $conv \{ v(t_{i}), v \in \mathcal V_i\} \cap conv \{ v(t_{i}), v \in \mathcal V_{i+1}\}$.
+   We have just proved that $conv \{ v(t_{i}), v \in \mathcal V_i\} \cap conv \{ v(t_{i}), v \in \mathcal V_{i+1}\} \ne \emptyset$.
    #+END_proof
 
-   A particular special case that is worth mentioning is when the matrix of constraints $A(t)$ of a [[eqn:time_varying_lp_l2]] doesn't depend on the time variable $t$. In that case, continuous feasible solutions always exist.
+   A special case that is worth mentioning is when the matrix of constraints $A(t)$ of a [[eqn:time_varying_lp_l2]] doesn't depend on the time variable $t$. In that case, continuous feasible solutions always exist.
 
    #+NAME: thm:A_constant
    #+BEGIN_thm
@@ -289,7 +292,7 @@ Both things happen only finitely many times.
 
 
    That contradicts the fact that the following LP has an optimal value that is continuous with respect to the parameter $\alpha$ in the neighborhood of 0 (because of Theorem [[thm:continuity_perturbation]]):
-   $$\underset{x \in P_{t+\alpha}}{\text{minimize}} \langle x, u \rangle.$$
+   $$\underset{x \in P_{t_i+\alpha}}{\text{minimize}} \langle x, u \rangle.$$
   
    #+END_proof
 
@@ -299,9 +302,9 @@ Both things happen only finitely many times.
   
    #+NAME: thm:optimality_continuous_solution
    #+BEGIN_thm
-   Suppose a [[eqn:time_varying_lp_l2]] with data $(A, b, c)$ admits a feasible continuous solution $f_0$, i.e. there exists a continuous function $f_0: [-1, 1] \rightarrow \mathbb R^n$ such that $A(t)f_0(t) \le b(t)$, $\forall t \in [-1, 1]$.
+   Suppose a [[eqn:time_varying_lp_l2]] with data $(A(t), b(t), c(t))$ admits a feasible continuous solution $f_0$, i.e. there exists a continuous function $f_0: [-1, 1] \rightarrow \mathbb R^n$ such that $A(t)f_0(t) \le b(t)$, $\forall t \in [-1, 1]$.
   
-   Then, for every $\varepsilon > 0$, there exists a continuous function $f: [-1, 1] \rightarrow \mathbb R^n$ that is feasible and $\int_0^1 \langle c(t), x(t)\rangle - \int_0^1 \langle c(t), f(t)\rangle \le \varepsilon$.
+   Then, continuous solutions are near optimal for the TV-LP, i.e. for every $\varepsilon > 0$, there exists a continuous function $f: [-1, 1] \rightarrow \mathbb R^n$ that is feasible and $\int_0^1 \langle c(t), x(t)\rangle - \int_0^1 \langle c(t), f(t)\rangle \le \varepsilon$.
    #+END_thm
    
     #+BEGIN_proof
@@ -310,7 +313,7 @@ Following the result of Theorem [[thm:geometry_feasible_set_lp]], there exists  
 
     We want to construct a function that is as close as possible to $x^{opt}$ (for the norm of $L_2([-1, 1])$ ) while staying continuous, which would prove the claim of the theorem.
     
-    For this purpose, define the interval $I_i^{\alpha} \coloneqq (t_i+\alpha, t_i -\alpha)$ for some positive scalar $\alpha$.
+    For this purpose, define the interval $I_i^{\alpha} \coloneqq (t_i-\alpha, t_i+\alpha) \cap [-1, 1]$ for some positive scalar $\alpha$.
 
   Let $f^{\alpha}$ be the function that is equal to $x^{opt}(t)$ on every $I_i^{\alpha}$, equal to $f_0$ on all the $t_i$ and interpolates linearly between $x(t)$ and $f_0(t)$ on $[t_i-\alpha, t_i+\alpha]$.
 
@@ -328,7 +331,7 @@ Following the result of Theorem [[thm:geometry_feasible_set_lp]], there exists  
    #+BEGIN_definition
 A [[eqn:time_varying_lp_l2]] is \emph{strictly feasible} if there exists a (not necessarily continuous) function $x^s: [-1, 1] \rightarrow \mathbb R^n$   and a scalar $\varepsilon > 0$ such that
 
-$$A(t)x^s(t) \le b(t) - \varepsilon \bf{1}, \; \forall t \in [-1, 1].$$
+$$A(t)x^s(t) \le b(t) - \varepsilon \textbf{1}, \; \forall t \in [-1, 1].$$
 
 \noindent In this case we say that $x^s(t)$ is strictly feasible for our [[eqn:time_varying_lp_l2]].
 #+END_definition
@@ -339,6 +342,8 @@ The condition of existence of continuous solution to a [[eqn:time_varying_lp_l2]
 #+BEGIN_thm
 If a [[eqn:time_varying_lp_l2]]  is strictly feasible, then it has a continuous near optimal solution.
 #+END_thm
+
+We will in fact prove a stronger statement. We will prove that any TV-LP that admits a strictly feasible solution, also admists a /continuous/ strict feasible solution.
 
 #+BEGIN_proof
 Assume strict feasibility of a [[eqn:time_varying_lp_l2]].
@@ -351,9 +356,9 @@ We provide a construction of $x^c(t)$ in two steps depending on whether we are n
 
 \paragraph{Near the problematic points $t_i$:}
 
-The polytope $\{x \in \mathbb R^n |  A(t_i)x \le b(t_i) - \varepsilon 1\}$ is not empty by strict feasibility. Let $w$ be one of its extreme points. Then there exists a basis $B$ such that $w = A_B(t_i)^{-1}(b(t_i) - \varepsilon 1)$.
+For some positive $\varepsilon$, the polytope $\{x \in \mathbb R^n |  A(t_i)x \le b(t_i) - \varepsilon 1\}$ is not empty by strict feasibility. Let $w$ be one of its extreme points. Then there exists a basis $B$ such that $w = A_B(t_i)^{-1}(b_B(t_i) - \varepsilon \textbf{1})$.
 
-Now define $w_i^{near}(t) \coloneqq A_B(t)^{-1}(b(t) - \varepsilon 1)$, then there exists a neighborhood of $t_i$, $[t_i-\alpha, t_i+\alpha]$, such that (i) $w_i^{near}(t)$ is a well defined continuous function and (ii) $w_i^{near}(t)$ is strictly feasible.
+Now define $w_i^{near}(t) \coloneqq A_B(t)^{-1}(b_B(t) - \varepsilon 1)$, then there exists a neighborhood of $t_i$, $[t_i-\alpha, t_i+\alpha]$, such that (i) $w_i^{near}(t)$ is a well defined continuous function and (ii) $w_i^{near}(t)$ is strictly feasible.
 
 Indeed, (i) is true because  $\det(A_B(t_i)) \ne 0$ implies that $\det(A_B(t)) \ne 0$ in the vicinity of $t_i$. To see why (ii) is true, we observe that since $A(t_i)w_i^{near}(t_i) \le b(t_i) - \varepsilon 1$, the inequality $A(t)w_i^{near}(t) \le b(t) - \frac{\varepsilon}2 1$ remains true when $t$ is arbitrarily close to $t_i$.
 
@@ -371,8 +376,8 @@ Similarly, for $t \in (t_{i-1}, t_{i})$, let $w_i^{far}(t) \coloneqq \frac{\sum_
 
 \noindent Let
 $$\delta_i^{} \coloneqq \min_{t \in J_i, j=1,\ldots, m} (b(t) - A(t)w_i^{far}(t))_j.$$
-Observe that $\delta_i > 0$. Otherwise, by continuity, there exist $\hat j$ and $\hat t \in J_i$ such that $(b(\hat t) - A(\hat t)w^{right}(\hat t))_{\hat j} = 0$, which means that 
-$0 = b_{\hat j}(\hat t)- A_{\hat j}^T(\hat t)w^{right}(\hat t) = \frac1{|\mathcal V_i|} \sum_{u \in \mathcal V_i} \underbrace{(b_{\hat j}(\hat t) - A_{\hat j}(\hat t)^Tu(\hat t))}_{\ge 0}$, i.e. all $\mathcal P_t$ 's vertices belong to same affine hyper plane $\{x \in \mathbb R^n |\; A_{\hat j}(\hat t)^T x = b_{\hat j}(\hat t) \}$, which contradicts the existence of a strictly feasible point $x^s(t)$.
+Observe that $\delta_i > 0$. Otherwise, by continuity, there exist $\hat j$ and $\hat t \in J_i$ such that $(b(\hat t) - A(\hat t)w^{far}(\hat t))_{\hat j} = 0$, which means that 
+$0 = b_{\hat j}(\hat t)- A_{\hat j}^T(\hat t)w^{far}(\hat t) = \frac1{|\mathcal V_i|} \sum_{u \in \mathcal V_i} \underbrace{(b_{\hat j}(\hat t) - A_{\hat j}(\hat t)^Tu(\hat t))}_{\ge 0}$, i.e. all $\mathcal P_t$ 's vertices belong to same affine hyper plane $\{x \in \mathbb R^n |\; A_{\hat j}(\hat t)^T x = b_{\hat j}(\hat t) \}$, which contradicts the existence of a strictly feasible point $x^s(t)$.
 
 \paragraph{Connecting the patches:}
 
@@ -386,14 +391,14 @@ Define $x^c(t)$ to be the continuous function defined as follow:
 
 
    \[x^c(t) = \left\{\begin{array}{cc}
-   w_i^{far}(t) & \max(-1, t_{i-1}+2\beta) \le t \le t_{i} - 2\beta\\
+   w_i^{far}(t) & t_{i-1}+2\beta < t \le t_{i} - 2\beta\\
    I_{t_{i} - 2\beta}^{t_{i} - \beta}(t) (w_i^{near}(t) - w_i^{far}(t)) + w_i^{far}(t) & t_{i}-2\beta < t \le t_{i} - \beta\\
-   w_i^{near}(t) & t_{i}-\beta < t \le \min(1, t_{i} + \beta)\\
+   w_i^{near}(t) & t_{i}-\beta < t \le t_{i} + 2\beta\\
    \end{array}\right.
    \]
 
 
-   It is easy to see that $x^c(t)$ is continuous. Furthermore, at all times $t \in [-1, 1]$, $x^c(t)$ is a convex combination of solutions that are strictly feasible, so that $x^c(t)$ is also $\varepsilon'-$ strictly feasible with  $\varepsilon' \coloneqq \min(\varepsilon/2, \min_{i=1,\cdots,N} \delta_i)$.
+   It is easy to see that $x^c(t)$ is continuous on $[-1, 1]$. Furthermore, at all times $t \in [-1, 1]$, $x^c(t)$ is a convex combination of solutions that are strictly feasible, so that $x^c(t)$ is also $\varepsilon'-$ strictly feasible with  $\varepsilon' \coloneqq \min(\varepsilon/2, \min_{i=1,\cdots,N} \delta_i)$.
 #+END_proof
 
 
@@ -463,7 +468,7 @@ If a [[eqn:time_varying_lp_l2]] is continuously full-dimensional and has a const
 #+END_prop
 
 #+BEGIN_proof
-Fix a continuously full-dimensional [[eqn:time_varying_lp_l2]] with data $(A, b, c)$ and feasible set $\mathcal P_t$ at time $t \in [-1, 1]$. Let $\delta$ be positive scalar and  $x^c: [-1, 1] \rightarrow \mathbb R^n$ a continuous feasible solutions for this [[eqn:time_varying_lp_l2]] such that $B(x^c(t), \delta) \subset \mathcal P_t$ for all $t \in [-1, 1]$.
+Fix a continuously full-dimensional [[eqn:time_varying_lp_l2]] with data $(A(t), b(t), c(t))$ and feasible set $\mathcal P_t$ at time $t \in [-1, 1]$. Let $\delta$ be positive scalar and  $x^c: [-1, 1] \rightarrow \mathbb R^n$ a continuous feasible solutions for this [[eqn:time_varying_lp_l2]] such that $B(x^c(t), \delta) \subset \mathcal P_t$ for all $t \in [-1, 1]$.
 
 
 Let's define
@@ -506,12 +511,13 @@ If a [[eqn:time_varying_lp_l2]] is strictly feasibility, then for every $\vareps
    
 * Decidability of the sufficient conditions for existence and optimality of polynomial solutions to LPs
 <<sec:decidabilityconditions>>
-  This section presents finite time algorithms to decide the conditions discussed in the previous section that guarantee feasibility of time varying LP as well as optimality of polynomial solutions.
+  This section presents finite time algorithms to decide the conditions discussed in the previous section that guarantee feasibility of time-varying LP as well as optimality of polynomial solutions. 
   
-  Theorem [[thm:form_optimal_solution_lp]] showed that the feasible set of a time varying LP can be fully described by giving the times $t_1, \ldots, t_N$ as well as the coefficients of the rational functions in the set $\mathcal V_i$ for all $i=1, \ldots, N$. We propose an algorithm that does exactly that.
+  Theorem [[thm:form_optimal_solution_lp]] showed that the feasible set of a time-varying LP can be fully described by giving the times $t_1, \ldots, t_N$ as well as the coefficients of the rational functions in the set $\mathcal V_i$ for all $i=1, \ldots, N$. We propose an algorithm that does exactly that. 
   
   Notice that since the algorithm produces a vertex description of the moving polytope $\mathcal P_t$, getting an optimal solution for all $t \in [-1, 1]$ is straightforward.
-  
+
+  We note that this algorithm is not practical, and its only purpose is to prove that one can solve a TV-LP exactly. We present later in Section [[sec:lp_is_sdp]] an efficient algorithm that relies on semi-definite programming and finds the best polynomial solution of a bounded degree to a TV-LP.
   
 ** Feasibility of a TV-LP
 
@@ -523,15 +529,32 @@ If a [[eqn:time_varying_lp_l2]] is strictly feasibility, then for every $\vareps
 
    It is clear that between two consecutive times $t_i$ and $t_{i+1}$ in $T$, the subset of constraints $B_v$ that are tight for the extreme points $v \in \mathcal V_i$ of the feasible set $\mathcal P_t$ of the TV-LP do not change. It is therefore sufficient to find those subsets at time (say) $\frac{t_i+t_{i+1}}2$.
 
+   #+BEGIN_remark
+   From a computation point of view, it is important to decide on the desired accuracy when calculating the elements of the set $T$. Indeed, we need to distinguish between the case when two roots $t$ and $u$ are equal or are just very close. In other terms, we need a lower bound on $\min_{t, u \in T, t \ne u} |u - t|$. The following lemma provides just that:
+   
+   #+BEGIN_lemma
+   [See \cite{Mahler1964}]
+
+   For $n \in \mathbb N$, there exists a universal constant $C_n$ such that the following holds:
+
+   If $p(t) = \sum_{i=0}^n a_i t^i$ is a univariate polynomial in the variable $t$ with integer coefficients $(a_0, \ldots, a_n)$, and $\alpha$ and $\beta$ are two distinct roots of $p(t)$, then
+
+   $$|\alpha - \beta| \ge C_n \frac1{\max |a_i|^n}.$$
+   #+END_lemma
+
+
+   If we apply this lemma to the polynomial obtained by taking the product of all the rational functions in $P$ and $Q$ as well as their common denominator, we get the accuracy needed for computing the elements of $T$.
+   #+END_remark
+   
    We propose Algorithm [[alg:checking_feasibility]], that takes as input the data of a TV-LP $(A, b, c)$, computes the set $T$ described earlier, and outputs the sets $\mathcal V_i, i=1,\ldots N-1$.
     
 #+NAME: alg:checking_feasibility
  #+BEGIN_algorithm
 \caption{Check feasibility}
 \begin{algorithmic}[1]
-\Procedure{Check Feasibility of a TV-LP with data $(A, b, c)$}{}
+\Procedure{Check Feasibility of a TV-LP with data $(A(t), b(t), c(t))$}{}
 \State \text{Compute $T$ , the finite set of points where the}
-\State \text{rational functions in $P$ and $Q$ change signs.}
+\State \text{rational functions in the sets $P$ and $Q$ change signs.}
 \State \text{(amounts to finding the roots of polynomials)}
 \For{ $i=1, \ldots, \operatorname{len}(T)-1$}
 \State $t \gets \frac{T[i] + T[i+1]}2$
@@ -545,7 +568,7 @@ If a [[eqn:time_varying_lp_l2]] is strictly feasibility, then for every $\vareps
    
 ** Solving a TV-LP exactly
 
-   This section describes how to obtain the optimal solution $x^{opt}(t)$ of a TV-LP with data $(A, b, c)$.   We know from Theorem [[thm:form_optimal_solution_lp]] that we can take $x^{opt}(t)$ to be piecewise rational function. Furthermore, using Algorithm [[alg:checking_feasibility]], we know that there exist times $t_1, \ldots t_N$ and sets $\mathcal V_1, \ldots, \mathcal V_{N-1}$, such that, for $t$ between two consecutive times $t_i$ and $t_{i+1}$, the extreme points of the feasible set of the TV-LP at time $t$ are $\{ v(t), \; v \in \mathcal V_i\}$. Therefore, we can take $x^{opt}(t)$ to be equal to the extreme point with the highest objective value $p_v(t) \coloneqq \langle c(t), v(t) \rangle$, with $v \in \mathcal V_i$. The set of constraint that are tight for that extreme point change finitely many times on the interval $(t_i, t_{i+1})$. That is because a change can only happen on the roots of one the following polynomials $\{q = p_v - p_w \; | \; v, w \in \mathcal V_i, q \ne 0\}$. Call this set of roots $R_i \coloneqq \{r_1, \ldots r_{|R|}\} \subset (t_i, t_{i+1})$.
+   This section describes how to obtain the optimal solution $x^{opt}(t)$ of a TV-LP with data $(A(t), b(t), c(t))$.   We know from Theorem [[thm:form_optimal_solution_lp]] that we can take $x^{opt}(t)$ to be piecewise rational function. Furthermore, using Algorithm [[alg:checking_feasibility]], we know that there exist times $t_1, \ldots t_N$ and sets $\mathcal V_1, \ldots, \mathcal V_{N-1}$, such that, for $t$ between two consecutive times $t_i$ and $t_{i+1}$, the extreme points of the feasible set of the TV-LP at time $t$ are $\{ v(t), \; v \in \mathcal V_i\}$. Therefore, we can take $x^{opt}(t)$ to be equal to the extreme point with the highest objective value $p_v(t) \coloneqq \langle c(t), v(t) \rangle$, with $v \in \mathcal V_i$. The set of constraint that are tight for that extreme point change finitely many times on the interval $(t_i, t_{i+1})$. That is because a change can only happen on the roots of one the following polynomials $\{q = p_v - p_w \; | \; v, w \in \mathcal V_i, q \ne 0\}$. Call this set of roots $R_i \coloneqq \{r_1, \ldots r_{|R|}\} \subset (t_i, t_{i+1})$.
 
    Algorithm [[alg:solving-time-varying-lp-exactly]] takes (A, b, c) as input, loops through all $t_i \in T$, and all $r_j \in R_i$, and finds the optimal solution to the TV-LP on every interval of the form $(r_j, r_{j+1})$, for $j=1, \ldots |R|-1$.
 
@@ -553,7 +576,7 @@ If a [[eqn:time_varying_lp_l2]] is strictly feasibility, then for every $\vareps
    #+BEGIN_algorithm
    \caption{Find optimal solution}
    \begin{algorithmic}[1]
-   \Procedure{Solve TV-LP with data $(A, b, c)$}{}
+   \Procedure{Solve TV-LP with data $(A(t), b(t), c(t))$}{}
    \State \text{Compute the breakpoints $T = \{t_1, \ldots, t_N\}$ and the }
    \State \text{sets $\mathcal V_1, \ldots, \mathcal V_{N-1}$ using Algorithm 1}.
    \For{ $i=1, \ldots, \operatorname{len}(T)-1$}
@@ -568,7 +591,7 @@ If a [[eqn:time_varying_lp_l2]] is strictly feasibility, then for every $\vareps
    #+END_algorithm
 
 
-** Deciding strict feasibility of a time-varying LP
+** Deciding strict feasibility of a TV-LP
    <<sec:deciding_strict_feasibility>>
    We seek to decide whether the following LP is feasible or not for some $\varepsilon > 0$:
    $$A(t)x(t) \le b(t) - \varepsilon 1$$
@@ -613,6 +636,8 @@ verifies $\inf_{t \in [-1, 1]} \varepsilon(t) > 0$. We can use Algorithm [[alg:s
   \begin{equation*}
   p(t)=(1+t)(1-t)q(t)+s(t), \quad q\in SOS_{n-2},\; s\in SOS_n, \qquad \text{if $n$ is even.}
   \end{equation*}
+
+  Denote the set of univariate non-negative polynomials on the interval $[-1, 1]$ by $ISOS$.
   #+END_thm
 
   As a result of this theorem, we can now rewrite a [[eqn:time_varying_lp_l2]] as (non time-varying) SDP:
@@ -624,14 +649,13 @@ verifies $\inf_{t \in [-1, 1]} \varepsilon(t) > 0$. We can use Algorithm [[alg:s
   #+NAME: eqn:Ppoly
   \begin{equation*}
   \begin{array}{ll@{}ll}
-  \underset{X(t) \in \mathbb R^n_d[t], \sigma_-(t), \sigma_+(t) \in \text{SOS}_d}{\text{maximize}} & \int_{-1}^1 \langle c(t), x(t) \rangle dt & \\
-  \text{subject to}& b(t) - A(t) x(t) = (1-t) \sigma_-(t) + (1+t) \sigma_+(t) \quad \forall t \in [-1, 1]\\
-  &\sigma_-(t), \sigma_-(t) \in SOS_{2d}
+  \underset{x(t) \in \mathbb R^n_d[t]}{\text{maximize}} & \int_{-1}^1 \langle c(t), x(t) \rangle dt & \\
+  \text{subject to}& b(t) - A(t) x(t) \in ISOS\\
   \end{array}
   \end{equation*}
   #+END_thm
 
-  To see that this indeed an SDP, one can note that the equality between two polynomials of degree at most $d$ can be written as an equality of the values they take at $d+1$ different times (which are linear functions of their coefficients), and the condition that a polynomial $\sigma(t)$ is sum of squares can be expressed as a PSD condition using the following proposition:
+  To see that this indeed an SDP, we need to prove that the set $ISOS \cap \mathbb R_d[t]$ is a spectrahedron, or in other terms a set defined by linear and PSD contraints (i.e, constraint of the form $X \succeq 0$). one can note that the equality between two polynomials of degree at most $d$ can be written as an equality of the values they take at $d+1$ different times (which are linear functions of their coefficients), and the condition that a polynomial $\sigma(t)$ is sum of squares can be expressed as a PSD condition using the following proposition:
 
   #+NAME: thm:tvlp-to-sdp
   #+BEGIN_thm
@@ -639,7 +663,7 @@ verifies $\inf_{t \in [-1, 1]} \varepsilon(t) > 0$. We can use Algorithm [[alg:s
   
   Consider breakpoints $t_0< \cdots < t_{2k}$, a basis of $\mathbb R_k[t]$, $p_0, \ldots, p_k$, and define $A^{(l)}$ to be the $(k+1) \times (k+1)$ matrix whose $(i, j)$ entry  $A_{ij}^{(l)}$ is equal to $p_i(t_l)p_j(t_l)$ for $0 \le i, j \le k$.
   
-   A polynomial $q(t)$ is in $SOS_k(t)$ if and only if there exists $X \in \mathcal S_{k+1}$ such that
+   A polynomial $q(t)$ is in $SOS_k$ if and only if there exists $X \in \mathcal S_{k+1}$ such that
 $$q(t_l) = \langle X, A^{(l)} \rangle \quad \forall l \in [2k].$$
 
 #+END_thm
@@ -666,7 +690,7 @@ A [[eqn:time_varying_sdp_l2]] with data $((A_i)_{i \in [m]}, b, c)$ is strictly 
 In this case we say that $X^s(t)$ is $\varepsilon$ -strictly feasible for our [[eqn:time_varying_sdp_l2]].
 #+END_definition
 
-The proof technique relies on the fact that spectrahedrons, the feasible sets of semidefinite programs, can be approximated within arbitrary accuracy by polyhedrons, and we generalize this result to the time varying-case when the strict feasibility condition is verified.
+The proof technique relies on the fact that spectrahedrons, the feasible sets of semidefinite programs, can be approximated within arbitrary accuracy by polyhedrons, and we generalize this result to the time-varying-case when the strict feasibility condition is verified.
      
   We also provide an efficient algorithm to find the best polynomial solution relying once again on the sum of squares techniques.
 
@@ -685,7 +709,7 @@ $$P(t) = \{ X \; | \; \alpha \in (\mathbb R^+)^{N(\varepsilon)},   X = \sum_{Y \
   #+END_thm
 
 
-To prove the theorem, let's fix a [[eqn:time_varying_sdp_l2]] and assume it is strictly feasible, and consider the following time varying LP:
+To prove the theorem, let's fix a [[eqn:time_varying_sdp_l2]] and assume it is strictly feasible, and consider the following time-varying LP:
 
   #+NAME: eqn:approx_lp_eps
   \begin{equation*}
@@ -728,8 +752,8 @@ To prove the theorem, let's fix a [[eqn:time_varying_sdp_l2]] and assume it is s
   \langle A_i(t), Z(t) \rangle
   &\le \langle A_i(t), X_s(t) \rangle + |\langle A_i(t), X_s(t)-Z(t) \rangle|
   \\&\le \langle A_i(t), X_s(t) \rangle + \max_{i\in[m], t \in [-1, 1]}||A_i(t)|| ||X_s(t)-Z(t)||
-  \\&\le b_i(t) - (\delta - 2M \varepsilon \max_{i\in[m], t \in [-1, 1]}||A_i(t)||) \bf{1}
-  \\&\le b_i(t) - \frac{\delta}2 \bf{1}
+  \\&\le b_i(t) - (\delta - 2M \varepsilon \max_{i\in[m], t \in [-1, 1]}||A_i(t)||) \textbf{1}
+  \\&\le b_i(t) - \frac{\delta}2 \textbf{1}
   \end{align*}
 
   
@@ -781,27 +805,33 @@ We use this formulation in the application of Section [[sec:time-varying-certifi
    #+BEGIN_prop
   [See Theorem 2.5 in \cite{DetteStudden}]
   
-  For $d \in \mathbb N$, and a symmetric polynomial matrix $X(t) \in \mathbb R_{2d+1}^{n \times n}[t]$, $X(t)  \succeq 0 , \; \forall t \in [-1, 1]$ if and only if $$X(t) \in (1+t) SOSM_d(t) + (1-t) SOSM_d(t).$$
+  For $d \in \mathbb N$, and a symmetric polynomial matrix $X(t) \in \mathbb R_{2d+1}^{n \times n}[t]$, $X(t)  \succeq 0 , \; \forall t \in [-1, 1]$ if and only if
+  $$X(t) \in (1+t) SOSM_d + (1-t) SOSM_d, \quad \text{if $n$ odd},$$
+  or
+  $$X(t) \in (1+t)(1-t) SOSM_d + SOSM_d, \quad \text{if $n$ even}.$$
+
+  Denite the symmetric polynomial matrices that are positive semi-definite on $[-1, 1]$ by $ISOSM$.
   #+END_prop
 
 
 #+NAME: thm:tvsdp_as_sdp
    #+BEGIN_thm
-For $d \in \mathbb N$, the following SDP finds the best polynomial solution of degree $2d+1$ to a [[eqn:time_varying_sdp_l2]] with data $((A_i)_{i\in[m]}, b, C)$.
+For $d \in \mathbb N$, the following SDP finds the best polynomial solution of degree $d$ to a [[eqn:time_varying_sdp_l2]] with data $((A_i)_{i\in[m]}, b, C)$.
 
   \begin{equation*}
   \begin{array}{ll@{}ll}
-  \underset{X(t)}{\text{maximize}} & \int_{-1}^1 \langle X(t), C(t) \rangle dt & \\
-  \text{subject to}\\& X(t) &\in (1+t)SOSM_{d}+ (1-t)SOSM_{d}\\
-  &  b_i(t) - \langle A_i(t), X(t) \rangle &\in (1+t) SOS_{d} + (1-t)SOS_{d}& \forall i \in [m]
+  \underset{X(t) \in \mathbb R[t]^{d \times d}}{\text{maximize}} & \int_{-1}^1 \langle X(t), C(t) \rangle dt & \\
+  \text{subject to}\\& X(t) &\in ISOSM\\
+  &  b_i(t) - \langle A_i(t), X(t) \rangle &\in  ISOS& \forall i \in [m]
   \end{array}
   \end{equation*}
+  
    #+END_thm
 
 A multivariate polynomial $\sigma(y)$ is in $SOS_d$ if and only if there exists a symmetric matrix Q such that $\sigma(y) = z^TQz, Q \succeq 0$, where $z$ is the vector of monomials in $y$ of degree up to $d$. This proves that the optimization problem formulated in the previous theorem is indeed an SDP. we call $Q$ the matrix /associated/ with the polynomial $\sigma$.
 
 
-** COMMENT Application: Time varying certificate of stability
+** COMMENT Application: time-varying certificate of stability
    <<sec:time-varying-certificate-of-stability>>
    As an application of the characterization in this paper, we consider the problem of certifying the stability of a linear system.
    More concretely , we want to certify that the following system is stable:
@@ -838,7 +868,8 @@ A multivariate polynomial $\sigma(y)$ is in $SOS_d$ if and only if there exists 
    
    This program is feasible if and only if it is $\frac12-$ strictly feasible. (Because $S_2(t)$ and $S_3(t)$ are either both empty or both non-empty). If we further assume that a certificate of stability that is bounded in time $t \in [-1, 1]$ exists, then  all conditions for theorem [[thm:strict_feasibility_implies_polynomial_optimality_sdp]] (and Remark [[rem:two_varibles]]) are verified, and therefore a /polynomial/ (and afortiori continuous) certificate $P(t)$ of stability of ([[eq:system]])  exists.
    
-      
+
+
 * Numerical results
    <<sec:numeric>>
    
@@ -848,7 +879,7 @@ A multivariate polynomial $\sigma(y)$ is in $SOS_d$ if and only if there exists 
 ** Leontief model
    <<sec:leontief>>
    
-   \begin{table}
+   \begin{table}[!htbp]
    \caption {\label{tbl:leontief} Time-varying Data for \ref{eq:leontief} }
    \begin{tabular}{|l|c|c|c|c|c|}\hline
    &Agriculture&Transportation& Petroleum & Demand & Cost\\
@@ -868,7 +899,7 @@ A multivariate polynomial $\sigma(y)$ is in $SOS_d$ if and only if there exists 
    #+caption: \ref{eq:leontief} best polynomial solution of degree 9. The corresponding objective value is 6.
    file:includes/leontief.png
 
-   In this first example, we consider an economy divided into $n$ sectors $1, \ldots, n$.  For each sector $i=1,\ldots,n$, there is a demand for $b_i$ units of type $i$, and producing an extra unit of type $i$ requires $a_{ij}$ units from sector $j$, for $j\in \{1, \ldots n\}$, and costs an amount $c_i$. We must decide how many units $i$, $x_i$, to produce. We need to find the quantities $x_i$ so that the total cost $\sum_{i=1}^n x_i c_i$ is minimized while the demand is met, i.e. $x_i \ge \sum_{j=1}^n a_{ij} x_j + d_i$, without exceeding a maximum limit $M$, i.e. $x_i \le M$.
+   In this first example, we consider an economy divided into $n$ sectors $1, \ldots, n$.  For each sector $i=1,\ldots,n$, there is a demand for $b_i$ units of type $i$, and producing an extra unit of type $i$ requires $a_{ij}$ units from sector $j$, for $j\in \{1, \ldots n\}$, and costs an amount $c_i$. We must decide how many units of sector $i$, $x_i$, to produce. We need to find the quantities $x_i$ so that the total cost $\sum_{i=1}^n x_i c_i$ is minimized while the demand is met, i.e. $x_i \ge \sum_{j=1}^n a_{ij} x_j + d_i$, without exceeding a maximum limit $M$, i.e. $x_i \le M$.
    
    We allow the production vector $x \coloneqq (x_i)_{i\in[n]}$, the technology matrix $A \coloneqq (a_{ij})_{i,j\in[n]}$, the demand vector $b \coloneqq (b_i)_{i\in[n]}$ and the cost vector $c \coloneqq (c_i)_{i \in [n]}$ to vary with time $t \in [-1, 1]$.
    
@@ -907,7 +938,7 @@ A multivariate polynomial $\sigma(y)$ is in $SOS_d$ if and only if there exists 
   \begin{equation*}
   \tag{MAXFLOW}
   \begin{array}{ll@{}ll}
-  \underset{(f_{ij}(t))_{(i, j) \in E}}{\text{maximize}} &$ \int_{-1}^1  \sum_{(1,j) \in E} f_{1,j}(t) dt & \\
+  \underset{(f_{ij}(t))_{(i, j) \in E}}{\text{maximize}} & \int_{-1}^1  \sum_{(1,j) \in E} f_{1,j}(t) dt & \\
   \text{subject to}& \sum_{(1, j) \in E} f_{i, j}(t) - f_{j, i}(t) = 0& \; &\forall t \in [-1, 1]\\
   & 0 \le f_{i,j}(t) \le b_{ij}(t), & \forall (i, j) \in E, \; &\forall t \in [-1, 1] \\
   \end{array}
@@ -963,7 +994,7 @@ In order to know if this can be improved substantially by allowing a higher uppe
   
   We turn this optimization problem into an SDP using the same techniques that we use for [[eqn:maxflow]]. Allowing polynomial solutions of degree up to 9, we get an upper bound of $85.52$ on the optimal value of [[eqn:maxflow]].
 
-  Notice that the solution given by $p_i(t) = n-i, d_{jk}(t) = \max(2, p_j(t) - p_k(t) + 1)$ for $i \in E, (j, k) \in E$  and $t \in [-1, 1]$ is $\varepsilon-$ strictly feasible to [[eqn:mincut]] with $\varepsilon = 1$. Furthermore, by primal feasibility, i.e. feasibility of [[eqn:maxflow]] for all times $t \in [-1, 1]$, we know that we can restrict the feasible set of [[eqn:mincut]] to a bounded subset where the optimal solution lives. As a consequence of Theorem [[thm:bound_equiv_uniform_bound]], we can actually consider the feasible set of [[eqn:mincut]] to be uniformly bounded in time. All assumptions for Theorem [[thm:strict_feasibility_implies_polynomial_optimality]] are then met, we know therefore that if we increase the degree of the polynomial solutions to [[eqn:mincut]] enough, we can get a feasible solution with an objective value arbitrarily close to the optimal one.
+  Notice that the solution given by $p_1(t) = 1+\varepsilon$, $p_i(t) = \varepsilon$, $d_{jk}(t) = \varepsilon + |p_j(t) - p_k(t)|$ for $i \in V \setminus \{1\}, (j, k) \in E$  and $t \in [-1, 1]$ is $\varepsilon-$ strictly feasible to [[eqn:mincut]] for any $\varepsilon > 0$. Furthermore, since [[eqn:mincut]] is an (exact) LP relaxation for an integer program, there always exist an optimal solution that takes only values $0$ and $1$, and therefore we can amend the constraints $p_i(t) \le 2, d_{jk}(t) \le 2, \quad \forall i \in V, (j, k) \in E, t \in [-1, 1]$ without changing the optimal value. As a consequence, we can consider the feasible set of [[eqn:mincut]] to be uniformly bounded in time. All assumptions for Theorem [[thm:strict_feasibility_implies_polynomial_optimality]] are then met, we know therefore that if we increase the degree of the polynomial solutions to [[eqn:mincut]] enough, we can get a feasible solution with an objective value arbitrarily close to the optimal one.
   
 
 ** Wireless Coverage problem
@@ -1004,7 +1035,7 @@ We can formulate the problem as a time-varying optimization problem in the varia
 
     Since we are dealing with bivariate polynomials that are non-negative on bounded regions of space, Putinar's Positivstellensatz result states that we can rewrite the last inequality as
     $$p = \sigma^{(j)}(t) + \mu^{(j)}(t) (1 - (x - \bar x_j)^2 - (y - \bar y_j)^2 ) \quad j=1,2$$
-    \noindent where $\sigma^{(j)}(t),  \mu_1^{(j)}(t) \in SOS(x, y)$ for all $t \in [-1, 1]$.
+    \noindent where $\sigma^{(j)}(t)$ and $\mu^{(j)}(t)$ are sum of squares of polynomials in $\mathbb R[x, y]$ for all $t \in [-1, 1]$.
 
     Denote by $P^{(j)}(t)$ and $Q^{(j)}(t)$ the positive semidefinite matrices associated with $\sigma^{(j)}(t)$ and  $\mu_1^{(j)}(t)$ respectively. (See Section [[sec:sdpt_is_sdp]] for the definition of associated matrices).
 
@@ -1019,7 +1050,7 @@ We can formulate the problem as a time-varying optimization problem in the varia
     \end{array}
     \end{equation*}
 
-    In the following, we allow this matrices $P^{(j)}$ and $Q^{(j)}$ for $j=1,2$ to depend polynomially on the variable $t$, and we fix the degree in $t$ to be no more than some integer $d$. Using Proposition [[prop:positivestellnaz_sdp]], for $j=1,2$, the condition $P{(j)}(t), Q{(j)}(t) \succeq 0 \; \forall t \in [-1, 1]$ can be written equivalently as $u^TP^{(j)}(t)u, u^TQ^{(j)}(t)u \in (1-t)SOS_{d, 1}(t, u) + (1+t) SOS_{d, 1}(t, u)$.
+    In the following, we allow this matrices $P^{(j)}$ and $Q^{(j)}$ for $j=1,2$ to depend polynomially on the variable $t$, and we fix the degree in $t$ to be no more than some integer $d$. Using Proposition [[prop:positivestellnaz_sdp]], for $j=1,2$, the condition $P{(j)}(t), Q{(j)}(t) \succeq 0 \; \forall t \in [-1, 1]$ can be written equivalently as $P^{(j)}(t), Q^{(j)}(t) \in (1-t)MSOS_{d_1} + (1+t) MSOS_{d_1}$ if $d$ is odd, and  $P^{(j)}(t), Q^{(j)}(t) \in (1+t)(1-t)MSOS_{d_1} + MSOS_{d_1}$ otherwise.
 
     Table \ref{tbl:wireless} reports the optimal values found for $d=0, 1, 2, 7$, and $d_1=7$.
     
@@ -1045,6 +1076,7 @@ We can formulate the problem as a time-varying optimization problem in the varia
 \includegraphics[width=.3\textwidth]{includes/wireless-5.png}
 \caption{\label{img:wireless} Three snapshots of the solution to a time-varying wireless coverage problem at times $t=-1, 0, 1$. In red, the two circular regions $\mathcal B_1, \mathcal B_2$ that need to be covered at all times $t \in [-1, 1]$. The background color at a point in the plane indicates the level of energy at that point (blue for low, yellow for high).}
 \end{figure}
+
 
 * Conclusion and open questions   
 
