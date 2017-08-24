@@ -58,17 +58,17 @@
 
 \ARTICLEAUTHORS{
 \AUTHOR{Amir Ali Ahmadi}
-\AFF{Princeton University, \EMAIL{a_a_a@princeton.edu}}
+\AFF{Princeton University, \EMAIL{a\_a\_a@princeton.edu}}
 \AUTHOR{Bachir El Khadir}
 \AFF{Princeton University, \EMAIL{bkhadir@princeton.edu}}
 }
 
 \ABSTRACT{
-We study linear and semidefinite programs whose data (e.g., the matrices $A$, $b$, $c$ for a linear program) are not constant but vary polynomially with time. We show that, under some conditions, we can approximate the optimal value of these problems arbitrarily well by searching for solutions that are polynomial functions of time themselves. Furthermore, we show that the problem of finding the optimal polynomial solution of a given degree can be cast exactly as a semidefinite program. 
+We study linear and semidefinite programs whose data (e.g., the matrices $A$, $b$, $c$ for a linear program) are not constant but vary polynomially with time. A solution to such a program is itself a function of time. We prove that in the case of time-varying linear program, the optimal solution is a piecewise rational function, and we provide an algorithm to find it. In practice however, we are intersted in solutions that are smooth. We show that, under some conditions, we can approximate the optimal value of these problems arbitrarily well by searching for solutions that are polynomial functions of time themselves. Furthermore, using sum of squares techniques, we show that the problem of finding the optimal polynomial solution of a given degree to a time-varying linear or semidefinite program can be cast exactly as a semidefinite program of small size. In particular, this provides a much more efficient algorithm to solve this kind of time-varying problems.
 }
 
 \maketitle
 #+END_SRC
-
+#+LATEX: \renewcommand\newpage{}
 #+INCLUDE: paper.org
 
