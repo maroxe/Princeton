@@ -1,0 +1,163 @@
+#+OPTIONS: toc:nil
+#+LATEX_HEADER: \usepackage[margin=0.85in]{geometry}
+#+LATEX_HEADER: \usepackage{listing}
+#+LATEX_HEADER: \usepackage{algorithm}
+#+LATEX_HEADER: \newtheorem{theorem}{Theorem}[section]
+#+LATEX_HEADER: \newtheorem{definition}[theorem]{Definition}
+#+LATEX_HEADER: \newtheorem{lemma}[theorem]{Lemma}
+#+LATEX_HEADER: \newtheorem{proof}[theorem]{Proof}
+
+
+* Dynamical system
+
+$$\dot x = f(x)$$
+
+- $f$ Homogeneous: $f(c x) = c^k x$.
+- Denote the solution at time $t$ starting at $x$ as $p(x, t)$.
+- $p(x, t)$ is  homogeneous, $p(c x, t) = c p(x, c^{k-1}t)$.
+
+
+$$||p(t, x)|| \le a \left({\frac{1}{ \frac{1}{|x|^{k-1}} + t}}\right)^{1/k-1} \le a \frac{|x|}{(1 + t|x|^{k-1})^{1/k-1}}$$
+
+On the sphere, $$||p(t, x)|| \le \frac{a}{ (1 + t)^{\frac1{k-1}}}.$$
+
+Lyapunov function $V(x) = \int_{0}^\infty ||p(x, t)||^{(k-1)m} dt$, $\frac{\partial}{\partial t} V(p(x, t)) = -||p(x, t)||^{(k-1)m}$.
+
+Homogeneous: $V(cx) = c^{(m-1)(k-1)} V(x)$
+
+* Finite integral
+
+  
+$$V_M(x) = \int_0^{\frac{M}{|x|^{k-1}}} ||p(x, t)||^{(k-1)m} dt$$
+$$V_M(c x) = c^{(m-1)(k-1)} V_M(x)$$
+$$\frac{\partial}{\partial t} V_M(p(x, t))= ||p(x, t+\frac{M}{|x|^{k-1}})||^{(k-1)m} - ||p(x, t)||^{(k-1)m} < 0$$
+
+* Approximation by rational functions
+  Fix $M > 0$.
+  Define $p_{d+1}(t, x) = x + \int_0^t f(p_d(s, x)) ds$, $p_0(t, x) = x$. They satisfy $p_d(c x, t)= c p_d(x, c^{k-1}t)$.
+  
+   #+begin_lemma
+  There exists $\delta > 0$ such that $|p_d - p|_X \rightarrow_{d} 0$, where $|f|_X = \sup_{(t, x) \in X} ||f(t, x)||$ and  $X = [0, \delta] \times bf{B}$.
+  #+end_lemma
+
+   
+     #+begin_proof
+  First, we prove that $p_d(x, t)$ is uniformly bounded on $X$ by some constant $C$.
+
+  Scale $f$ so that $1 = \sup_{|x| \le 2} ||\nabla f(x)|| + ||f(x)||$, so that $||f(y)|| \le |y|^k$ and $|\nabla f(y)| \le |y|^{k-1}$ for all $y \in \mathbb R^{n}$.
+  
+  Fix $x \in \mathbb S^{n-1}, t \in [0, \delta]$.
+  
+  \begin{align*}
+  |p_{d+1}(x, t)| &\le 1 + \int_0^t |f(p_d(s, x))| ds 
+  \\&\le 1 + \delta |p_d(s, x)|^{k}
+  \end{align*}
+
+  If $p_d(t, x)$ is bounded by $2$, then $p_{k+1}(t, x)$ is bounded by $1 + \delta 2^k$, picking $\delta < \frac 1{2^{k+1}}$ small enough this is smaller than $2$.
+
+  We have just proved that as long as $\delta < \frac 1{2^{k+1}}$, $\sup_{(t,x) \in X} |p_d(t, x)| \le 2$ for all $d \in \mathbb N$.
+
+  Now, to get uniform convergence, we are going to get a bound on $|p_d - p|_{X} = \sup_X |p_d(t,x) - p(t,x)|$.
+
+  Notice that $|p_{d+1} - p|_X \le \int_{0}^t ||f(p_d) - f(p)|| dt \le \delta 2^{d-1} |p_d - p|_X < \frac12 |p_d - p|_X$, which proves that $|p - p_d|_X \rightarrow 0$.
+
+     #+end_proof
+
+     As a result, on $[0, \delta]$, $p_d(t, x)$ is bounded by $C$.
+     
+     #+begin_lemma
+     $|J p_d - J p|_X \rightarrow 0$.
+     #+end_lemma
+
+     #+begin_proof
+     \begin{align*}|J p_{d+1}(t, x) - J p(t, x)|
+     &\le \delta |(Jp_d)(t,x) (Jf)(p_d(t,x)) - (Jp)(t,x) (Jf)(p(t,x))| 
+     \\&\le \delta |(Jp_d)(t,x) (Jf)(p_d(t,x)) - (Jp)(t,x) (Jf)(p(t,x))| 
+     \end{align*}
+     #+end_proof
+     
+  #+begin_lemma
+  For every $(t, x) \in X$ there $p_d(p(t, x), )
+  #+end_lemma
+
+
+     #+begin_lemma
+  There exists a sequence of polynomials $p_d(t, x)$ that converges uniformly to $p(x, t)$ on $\mathbb S^{n-1} \times [0, M]$. Furthermore, $p_d(t, x)$ satisfy $p_d(c x, t)= c p_d(x, c^{k-1}t)$.
+  #+end_lemma
+
+  #+begin_proof
+  Define $p_{d+1}(t, x) = x + \int_0^t f(p_d(s, x)) ds$, $p_0(t, x) = x$.
+
+  Let's prove that there exist $\delta > 0$, such that
+  $|p - p_d|_X := \sup_{(t,x)  \in X} ||p_d(x, t) - p(x, t)|| \rightarrow_d 0$, 
+  where $X = [0, \delta] \times \mathbb S^{n-1}$.
+  
+  First, we prove that $p_d(x, t)$ is uniformly bounded on $X$ by some constant $C$.
+
+  Scale $f$ so that $1 = \sup_{|x| \le 2} ||\nabla f(x)|| + ||f(x)||$, so that $||f(y)|| \le |y|^k$ and $|\nabla f(y)| \le |y|^{k-1}$ for all $y \in \mathbb R^{n}$.
+  
+  Fix $x \in \mathbb S^{n-1}, t \in [0, \delta]$.
+  
+  \begin{align*}
+  .|p_{d+1}(x, t)| &\le 1 + \int_0^t |f(p_d(s, x))| ds 
+  \\&\le 1 + \delta |p_d(s, x)|^{k}
+  \end{align*}
+
+  If $p_d(t, x)$ is bounded by $2$, then $p_{k+1}(t, x)$ is bounded by $1 + \delta 2^k$, picking $\delta < \frac 1{2^{k+1}}$ small enough this is smaller than $2$.
+
+  We have just proved that as long as $\delta < \frac 1{2^{k+1}}$, $\sup_{(t,x) \in X} |p_d(t, x)| \le 2$ for all $d \in \mathbb N$.
+
+  Now, to get uniform convergence, we are going to get a bound on $|p_d - p|_{X} = \sup_X |p_d(t,x) - p(t,x)|$.
+
+  Notice that $|p_{d+1} - p|_{\infty} \le \int_{0}^t |f(p_d) - f(p)| dt \le \delta 2^{d-1} |p_d - p|_{\infty} < \frac12 |p_d - p|_{\infty}$, which proves that $|p - p_d|_X \rightarrow 0$.
+
+
+  Fix $\varepsilon$ and let $d$ large enough so that 
+  $|p - p_d| \le \varepsilon$.
+
+  Since $p_d(\delta, x) \le \varepsilon +\frac{a}{ (1 + \delta)^{k-1}} \le \varepsilon + $.
+  #+end_proof
+
+
+  - $V_M^d(x) = \int_0^{\frac{M}{|x|^{k-1}}} ||p_d(x, t)||^{(k-1)m} dt$, rational function in $x$.
+  - $V_M^d(x)$ homogeneous.
+  - $\frac{\partial}{\partial t} V^d_M(p(x, t))= ||p_d(x, t+\frac{M}{|x|^{k-1}})||^{(k-1)m} - ||p_d(x, t)||^{(k-1)m} < 0$
+
+  #+begin_lemma
+  $|p_d(x, M)| <  1$ on $S^{n-1}$ for $d$ and $M$ large enough.
+  #+end_lemma
+  
+* Calculation
+  
+\begin{align*}
+V(cx) &= \int_0^\infty ||p(cx, t)||^{(k-1)m} dt
+\\&= \int_0^\infty c^{(k-1)m} ||p(x, \frac{t}{c^{k-1}})||^{(k-1)m} dt
+\\&= \int_0^\infty c^{(k-1)(m-1)} ||p(x, t)||^{(k-1)m} dt
+\\&= c^{(m-1)(k-1)} V(x)
+\end{align*}
+
+$V_M(x) = \int_0^{|x|^{\alpha}M} ||p(x, t)||^{(k-1)m} dt$, 
+
+\begin{align*}
+V_M(cx) &= \int_0^{|cx|^{\alpha}M} ||p(cx, t)||^{(k-1)m} dt
+\\&= \int_0^{|cx|^{\alpha}M} c^{(k-1)m} ||p(x, c^{k-1} t)||^{(k-1)m} dt
+\\&= c^{(k-1)(m-1)} \int_0^{c^{\alpha+k-1}|x|^{\alpha}M}  ||p(x, u)||^{(k-1)m} du & (u = tc^{k-1})
+\\&= c^{(k-1)(m-1)} \int_0^{|x|^{\alpha} M}  ||p(x, u)||^{(k-1)m} du &  (\alpha=1-k)
+\\&= c^{(k-1)(m-1)} V_M(x)
+\end{align*}
+
+\begin{align*}
+V_M(p(x, t)) &= \int_0^{|x|^{\alpha}M} ||p(x, u+t)||^{(k-1)m} du
+\\&= \int_t^{t+|x|^{\alpha}M} ||p(x, u)||^{(k-1)m} du
+\end{align*}
+
+$$(\frac{||p(t, x)||}{||x||})^{k-1} \le a^{k-1} \frac{1}{1 + t |x|^{k-1}}$$
+
+
+$$\frac{\partial}{\partial t} V_M(p(x, t))= ||p(x, t+|x|^{\alpha}M)||^{(k-1)m} - ||p(x, t)||^{(k-1)m} < 0$$
+
+$$\left(\frac{|p(x, M|x|^{\alpha})|}{|x|}\right)^{k-1} \le \frac{a}{1 + M}$$
+
+
+
+
