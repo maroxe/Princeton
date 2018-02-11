@@ -1,0 +1,72 @@
+#+LaTeX_CLASS: informs1
+#+LaTeX_CLASS_OPTIONS: [moor]
+
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usetikzlibrary{arrows.meta}
+#+LATEX_HEADER: \usepackage{natbib}
+#+LATEX_HEADER: \usepackage{listing}
+#+LATEX_HEADER: \usepackage{algorithm}
+#+LATEX_HEADER: \usepackage{mathtools}
+
+
+#+LATEX_HEADER: \def\TheoremsNumberedThrough{%
+#+LATEX_HEADER: \theoremstyle{TH}%
+#+LATEX_HEADER: \newtheorem{thm}{Theorem}
+#+LATEX_HEADER: \newtheorem{lemma}{Lemma}
+#+LATEX_HEADER: \newtheorem{prop}{Proposition}
+#+LATEX_HEADER: \newtheorem{cor}{Corollary}
+#+LATEX_HEADER: \newtheorem{claim}{Claim}
+#+LATEX_HEADER: \newtheorem{conjecture}{Conjecture}
+#+LATEX_HEADER: \newtheorem{hypothesis}{Hypothesis}
+#+LATEX_HEADER: \newtheorem{assumption}{Assumption}
+#+LATEX_HEADER: \newtheorem{definition}{Definition}
+#+LATEX_HEADER: \newtheorem{myexample}{Example}
+#+LATEX_HEADER: \newtheorem{remark}{Remark}
+#+LATEX_HEADER: }
+
+#+LATEX_HEADER: \def\EMAIL#1{\href{mailto:#1}{#1}}% When hyperref is used, otherwise outcomment 
+#+LATEX_HEADER: \def\URL#1{\href{#1}{#1}}         % When hyperref is used, otherwise outcomment 
+
+#+LATEX_HEADER: \TheoremsNumberedThrough     % Preferred (Theorem 1, Lemma 1, Theorem 2)
+#+LATEX_HEADER: \EquationsNumberedThrough    % Default: (1), (2), ...
+#+LATEX_HEADER:  \NatBibNumeric
+#+LATEX_HEADER:  \def\bibfont{\small}%
+#+LATEX_HEADER:  \def\bibsep{\smallskipamount}%
+#+LATEX_HEADER:  \def\bibhang{24pt}%
+#+LATEX_HEADER:  \def\BIBand{and}%
+#+LATEX_HEADER:  \def\newblock{\ }%
+#+LATEX_HEADER:  \bibpunct[, ]{[}{]}{,}{n}{}{,}%
+
+
+#+LATEX_HEADER:\usepackage{algpseudocode}% http://ctan.org/pkg/algorithmicx
+#+LATEX_HEADER: %\usepackage[noend]{algpseudocode}
+#+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+#+LATEX_HEADER: \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+#+LATEX_HEADER: \usepackage[colorlinks=true,breaklinks=true,bookmarks=true,urlcolor=blue,
+#+LATEX_HEADER:      citecolor=blue,linkcolor=blue,bookmarksopen=false,draft=false]{hyperref}
+
+#+LATEX_HEADER: \renewenvironment{proof}{\emph{Proof.}}{\(\blacksquare\)}
+
+#+BEGIN_SRC latex :export results
+\TITLE{Time-Varying Semidefinite Programs}
+
+\RUNAUTHOR{Ahmadi and El Khadir}
+\RUNTITLE{Time-Varying SDPs}
+
+\ARTICLEAUTHORS{
+\AUTHOR{Amir Ali Ahmadi}
+\AFF{Princeton University, \EMAIL{a\_a\_a@princeton.edu}}
+\AUTHOR{Bachir El Khadir}
+\AFF{Princeton University, \EMAIL{bkhadir@princeton.edu}}
+}
+
+\ABSTRACT{
+We study semidefinite programs whose data are not constant but vary polynomially with time. A solution to such a program, which we call time-varying semidefinite program (TV-SDP), is itself a function of time. Motivated by practical applications where a smooth solution is desired, we show that, under some conditions, we can find solutions that are polynomial in time and arbitrarily close to being optimal. Furthermore, using sum of squares techniques and certain Positivstellensatze from real algebra, we show that the problem of finding the optimal polynomial solution of a given degree to a TV-SDP can be cast exactly as a semidefinite program of small size. We also provide a duality theory to give matching upper bounds on the optimal value to a TV-SDP. We conclude by demonstrating some applications of our framework to Leontief input-ouput production model with varying demands, a maximum flow problem with varying capacities and a wireless coverage problem of semialgebraic areas moving in time.
+}
+
+\maketitle
+#+END_SRC
+
+
+#+LATEX: \renewcommand\newpage{}
+#+INCLUDE: paper.org
