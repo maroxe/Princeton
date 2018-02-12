@@ -1,9 +1,10 @@
 #+LATEX_HEADER: \newcommand{\weakcvg}{\rightharpoonup}
 
+# (defun compile() (interactive) (export-pdf-and-show-me-diff "paper_informs.org" "paper_informs.tex" "paper_informs_saved.tex" "paper_informs.pdf"))
 
-# (export-pdf-and-show-me-diff "mainorg" "paper_informs.org" "paper_informs.pdf")
+# (global-set-key [f9] 'compile)
 
-* Introduction 
+* Introduction
   In this paper, we study semidefinite programs (SDPs) whose feasible set and objective depend on time. More specifically, a /time-varying/ semidefinite program (TV-SDP) is the following problem
   
   #+NAME: eqn:time_varying_sdp_l2
@@ -17,7 +18,7 @@
   \end{array}
   \end{equation*}
 
-  \noindent where $[m]$ denotes the set $\{1, \ldots, m\}$,  $\gamma$ is positive scalar, $X(t), A_i(t), D_i(t, s), C(t)$ are symmetric $n \times n$ matrices, and $b_i(t)$ is a scalar for all $t, s \in [0, 1]$ and $i\in [m]$. The notation $||X(t)||_{\infty}$ denotes the maximum entry in absolute value of of the matrix $X(t)$ for all $t \in [0, 1]$. The entries of the matrices $A_i(t), D_i(t, s), b_i(t)$ for $i=1,\ldots,m$ and $C(t)$ are polynomial functions of $t$ and $s$. The abbreviation /a.e./ indicates that inequalities should hold $[0, 1] \setminus N$, where $N$ is a set of measure 0.
+  \noindent where $[m]$ denotes the set $\{1, \ldots, m\}$,  $\gamma$ is positive scalar, $X(t), A_i(t), D_i(t, s), C(t)$ are symmetric $n \times n$ matrices, and $b_i(t)$ is a scalar for all $t, s \in [0, 1]$ and $i\in [m]$. The notation $||X(t)||_{\infty}$ denotes the maximum entry in absolute value of of the matrix $X(t)$ for all $t \in [0, 1]$. The entries of the matrices $A_i(t), D_i(t, s), b_i(t)$ for $i=1,\ldots,m$ and $C(t)$ are polynomial functions of $t$ and $s$. The abbreviation /a.e./ indicates that inequalities should hold for every $t \in [0, 1] \setminus N$, where $N$ is a set of measure 0.
   
   The terms $\int_0^t \langle D_i(t, s), X(s) \rangle ds$, with $i \in [m]$ are called kernel terms and they allow for more flexibility in expressing the constraints of a [[eqn:time_varying_sdp_l2]]. To see that, consider the case where all the $D_i(t, s)$ are identically 0, then [[eqn:time_varying_sdp_l2]] reduces to a sequence of SDPs indexed by time $t \in [0, 1]$. In theory, we can solve every SDP in this sequence independently of the others. When these terms are not 0, then the value that a solution takes at a given time affects the range of values it could take at later times. In particular, when the $D_i(t, s)$ are constant functions of $t$ and $s$, [[eqn:time_varying_sdp_l2]] are powerful enough to express linear constraints involving the function $\int_0^t X(s) ds$ and its derivative $X(t)$.
 
@@ -38,36 +39,32 @@
   The second approach, or /dual/ approach, gives an upper bound on the optimal value to the [[eqn:time_varying_sdp_l2]]. To explain the idea behind this, let us first rewrite a typical constraint $\langle A(t), X(t) \rangle + \int_0^t \langle D(t, s), X(s) \rangle ds \le b(t) , \forall t \in [0, 1]$ to a [[eqn:time_varying_sdp_l2]] in the form  $\int_0^1 p(t) \{\langle A(t), X(t) \rangle + \int_0^t \langle D(t, s), X(s) \rangle ds\} dt  \le \int_0^1 p(t)  b(t) dt$, where $p(t)$ is a test function that ranges over all non negative functions on $[0, 1]$. Now, if we restrict the class of test functions further, we are relaxing the constraints on the solution $X(t)$. We will see in Section [[sec:sdpt_is_sdp]] that taking this class to be the set of sum-of-squares polynomials of a given degree is algorithmically tractable, and as the degree goes to infinity, we converge to the optimal value of [[eqn:time_varying_sdp_l2]].
   
   
-As a numerical example of a simple TV-SDP, consider the following problem illustrated in Figure [[img:example_tv_lp]], and given by data
+As a numerical example of a simple TV-SDP, consider the following problem illustrated in Figure [[img:example_tv_sdp]], and given by data
 
 \[
-A_1(t) = -A_3(t) = \begin{pmatrix}
-2-t&0\\0&-1-t\\
-\end{pmatrix},
-A_2(t) = - A_4(t) = \begin{pmatrix}
-1+t&0\\0&2-t\\
-\end{pmatrix},
-A_5(t) = \begin{pmatrix}
-2+t&0\\0&2+t
-\end{pmatrix},
+A_i(t) = -A_{3+i}(t) = E_{ii}, b_i(t) = b_{3+i}(t) = 0 \quad \text{for } i=1,2,3,
 \]
+
+\[A_7(t) = -A_8(t) = E_{23}, b_{7}(t) = b_8(t) = 0,\]
+
+\[A_9(t) = E_{12}, b_9(t) = (2t-1)^2,\]
+
 \[
-b(t) = \begin{pmatrix}1\\1\\2\\2\\-t\end{pmatrix},
 D(s, t) = 0,
 \text{and }
-C(t) = \begin{pmatrix}
-t&0\\0&t^2
-\end{pmatrix},
+C(t) = (-9t^2 + 9t - 1) E_{12} + (-23t^3 + 34t^2 - 12t) E_{13},
 \]
+where $E_{ij}$ is the $3 \times 3$ matrix with 1 on the $(i, j)\text{-th}$ entry and 0 elsewhere.
 
-  #+NAME: img:example_tv_lp
+
+  #+NAME: img:example_tv_sdp
   #+ATTR_LATEX:  :width 0.75\textwidth
   #+caption:An example of a TV-SDP
-  [[file:includes/tvlp_non_annoted.png]]
+  [[file:includes/example_tvsdp.png]]
 
   As the kernel terms are identically 0, an optimal solution to this TV-SDP is a function of time $X^{opt}(t) \in \mathbb R^{2 \times 2}$ that maximizes the linear objective $\langle C(t), X\rangle$ under the constraints $X \succeq 0$ and $\langle A_i(t), X \rangle \le b_i(t) \; \forall i \in [m]$ for all $t \in [0, 1]$.
 
-  In Figure [[img:example_tv_lp]], the blue circles represent the coordinates $(X^{opt}_{11}(t), X^{opt}_{22}(t))$ at some sample times $t \in [0, 1]$. Similarly, the dotted red line represents the diagonal entries of the optimal polynomial solution $X^{poly}(t)$ of degree $11$. The two dimensional projection  $\{(X_{11}, X_{22}) \; |\; X \in \mathbb R^{2 \times 2}, X \succeq 0, \langle A_i(t), X \rangle \le b_i(t) \; \forall i \in \{1, \ldots, m\}\}$ of the feasible set for the same sample times $t$ is delimited by blue lines. As time progresses, the number of facets of this set changes. The objective function $C(t)$ is represented by a black arrow, which also moves in time.
+  In Figure [[img:example_tv_sdp]], the blue circles represent the coordinates $(X^{opt}_{12}(t), X^{opt}_{13}(t))$ at some sample times $t \in [0, 1]$. Similarly, the dotted red line represents the diagonal entries of the optimal polynomial solution $X^{poly}(t)$ of degree $20$. The two dimensional projection  $\{(X_{12}, X_{13}) \; |\; X \in \mathbb R^{3 \times 3}, X \succeq 0, \langle A_i(t), X \rangle \le b_i(t) \; \forall i \in \{1, \ldots, m\}\}$ of the feasible set for the same sample times $t$ is delimited by blue lines. As time progresses, the number of facets of this set changes. The objective function $C(t)$ is represented by a black arrow, which also moves in time.
 
   # Notice that in general an optimal solution to a TV-SDP is any function $X^{opt}: [0, 1] \longrightarrow \mathbb R^{n \times n}$ for which $X^{opt}(t)$ is solution to the following semidefinite program almost everywhere in $[0, 1]$:
 
@@ -81,7 +78,7 @@ t&0\\0&t^2
   # \end{array}
   # \end{equation*}
   
-  # In general $X^{opt}(t)$ is not a polynomial function, and might not even be continuous. In the example of Figure [[img:example_tv_lp]] for instance, the optimal solution $X^{opt}(t)$ lives on the vertices of the feasible set and occasionally jumps from one vertex to a different one, or in other terms, there are times when the set of indices of constraints that are tight for $x^{opt}(t)$ changes, while the optimal polynomial solution moves continuously in the feasible set and tries to be as close as possible to $x^{opt}(t)$.
+  # In general $X^{opt}(t)$ is not a polynomial function, and might not even be continuous. In the example of Figure [[img:example_tv_sdp]] for instance, the optimal solution $X^{opt}(t)$ lives on the vertices of the feasible set and occasionally jumps from one vertex to a different one, or in other terms, there are times when the set of indices of constraints that are tight for $x^{opt}(t)$ changes, while the optimal polynomial solution moves continuously in the feasible set and tries to be as close as possible to $x^{opt}(t)$.
   
   
   # In this paper, we are looking specifically for polynomial feasible solutions, it is thus necessary to settle for a weaker notion of optimality than point-wise optimality. We say that a continuous solution $f(t)$ for a TV-LP is $\varepsilon\text{-near}$ optimal if $\int_0^1 \langle f(t), c(t)\rangle dt - \int_0^1 \langle x^{opt}(t), c(t)\rangle dt \le \varepsilon$. If for all positive $\varepsilon$, there exists a continuous (resp. polynomial) feasible solution that is $\varepsilon\text{-near}$ optimal for the TV-LP, we say that continuous (resp. polynomial) solutions are near optimal for the TV-LP.
@@ -105,10 +102,10 @@ t&0\\0&t^2
 #+LATEX: \renewcommand\labelitemi{{\boldmath$\cdot$}}
 
 * Notation
-  - We denote by $L_{\infty}([0, 1])$ the set of bounded real valued functions defined on the set $[0, 1]$.
-  - We denote by $C_b([0, 1])$ the set of bounded, real valued continuous functions defined on the set $[0, 1]$.
-  - For a function $f \in L_{\infty}([0, 1])$, $f_n(t) \; dt$ denotes the measure with density $f_n(t)$ with respect to the Lebesgue measure $dt$.
-    
+  - We denote by $L_{\infty}([0, 1], \mathbb R^n)$ the set of bounded functions $f: [0, 1] \longrightarrow \mathbb R^n$.
+  - We denote by $C_b([0, 1])$ the set of bounded continuous functions $f: [0, 1] \longrightarrow \mathbb R^n$.
+  - For a function $f = \begin{pmatrix}f_1\\\vdots\\f_n\end{pmatrix} \in L_{\infty}([0, 1], \mathbb R^n)$, $f(t) \; dt$ denotes the $n\times 1$ vector whose $i\text{-th}$ component is the measure that has the density $f_i(t)$ with respect to the Lebesgue measure $dt$.
+  - For any convex subset $C$ of $\mathbb R^n$, $C^*$ denotes its dual, i.e. $C^* \coloneqq \{y \in \mathbb R^n \; | \; \langle x, y \rangle \ge 0 \; \forall x \in C \}$.
 * Analysis Background
   
    This subsection gives the background on function analysis needed to proceed with the theorems for the rest of the paper. We begin by the definition of weak convergence. 
@@ -118,21 +115,21 @@ t&0\\0&t^2
    [Weak Convergence]
    
    A sequence of measures on $[0, 1]$ $\{\mu_n\}$ converges weakly to $\mu_{\infty}$ and we write $\mu_n \weakcvg \mu$ if
-   $$\int_0^1 p(t) \; d\mu_n(t) \rightarrow \int_0^1  p(t) \; dt \text{ as $n \rightarrow \infty$ for all } p \in C_b([0, 1]).$$
+   $$\int_0^1 p(t) \; d\mu_n \rightarrow \int_0^1  p(t) \; d\mu \text{ as $n \rightarrow \infty$ for all } p \in C_b([0, 1], \mathbb R).$$
 
 
-   Similarly, a sequence of real valued functions $\{f_n\}$ of $L_{\infty}([0, 1])$ converges weakly to $f_{\infty}$  and we write $f_n \weakcvg f_{\infty}$ if $f_n(t) dt \weakcvg f_{\infty}(t) dt$.
+   Similarly, a sequence of real valued functions $\{f_n\}$ of $L_{\infty}([0, 1], \mathbb R)$ converges weakly to $f_{\infty}$  and we write $f_n \weakcvg f_{\infty}$ if $f_n(t) dt \weakcvg f_{\infty}(t) dt$.
 
 
    #+end_definition
    
-   It is already known that a sequence of bounded measures on a compact set has subsequence that converges weakly. The following theorem shows that when these measures have densities, i.e. absolutely continuous with respect to the Lebesgue measure, then the limit is also absolutely continuous.
+   It is already known that a sequence of bounded measures on a compact set has subsequence that converges weakly. The following theorem shows that when these measures have densities (i.e. are absolutely continuous with respect to the Lebesgue measure), then the limit is also absolutely continuous.
    
 
    #+name: thm:bounded_func_weakly_converge
    #+begin_thm
 (See \cite{WeakConvergenceUniformBound})
-Suppose $(d\mu_n(t) = f_n(t) dt)_n$ is a sequence of measures on $[0, 1]$ and $M$ a positive constant such that $|f_n(t)| \le M\; \forall t \in [0, 1]$, and suppose that there is a probability measure $\mu$ on $[0, 1]$ such that $\mu_n$ converges weakly to $\mu$, then $\mu$ is absolutely continuous with respect to $dt$, i.e. there exist a measurable function $f(t)$ such that $d \mu(t) = f(t) dt$.
+Suppose $(d\mu_n(t) = f_n(t) dt)_n$ is a sequence of measures on $[0, 1]$ and $M$ a positive constant such that $|f_n(t)| \le M\; \forall t \in [0, 1]$, and suppose that that the $\mu_n$ converge weakly to  a measure $\mu$ on $[0, 1]$, then $\mu$ is absolutely continuous with respect to $dt$, i.e. there exist a measurable function $f(t)$ such that $d \mu(t) = f(t) dt$.
 #+end_thm
 
 #+begin_proof
@@ -170,7 +167,7 @@ The next theorem shows that when a linear inequality is satisfied by sequence of
 
    #+name: thm:weak_lim_satisfies_ineq
    #+begin_thm
-   If a sequence of function $\{f_n\}$ of $L_{\infty}([0, 1])$ satisfies $\|f_n(t)\| \le 1$ for all $t \in [0, 1]$ and $n \in \mathbb N$, converges weakly to $f_{\infty} \in L_{\infty}([0, 1])$ and satisfies
+   If a sequence of function $\{f_n\}$ of $L_{\infty}([0, 1], \mathbb R^n)$ satisfies $\|f_n(t)\| \le 1$ for all $t \in [0, 1]$ and $n \in \mathbb N$, converges weakly to $f_{\infty} \in L_{\infty}([0, 1], \mathbb R^n)$ and satisfies
    $$\langle a(t), f_n(t) \rangle + \int_0^t \langle g(t, s), f_n(t)\rangle dt \le b(t) \quad \forall t \in [0, 1] \; \text{a.e.}, \forall n \in \mathbb N,$$
    where $a(t), g(s, t), b(t)$ are bounded functions, then
    $$\langle a(t), f_{\infty}(t) \rangle + \int_0^t \langle g(t, s), f_{\infty}(t)\rangle dt \le b(t) \quad \forall t \in [0, 1] \; \text{a.e.}$$
@@ -180,10 +177,10 @@ The next theorem shows that when a linear inequality is satisfied by sequence of
    Fix an $n$ in $\mathbb N$, the inequality 
 $$\langle a(t), f_n(t) \rangle + \int_0^t \langle g(t, s), f_n(t)\rangle dt \le b(t) \quad \forall t \in [0, 1] \; \text{a.e.},$$
 is equivalent to 
-   $$\int_0^1 \left(p(t)\langle a(t), f_n(t) \rangle + \int_0^t \langle g(t, s), f_n(t)\rangle ds\right) dt \le \int_0^1 p(t) b(t) dt \quad \forall p \in C_b([0, 1]),$$
+   $$\int_0^1 \left(p(t)\langle a(t), f_n(t) \rangle + \int_0^t \langle g(t, s), f_n(t)\rangle ds\right) dt \le \int_0^1 p(t) b(t) dt \quad \forall p \in C_b([0, 1], \mathbb R),$$
 which we can rewrite as
 
-   $$\int_0^1 \langle p(t) a(t), f_n(t) \rangle  dt +  \int_0^1 \langle p(t) \int_{t}^1 g(t, s) dt, f_n(t)\rangle dt  \le \int_0^1 p(t) b(t) dt \quad \forall p \in C_b([0, 1]).$$
+   $$\int_0^1 \langle p(t) a(t), f_n(t) \rangle  dt +  \int_0^1 \langle p(t) \int_{t}^1 g(t, s) dt, f_n(t)\rangle dt  \le \int_0^1 p(t) b(t) dt \quad \forall p \in C_b([0, 1], \mathbb R).$$
 By weak convergence, this inequalities are also true if we replace $f_n$ by its limit $f_{\infty}$, which proves the claim.
    
    #+end_proof
@@ -195,7 +192,7 @@ By weak convergence, this inequalities are also true if we replace $f_n$ by its 
 We start by showing that [[eqn:time_varying_sdp_l2]] achives its optimal value $opt$. 
 
 #+begin_thm
-There exists a measurable function $X^{opt}(t)$ feasible to [[eqn:time_varying_sdp_l2]] whose optimal value is $opt$.
+If  [[eqn:time_varying_sdp_l2]] is feasible, then there exists a measurable function $X^{opt}(t)$ feasible to [[eqn:time_varying_sdp_l2]] whose optimal value is $opt$.
 #+end_thm
 
 #+begin_proof
@@ -215,45 +212,47 @@ It is clear by weak convergence that $X^{\infty}$ achieves the optimal value to 
 ** Polynomials are optimal under strict feasibility assumption
    <<sec:poly_are_optimal>>
    
-    We seek a characterization for optimality of polynomial solutions to a semidefinite program. The idea is to be able to approximate a good solution by a polynomial function. To be able to do that without violating the constraints of [[eqn:time_varying_sdp_l2]], we definie the following notion of strict feasibility.
+    We seek a characterization for optimality of polynomial solutions to a [[eqn:time_varying_sdp_l2]]. The idea is to be able to approximate a good solution by a polynomial function. To be able to do that without violating the constraints of [[eqn:time_varying_sdp_l2]], we definie the following notion of strict feasibility.
 
   #+NAME: def:strict_feasibility_sdp
      #+BEGIN_definition
-A [[eqn:time_varying_sdp_l2]] with data $(A_i(t), D_i(t, s), b(t), C(t))$ is $\varepsilon\text{-strictly}$ feasible if there exists a function $X^{s}: [0, 1] \rightarrow \mathbb R^{n \times n}$ and a positive scalar $\varepsilon$ such that for all $t \in [0, 1]$, $||X^s(t)||_{\infty} \le \gamma - \varepsilon$, $X^{s}(t) \succeq \varepsilon I$ and
+A [[eqn:time_varying_sdp_l2]] with data $(A_i(t), D_i(t, s), b(t), C(t))_{i=1}^m$ is $\varepsilon\text{-strictly}$ feasible if there exists a function $X^{s}: [0, 1] \rightarrow \mathbb R^{n \times n}$ and a positive scalar $\varepsilon$ such that for all $t \in [0, 1]$, $||X^s(t)||_{\infty} \le \gamma - \varepsilon$, $X^{s}(t) \succeq \varepsilon I$ and
 $\langle A_i(t), X^s(t) \rangle + \int_0^1 \langle D_{i}(s, t), X(s) \rangle dt \le b_i(t) - \varepsilon$ for $i = 1, \ldots, m$.
 
-In this case we say that $X^s(t)$ is $\varepsilon$ -strictly feasible for our [[eqn:time_varying_sdp_l2]].
+In this case we say that $X^s(t)$ is $\varepsilon\text{-strictly}$ feasible for our [[eqn:time_varying_sdp_l2]].
 #+END_definition
 
 
-  We can now formulate the main theorem of this section, whose proof is presented afterwards.
+  We can now formulate the main theorem of this section.
 
 #+begin_thm
 If [[eqn:time_varying_sdp_l2]] is strictly feasible, then there exists a sequence of /polynomial/ solutions $(X_n(t))_{n}$ such that $\int_0^1 \langle C(t), X_n(t) \rangle  \rm dt \rightarrow opt$.
 #+end_thm
 
-The proof of this theorem follows from the next lemma.
+# The proof of this theorem follows from the next lemma.
 
-#+BEGIN_lemma
-Under  $\varepsilon\text{-strict}$ feasibilty assumption of [[eqn:time_varying_sdp_l2]], there exists a sequence of /continuous/,  $\varepsilon/2\text{-strictly}$ feasible solutions $(F_n(t))_{n}$ such that $\int_0^1 \langle C(t), F_n(t) \rangle  \rm dt \rightarrow opt$.
-#+END_lemma
+# #+BEGIN_lemma
+# Under  $\varepsilon\text{-strict}$ feasibilty assumption of [[eqn:time_varying_sdp_l2]], there exists a sequence of /continuous/,  $\varepsilon/2\text{-strictly}$ feasible solutions $(F_n(t))_{n}$ such that $\int_0^1 \langle C(t), F_n(t) \rangle  \rm dt \rightarrow opt$.
+# #+END_lemma
 
 
-The strict feasibility assumption enables us to approximate the optimal solution of [[eqn:time_varying_sdp_l2]] by continuous (and later, polynomial) solutions. We use /mollifiers/ to obtain this approximation.
+The strict feasibility assumption enables us to approximate the optimal solution of [[eqn:time_varying_sdp_l2]] by continuous (and later, polynomial) solutions. We use /mollifiers/ to obtain this approximation. For ease of notation, denote by $L_1$ the set $L_1([0, 1], \mathbb R^{n\times n})$.
 
 
 #+BEGIN_definition
-A sequence of mollifiers (indexed by $v \in \mathbb N$)  is a sequence of linear operators on the space of integrable functions: $M_v: \mathcal L_1 \rightarrow L_1$ such that:
+A sequence of mollifiers (indexed by $v \in \mathbb N$)  is a sequence of linear operators on the space of integrable functions: $M_v: L_1 \rightarrow L_1$ such that:
 
-- (i) If $f \in L_1$, then $\mathcal M_v f$ is continuous, and $\mathcal M_v f \overset{\text{in }L_1}{\longrightarrow}_{v} f$ .
+- (i) If $f \in L_1$, then $\mathcal M_v f$ is continuous, and $\int_{0}^1 \|\mathcal M_v f - f\| {\longrightarrow}_{v} 0$ .
 - (ii) If $f, g \in L_1$ such that for all $t \in [0, 1]$, $f(t) \ge g(t)$, then $M_v f(t) \ge \mathcal M_v g(t)$.
 - (iii) If $f, g \in L_1$ such that for all $t \in [0, 1]$, $f(t) \succeq g(t)$, then $M_v f(t) \succeq \mathcal M_v g(t)$.
-- (iv) If $f$ is continuous, then  $\mathcal M_v f \overset{\text{uniformly}}{\longrightarrow}_{v} f$ .
+- (iv) If $f$ is continuous, then  $\sup_{t \in [0, 1]} \|\mathcal M_v f(t) - f(t)\| {\longrightarrow}_{v} 0$ .
 - (v) If $f$ continuous and $g \in L_1$, then for all $t \in [0, 1]$, $\mathcal M_v (fg) (t) - f(t) M_v g(t) \rightarrow_v 0$.
 #+END_definition
 
 
 #+begin_thm
+[See \cite{Kuhn12}]
+
 Mollifiers exist.
 #+end_thm
 
@@ -266,16 +265,16 @@ As a first step, fix $\lambda \in [0, 1]$ and let $X_1(t) := \lambda X^f(t) + (1
 
 For the second step, we construct a continuous feasible solution that approximates $X_1$. Let $\mathcal M_v$ be a sequence of mollifiers, and fix $v \in \mathbb N$. Define $F_v(t) = \mathcal M_v X_1 (t)$. We have that $F_v(t)$ is a continuous function that satisfies $F_v(t) \succeq 0$ for all $t\in [0, 1]$ (because $X_1(t) \succeq 0$) and $\int_0^1 \langle C(t), F_v(t) \rangle \rightarrow_v \int_0^1 \langle C(t), X_1(t) \rangle$.
   
-Let's now prove that $F_v(t)$ is feasible. For each inequality indexed by $i \in \{1, \ldots, m\}$
+Let's now prove that $F_v(t)$ is feasible. For each inequality indexed by $i \in \{1, \ldots, m\}$ and $t \in [0, 1]$, we have that
 $$b_i(t) - \langle A_i(t), X_1(t) \rangle - \int_0^t \langle D_i(t, s),  X_1(s) \rangle ds  \ge \varepsilon,$$
 
 apply $\mathcal M_v$ to both sides
 $$\mathcal M_v b_i(t) - \mathcal M_v \langle A_i(t), X_1(t) \rangle  - \mathcal M_v \int_0^t \langle D_i(t, s),  X_1(s) \rangle ds\ge \varepsilon.$$
 
-But now we have that $\mathcal M_v b_i(t) \rightarrow_v b_i(t)$, $\mathcal M_v \langle A_i(t), X_1(t) - \langle A_i(t), \underbrace{\mathcal M_v X_1(t)}_{F_v(t)} \rangle \rightarrow_v 0$ and $\mathcal M_v \int_0^t \langle D_i(t, s),  X_1(s) \rangle -  \int_0^t \langle D_i(t, s),  \mathcal M_v X_1(s) \rangle \rightarrow_v 0$, so that for $v$ large enough, each of this quantities well be smaller than $\varepsilon/4$ in absolute value, in such a way that
+Using property /(iv)/ of mollifiers we have that $\mathcal M_v b_i(t) \rightarrow_v b_i(t)$, $\mathcal M_v \langle A_i(t), X_1(t) \rangle - \langle A_i(t), \underbrace{\mathcal M_v X_1(t)}_{F_v(t)} \rangle \rightarrow_v 0$, and using property /(v)/ we get that $\mathcal M_v \int_0^t \langle D_i(t, s),  X_1(s) \rangle -  \int_0^t \langle D_i(t, s),  \mathcal M_v X_1(s) \rangle \rightarrow_v 0$, so that for $v$ large enough, each of this quantities will be smaller than $\varepsilon/4$ in absolute value, in such a way that
 $$b_i(t) -  \langle A_i(t), F_v(t) \rangle- \mathcal M_v \int_0^t \langle D_i(t, s),  F_v(s) \rangle  \ge \varepsilon/2.$$
 
-As a final step, we invoke Weierstrass theorem to approximate $F_v(t)$ by a polynomial $P_v(t)$.
+As a final step, we invoke Weierstrass theorem to approximate $F_v(t)$ by a polynomial.
 
 #+END_proof
   
@@ -283,7 +282,9 @@ As a final step, we invoke Weierstrass theorem to approximate $F_v(t)$ by a poly
 ** Finding the best polynomial solution to a TV-SDP via SDP
    <<sec:sdpt_is_sdp>>
 
-   This section describes how one can find the best /polynomial/ solution to a TV-SDP of a given degree. We prove that we can turn a TV-SDP into an semidefinite program. The idea behind such a reduction is that a univariate polynomial matrix $X(t)$ is positive semidefinite on $\mathbb R$ if and only if it can be written as a square of a polynomial matrix (Proposition [[prop:positivestellnaz_sdp]]). Searching over such decompositions and optimizing over them can be cast as an SDP (see Remark [[remark:sos_is_sdp]]). 
+   This section describes how one can find the best /polynomial/ solution to a TV-SDP of a given degree. We prove that we can turn a TV-SDP into an semidefinite program (SDP). Recall that an SDP is an optimization problem where the objective function is linear, and the feasible set is equal the intersection of the positive semidefinite cone with a hyperplane.
+
+   The idea behind such a reduction is that a univariate polynomial matrix $X(t)$ is positive semidefinite on $\mathbb R$ if and only if it can be written as a square of a polynomial matrix (Proposition [[prop:positivestellnaz_sdp]]). Searching over such decompositions and optimizing over them can be cast as an SDP (see Remark [[remark:sos_is_sdp]]). 
 
 #+NAME: prop:positivestellnaz_sdp
  #+BEGIN_prop
@@ -332,31 +333,41 @@ A multivariate polynomial $\sigma(y)$ is in $SOS_d$ if and only if there exists 
 
 
 * Dual approach: Getting upper bounds
-  The previous section explained how to obtain a sequence of polynomial solutions to a TV-SDP of non-decreasing degree whose objective value eventually converges to the optimal one from below under some assumptions. In practice this assumptions are not always easy to check, so one could only try to search for a polynomial with the highest degree the available computing power allows for, and in this case it is not clear how far off this solution is from the optimal value.
+  The previous section explained how to obtain a sequence of polynomial solutions to a TV-SDP of non-decreasing degree whose objective value eventually converges to the optimal one from below under some assumptions. In practice this assumptions are not always easy to check, so one could only try to search for a polynomial with the highest degree available computing power allows for, and in this case it is not clear how far off this solution is from the optimal value.
   
   This section provides an alternative way to approach TV-SDPs by providing upper bounds on the optimal value. This idea is explained below.
 
-  To solve a TV-SDP, we are interested in a solution $X(t)$ that satisfies the constraints either of the form $X(t) \succeq 0$ or  $\langle A(t), X(t) \rangle +  \int_0^t \langle D(t, s),  X(s) \rangle ds \le b(t)$  for all $t \in [0, 1]$ where $A(t), D(t, s)$ and $b(t)$ are polynomial matrices of respective sizes $n \times n$, $n \times n$ and $1 \times 1$.
+  To solve a TV-SDP, we are interested in a solution $X(t)$ that satisfies the constraints either of the form
+  #+name: eq:const1
+  \begin{equation}
+  X(t) \succeq 0
+  \end{equation}
+  or
+  #+name: eq:const2
+  \begin{equation}
+  \langle A(t), X(t) \rangle +  \int_0^t \langle D(t, s),  X(s) \rangle ds \le b(t)
+  \end{equation}
+  for all $t \in [0, 1]$ where $A(t), D(t, s)$ and $b(t)$ are polynomial matrices of respective sizes $n \times n$, $n \times n$ and $1 \times 1$.
 
-  An alternative way of rewriting this constrains is
-  $$\int_{0}^1 \langle P(t), X(t) \rangle dt  \ge 0\; \forall P \in M\mathcal T$$
-  and
-  $$\int_0^1 p(t) (\langle A(t), X(t) \rangle +  \int_0^t \langle D(t, s),  X(s) \rangle ds - b(t)) dt \le 0\; \forall p \in \mathcal T,$$
-  where $\mathcal T$ is the set of univariate non negative polynomials on $[0, 1]$ and $M\mathcal T$ is the set of matrix valued polynomials that are positive semidefinite on $[0, 1]$. This is a direct consequence of the following lemma.
+  An alternative way of rewriting constraints ([[eq:const1]]) and ([[eq:const2]]) is
+  $$\int_{0}^1 \langle P(t), X(t) \rangle dt  \ge 0 \quad \forall P \in M\mathcal T,$$
+  and 
+  $$\int_0^1 p(t) (\langle A(t), X(t) \rangle +  \int_0^t \langle D(t, s),  X(s) \rangle ds - b(t)) dt \le 0 \quad \forall p \in \mathcal T,$$
+  where $\mathcal T$ is the set of univariate non negative polynomials on $[0, 1]$ and $M\mathcal T$ is the set of matrix valued polynomials that are positive semidefinite on $[0, 1]$. This is a direct consequence of the following lemmas.
   
 #+begin_lemma
 A polynomial $f(t)$ is non negative on the interval $[0, 1]$ if and only if $\int_0^t p(t) f(t) dt \ge 0$ for all $p(t) \in \mathcal T$. 
 #+end_lemma
 
 #+begin_lemma
-A polynomial matrix $F(t)$ is positive semidefinite on the interval $[0, 1]$ if and only if $\int_0^t \langle P(t), F(t)\rangle dt \succeq 0$ for all $P(t) \in \mathcal \mathcal MT$.
+A polynomial matrix $F(t)$ is positive semidefinite on the interval $[0, 1]$ if and only if $\int_0^t \langle P(t), F(t)\rangle dt \ge 0$ for all $P(t) \in \mathcal \mathcal M\mathcal T$.
 #+end_lemma
 
 
 #+begin_proof
 We give the proof of the second Lemma, as the first Lemma follows as a special case when the matrices are of dimension 1.
 
-The if part of the theorem is trivial. For the other direction let $F(t)$ be a polynomial such that $\int_0^t \langle P(t), F(t) \rangle dt \ge 0$ for all $t \in [0, 1]$ and $P(t) \in \mathcal M\mathcal T$. For $u \in [0, 1]$, denote by $\delta_u$ Dirac's delta distribution centered around $u$ and let $P_n(t)$ be a sequence of polynomials in $\mathcal M \mathcal T$ converging to $\delta_u$ in distribution, then $F(u) = \lim_n \int_0^t \langle P_n(t), F(t) \rangle dt \succeq 0$.
+The if part of the theorem is trivial. For the other direction let $F(t)$ be a polynomial such that $\int_0^t \langle P(t), F(t) \rangle dt \ge 0$ for all $t \in [0, 1]$ and $P(t) \in \mathcal M\mathcal T$. For $u \in [0, 1]$, denote by $\delta_u$ Dirac's delta distribution centered around $u$.  Let $p_n(t)$ be a sequence of polynomials in $\mathcal T$ weakly converging to $\delta_u$, then for any $x \in \mathbb R^n$, $x^TF(u)x = \lim_n \int_0^t \langle p_n(t) xx^T, F(t) \rangle dt \ge 0$, which proves the Lemma.
 #+end_proof
 
 
@@ -366,12 +377,16 @@ The if part of the theorem is trivial. For the other direction let $F(t)$ be a p
   $$\mathcal L_{X_{ij}}(p) := \int_0^1 p(t) X_{ij}(t) dt = \sum_{k=1}^d p_k \int_0^1 t^k X_{ij}(t) dt$$
   for every polynomial $p(t) = \sum_{k=1}^d p_k t^k$ of degree $d$, where $X_{ij}$ stands for the $(i, j)\text{-ith}$ entry of $X$.
 
-  We define $\mathcal L_X(A) := \sum_{1 \le i,j \le n} \mathcal L_{X_{ij}}(A_{ij}(t))$ for every $n\times n$ polynomial matrix $A(t)$. 
+  We also define
+  $$\mathcal L_{X}:\mathbb R^{n \times n}[t] \rightarrow \mathbb R$$
+  as
+  $$\mathcal L_X(A) := \sum_{1 \le i,j \le n} \mathcal L_{X_{ij}}(A_{ij})$$
+  for every $n\times n$ polynomial matrix $A(t)$. 
  
   # Similarly, define the functional $\mathcal M_X: \mathbb R^{n \times n}[t] \rightarrow \mathbb R$ as  $\mathcal M_X(P) := \int_0^t \langle P(t), X(t) \rangle dt$ for every matrix valued polynomial $P(t)$.
-  Notice that in order to evalulate a polynomial of degree $d$, we only need to know  $(\int_0^1 t^i X(t)dt)_{i=0,\ldots,d}$, i.e. the first $d$ moments of $\mathcal L_X$.
+  # Notice that in order to evaluaate the image of a polynomial of degree $d$, we only need to know  the first $d$ moments of $\mathcal L_X$, $(\int_0^1 t^i X(t)dt)_{i=0,\ldots,d}$.
 
-  Fix a polynomial $p \in \mathcal T$ and $P \in M \mathcal T$, then using this new notation, we have that
+  Fix  $p \in \mathcal T$ and $P \in M \mathcal T$, then using this new notation, we have that
   
   $\int_{0}^1 \langle P(t), X(t) \rangle dt = \mathcal L_X(P(t))$ ,
   $\int_0^1 p(t) \langle A(t), X(t) \rangle = \mathcal L_X(p(t)A(t))$ and
@@ -380,48 +395,28 @@ The if part of the theorem is trivial. For the other direction let $F(t)$ be a p
   \\&= \mathcal L_X \left(\int_{s}^1 p(t) D(t, s) dt\right).
   \end{align*}
 
+
+  Therefore we can rewrite objective function as $\mathcal L_X(C(t))$.  We can also rewrite constraints ([[eq:const1]]) and ([[eq:const2]]) as
+  $$\mathcal L_X(P(t)) \ge 0  \quad \forall P \in M \mathcal T$$
+  and
+  $$\mathcal L_X \left(p(t)A_i(t) + \int_{t}^1 p(s) D_i(s, t) ds\right) \le \int_0^1 p(t)b_i(t) dt \quad \forall p \in \mathcal T, \; \forall i \in [m].$$
+
+  Now, if we denote by $\mathcal T_d$ (resp. $M\mathcal T_d$) the subset of $\mathcal T$ (resp. $M\mathcal T$) of polynomials of degree at most $d$, and we restrict our test functions $p(t)$ (resp. $P(t)$) to live in this subset, then we obtain the following relaxation of constraints ([[eq:const1]]) and ([[eq:const2]]):
+
+  #+name: eqn:const1relaxed
+  \begin{equation}
+  \mathcal L_X(P(t)) \ge 0  \quad \forall P \in M \mathcal T_d
+  \end{equation}
+  and
+  #+name: eqn:const2relaxed
+  \begin{equation}
+  \mathcal L_X \left(p(t)A_i(t) + \int_{t}^1 p(s) D_i(s, t) ds\right) \le \int_0^1 p(t)b_i(t) dt \quad \forall p \in \mathcal T_d, \; \forall i \in [m].
+  \end{equation}
   
-  We can rewrite the constraints of a TV-SDP as follow
   
-  #+NAME: eqn:time_varying_sdp_l2_moments
-  \begin{equation*}
-  \tag{TV-SDP}
-  \begin{array}{ll@{}ll}
-  \underset{X(t)}{\text{maximize}} & \mathcal L_X(C(t)) & \\
-  \text{subject to}& \mathcal L_X(P(t)) \ge 0  &\; \forall P \in M \mathcal T,\\
-  & \mathcal L_X \left(p(t)A_i(t) + \int_{t}^1 p(s) D_i(s, t) ds\right) \le \int_0^1 p(t)b_i(t) dt &\; \forall p \in \mathcal T, \; \forall i \in [m].\\
-  \end{array}
-  \end{equation*}
-
-  Now, if we denote by $\mathcal T_d$ (resp. $M\mathcal T_d$)the subset of $\mathcal T$ (resp. $M\mathcal T$) of polynomials of degree at most $d$, and we restrict our test functions $p(t)$ (resp. $P(t)$) to live in this subset, then we obtain the following relaxation of [[eqn:time_varying_sdp_l2]] that provides an upper bound on its optimal value.
-
-    
-  #+NAME: eqn:dual_time_varying_sdp_d
-  \begin{equation*}
-  \tag{DUAL-TV-SDP-d}
-  \begin{array}{ll@{}ll}
-  \underset{X(t)}{\text{maximize}} & \mathcal L_X(C(t)) & \\
-  \text{subject to}& \mathcal L_X(P(t)) \ge 0  &\; \forall P \in M \mathcal T_d,\\
-  & \mathcal L_X \left(p(t)A_i(t) + \int_{t}^1 p(s) D_i(s, t) ds\right) \le \int_0^1 p(t)b_i(t) dt &\; \forall p \in \mathcal T_d, \; \forall i \in [m].\\
-  \end{array}
-  \end{equation*}
-
+  Notice that these constraints and objective function depend on $X(t)$ only through the functional $\mathcal L_X$. Also notice that for every linear functional  $\mathcal L: \mathbb R_{d'}[t] \rightarrow \mathbb R^{n \times n}$ there exists a unique matrix valued polynomial $X(t)$ of degree $d'$ such that $\mathcal L_X$ agrees with $\mathcal L$. Indeed, paramterize a polynomial function $x(t)$ by $\sum_{k=0}^{d'} x_k t^k$. For any sequence of numbers $(s_1, \ldots, s_{d'}) \in \mathbb R^{d'}$, the linear system of equations $$\int_0^1 t^i x(t) dt = \sum_{k=0}^{d'}\frac{1}{i+k+1} x_k =  s_i \quad i=1,\ldots,d'$$ in the variables $x_k$ is invertible since the matrix $H_{d'} := (\frac1{i+k+1})_{ik}$ is a Hankel matrix. From now on, we denote by $X_{\mathcal L}(t)$ the unique polynomial matrix of degree $d'$ such that $\mathcal L = \mathcal L_{X_{\mathcal L}}$.
   
-  Notice that the constraints and objective function of this program depend on $X(t)$ only through the functional $\mathcal L_X$. Also notice that for every linear functional  $\mathcal L: \mathbb R_{d'}[t] \rightarrow \mathbb R^{n \times n}$ there exists a unique matrix valued polynomial $X(t)$ of degree $d'$ such that $\mathcal L_X$ agrees with $\mathcal L$. Indeed, paramterize a polynomial function $x(t)$ by $\sum_{k=0}^{d'} x_k t^k$. For any sequence of numbers $(s_1, \ldots, s_{d'}) \in \mathbb R^{d'}$, the linear system of equations $\int_0^1 t^i x(t) dt = \sum_{k=0}^{d'}\frac{1}{i+k+1} x_k =  s_i$ in the variables $x_k$ is invertible since the matrix $H_{d'} := (\frac1{i+k+1})_{ik}$ is a Hankel matrix.
-
-  
-  Therefore, we can drop the dependence on $X(t)$ and rewrite [[eqn:dual_time_varying_sdp_d]] as 
-
-      
-  \begin{equation*}
-  \begin{array}{ll@{}ll}
-  \underset{\mathcal L: \mathbb R_{d'}[t] \rightarrow \mathbb R^{n \times n}}{\text{maximize}} & \mathcal L(C(t)) & \\
-  \text{subject to}& \mathcal L(P(t)) \ge 0  &\; \forall P \in M \mathcal T_d,\\
-  & \mathcal L \left(p(t)A_i(t) + \int_{t}^1 p(s) D_i(s, t) ds\right) \le \int_0^1 p(t)b_i(t) dt &\; \forall p \in \mathcal T_d, \; \forall i \in [m].
-  \end{array}
-  \end{equation*}
-
-  From now on, we denote by $X_{\mathcal L}(t)$ the unique polynomial matrix of degree $d'$ such that $\mathcal L = \mathcal L_{X_{\mathcal L}}$, and we append the linear constraint $||X_{\mathcal L}(t)||_{\infty} \le \gamma$ to obtain a sharper upper bound to the previous program to obtain
+  As a consequence of the last paragraph, We can drop the dependence on $X(t)$ and rewrite [[eqn:dual_time_varying_sdp_d]] as 
 
         
   #+NAME: eqn:dual_time_varying_sdp_d
@@ -440,19 +435,14 @@ The if part of the theorem is trivial. For the other direction let $F(t)$ be a p
 ** Strong duality
 
 #+begin_thm
-The optimal value of [[eqn:dual_time_varying_sdp_d]] converges to the optimal value of [[eqn:time_varying_sdp_l2]] as $d$ goes to infinity.
+If  [[eqn:time_varying_sdp_l2]] is feasible, then the optimal value of [[eqn:dual_time_varying_sdp_d]] converges to the optimal value of [[eqn:time_varying_sdp_l2]] as $d$ goes to infinity.
 #+end_thm
 
 
-Fix $d$ in $\mathbb N$, and let $\mathcal L^{(d)}$ a feasible solution to [[eqn:dual_time_varying_sdp_d]] that has an objective value within $\frac1d$ of the optimal one. Considering $\mathcal L^{(d)}$ as measures, we are going to prove that 
+Fix $d$ in $\mathbb N$, and let $\mathcal L^{(d)}$ a feasible solution to [[eqn:dual_time_varying_sdp_d]] such that
+$$\mathcal L^{(d)}(C(t)) \le opt + \frac1n.$$
 
-The sequence of polynomials $(X_{\mathcal L^{(d)}})$ is uniformly bounded. Take any weakly convergent subsequent and call its limit $X_{\infty}$.
-
-Define the operator $\mathcal L_{\infty}$ as $\mathcal L_{\infty}(p(t)) := \int_0^1 p(t) X_{\infty}(t) dt$ for all $p \in \mathbb R[t]$. It is not hard to see that for all such $p(t)$,
-
-$$\lim_n \mathcal L^{(n)}(p(t)) = \mathcal L_{\infty}(p(t)).$$
-
-
+The sequence of polynomials $(X_{\mathcal L^{(d)}})$ is uniformly bounded. Take any weakly convergent subsequence and call its limit $X_{\infty}$. It is clear that $\mathcal L^{(\infty)}(C(t)) = opt$. Moreover, Theorem [[thm:weak_lim_satisfies_ineq]] guarantees that any constraints of type ([[eqn:const1relaxed]]) and ([[eqn:const2relaxed]]) that is satisfied by $\mathcal L^{(d)}$ for $d$ large enough is also satisfied by $\mathcal L^{\infty}$. As a result $X^{\infty}$ satisfies all the constraints of [[eqn:time_varying_sdp_l2]].
 
 
 
@@ -460,7 +450,13 @@ $$\lim_n \mathcal L^{(n)}(p(t)) = \mathcal L_{\infty}(p(t)).$$
 
 ** The dual of a time-varying SDP is an SDP
 
-   In the previous section we provided a sequence of optimization programs [[eqn:dual_time_varying_sdp_d]], index by $d$, with an optimal value converging from above to the optimal value of [[eqn:time_varying_sdp_l2]]. In this section we prove that [[eqn:dual_time_varying_sdp_d]] can be cast as SDPs.
+   In the previous section we provided a sequence of optimization programs [[eqn:dual_time_varying_sdp_d]], index by $d$, with an optimal value converging from above to the optimal value of [[eqn:time_varying_sdp_l2]]. In this section we prove that [[eqn:dual_time_varying_sdp_d]] can be cast as SDPs. For that, we will need the following fact from convex geometry
+   
+
+   #+begin_thm
+   If $C \subseteq \mathbb R^{n\times n}$ is equal to the intersection of the positive semidefinite cone with some hyperplane, then its dual $C^*$ is also equal to the intersection of the positive semidefinite cone with some hyperplane.
+   #+end_thm
+   
 
 Recall the definition of [[eqn:dual_time_varying_sdp_d]]
          
@@ -475,15 +471,21 @@ Recall the definition of [[eqn:dual_time_varying_sdp_d]]
   \end{equation*}
 
 
-  The variable is $\mathcal L$, can be viewed as a $d'+1$ dimensional vector. The objective function is linear in $\mathcal L$. Now we are going to consider the constraints one by one. The first constraint,   $$\mathcal L(P(t)) \ge 0 \; \forall P \in M \mathcal T_d$$ can be written as $\mathcal L \in  (M \mathcal T_d)^*$, where $(M \mathcal T_d)^*$ is the dual of $M \mathcal T_d$. Since $M \mathcal T_d$ is the intersection of a hyperplane with the semidefinite cone, which is self dual, $(M \mathcal T_d)^*$ is also an intersection of a hyperplane with the semidefinite cone.
+  The variable is $\mathcal L$, can be viewed as a $d'+1$ dimensional vector. The objective function is linear in $\mathcal L$. Now we are going to consider the constraints one by one. The first constraint,
+  $$\mathcal L(P(t)) \ge 0 \quad \forall P \in M \mathcal T_d$$
+  can be written as $\mathcal L \in  (M \mathcal T_d)^*$. Since $M \mathcal T_d$ is the intersection of a hyperplane with the semidefinite cone, $(M \mathcal T_d)^*$ is also an intersection of a hyperplane with the semidefinite cone.
 
-   Next, we identify a polynomial $p(t)$ in $\mathcal T_d$ with the vector of its  $p \in \mathbb R^d$. Then since  the polynomial $p(t)A_i(t) + \int_{t}^1 p(s) D_i(s, t) ds$ depend linearly on $p$, its coefficients can be written as $M_i p$, where $M_i$ is a $d \times d$ matrix than can be easily constructed from the coefficients of $A_i(t)$ and $D_i(s, t)$. Similarly, there exists a vector $b_i \in \mathbb R^d$ such that $\int_0^1 p(t)b_i(t) dt = p'b_i$. Therfore,
-   $$\mathcal L \left(p(t)A_i(t) + \int_{t}^1 p(s) D_i(s, t) ds\right) \le \int_0^1 p(t)b_i(t) dt \iff \mathcal L(M_i p) \le p'b_i \iff \langle b_i - \mathcal L M_i^T,  p \rangle \ge 0 \iff b_i - \mathcal L M_i^T \in \mathcal T_d^*,$$
+   Next, we identify a polynomial $p(t)$ in $\mathcal T_d$ with the vector of its coefficients  $p \in \mathbb R^{d+1}$. Since  the polynomial $p(t)A_i(t) + \int_{t}^1 p(s) D_i(s, t) ds$ depend linearly on $p$, its coefficients can be written as $M_i p$, where $M_i$ is a $d \times d$ matrix than can be easily constructed from the coefficients of $A_i(t)$ and $D_i(s, t)$. Similarly, there exists a vector $b_i \in \mathbb R^d$ such that $\int_0^1 p(t)b_i(t) dt = \langle p, b_i \rangle$. Therfore,
+   
+   \begin{align*}
+   \mathcal L \left(p(t)A_i(t) + \int_{t}^1 p(s) D_i(s, t) ds\right) \le \int_0^1 p(t)b_i(t) dt
+   &\iff \mathcal L(M_i p) \le \langle p, b_i \rangle
+   \\&\iff \langle b_i - \mathcal L M_i^T,  p \rangle \ge 0
+   \\&\iff b_i - \mathcal L M_i^T \in \mathcal T_d^*,\end{align*}
 and similarly to $M\mathcal T_d^*$, $\mathcal T_d^*$ is itself an intersection of a hyperplane with the semidefinite cone.
 
 Finally, the coefficients of the polynomial $X_{\mathcal L}(t)$ depend linearly on $\mathcal L$, and the constraint $||X_{\mathcal L}(t)||_{\infty} \le \gamma \; \forall t \in[0, 1]$ means that the coefficient of the entries of polynomial matrices $X_{\mathcal L}(t)-\gamma$ and $\gamma - X_{\mathcal L}(t)$ are in $MSOS_d$.
-   
 
-Finally
+
 \bibliographystyle{plain}
 \bibliography{citations}
